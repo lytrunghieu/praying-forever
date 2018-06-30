@@ -40,7 +40,6 @@
 		65C8DC2C6F094E56847A8EAE /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D0F3FADE5A8428BADBEC567 /* FontAwesome.ttf */; };
 		6D461564986B4C2EA7DE2523 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7E7C62865E224DE89AFCB545 /* EvilIcons.ttf */; };
 		795C039F20074A8000016185 /* libRCTSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 795C039D20074A4900016185 /* libRCTSplashScreen.a */; };
-		795C03B020074B3400016185 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 795C03AE20074B3300016185 /* LaunchScreen.xib */; };
 		795C03C02007509D00016185 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 795C03BF2007509C00016185 /* splash.png */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		87B9599C7C724A73A8D3E632 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B0FAA0D533147C89F092A82 /* Zocial.ttf */; };
@@ -380,7 +379,6 @@
 		7318A90AC573424F8CDBF003 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		795C039820074A4700016185 /* RCTSplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSplashScreen.xcodeproj; path = "../node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen.xcodeproj"; sourceTree = "<group>"; };
-		795C03AE20074B3300016185 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		795C03BF2007509C00016185 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = splash.png; path = ../../../../src/Images/splash.png; sourceTree = "<group>"; };
 		7E7C62865E224DE89AFCB545 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -622,7 +620,6 @@
 			isa = PBXGroup;
 			children = (
 				795C03BF2007509C00016185 /* splash.png */,
-				795C03AE20074B3300016185 /* LaunchScreen.xib */,
 			);
 			name = SplashScreenResource;
 			path = "../node_modules/react-native-smart-splash-screen/ios/SplashScreenResource";
@@ -1193,7 +1190,6 @@
 				D7A71F4538654C679AB6A136 /* Ionicons.ttf in Resources */,
 				AC4C30104ECA490CA5FB4FC7 /* MaterialCommunityIcons.ttf in Resources */,
 				EC8F52F6531B4542BD6C81C2 /* MaterialIcons.ttf in Resources */,
-				795C03B020074B3400016185 /* LaunchScreen.xib in Resources */,
 				E1E31E27D60542968C6C505D /* Octicons.ttf in Resources */,
 				795C03C02007509D00016185 /* splash.png in Resources */,
 				AF571B8BD1B248CC916D4485 /* SimpleLineIcons.ttf in Resources */,
@@ -1361,8 +1357,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
@@ -1386,7 +1384,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
