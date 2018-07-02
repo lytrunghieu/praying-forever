@@ -48,13 +48,6 @@ StatusBarLight.propsType = {
 
 const styles = StyleSheet.create({
   statusBarBG: {
-    // marginBottom: -Metrics.statusBarHeight,
     marginBottom: Platform.OS === 'ios' ? 0 : -CommonUtils.getStatusBarHeight(),
-    // height: Metrics.statusBarHeight,
-    height: CommonUtils.getStatusBarHeight(),
-
-    // marginBottom: Platform.OS === 'ios' ? 0 : -Metrics.statusBarHeight,
-    // height: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
-
-  },
+    height: CommonUtils.getStatusBarHeight(),},
 });

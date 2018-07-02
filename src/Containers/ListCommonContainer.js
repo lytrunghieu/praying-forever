@@ -4,7 +4,8 @@
 
 import React ,{PureComponent} from "react";
 import {View ,ScrollView} from "react-native";
-import  {NavBar} from "../Components/Common";
+import  {NavBar,PlaceHolder} from "../Components/Common";
+import {Images} from "../Themes"
 
 export default class ListCommon extends PureComponent {
 
@@ -12,6 +13,10 @@ export default class ListCommon extends PureComponent {
         return (<View style={{flex : 1}}>
                 <ScrollView>
                     <NavBar title={"Title"}/>
+                    <PlaceHolder/>
+                    <NavBar title={"Title"} iconLeft ={Images.back} />
+                    <PlaceHolder/>
+                    <NavBar title={"Title"} iconLeft ={Images.back}  iconRight ={Images.more}/>
                 </ScrollView>
             </View>
         )

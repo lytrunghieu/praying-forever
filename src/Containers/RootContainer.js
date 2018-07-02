@@ -32,7 +32,7 @@ class RootContainer extends PureComponent {
 
     return (
       <View style={styles.container} >
-        <StatusBar backgroundColor={Colors.blueSky} barStyle={'light-content'} />
+        <StatusBar backgroundColor={Colors.primary} barStyle={'light-content'} />
         <SafeAreaView style={styles.container}>
           <ReduxNavigation />
         </SafeAreaView>

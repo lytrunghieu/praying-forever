@@ -11,46 +11,47 @@ import { Colors, Metrics,Images } from '../../Themes';
 //Components
 import Button from './Button';
 
+const widthOfIcon = Platform.OS === 'ios' ? 60 : 50;
+
 export default class NavBar extends PureComponent {
 
     render() {
+        const { title, onPressLeftButton, onPressRightButton, iconLeft , iconRight} = this.props;
 
-        const { title, onPressLeftButton, onPressRightButton, isHideLeftButton, isHideRightButton, nameIconLeft, iconTypeLeft, isShowBackIcon } = this.props;
+        let leftButtonView = (
+            <View style ={styles.emptyIcon}/>
+        );
+        let rightButtonView = (
+            <View  style ={styles.emptyIcon}/>
+        );
 
-        const LeftButtonView = (<Button onPress={() => onPressLeftButton()}
-                                        iconWrapper={styles.leftIconWrapper}
-                                        iconType={iconTypeLeft}
-                                        label={'Menu'}
-                                        name={nameIconLeft}
-                                        buttonStyle={styles.button}
-                                        labelStyle={styles.titleText}
-                                        isHideLabel
-        />)
+        if(iconLeft){
+            leftButtonView = (
+                <TouchableOpacity style ={styles.leftIconWrapper}>
+                    <Image source={iconLeft}/>
+                </TouchableOpacity>
+            );
+        }
 
-        const RightButtonView = (<Button onPress={() => onPressRightButton()}
-                                         iconWrapper={styles.rightIconWrapper}
-                                         iconType={'MaterialCommunityIcons'}
-                                         label={'Extend'}
-                                         name={'dots-vertical'}
-                                         buttonStyle={styles.button}
-                                         labelStyle={styles.titleText}
-                                         isHideLabel
-        />)
+        if(iconRight){
+            rightButtonView = (
+                <TouchableOpacity style ={styles.rightIconWrapper}>
+                    <Image source={iconRight}/>
+                </TouchableOpacity>
+            );
+        }
+
+
+
+
 
         return (
             <View style={styles.container}>
-                {isShowBackIcon &&
-                <TouchableOpacity>
-                    <Image source={Images.back}/>
-                </TouchableOpacity>
-                }
-                {isHideLeftButton ? null : LeftButtonView}
-
-                <View style={[styles.titleWrapper, {paddingLeft: isHideLeftButton ? 50 : 0, paddingRight: isHideRightButton ? 50 : 0}]}>
+                {leftButtonView}
+                <View style={[styles.titleWrapper]}>
                     <Text style={styles.titleText}>{title}</Text>
                 </View>
-
-                {isHideRightButton ? null : RightButtonView}
+                {rightButtonView}
             </View>
         )
     }
@@ -58,64 +59,57 @@ export default class NavBar extends PureComponent {
 
 NavBar.defaultProps = {
     title: "",
-    isHideLeftButton: false,
-    isHideRightButton: false,
     onPressLeftButton: () => { },
     onPressRightButton: () => { },
-    nameIconLeft: "menu",
-    nameIconRight: "dots-vertical",
-    iconTypeLeft: "MaterialCommunityIcons",
-    iconTypeRight: "MaterialCommunityIcons",
-    isShowBackIcon :false,
 };
 
 NavBar.propTypes = {
     title: PropTypes.string,
-    isHideLeftButton: PropTypes.bool,
-    isHideRightButton: PropTypes.bool,
     onPressLeftButton: PropTypes.func,
     onPressRightButton: PropTypes.func,
-    nameIconLeft: PropTypes.string,
-    nameIconRight: PropTypes.string,
-    iconTypeLeft: PropTypes.string,
-    iconTypeRight: PropTypes.string,
-    isShowBackIcon: PropTypes.bool
+
 }
 
 const styles = EStyleSheet.create({
     container: {
         flexDirection: 'row',
         backgroundColor: Colors.primary,
-        // backgroundColor: 'green',
         height: Platform.OS === 'ios' ? 60 : 50,
-
+        shadowOffset :{
+            height : 1,
+            // width :100
+        },
+        shadowRadius : 2,
+        shadowColor :Colors.black,
+        shadowOpacity : 1,
     },
+
+    emptyIcon :{
+      width :widthOfIcon
+    },
+
     titleWrapper: {
-        flex: 6,
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        // backgroundColor: 'violet'
     },
+
     titleText: {
         fontSize: 20,
         color: Colors.white,
         fontFamily:"Roboto-Bold"
     },
-    button: {
-        flex: 1,
-        // backgroundColor: 'green'
-    },
 
     leftIconWrapper: {
-        // backgroundColor: 'green',
         justifyContent: 'center',
-        alignItems: 'flex-start',
-        paddingLeft: 10
+        width :widthOfIcon,
+        paddingLeft: 20,
     },
+
     rightIconWrapper: {
-        // backgroundColor: 'green',
         justifyContent: 'center',
-        alignItems: 'flex-end',
-        paddingLeft: 10
+        alignItems:"flex-end",
+        paddingRight : 20,
+        width :widthOfIcon,
     }
 });
