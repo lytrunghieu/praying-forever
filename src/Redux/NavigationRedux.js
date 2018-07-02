@@ -10,10 +10,11 @@ import { CommonUtils } from '../Utils'
 
 const { navigate, reset } = NavigationActions;
 const { getStateForAction } = MainNav.router;
+import INITIAL_STATE from "./initialStates"
 
-const INITIAL_STATE = getStateForAction(
-  navigate({ routeName: ScreenKey.SPLASH_SCREEN })
-)
+// const INITIAL_STATE = getStateForAction(
+//   navigate({ routeName: ScreenKey.SPLASH_SCREEN })
+// )
 const NOT_AUTHENTICATE_STATE = getStateForAction(reset({
   index: 0,
   actions: [
@@ -33,7 +34,7 @@ const AUTHENTICATE_STATE = getStateForAction(reset({
  */
 // const navigateTo = routeName => () => navigate({ routeName })
 
-export function reducer(state = INITIAL_STATE, action) {
+export function reducer(state = INITIAL_STATE.navigation, action) {
 
   // CommonUtils.log('NavigationRedux action:', action);
   // CommonUtils.log('NavigationRedux state:', state);
@@ -47,16 +48,16 @@ export function reducer(state = INITIAL_STATE, action) {
   //   value: state
   // });
 
-  switch (action.type) {
-    case AppStateTypes.SET_REHYDRATION_COMPLETE:
-      return NOT_AUTHENTICATE_STATE
-    case AuthenticateTypes.LOGOUT:
-      return NOT_AUTHENTICATE_STATE
-    case AuthenticateTypes.AUTHENTICATE_SUCCESS:
-      return AUTHENTICATE_STATE
-    case AuthenticateTypes.AUTO_AUTHENTICATE:
-      return AUTHENTICATE_STATE
-  }
+  // switch (action.type) {
+  //   case AppStateTypes.SET_REHYDRATION_COMPLETE:
+  //     return NOT_AUTHENTICATE_STATE
+  //   case AuthenticateTypes.LOGOUT:
+  //     return NOT_AUTHENTICATE_STATE
+  //   case AuthenticateTypes.AUTHENTICATE_SUCCESS:
+  //     return AUTHENTICATE_STATE
+  //   case AuthenticateTypes.AUTO_AUTHENTICATE:
+  //     return AUTHENTICATE_STATE
+  // }
   let nextState = getStateForAction(action, state)
 
   // CommonUtils.log('NavigationRedux nextState:', nextState);
@@ -65,7 +66,7 @@ export function reducer(state = INITIAL_STATE, action) {
   //   value: nextState
   // });
 
-  // CommonUtils.log('NavigationRedux nextState:', nextState);
+  CommonUtils.log('NavigationRedux nextState:', nextState);
 
   return nextState || state
 }
