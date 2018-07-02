@@ -77,7 +77,6 @@ const styles = EStyleSheet.create({
         height: Platform.OS === 'ios' ? 60 : 50,
         shadowOffset :{
             height : 1,
-            // width :100
         },
         shadowRadius : 2,
         shadowColor :Colors.black,
