@@ -2,7 +2,8 @@
 import React, {PureComponent} from 'react';
 import {
     View,
-    Text
+    Text,
+    TouchableOpacity
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
@@ -20,23 +21,28 @@ export default class OptionPopup extends PureComponent {
 
     render() {
 
-        const {text, hideDivider} = this.props;
+        const {text, hideDivider, onPress, index} = this.props;
         return (
-            <View style={[styles.container, !hideDivider ? styles.divider : null]}>
+            <TouchableOpacity style={[styles.container, !hideDivider ? styles.divider : null]}
+                onPress ={onPress.bind(this,index)}
+            >
                 <Text style={styles.text}>{text}</Text>
-            </View>
+            </TouchableOpacity>
         );
     }
 }
 
 OptionPopup.defaultProps = {
     text: "",
+    index : 0,
     hideDivider: false,
+    onPress : () =>{}
 }
 
 OptionPopup.propTypes = {
     text: PropTypes.string.isRequired,
     hideDivider: PropTypes.bool,
+    onPress : PropTypes.func
 }
 
 const styles = EStyleSheet.create({

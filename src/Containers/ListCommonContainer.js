@@ -3,11 +3,22 @@
  */
 
 import React, {PureComponent} from "react";
-import {View, ScrollView,Text} from "react-native";
-import  {NavBar, PlaceHolder, HeaderSearch,Separator,OptionPopup} from "../Components/Common";
+import {View, ScrollView,Text,TouchableOpacity} from "react-native";
+import  {NavBar, PlaceHolder, HeaderSearch,Separator,OptionPopup,DropdowPopup,Button} from "../Components/Common";
 import {Images} from "../Themes"
 
 export default class ListCommon extends PureComponent {
+
+    constructor(props){
+        super(props);
+        this.showDropdownPopup = this.showDropdownPopup.bind(this);
+    }
+
+    showDropdownPopup(){
+        this.refs["navBar"].measure().then(res =>{
+            this.refs["dropdown"].open({x : res.ox , y : res.oy});
+        });
+    }
 
     render() {
         return (<View style={{flex: 1}}>
@@ -16,7 +27,11 @@ export default class ListCommon extends PureComponent {
                     <PlaceHolder/>
                     <NavBar title={"Title"} iconLeft={Images.back}/>
                     <PlaceHolder/>
-                    <NavBar title={"Title"} iconLeft={Images.back} iconRight={Images.more}/>
+                    <NavBar
+                        ref="navBar"
+                        title={"Title"} iconLeft={Images.back} iconRight={Images.more}
+                        onPressRightButton={this.showDropdownPopup}
+                    />
                     <PlaceHolder/>
                     <HeaderSearch
                         ref={ref => this.headerSearch = ref}
@@ -30,7 +45,14 @@ export default class ListCommon extends PureComponent {
                     <PlaceHolder/>
                     <Text>Option</Text>
                     <OptionPopup text={"Option 1"}/>
+                    <PlaceHolder/>
+                    <Button text="Button"/>
+
                 </ScrollView>
+                <DropdowPopup
+                    ref ="dropdown"
+                    options={["option 1","option 2"]}
+                />
             </View>
         )
     }
