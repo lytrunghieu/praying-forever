@@ -3,8 +3,8 @@
  */
 
 import React, {PureComponent} from "react";
-import {View, ScrollView} from "react-native";
-import  {NavBar, PlaceHolder, HeaderSearch} from "../Components/Common";
+import {View, ScrollView,Text} from "react-native";
+import  {NavBar, PlaceHolder, HeaderSearch,Separator,OptionPopup} from "../Components/Common";
 import {Images} from "../Themes"
 
 export default class ListCommon extends PureComponent {
@@ -24,6 +24,12 @@ export default class ListCommon extends PureComponent {
                             this.headerSearch.clear()
                         }}
                     />
+                    <PlaceHolder/>
+                    <Text>Separator</Text>
+                    <Separator/>
+                    <PlaceHolder/>
+                    <Text>Option</Text>
+                    <OptionPopup text={"Option 1"}/>
                 </ScrollView>
             </View>
         )

@@ -1,10 +1,11 @@
 // Libraries
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import {
-  View,
+    View,
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
+import {Colors} from "../../Themes"
 
 // Utilities
 
@@ -12,31 +13,30 @@ import PropTypes from 'prop-types';
 
 export default class Separator extends PureComponent {
 
-  constructor(props) {
-    super(props);
-  }
+    constructor(props) {
+        super(props);
+    }
 
-  render() {
+    render() {
 
-    const { style } = this.props;
-    return (
-      <View style={style} />
-    );
-  }
+        const {height} = this.props;
+        return (
+            <View style={[styles.main, {height: height}]}/>
+        );
+    }
 }
 
 Separator.defaultProps = {
-  style: {}
+    height: 1,
 }
 
 Separator.propTypes = {
-  style: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.array,
-    PropTypes.number
-  ])
+    height: PropTypes.number
 }
 
 const styles = EStyleSheet.create({
-
+    main: {
+        backgroundColor: Colors.gray,
+        width :"100%"
+    }
 });

@@ -3,6 +3,7 @@ const type = {
     bold: 'Avenir-Black',
     emphasis: 'HelveticaNeue-Italic',
     robotoBold: "Roboto-Bold",
+    robotoMedium: "Roboto-Medium",
     robotoItalic: "Roboto-Italic",
     robotoThin: "Roboto-Thin"
 }
