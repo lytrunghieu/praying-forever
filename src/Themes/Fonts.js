@@ -5,7 +5,8 @@ const type = {
     robotoBold: "Roboto-Bold",
     robotoMedium: "Roboto-Medium",
     robotoItalic: "Roboto-Italic",
-    robotoThin: "Roboto-Thin"
+    robotoThin: "Roboto-Thin",
+    robotoLightItalic: "Roboto-LightItalic"
 }
 
 const size = {

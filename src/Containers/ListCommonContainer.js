@@ -4,7 +4,7 @@
 
 import React, {PureComponent} from "react";
 import {View, ScrollView,Text,TouchableOpacity} from "react-native";
-import  {NavBar, PlaceHolder, HeaderSearch,Separator,OptionPopup,DropdowPopup,Button} from "../Components/Common";
+import  {NavBar, PlaceHolder, HeaderSearch,Separator,OptionPopup,DropdowPopup,Button,PrayItem} from "../Components/Common";
 import {Images} from "../Themes"
 
 export default class ListCommon extends PureComponent {
@@ -47,6 +47,8 @@ export default class ListCommon extends PureComponent {
                     <OptionPopup text={"Option 1"}/>
                     <PlaceHolder/>
                     <Button text="Button"/>
+                    <PrayItem content={"a Human is sick in hopostal to near dead need help about money to heal cancer in final period"} title={"Sick"} date={"23/02/2017"}/>
+                    <PrayItem content={"a Human is sick in hopostal to near dead"} title={"Sick"} date={"20/02/2017"}/>
 
                 </ScrollView>
                 <DropdowPopup

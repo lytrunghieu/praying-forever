@@ -5,6 +5,7 @@ import Separator from './Separator';
 import OptionPopup from './OptionPopup';
 import  DropdowPopup from "./DropdowPopup";
 import  Button from "./Button";
+import  PrayItem from "./PrayItem";
 
 export {
     NavBar,
@@ -13,5 +14,6 @@ export {
     Separator,
     OptionPopup,
     DropdowPopup,
-    Button
+    Button,
+    PrayItem
 };
