@@ -17,11 +17,11 @@ export default class NavBar extends PureComponent {
 
     measure() {
         return new Promise((res, rej) => {
-            this.refs["container"].measure((ox, oy, width, height) => {
+            this.refs["container"].measure((ox, oy, width, height, px,py) => {
                 //calculate postion
                 res({
                     ox: 20,
-                    oy: oy + height
+                    oy: py + height
                 });
             });
         });

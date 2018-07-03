@@ -62,6 +62,7 @@ export default class HeaderSearch extends PureComponent {
                         placeholderTextColor={Colors.white}
                         placeholder={placeHolderText}
                         onChangeText={onChangeText}
+                        underlineColorAndroid={"rgba(0,0,0,0)"}
                     />
                     <View style={styles.line}/>
                 </View>
