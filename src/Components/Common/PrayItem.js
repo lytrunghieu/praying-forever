@@ -5,7 +5,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
 
 // Utilities
-import {Colors, Fonts} from '../../Themes';
+import {Colors, Fonts,ApplicationStyles} from '../../Themes';
 
 export default class NavBar extends PureComponent {
 
@@ -27,7 +27,7 @@ export default class NavBar extends PureComponent {
         );
 
         return (
-            <TouchableOpacity style={styles.container}
+            <TouchableOpacity style={[styles.container , ApplicationStyles.screen.shadowContainer]}
                               ref="container"
                               onPress={onPress}
             >
@@ -56,14 +56,14 @@ NavBar.propTypes = {
 const styles = EStyleSheet.create({
     container: {
         flexDirection: 'row',
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.primary,
         width: "100%",
-        height: 52,
-        paddingLeft: 10,
-        paddingRight: 10,
+        height: "$heightRow",
+        paddingLeft: "$padding",
+        paddingRight: "$padding",
         alignItems: "center",
-        borderBottomWidth: 1,
-        borderColor: Colors.gray
+        borderRadius : 5,
+
     },
 
     leftContainer: {
@@ -78,20 +78,20 @@ const styles = EStyleSheet.create({
     },
 
     title: {
-        fontFamily: Fonts.type.robotoMedium,
-        fontSize: 14,
+        fontFamily: Fonts.type.robotoRegular,
+        fontSize: Fonts.size.normal,
         color: Colors.black
     },
 
     content: {
-        fontFamily: Fonts.type.robotoLightItalic,
-        fontSize: 12,
-        color: Colors.black
+        fontFamily: Fonts.type.robotoRegular,
+        fontSize: Fonts.size.small,
+        color: Colors.gray
     },
 
     date: {
-        fontFamily: Fonts.type.robotoMedium,
-        fontSize: 14,
+        fontFamily: Fonts.type.robotoRegular,
+        fontSize: Fonts.size.small,
         color: Colors.black,
         textAlign: "right"
     }

@@ -4,7 +4,7 @@
 
 import React, {PureComponent} from "react";
 import {View, ScrollView,Text,TouchableOpacity} from "react-native";
-import  {NavBar, PlaceHolder, HeaderSearch,Separator,OptionPopup,DropdowPopup,Button,PrayItem} from "../Components/Common";
+import  {NavBar, PlaceHolder, HeaderSearch,Separator,OptionPopup,DropdowPopup,Button,PrayItem,ImageBackground} from "../Components/Common";
 import {Images} from "../Themes"
 
 export default class ListCommon extends PureComponent {
@@ -22,6 +22,7 @@ export default class ListCommon extends PureComponent {
 
     render() {
         return (<View style={{flex: 1}}>
+                <ImageBackground/>
                 <ScrollView>
                     <NavBar title={"Title"}/>
                     <PlaceHolder/>
@@ -44,13 +45,22 @@ export default class ListCommon extends PureComponent {
                     <Separator/>
                     <PlaceHolder/>
                     <Text>Option</Text>
-                    <OptionPopup text={"Option 1"}/>
+                    <OptionPopup text={"Option 1"} leftIcon ={Images.inProgress} count ={199}/>
+                    <OptionPopup text={"Option 2"} leftIcon ={Images.about}/>
+                    <OptionPopup text={"Option 2"} leftIcon ={Images.setting}/>
+                    <OptionPopup text={"Option 2"} leftIcon ={Images.complete}/>
                     <PlaceHolder/>
                     <Button text="Button"/>
+                    <PlaceHolder/>
+                    <Button text="Button Fit" fit ={true}/>
+                    <PlaceHolder/>
                     <PrayItem content={"a Human is sick in hopostal to near dead need help about money to heal cancer in final period"} title={"Sick"} date={"23/02/2017"}/>
+                    <PlaceHolder/>
                     <PrayItem content={"a Human is sick in hopostal to near dead"} title={"Sick"} date={"20/02/2017"}/>
 
+
                 </ScrollView>
+
                 <DropdowPopup
                     ref ="dropdown"
                     options={["option 1","option 2"]}

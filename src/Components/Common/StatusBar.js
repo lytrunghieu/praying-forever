@@ -19,7 +19,7 @@ export default class StatusBarLight extends PureComponent {
         <Image style={styles.statusBarBG} source={this.props.source}>
           <StatusBar animated
             backgroundColor="rgba(0,0,0,0)"
-            barStyle="light-content"
+            barStyle="liight-content"
             translucent={true}
             {...this.props}
           />
@@ -29,7 +29,7 @@ export default class StatusBarLight extends PureComponent {
           <StatusBar
             backgroundColor="rgba(0,0,0,0)"
             translucent={false}
-            barStyle="dark-content"
+            barStyle="light-content"
             {...this.props}
           />
         </View>

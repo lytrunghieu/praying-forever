@@ -6,10 +6,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import PropTypes from 'prop-types';
 
 // Utilities
-import {Colors, Metrics, Images} from '../../Themes';
+import {Colors, Metrics, Images,ApplicationStyles} from '../../Themes';
 
 //Components
 import Button from './Button';
+import Fonts from "../../Themes/Fonts";
 
 const widthOfIcon = Platform.OS === 'ios' ? 60 : 50;
 
@@ -59,7 +60,7 @@ export default class NavBar extends PureComponent {
 
 
         return (
-            <View style={styles.container}
+            <View style={[styles.container,ApplicationStyles.screen.shadowContainer]}
                   ref="container"
             >
                 {leftButtonView}
@@ -92,12 +93,12 @@ const styles = EStyleSheet.create({
         flexDirection: 'row',
         backgroundColor: Colors.primary,
         height: Platform.OS === 'ios' ? 60 : 50,
-        shadowOffset: {
-            height: 1,
-        },
-        shadowRadius: 2,
-        shadowColor: Colors.black,
-        shadowOpacity: 1,
+        // shadowOffset: {
+        //     height: 1,
+        // },
+        // shadowRadius: 2,
+        // shadowColor: Colors.black,
+        // shadowOpacity: 1,
     },
 
     emptyIcon: {
@@ -111,21 +112,21 @@ const styles = EStyleSheet.create({
     },
 
     titleText: {
-        fontSize: 20,
-        color: Colors.white,
-        fontFamily: "Roboto-Bold"
+        fontSize: Fonts.size.large,
+        color: Colors.black,
+        fontFamily: Fonts.type.robotoMedium
     },
 
     leftIconWrapper: {
         justifyContent: 'center',
         width: widthOfIcon,
-        paddingLeft: 20,
+        paddingLeft: "$padding",
     },
 
     rightIconWrapper: {
         justifyContent: 'center',
         alignItems: "flex-end",
-        paddingRight: 20,
+        paddingRight: "$padding",
         width: widthOfIcon,
     }
 });

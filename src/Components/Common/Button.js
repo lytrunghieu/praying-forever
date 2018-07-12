@@ -11,10 +11,10 @@ export default class Button extends PureComponent {
 
 
     render() {
-        let {onPress, text} = this.props;
+        let {onPress, text , fit} = this.props;
         return (
             <TouchableOpacity onPress={() => onPress()}
-                              style={[styles.container]}>
+                              style={[styles.container , fit && styles.fit]}>
                 <Text style={styles.labelText}>{text}</Text>
             </TouchableOpacity>
         )
@@ -24,23 +24,30 @@ export default class Button extends PureComponent {
 Button.defaultProps = {
     onPress: () => {
     },
-    text : ""
+    text: "",
+    fit: false,
 };
 
 Button.propTypes = {
     onPress: PropTypes.func,
-    text : PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+    fit : PropTypes.bool
 }
 
 
 const styles = EStyleSheet.create({
     container: {
-        backgroundColor: Colors.primary,
-        width: 106,
-        height: 32,
+        backgroundColor: Colors.black,
+        width: 184,
+        height: 40,
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 2,
+        borderRadius: 21,
+    },
+
+    fit : {
+        width: null,
+        flex : 0,
     },
 
     labelText: {

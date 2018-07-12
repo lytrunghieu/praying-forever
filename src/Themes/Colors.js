@@ -1,9 +1,10 @@
 const colors = {
-    blueSky: "#2196f3",
+    // blueSky: "#2196f3",
     white: "#FFFFFF",
-    black: "#2B2626",
-    primary :"#E59171",
-    gray :"#9B9B9B"
+    transparent : "rgba(0,0,0,0)",
+    black: "#3F3F3F",
+    primary :"#FFFFFF",
+    gray :"#AFAFBB"
 }
 
 export default colors

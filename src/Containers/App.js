@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import SplashScreen from 'react-native-smart-splash-screen';
 import { Provider } from 'react-redux';
+import {globalStyle} from "../Themes"
 
 // Configs
 import '../Config'
@@ -14,7 +15,7 @@ import RootContainer from './RootContainer';
 // Store
 import createStore from '../Redux';
 
-EStyleSheet.build();
+EStyleSheet.build(globalStyle);
 // create our store
 const store = createStore()
 

@@ -6,6 +6,7 @@ import OptionPopup from './OptionPopup';
 import  DropdowPopup from "./DropdowPopup";
 import  Button from "./Button";
 import  PrayItem from "./PrayItem";
+import  ImageBackground from "./ImageBackground";
 
 export {
     NavBar,
@@ -15,5 +16,6 @@ export {
     OptionPopup,
     DropdowPopup,
     Button,
-    PrayItem
+    PrayItem,
+    ImageBackground
 };

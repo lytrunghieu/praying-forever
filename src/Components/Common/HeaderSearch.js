@@ -63,6 +63,7 @@ export default class HeaderSearch extends PureComponent {
                         placeholder={placeHolderText}
                         onChangeText={onChangeText}
                         underlineColorAndroid={"rgba(0,0,0,0)"}
+
                     />
                     <View style={styles.line}/>
                 </View>
@@ -114,17 +115,16 @@ const styles = EStyleSheet.create({
 
     inputContainer: {
         flex: 1,
-        fontSize: 20,
-        fontFamily: Fonts.type.robotoThin,
-        color: Colors.white,
-        fontWeight: "normal"
+        fontSize: Fonts.size.large,
+        fontFamily: Fonts.type.robotoLightItalic,
+        color: Colors.black,
     },
 
     line: {
         position: "absolute",
         height: 1,
         width: "100%",
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.gray,
         left: 0,
         bottom: 12
     },
