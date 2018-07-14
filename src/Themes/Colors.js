@@ -4,7 +4,8 @@ const colors = {
     transparent : "rgba(0,0,0,0)",
     black: "#3F3F3F",
     primary :"#FFFFFF",
-    gray :"#AFAFBB"
+    gray :"#AFAFBB",
+    red :"red",
 }
 
 export default colors

@@ -59,8 +59,8 @@ export default class HeaderSearch extends PureComponent {
                     <TextInput
                         ref="textInput"
                         style={styles.inputContainer}
-                        placeholderTextColor={Colors.white}
-                        placeholder={placeHolderText}
+                        placeholderTextColor={Colors.black}
+                        placeholder={"Tim kiem"}
                         onChangeText={onChangeText}
                         underlineColorAndroid={"rgba(0,0,0,0)"}
 

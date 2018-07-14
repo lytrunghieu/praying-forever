@@ -92,7 +92,7 @@ const styles = EStyleSheet.create({
     container: {
         flexDirection: 'row',
         backgroundColor: Colors.primary,
-        height: Platform.OS === 'ios' ? 60 : 50,
+        height: Platform.OS === 'ios' ? 50 : 50,
         // shadowOffset: {
         //     height: 1,
         // },

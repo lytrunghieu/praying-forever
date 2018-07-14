@@ -7,6 +7,7 @@ import  DropdowPopup from "./DropdowPopup";
 import  Button from "./Button";
 import  PrayItem from "./PrayItem";
 import  ImageBackground from "./ImageBackground";
+import  ConfirmModal from "./ConfirmModal";
 
 export {
     NavBar,
@@ -17,5 +18,7 @@ export {
     DropdowPopup,
     Button,
     PrayItem,
-    ImageBackground
+    ImageBackground,
+    ConfirmModal
+
 };
