@@ -6,6 +6,14 @@ import Colors from './Colors'
 // Similar to an XML fragment layout in Android
 
 const ApplicationStyles = {
+
+    button :{
+      container :{
+          height : 84,
+          justifyContent:"center"
+      },
+    },
+
     screen: {
         mainContainer: {
             flex: 1,

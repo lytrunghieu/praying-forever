@@ -1,8 +1,8 @@
 import React from "react";
 import ModalBase from "./ModalBase";
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {View, Text,ScrollView} from "react-native";
-import {Colors, Fonts,globalStyle} from "../../Themes";
+import {View,ScrollView} from "react-native";
+import {Colors,globalStyle ,ApplicationStyles} from "../../Themes";
 import PropTypes from 'prop-types';
 import {Button,Checkbox} from "./";
 
@@ -49,7 +49,7 @@ export default class CheckboxModal extends ModalBase {
         return (
             <View style={styles.container}>
                 {optionsComponent}
-                <View style ={styles.buttonContainer}>
+                <View style ={ApplicationStyles.button.container}>
                     <Button text={textDone}
                             onPress={this.onPressSubmit}
                     />
@@ -79,9 +79,5 @@ const styles = EStyleSheet.create({
         alignItems: "center",
     },
 
-    buttonContainer:{
-        height : 84,
-        justifyContent:"center"
-    }
 
 });

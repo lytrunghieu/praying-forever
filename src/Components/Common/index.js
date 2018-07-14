@@ -11,6 +11,7 @@ import  ActionSheet from "./ActionSheet";
 import  ConfirmModal from "./ConfirmModal";
 import  Checkbox from "./Checkbox";
 import  CheckboxModal from "./CheckboxModal";
+import  SwitchRowItem from "./SwitchRowItem";
 
 export {
     NavBar,
@@ -25,5 +26,6 @@ export {
     ActionSheet,
     ConfirmModal,
     Checkbox,
-    CheckboxModal
+    CheckboxModal,
+    SwitchRowItem
 };

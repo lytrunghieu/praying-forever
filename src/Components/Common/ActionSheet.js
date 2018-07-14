@@ -46,7 +46,7 @@ export default class ActionSheet extends ModalBase {
                 {options.map((op, index) => {
                    return this.renderOptionRow(op, index);
                 })}
-                <View style ={styles.buttonContainer}>
+                <View style ={ApplicationStyles.button.container}>
                     <Button text={"CANCEL"}
                         onPress={this.close}
                     />
@@ -70,10 +70,5 @@ const styles = EStyleSheet.create({
         backgroundColor: Colors.primary,
         alignItems: "center",
     },
-    
-    buttonContainer:{
-        height : 84,
-        justifyContent:"center"
-    }
 
 });

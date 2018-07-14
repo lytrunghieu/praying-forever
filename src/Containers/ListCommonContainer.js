@@ -17,7 +17,8 @@ import {
     ActionSheet,
     ConfirmModal,
     Checkbox,
-    CheckboxModal
+    CheckboxModal,
+    SwitchRowItem
 } from "../Components/Common";
 import {Images,Colors} from "../Themes"
 import * as _ from "lodash";
@@ -32,6 +33,7 @@ export default class ListCommon extends PureComponent {
         this.showActionSheet = this.showActionSheet.bind(this);
         this.onPressCheckbox = this.onPressCheckbox.bind(this);
         this.showCheckboxList = this.showCheckboxList.bind(this);
+        this.onChangeValueSwitch = this.onChangeValueSwitch.bind(this);
 
         this.state ={
             checkboxList :[
@@ -66,9 +68,16 @@ export default class ListCommon extends PureComponent {
                     isChecked : false,
                     onPress : this.onPressCheckbox
                 }
-            ]
+            ],
+            switchValue : false,
         };
 
+    }
+
+    onChangeValueSwitch(value){
+        this.setState({
+            switchValue: value
+        });
     }
 
     onPressCheckbox(index){
@@ -112,7 +121,7 @@ export default class ListCommon extends PureComponent {
 
     render() {
 
-        const {checkboxList} = this.state;
+        const {checkboxList ,switchValue} = this.state;
         const options = [
             {text: "Search"},
             {text: "Delete All" , color : Colors.red}
@@ -166,9 +175,12 @@ export default class ListCommon extends PureComponent {
                     <Checkbox text ={checkboxList[0].text} isChecked ={checkboxList[0].isChecked} onPress ={checkboxList[0].onPress} index ={0}/>
                     <Checkbox text ={checkboxList[1].text} isChecked ={checkboxList[1].isChecked} onPress ={checkboxList[1].onPress} index ={1}/>
                     <Text onPress ={this.showCheckboxList} >Show checkbox Modal</Text>
-
-
-
+                    <Text>SwitchRowItem</Text>
+                    <SwitchRowItem
+                        title ={"Reminder"}
+                        value ={switchValue}
+                        onValueChange ={this.onChangeValueSwitch}
+                    />
 
                 </ScrollView>
 
