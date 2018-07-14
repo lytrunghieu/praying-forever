@@ -9,6 +9,8 @@ import  PrayItem from "./PrayItem";
 import  ImageBackground from "./ImageBackground";
 import  ActionSheet from "./ActionSheet";
 import  ConfirmModal from "./ConfirmModal";
+import  Checkbox from "./Checkbox";
+import  CheckboxModal from "./CheckboxModal";
 
 export {
     NavBar,
@@ -21,5 +23,7 @@ export {
     PrayItem,
     ImageBackground,
     ActionSheet,
-    ConfirmModal
+    ConfirmModal,
+    Checkbox,
+    CheckboxModal
 };

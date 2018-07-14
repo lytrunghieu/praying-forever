@@ -15,17 +15,81 @@ import {
     PrayItem,
     ImageBackground,
     ActionSheet,
-    ConfirmModal
+    ConfirmModal,
+    Checkbox,
+    CheckboxModal
 } from "../Components/Common";
 import {Images,Colors} from "../Themes"
+import * as _ from "lodash";
 
 export default class ListCommon extends PureComponent {
 
     constructor(props) {
         super(props);
+
         this.showDropdownPopup = this.showDropdownPopup.bind(this);
         this.showConfirmModal = this.showConfirmModal.bind(this);
         this.showActionSheet = this.showActionSheet.bind(this);
+        this.onPressCheckbox = this.onPressCheckbox.bind(this);
+        this.showCheckboxList = this.showCheckboxList.bind(this);
+
+        this.state ={
+            checkboxList :[
+                {
+                    text :"Option 1",
+                    index : 0,
+                    isChecked : true,
+                    onPress : this.onPressCheckbox
+                },
+
+                {
+                    index : 1,
+                    text :"Option 2",
+                    isChecked : false,
+                    onPress : this.onPressCheckbox
+                },
+                {
+                    index : 2,
+                    text :"Option 3",
+                    isChecked : false,
+                    onPress : this.onPressCheckbox
+                },
+                {
+                    index : 3,
+                    text :"Option 4",
+                    isChecked : false,
+                    onPress : this.onPressCheckbox
+                },
+                {
+                    index : 4,
+                    text :"Option 5",
+                    isChecked : false,
+                    onPress : this.onPressCheckbox
+                }
+            ]
+        };
+
+    }
+
+    onPressCheckbox(index){
+
+        let checkboxList = _.cloneDeep(this.state.checkboxList);
+        if(!checkboxList[index]){
+            return;
+        }
+
+
+        checkboxList[index].isChecked = !checkboxList[index].isChecked;
+        checkboxList.map((ch, _index) =>{
+            if(_index !== index){
+               ch.isChecked = false;
+            }
+            return ch;
+        })
+
+        this.setState({
+            checkboxList: checkboxList
+        });
     }
 
     showDropdownPopup() {
@@ -42,7 +106,13 @@ export default class ListCommon extends PureComponent {
         this.refs["actionSheet"].open();
     }
 
+    showCheckboxList(){
+        this.refs["checkboxList"].open();
+    }
+
     render() {
+
+        const {checkboxList} = this.state;
         const options = [
             {text: "Search"},
             {text: "Delete All" , color : Colors.red}
@@ -91,10 +161,18 @@ export default class ListCommon extends PureComponent {
 
                     <PlaceHolder/>
                     <Text onPress={this.showActionSheet}>Show Action Sheet</Text>
+                    <PlaceHolder/>
+                    <Text>Checkbox</Text>
+                    <Checkbox text ={checkboxList[0].text} isChecked ={checkboxList[0].isChecked} onPress ={checkboxList[0].onPress} index ={0}/>
+                    <Checkbox text ={checkboxList[1].text} isChecked ={checkboxList[1].isChecked} onPress ={checkboxList[1].onPress} index ={1}/>
+                    <Text onPress ={this.showCheckboxList} >Show checkbox Modal</Text>
+
+
 
 
                 </ScrollView>
 
+                {/*MODAL*/}
                 <DropdowPopup
                     ref="dropdown"
                     options={["option 1", "option 2"]}
@@ -110,6 +188,11 @@ export default class ListCommon extends PureComponent {
                 <ActionSheet
                     ref="actionSheet"
                     options={options}
+                />
+                <CheckboxModal
+                    ref ={"checkboxList"}
+                    options={checkboxList}
+                    textDone={"DONE"}
                 />
 
             </View>
