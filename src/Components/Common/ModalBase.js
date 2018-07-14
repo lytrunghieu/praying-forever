@@ -4,6 +4,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {
     TouchableOpacity
 } from 'react-native';
+import PropTypes from 'prop-types';
 
 export default class ModalBase extends PureComponent {
 
@@ -32,6 +33,7 @@ export default class ModalBase extends PureComponent {
     }
 
     render(){
+
         return (
             <Modal
                 style={[styles.modal]}
@@ -39,9 +41,8 @@ export default class ModalBase extends PureComponent {
                 animationDuration={this.animationDuration}
                 swipeToClose={false}
                 backdropOpacity={this.backdropOpacity}
-                position ={this.position}
             >
-                <TouchableOpacity style={[styles.container , this.isCenter && styles.containerCenter ]}
+                <TouchableOpacity style={[styles.container ,  this.isCenter  && styles.containerCenter ]}
                                   activeOpacity={1}
                                   onPress={this.close}
 
@@ -52,6 +53,9 @@ export default class ModalBase extends PureComponent {
         )
     }
 
+}
+
+ModalBase.defaultProps ={
 }
 
 const styles = EStyleSheet.create({

@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
-import OptionPopup from "./OptionPopup";
+import OptionPopup from "./Option";
 
 import {Colors, Fonts} from "../../Themes"
 import ModalBase from "./ModalBase"

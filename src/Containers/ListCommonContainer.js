@@ -3,29 +3,51 @@
  */
 
 import React, {PureComponent} from "react";
-import {View, ScrollView,Text,TouchableOpacity} from "react-native";
-import  {NavBar, PlaceHolder, HeaderSearch,Separator,OptionPopup,DropdowPopup,Button,PrayItem,ImageBackground,ConfirmModal} from "../Components/Common";
-import {Images} from "../Themes"
+import {View, ScrollView, Text, TouchableOpacity} from "react-native";
+import {
+    NavBar,
+    PlaceHolder,
+    HeaderSearch,
+    Separator,
+    Option,
+    DropdowPopup,
+    Button,
+    PrayItem,
+    ImageBackground,
+    ActionSheet,
+    ConfirmModal
+} from "../Components/Common";
+import {Images,Colors} from "../Themes"
 
 export default class ListCommon extends PureComponent {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.showDropdownPopup = this.showDropdownPopup.bind(this);
         this.showConfirmModal = this.showConfirmModal.bind(this);
+        this.showActionSheet = this.showActionSheet.bind(this);
     }
 
-    showDropdownPopup(){
-        this.refs["navBar"].measure().then(res =>{
-            this.refs["dropdown"].open({x : res.ox , y : res.oy});
+    showDropdownPopup() {
+        this.refs["navBar"].measure().then(res => {
+            this.refs["dropdown"].open({x: res.ox, y: res.oy});
         });
     }
 
-    showConfirmModal(){
+    showConfirmModal() {
         this.refs["confirm"].open();
     }
 
+    showActionSheet() {
+        this.refs["actionSheet"].open();
+    }
+
     render() {
+        const options = [
+            {text: "Search"},
+            {text: "Delete All" , color : Colors.red}
+            ];
+
         return (<View style={{flex: 1}}>
                 <ImageBackground/>
                 <ScrollView>
@@ -50,36 +72,46 @@ export default class ListCommon extends PureComponent {
                     <Separator/>
                     <PlaceHolder/>
                     <Text>Option</Text>
-                    <OptionPopup text={"Option 1"} leftIcon ={Images.inProgress} count ={199}/>
-                    <OptionPopup text={"Option 2"} leftIcon ={Images.about}/>
-                    <OptionPopup text={"Option 2"} leftIcon ={Images.setting}/>
-                    <OptionPopup text={"Option 2"} leftIcon ={Images.complete}/>
+                    <Option text={"Option 1"} leftIcon={Images.inProgress} count={199}/>
+                    <Option text={"Option 2"} leftIcon={Images.about}/>
+                    <Option text={"Option 2"} leftIcon={Images.setting}/>
+                    <Option text={"Option 2"} leftIcon={Images.complete}/>
                     <PlaceHolder/>
                     <Button text="Button"/>
                     <PlaceHolder/>
-                    <Button text="Button Fit" fit ={true}/>
+                    <Button text="Button Fit" fit={true}/>
                     <PlaceHolder/>
-                    <PrayItem content={"a Human is sick in hopostal to near dead need help about money to heal cancer in final period"} title={"Sick"} date={"23/02/2017"}/>
+                    <PrayItem
+                        content={"a Human is sick in hopostal to near dead need help about money to heal cancer in final period"}
+                        title={"Sick"} date={"23/02/2017"}/>
                     <PlaceHolder/>
                     <PrayItem content={"a Human is sick in hopostal to near dead"} title={"Sick"} date={"20/02/2017"}/>
                     <PlaceHolder/>
-                    <Text onPress ={this.showConfirmModal}>Show Confrim Modal</Text>
+                    <Text onPress={this.showConfirmModal}>Show Confrim Modal</Text>
+
+                    <PlaceHolder/>
+                    <Text onPress={this.showActionSheet}>Show Action Sheet</Text>
 
 
                 </ScrollView>
 
                 <DropdowPopup
-                    ref ="dropdown"
-                    options={["option 1","option 2"]}
+                    ref="dropdown"
+                    options={["option 1", "option 2"]}
                 />
 
                 <ConfirmModal
-                    ref ="confirm"
+                    ref="confirm"
                     title={"Warning"}
                     content={"Are you want delete all ?"}
                     acceptText={"Yes"}
                     rejectText={"No"}
                 />
+                <ActionSheet
+                    ref="actionSheet"
+                    options={options}
+                />
+
             </View>
         )
     }

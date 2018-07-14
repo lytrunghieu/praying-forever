@@ -22,14 +22,14 @@ export default class OptionPopup extends PureComponent {
 
     render() {
 
-        const {text, hideDivider, onPress, index, leftIcon, count} = this.props;
+        const {text, hideDivider, onPress, index, leftIcon, count, textIsCenter, textColor} = this.props;
         let textCount = count;
-        if(textCount > 99){
-            textCount="99+";
+        if (textCount > 99) {
+            textCount = "99+";
         }
-        else{
-            if(textCount ==0){
-                textCount ="";
+        else {
+            if (textCount == 0) {
+                textCount = "";
             }
         }
         return (
@@ -42,8 +42,12 @@ export default class OptionPopup extends PureComponent {
                 </View>
                 }
 
-                <Text style={styles.text}>{text}</Text>
-                <Text style={styles.count}>{textCount}</Text>
+                <Text style={[styles.text, textIsCenter && styles.textCenter ,{color :textColor}]}>{text}</Text>
+                {
+                    textCount ?
+                    <Text style ={styles.count}>{textCount}</Text> : null
+                }
+
             </TouchableOpacity>
         );
     }
@@ -51,18 +55,23 @@ export default class OptionPopup extends PureComponent {
 
 OptionPopup.defaultProps = {
     text: "",
+    textColor :Colors.black,
     index: 0,
     hideDivider: false,
     onPress: () => {
     },
     leftIcon: null,
-    count : 0,
+    count: 0,
+    textIsCenter: false
+
 }
 
 OptionPopup.propTypes = {
     text: PropTypes.string.isRequired,
     hideDivider: PropTypes.bool,
     onPress: PropTypes.func,
+    textIsCenter: PropTypes.bool,
+    textColor: PropTypes.string,
 }
 
 const styles = EStyleSheet.create({
@@ -70,8 +79,6 @@ const styles = EStyleSheet.create({
         height: "$heightRow",
         width: "100%",
         backgroundColor: Colors.primary,
-        // paddingLeft: "$padding",
-        // justifyContent: "center",
         flexDirection: "row",
         alignItems: "center",
     },
@@ -86,20 +93,23 @@ const styles = EStyleSheet.create({
     },
 
     text: {
-        paddingLeft : "$padding",
+        paddingLeft: "$padding",
         fontSize: Fonts.size.large,
         fontFamily: Fonts.type.robotoMedium,
-        color: Colors.black,
-        flex : 1,
+        flex: 1,
     },
 
-    count :{
+    textCenter: {
+        textAlign :"center",
+    },
+
+    count: {
         fontFamily: Fonts.type.robotoRegular,
         fontSize: Fonts.size.large,
-        color : Colors.gray,
+        color: Colors.gray,
         width: 50,
         paddingRight: "$padding",
-        textAlign:"right"
+        textAlign: "right"
     }
 
 });

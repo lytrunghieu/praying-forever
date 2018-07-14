@@ -19,7 +19,17 @@ const ApplicationStyles = {
             shadowRadius: 2,
             shadowColor: Colors.black,
             shadowOpacity: 1,
+        },
+
+        shadowContainerUp :{
+            shadowOffset: {
+                height: -1,
+            },
+            shadowRadius: 2,
+            shadowColor: Colors.black,
+            shadowOpacity: 1,
         }
+
         // rowItemContainer: {
         //     width : "1"
         // }
