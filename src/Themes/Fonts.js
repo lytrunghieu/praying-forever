@@ -11,7 +11,7 @@ const type = {
 }
 
 const size = {
-    large: 18,
+    large: 16,
     normal: 14,
     small: 12,
 }

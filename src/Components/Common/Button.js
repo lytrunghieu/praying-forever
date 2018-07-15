@@ -41,7 +41,7 @@ Button.propTypes = {
 const styles = EStyleSheet.create({
     container: {
         backgroundColor: Colors.black,
-        height: 40,
+        height: 32,
         alignItems: "center",
         justifyContent: "center",
         borderRadius: 21,
@@ -53,8 +53,8 @@ const styles = EStyleSheet.create({
     },
 
     labelText: {
-        fontSize: 18,
-        fontFamily: Fonts.type.robotoMedium
+        fontSize: Fonts.size.large,
+        fontFamily: Fonts.type.robotoRegular
 
     },
 

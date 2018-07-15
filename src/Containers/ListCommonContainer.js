@@ -18,10 +18,14 @@ import {
     ConfirmModal,
     Checkbox,
     CheckboxModal,
-    SwitchRowItem
+    SwitchRowItem,
+    Input,
+    InputTitle,
+    TextArea
 } from "../Components/Common";
 import {Images,Colors} from "../Themes"
 import * as _ from "lodash";
+
 
 export default class ListCommon extends PureComponent {
 
@@ -34,6 +38,10 @@ export default class ListCommon extends PureComponent {
         this.onPressCheckbox = this.onPressCheckbox.bind(this);
         this.showCheckboxList = this.showCheckboxList.bind(this);
         this.onChangeValueSwitch = this.onChangeValueSwitch.bind(this);
+        this.onChangeTextInput = this.onChangeTextInput.bind(this);
+        this.onDeleteTextInput = this.onDeleteTextInput.bind(this);
+        this.onChangeHeaderSearch = this.onChangeHeaderSearch.bind(this);
+        this.onDeleteTextInputSearch = this.onDeleteTextInputSearch.bind(this);
 
         this.state ={
             checkboxList :[
@@ -70,8 +78,33 @@ export default class ListCommon extends PureComponent {
                 }
             ],
             switchValue : false,
+            valueTextInput :"",
+            valueHeaderSearch :"",
         };
+    }
 
+    onDeleteTextInputSearch(){
+        this.setState({
+            valueHeaderSearch : ""
+        });
+    }
+
+    onDeleteTextInput(){
+        this.setState({
+            valueTextInput : ""
+        });
+    }
+
+    onChangeTextInput(text){
+        this.setState({
+            valueTextInput : text
+        });
+    }
+
+    onChangeHeaderSearch(text){
+        this.setState({
+            valueHeaderSearch : text
+        });
     }
 
     onChangeValueSwitch(value){
@@ -142,9 +175,10 @@ export default class ListCommon extends PureComponent {
                     <PlaceHolder/>
                     <HeaderSearch
                         ref={ref => this.headerSearch = ref}
-                        onPressRightButton={() => {
-                            this.headerSearch.clear()
-                        }}
+                        onPressRightIcon={this.onDeleteTextInputSearch}
+                        value ={this.state.valueHeaderSearch}
+                        onChangeText={this.onChangeHeaderSearch}
+                        fit ={true}
                     />
                     <PlaceHolder/>
                     <Text>Separator</Text>
@@ -181,6 +215,29 @@ export default class ListCommon extends PureComponent {
                         value ={switchValue}
                         onValueChange ={this.onChangeValueSwitch}
                     />
+                    <PlaceHolder/>
+                    <Input
+                        ref ={"textInput"}
+                        value ={this.state.valueTextInput}
+                        placeholder ="Search"
+                        onChangeText ={this.onChangeTextInput}
+                        onPressRightIcon={this.onDeleteTextInput}
+                        isShowShadow ={true}
+                    />
+
+                    <PlaceHolder/>
+                    <Text>textInput Title</Text>
+                    <InputTitle
+                        ref ={"textInputTitle"}
+                        value ={this.state.valueTextInput}
+                        placeholder ="Search"
+                        onChangeText ={this.onChangeTextInput}
+                        onPressRightIcon={this.onDeleteTextInput}
+                    />
+
+                    <PlaceHolder/>
+                    <Text>Text Area</Text>
+                    <TextArea/>
 
                 </ScrollView>
 

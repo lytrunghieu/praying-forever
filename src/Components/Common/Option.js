@@ -94,18 +94,19 @@ const styles = EStyleSheet.create({
 
     text: {
         paddingLeft: "$padding",
-        fontSize: Fonts.size.large,
-        fontFamily: Fonts.type.robotoMedium,
+        fontSize: Fonts.size.normal,
+        fontFamily: Fonts.type.robotoRegular,
         flex: 1,
     },
 
     textCenter: {
+        paddingLeft: 0,
         textAlign :"center",
     },
 
     count: {
         fontFamily: Fonts.type.robotoRegular,
-        fontSize: Fonts.size.large,
+        fontSize: Fonts.size.normal,
         color: Colors.gray,
         width: 50,
         paddingRight: "$padding",

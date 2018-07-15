@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 // Utilities
 import {Colors, Images, Fonts} from '../../Themes';
+import {Input} from "./"
 
 const widthOfIcon = Platform.OS === 'ios' ? 60 : 50;
 
@@ -22,12 +23,9 @@ export default class HeaderSearch extends PureComponent {
 
     render() {
 
-        const {onPressLeftButton, onPressRightButton, onChangeText, iconLeft, iconRight,placeHolderText} = this.props;
+        const {onPressLeftButton, iconLeft} = this.props;
 
         let leftButtonView = (
-            <View style={styles.emptyIcon}/>
-        );
-        let rightButtonView = (
             <View style={styles.emptyIcon}/>
         );
 
@@ -41,33 +39,10 @@ export default class HeaderSearch extends PureComponent {
             );
         }
 
-        if (iconRight) {
-            rightButtonView = (
-                <TouchableOpacity style={styles.rightIconWrapper}
-                                  onPress={onPressRightButton}
-                >
-                    <Image source={iconRight}/>
-                </TouchableOpacity>
-            );
-        }
-
-
         return (
             <View style={styles.container}>
                 {leftButtonView}
-                <View style={styles.inputWrap}>
-                    <TextInput
-                        ref="textInput"
-                        style={styles.inputContainer}
-                        placeholderTextColor={Colors.black}
-                        placeholder={"Tim kiem"}
-                        onChangeText={onChangeText}
-                        underlineColorAndroid={"rgba(0,0,0,0)"}
-
-                    />
-                    <View style={styles.line}/>
-                </View>
-                {rightButtonView}
+                <Input {... this.props}/>
             </View>
         )
     }
@@ -76,20 +51,17 @@ export default class HeaderSearch extends PureComponent {
 HeaderSearch.defaultProps = {
     onPressLeftButton: () => {
     },
-    onPressRightButton: () => {
+    onPressRightIcon: () => {
     },
-    onChangeText: () => {
-    },
+
     iconLeft: Images.back,
-    iconRight: Images.close,
-    placeHolderText: "Search"
+    placeholder: "Search"
 };
 
 HeaderSearch.propTypes = {
     onPressLeftButton: PropTypes.func,
-    onPressRightButton: PropTypes.func,
-    onChangeText: PropTypes.func,
-    placeHolderText: PropTypes.string
+    onPressRightIcon: PropTypes.func,
+
 }
 
 const styles = EStyleSheet.create({
@@ -113,31 +85,11 @@ const styles = EStyleSheet.create({
         flex: 1
     },
 
-    inputContainer: {
-        flex: 1,
-        fontSize: Fonts.size.large,
-        fontFamily: Fonts.type.robotoLightItalic,
-        color: Colors.black,
-    },
-
-    line: {
-        position: "absolute",
-        height: 1,
-        width: "100%",
-        backgroundColor: Colors.gray,
-        left: 0,
-        bottom: 12
-    },
-
     leftIconWrapper: {
         justifyContent: 'center',
         paddingLeft: 20,
         paddingRight: 20,
     },
 
-    rightIconWrapper: {
-        justifyContent: 'center',
-        paddingLeft: 20,
-        paddingRight: 20,
-    }
+
 });

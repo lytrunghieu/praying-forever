@@ -31,7 +31,7 @@ const styles = EStyleSheet.create({
     text :{
         flex : 1,
         fontFamily: Fonts.type.robotoRegular,
-        fontSize: Fonts.size.large,
+        fontSize: Fonts.size.normal,
         color : Colors.black,
     },
 

@@ -12,6 +12,9 @@ import  ConfirmModal from "./ConfirmModal";
 import  Checkbox from "./Checkbox";
 import  CheckboxModal from "./CheckboxModal";
 import  SwitchRowItem from "./SwitchRowItem";
+import  Input from "./Input";
+import  InputTitle from "./InputTitle";
+import  TextArea from "./TextArea";
 
 export {
     NavBar,
@@ -27,5 +30,8 @@ export {
     ConfirmModal,
     Checkbox,
     CheckboxModal,
-    SwitchRowItem
+    SwitchRowItem,
+    Input,
+    InputTitle,
+    TextArea
 };
