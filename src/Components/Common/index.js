@@ -15,6 +15,7 @@ import  SwitchRowItem from "./SwitchRowItem";
 import  Input from "./Input";
 import  InputTitle from "./InputTitle";
 import  TextArea from "./TextArea";
+import  RowItem from "./RowItem";
 
 export {
     NavBar,
@@ -33,5 +34,6 @@ export {
     SwitchRowItem,
     Input,
     InputTitle,
-    TextArea
+    TextArea,
+    RowItem
 };

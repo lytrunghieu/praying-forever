@@ -21,7 +21,8 @@ import {
     SwitchRowItem,
     Input,
     InputTitle,
-    TextArea
+    TextArea,
+    RowItem
 } from "../Components/Common";
 import {Images,Colors} from "../Themes"
 import * as _ from "lodash";
@@ -238,6 +239,9 @@ export default class ListCommon extends PureComponent {
                     <PlaceHolder/>
                     <Text>Text Area</Text>
                     <TextArea/>
+                    <PlaceHolder/>
+                    <Text>Row Item</Text>
+                    <RowItem title ={"Reminder"} icon ={Images.edit} />
 
                 </ScrollView>
 

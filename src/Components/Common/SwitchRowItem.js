@@ -5,7 +5,7 @@ import {Colors,Fonts,ApplicationStyles} from '../../Themes';
 
 const SwitchRowItem  =({title ="" , onValueChange = () =>{} ,value }) =>{
     return (
-        <View style ={styles.container}>
+        <View style ={[styles.container,ApplicationStyles.screen.shadowContainer]}>
             <Text numberOfLines ={1} style ={[styles.text, !value && {color : Colors.gray}]}>{title}</Text>
             <Switch
                 value ={value}
