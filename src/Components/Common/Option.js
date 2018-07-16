@@ -72,6 +72,7 @@ OptionPopup.propTypes = {
     onPress: PropTypes.func,
     textIsCenter: PropTypes.bool,
     textColor: PropTypes.string,
+
 }
 
 const styles = EStyleSheet.create({

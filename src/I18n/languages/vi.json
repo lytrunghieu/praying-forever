@@ -1,1 +1,17 @@
-{}
+{
+  "logInScreen": "Dang Nhap",
+  "logIn": "Login",
+  "signUpScreen": "SignUp Screen",
+  "signUp": "SignUp",
+  "homeScreen": "Home Screen",
+  "home": "Home",
+  "aScreen": "A Screen",
+  "aDetailScreen": "A Detail Screen",
+  "bScreen": "B Screen",
+  "logout": "Logout",
+  "releaseYear": "Release Year",
+  "title": "Title",
+  "userName": "User Name",
+  "passWord": "Password",
+  "email": "Email"
+}

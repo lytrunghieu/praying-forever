@@ -26,6 +26,8 @@ import {
 } from "../Components/Common";
 import {Images,Colors} from "../Themes"
 import * as _ from "lodash";
+import I18n from '../I18n';
+
 
 
 export default class ListCommon extends PureComponent {
@@ -43,7 +45,7 @@ export default class ListCommon extends PureComponent {
         this.onDeleteTextInput = this.onDeleteTextInput.bind(this);
         this.onChangeHeaderSearch = this.onChangeHeaderSearch.bind(this);
         this.onDeleteTextInputSearch = this.onDeleteTextInputSearch.bind(this);
-
+        // I18n.locales("vi");
         this.state ={
             checkboxList :[
                 {
@@ -164,7 +166,7 @@ export default class ListCommon extends PureComponent {
         return (<View style={{flex: 1}}>
                 <ImageBackground/>
                 <ScrollView>
-                    <NavBar title={"Title"}/>
+                    <NavBar title={I18n.t("logInScreen")}/>
                     <PlaceHolder/>
                     <NavBar title={"Title"} iconLeft={Images.back}/>
                     <PlaceHolder/>
@@ -242,6 +244,9 @@ export default class ListCommon extends PureComponent {
                     <PlaceHolder/>
                     <Text>Row Item</Text>
                     <RowItem title ={"Reminder"} icon ={Images.edit} />
+                    <Text
+                        onPress ={() =>{this.props.navigation.navigate('DrawerNav')}}
+                    >show drawer</Text>
 
                 </ScrollView>
 

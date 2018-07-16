@@ -25,6 +25,7 @@ class HomeScreen extends PureComponent {
 
   constructor(props) {
     super(props);
+
   }
 
   componentDidMount() {

@@ -25,6 +25,7 @@ const translateOrFallback = initialMsg => {
   return localMsg
 }
 
+
 export default {
   ...I18n,
   t: translateOrFallback
