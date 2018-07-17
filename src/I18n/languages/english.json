@@ -1,4 +1,12 @@
 {
+
+  "praying":"Praying",
+  "search":"Search",
+  "deleteAll":"Delete All",
+  "cancel":"CANCEL",
+
+
+
   "logInScreen": "Login Screen",
   "logIn": "Login",
   "signUpScreen": "SignUp Screen",

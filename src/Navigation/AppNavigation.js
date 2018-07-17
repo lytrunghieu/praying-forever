@@ -12,6 +12,7 @@ import AScreen from '../Containers/AScreen';
 import ADetailScreen from '../Containers/ADetailScreen';
 import BScreen from '../Containers/BScreen';
 import ListCommonContainer from '../Containers/ListCommonContainer';
+import {PrayingInProgressContainer} from '../Containers/PrayingInProgressContainer';
 
 const AStack = StackNavigator({
         [ScreenKey.A_SCREEN]: {screen: AScreen},
@@ -20,21 +21,24 @@ const AStack = StackNavigator({
         headerMode: 'none',
         // initialRouteName: 'Login',
         //   cardStyle: styles.card,
-        transitionConfig: getSlideFromRightTransition,
+        // transitionConfig: getSlideFromRightTransition,
         // mode: 'modal'
     }
 )
 
 const DrawerNav = DrawerNavigator({
-    [ScreenKey.HOME_SCREEN]: {
-        screen: HomeScreen,
-    },
-    [ScreenKey.A_STACK]: {
-        screen: AStack,
-    },
-    [ScreenKey.B_SCREEN]: {
-        screen: BScreen,
-    },
+    // [ScreenKey.HOME_SCREEN]: {
+    //     screen: HomeScreen,
+    // },
+    // [ScreenKey.A_STACK]: {
+    //     screen: AStack,
+    // },
+    // [ScreenKey.B_SCREEN]: {
+    //     screen: BScreen,
+    // },
+    [ScreenKey.PRAYING_INPROGESS]: {
+        screen: PrayingInProgressContainer
+    }
 }, {
     contentComponent: DrawerContainer // custom drawer
 });
@@ -45,14 +49,18 @@ const MainNav = StackNavigator({
         [ScreenKey.DRAWER_NAV]: {screen: DrawerNav},
         [ScreenKey.LOGIN_SCREEN]: {screen: LoginScreen},
         [ScreenKey.SIGNUP_SCREEN]: {screen: SignupScreen},
-        [ScreenKey.LIST_COMMON]: {screen: ListCommonContainer}
+        [ScreenKey.LIST_COMMON]: {screen: ListCommonContainer},
+        // [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressContainer}
 
     }, {
         headerMode: 'none',
         // initialRouteName: ScreenKey.SPLASH_SCREEN,
         //   cardStyle: styles.card,
-        transitionConfig: getSlideFromRightTransition, // custom transition animation
+        // transitionConfig: getSlideFromRightTransition, // custom transition animation
         // mode: 'modal'
+        navigationOptions: {
+            gesturesEnabled: false,
+        },
     }
 )
 

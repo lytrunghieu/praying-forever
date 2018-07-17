@@ -16,6 +16,7 @@ import  Input from "./Input";
 import  InputTitle from "./InputTitle";
 import  TextArea from "./TextArea";
 import  RowItem from "./RowItem";
+import  ButtonAction from "./ButtonAction";
 
 export {
     NavBar,
@@ -35,5 +36,6 @@ export {
     Input,
     InputTitle,
     TextArea,
-    RowItem
+    RowItem,
+    ButtonAction
 };

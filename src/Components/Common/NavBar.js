@@ -79,6 +79,8 @@ NavBar.defaultProps = {
     },
     onPressRightButton: () => {
     },
+    iconLeft :null,
+    iconRight : null
 };
 
 NavBar.propTypes = {

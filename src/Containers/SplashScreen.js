@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
+import {NavigationActions} from "react-navigation";
 // Utilities
 import { ScreenKey } from '../Constants';
 import { Colors, Metrics, Images } from '../Themes';
@@ -16,6 +16,12 @@ class SplashScreen extends Component {
 
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount(){
+    setTimeout(()=>{
+        this.props.navigation.dispatch({type : NavigationActions.RESET, routeName :ScreenKey.DRAWER_NAV});
+    },2000);
   }
 
   render() {

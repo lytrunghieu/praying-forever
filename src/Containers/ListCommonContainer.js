@@ -45,7 +45,7 @@ export default class ListCommon extends PureComponent {
         this.onDeleteTextInput = this.onDeleteTextInput.bind(this);
         this.onChangeHeaderSearch = this.onChangeHeaderSearch.bind(this);
         this.onDeleteTextInputSearch = this.onDeleteTextInputSearch.bind(this);
-        // I18n.locales("vi");
+
         this.state ={
             checkboxList :[
                 {

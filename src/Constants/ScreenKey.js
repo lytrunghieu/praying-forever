@@ -12,5 +12,6 @@ module.exports = {
     B_SCREEN: 'BScreen',
     C_SCREEN: 'CScreen',
     LIST_COMMON: "ListCommon",
+    PRAYING_INPROGESS: "PrayingInProgress",
 
 };

@@ -16,6 +16,7 @@ const images = {
     checkOff : require ('../Images/checkOff.png'),
     edit : require ('../Images/edit.png'),
     checkOn : require ('../Images/checkOn.png'),
+    menu : require ('../Images/menu.png'),
 }
 
 export default images

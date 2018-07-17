@@ -5,6 +5,7 @@ import {View} from "react-native";
 import {Colors,ApplicationStyles} from "../../Themes";
 import PropTypes from 'prop-types';
 import {Button, Option} from "./";
+import I18n from '../../I18n';
 
 export default class ActionSheet extends ModalBase {
 
@@ -40,14 +41,14 @@ export default class ActionSheet extends ModalBase {
     }
 
     renderContent() {
-        const {options} = this.props;
+        const {options, submitText} = this.props;
         return (
             <View style={[styles.container,ApplicationStyles.screen.shadowContainerUp]}>
                 {options.map((op, index) => {
                    return this.renderOptionRow(op, index);
                 })}
                 <View style ={ApplicationStyles.button.container}>
-                    <Button text={"CANCEL"}
+                    <Button text={submitText}
                         onPress={this.close}
                     />
                 </View>
@@ -58,10 +59,12 @@ export default class ActionSheet extends ModalBase {
 
 ActionSheet.defaultProps  = {
     closeWhenPress : true,
+    submitText :I18n.t("cancel")
 }
 
 ActionSheet.propTypes = {
-    options: PropTypes.array.isRequired
+    options: PropTypes.array.isRequired,
+    submitText : PropTypes.string.isRequired,
 }
 
 const styles = EStyleSheet.create({

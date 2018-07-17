@@ -12,6 +12,16 @@ const ApplicationStyles = {
           height : 84,
           justifyContent:"center"
       },
+        shadowCenter :{
+            shadowOffset: {
+                height: 2,
+                width : 2,
+            },
+            shadowRadius: 2,
+            shadowColor: Colors.black,
+            shadowOpacity: 1,
+            elevation: 1
+        }
     },
 
     screen: {
@@ -22,11 +32,12 @@ const ApplicationStyles = {
 
         shadowContainer :{
             shadowOffset: {
-                height: 1,
+                height: 2,
             },
             shadowRadius: 2,
             shadowColor: Colors.black,
             shadowOpacity: 1,
+            elevation: 1
         },
 
         shadowContainerUp :{
@@ -36,6 +47,7 @@ const ApplicationStyles = {
             shadowRadius: 2,
             shadowColor: Colors.black,
             shadowOpacity: 1,
+            elevation: 1
         }
 
         // rowItemContainer: {
