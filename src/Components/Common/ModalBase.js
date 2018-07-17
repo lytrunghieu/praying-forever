@@ -47,7 +47,11 @@ export default class ModalBase extends PureComponent {
                                   onPress={this.close}
 
                 >
+                    <TouchableOpacity
+                        activeOpacity={1}
+                    >
                     {this.renderContent()}
+                    </TouchableOpacity>
                 </TouchableOpacity>
             </Modal>
         )
