@@ -13,32 +13,11 @@ import ADetailScreen from '../Containers/ADetailScreen';
 import BScreen from '../Containers/BScreen';
 import ListCommonContainer from '../Containers/ListCommonContainer';
 import {PrayingInProgressContainer} from '../Containers/PrayingInProgressContainer';
-
-const AStack = StackNavigator({
-        [ScreenKey.A_SCREEN]: {screen: AScreen},
-        [ScreenKey.A_SCREEN_DETAIL]: {screen: ADetailScreen},
-    }, {
-        headerMode: 'none',
-        // initialRouteName: 'Login',
-        //   cardStyle: styles.card,
-        // transitionConfig: getSlideFromRightTransition,
-        // mode: 'modal'
-    }
-)
+import {CreatePrayingContainer} from '../Containers/CreatePrayingContainer';
 
 const DrawerNav = DrawerNavigator({
-    // [ScreenKey.HOME_SCREEN]: {
-    //     screen: HomeScreen,
-    // },
-    // [ScreenKey.A_STACK]: {
-    //     screen: AStack,
-    // },
-    // [ScreenKey.B_SCREEN]: {
-    //     screen: BScreen,
-    // },
-    [ScreenKey.PRAYING_INPROGESS]: {
-        screen: PrayingInProgressContainer
-    }
+    [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressContainer},
+
 }, {
     contentComponent: DrawerContainer // custom drawer
 });
@@ -50,8 +29,7 @@ const MainNav = StackNavigator({
         [ScreenKey.LOGIN_SCREEN]: {screen: LoginScreen},
         [ScreenKey.SIGNUP_SCREEN]: {screen: SignupScreen},
         [ScreenKey.LIST_COMMON]: {screen: ListCommonContainer},
-        // [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressContainer}
-
+        [ScreenKey.CREATE_PRAYING]: {screen: CreatePrayingContainer},
     }, {
         headerMode: 'none',
         // initialRouteName: ScreenKey.SPLASH_SCREEN,

@@ -58,7 +58,6 @@ export default class NavBar extends PureComponent {
             );
         }
 
-
         return (
             <View style={[styles.container,ApplicationStyles.screen.shadowContainer]}
                   ref="container"
@@ -87,6 +86,8 @@ NavBar.propTypes = {
     title: PropTypes.string,
     onPressLeftButton: PropTypes.func,
     onPressRightButton: PropTypes.func,
+    iconLeft : PropTypes.number,
+    iconRight : PropTypes.number,
 
 }
 
@@ -95,12 +96,6 @@ const styles = EStyleSheet.create({
         flexDirection: 'row',
         backgroundColor: Colors.primary,
         height: Platform.OS === 'ios' ? 50 : 50,
-        // shadowOffset: {
-        //     height: 1,
-        // },
-        // shadowRadius: 2,
-        // shadowColor: Colors.black,
-        // shadowOpacity: 1,
     },
 
     emptyIcon: {
@@ -130,5 +125,6 @@ const styles = EStyleSheet.create({
         alignItems: "flex-end",
         paddingRight: "$padding",
         width: widthOfIcon,
-    }
+    },
+
 });

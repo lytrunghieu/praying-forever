@@ -1,9 +1,21 @@
 {
 
   "praying":"Praying",
+  "createNewPray":"Create New Pray",
   "search":"Search",
   "deleteAll":"Delete All",
   "cancel":"CANCEL",
+  "inputTitlePray":"Input Title Pray",
+  "inputContent":"Input Content",
+  "health" :"Health",
+  "faith" :"Faith",
+  "economic":"Economic",
+  "marriage":"Marriage",
+  "done":"DONE",
+  "reminder":"Reminder",
+  "create":"CREATE",
+  "save":"SAVE",
+
 
 
 

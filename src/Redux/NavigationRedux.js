@@ -74,6 +74,12 @@ export function reducer(state = INITIAL_STATE.navigation, action) {
                 }
             }
 
+            case NavigationActions.BACK : {
+                nextState = getStateForAction(action, state);
+                return nextState;
+            }
+
+
             default: {
                 return state;
             }

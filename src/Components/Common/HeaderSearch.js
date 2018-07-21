@@ -61,6 +61,7 @@ HeaderSearch.defaultProps = {
 HeaderSearch.propTypes = {
     onPressLeftButton: PropTypes.func,
     onPressRightIcon: PropTypes.func,
+    iconLeft : PropTypes.number
 
 }
 

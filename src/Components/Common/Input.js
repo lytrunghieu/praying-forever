@@ -21,6 +21,7 @@ export default class Input extends PureComponent {
             <View style={[styles.container, fit && styles.containerFit]}>
                 <TextInput
                     style={styles.textInput}
+                    underlineColorAndroid={'rgba(0,0,0,0)'}
                     {...this.props}
                     ref ={"input"}
                 />

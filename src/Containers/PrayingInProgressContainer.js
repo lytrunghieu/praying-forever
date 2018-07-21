@@ -5,7 +5,6 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
 import { ScreenKey } from '../Constants';
 import { Colors,Images,ApplicationStyles} from '../Themes';
 import I18n from '../I18n';
@@ -23,6 +22,11 @@ class PrayingInProgress extends PureComponent {
         super(props);
         this.onPressLeft = this.onPressLeft.bind(this);
         this.onPressRight = this.onPressRight.bind(this);
+        this.onPressAdd = this.onPressAdd.bind(this);
+    }
+
+    onPressAdd(){
+        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING);
     }
 
     onPressLeft(){
@@ -47,7 +51,7 @@ class PrayingInProgress extends PureComponent {
                         iconRight ={Images.more}
                         onPressRightButton={this.onPressRight}
                 />
-                <ButtonAction />
+                <ButtonAction onPress ={this.onPressAdd}/>
                 <ActionSheet
                     options={optionActionSheet}
                     ref ={"moreAction"}
@@ -68,14 +72,5 @@ const mapDispatchToProps = (dispatch) => ({
 export const  PrayingInProgressContainer = connect(mapStateToProps, mapDispatchToProps)(PrayingInProgress);
 
 const styles = EStyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.white,
 
-    },
-    body: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
 });
