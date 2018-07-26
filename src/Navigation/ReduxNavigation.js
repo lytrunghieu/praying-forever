@@ -26,5 +26,5 @@ const ReduxNavigation = (props) => {
   return <AppNavigation navigation={navigation} />
 }
 
-const mapStateToProps = state => ({ nav: state.nav })
+const mapStateToProps = state => ({ nav: state.navigationReducer })
 export default connect(mapStateToProps)(ReduxNavigation)

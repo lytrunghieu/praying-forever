@@ -5,11 +5,12 @@ import rootSaga from '../Sagas';
 export default () => {
   /* ------------- Assemble The Reducers ------------- */
   const rootReducer = combineReducers({
-    nav: require('./NavigationRedux').reducer,
+    nav: require('../reducers/navigationReducer').navigationReducer,
     movies: require('./MoviesRedux').reducer,
     appState: require('./AppStateRedux').reducer,
     authenticate: require('./AuthenticateRedux').reducer,
-    
+
+
   })
 
   return configureStore(rootReducer, rootSaga);

@@ -1,12 +1,12 @@
 import {NavigationActions} from 'react-navigation';
 
 import MainNav from '../Navigation/AppNavigation';
-import {ScreenKey} from '../Constants';
+import {ScreenKey} from '../Constants/index';
 
 import {AppStateTypes} from '../Redux/AppStateRedux';
 import {AuthenticateTypes} from '../Redux/AuthenticateRedux';
 
-import {CommonUtils} from '../Utils'
+import {CommonUtils} from '../Utils/index'
 
 const {navigate, reset} = NavigationActions;
 const {getStateForAction} = MainNav.router;
@@ -35,7 +35,7 @@ const AUTHENTICATE_STATE = getStateForAction(reset({
  */
 // const navigateTo = routeName => () => navigate({ routeName })
 
-export function reducer(state = INITIAL_STATE.navigation, action) {
+export function navigationReducer(state = INITIAL_STATE.navigation, action) {
     let oldState;
     let routeName;
     let existRoute;

@@ -5,8 +5,10 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {Images, ApplicationStyles} from '../Themes';
+import {CommonActions} from '../actions';
 import I18n from '../I18n';
 import {
     NavBar,
@@ -20,6 +22,7 @@ import {
     Button
 } from '../Components/Common';
 import moment from "moment";
+
 
 class CreatePraying extends PureComponent {
 
@@ -41,7 +44,7 @@ class CreatePraying extends PureComponent {
                 }
             ],
             isReminder: false,
-            timeReminder: new Date()
+            timeReminder: moment().format("hh:mm a")
         };
         this.onPressBack = this.onPressBack.bind(this);
         this.onChangeText = this.onChangeText.bind(this);
@@ -60,7 +63,10 @@ class CreatePraying extends PureComponent {
     }
 
     onPressCreate() {
-
+        const {title,content,isReminder,timeReminder} = this.state;
+        let params = {title,content,isReminder,timeReminder, created : moment().valueOf()};
+        this.props.commonActions.createNewPray(params);
+        this.onPressBack();
     }
 
     onPressEdit() {
@@ -122,6 +128,7 @@ class CreatePraying extends PureComponent {
     }
 
     render() {
+        const {timeReminder} = this.state;
         return (
             <KeyboardAvoidingView style={ApplicationStyles.screen.mainContainer}
                                   behavior="padding" enabled
@@ -162,7 +169,7 @@ class CreatePraying extends PureComponent {
                     <PlaceHolder/>
                     {this.state.isReminder &&
                     <View>
-                        <RowItem title={moment(this.state.timeReminder).format("hh:mm a")} icon={Images.edit}
+                        <RowItem title={timeReminder} icon={Images.edit}
                                  onPress={this.onPressEdit}/>
                         <PlaceHolder/>
                     </View> || null
@@ -194,9 +201,13 @@ class CreatePraying extends PureComponent {
 
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
 
-const mapDispatchToProps = (dispatch) => ({})
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    commonActions: bindActionCreators(CommonActions, dispatch),
+})
 
 export const CreatePrayingContainer = connect(mapStateToProps, mapDispatchToProps)(CreatePraying);
 

@@ -75,6 +75,7 @@ const styles = EStyleSheet.create({
         justifyContent: "center",
         width: 77,
         flex: -1,
+        alignItems:"flex-end"
     },
 
     title: {

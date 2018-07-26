@@ -10,7 +10,9 @@ export default class ModalBase extends PureComponent {
 
     constructor(props) {
         super(props);
-
+        this.state={
+            visible :false
+        };
         this.isCenter = true;
         this.animationDuration =500;
         this.backdropOpacity = 0.5;
@@ -22,10 +24,16 @@ export default class ModalBase extends PureComponent {
 
     open(){
         this.refs["modal"].open();
+        // this.setState({
+        //     visible :true
+        // });
     }
 
     close(){
         this.refs["modal"].close();
+        // this.setState({
+        //     visible :false
+        // });
     }
 
     renderContent(){
@@ -38,6 +46,7 @@ export default class ModalBase extends PureComponent {
             <Modal
                 style={[styles.modal]}
                 ref={"modal"}
+                // isOpen={this.state.visible}
                 animationDuration={this.animationDuration}
                 swipeToClose={false}
                 backdropOpacity={this.backdropOpacity}

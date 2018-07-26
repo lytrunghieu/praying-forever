@@ -30,51 +30,6 @@ class DrawerContainer extends PureComponent {
           <Option text={"Complete"}   leftIcon ={Images.complete} />
           <Option text={"About"}   leftIcon ={Images.about} />
           <Option text={"Setting"}   leftIcon ={Images.setting} />
-
-
-          {/*<Button onPress={() => navigate(ScreenKey.HOME_SCREEN)}*/}
-            {/*labelWrapper={styles.labelButtonWrapper}*/}
-            {/*label={I18n.t('home')}*/}
-            {/*buttonStyle={[styles.buttonWrapper, this.changeforegroundRowFocusStyle(activeItemKey, ScreenKey.HOME_SCREEN)]}*/}
-            {/*labelText={[this.changeForegroundTextStyle(activeItemKey, ScreenKey.HOME_SCREEN)]}*/}
-            {/*iconWrapper={styles.iconWrapper}*/}
-            {/*iconType={'Entypo'}*/}
-            {/*name={'home'}*/}
-            {/*iconColor={this.changeForegroundIconStyle(activeItemKey, ScreenKey.HOME_SCREEN)}*/}
-          {/*/>*/}
-
-          {/*<Button onPress={() => navigate(ScreenKey.A_STACK)}*/}
-            {/*labelWrapper={styles.labelButtonWrapper}*/}
-            {/*label={I18n.t('aScreen')}*/}
-            {/*buttonStyle={[styles.buttonWrapper, this.changeforegroundRowFocusStyle(activeItemKey, ScreenKey.A_STACK)]}*/}
-            {/*labelText={[this.changeForegroundTextStyle(activeItemKey, ScreenKey.A_STACK)]}*/}
-            {/*iconWrapper={styles.iconWrapper}*/}
-            {/*iconType={'MaterialCommunityIcons'}*/}
-            {/*name={'projector-screen'}*/}
-            {/*iconColor={this.changeForegroundIconStyle(activeItemKey, ScreenKey.A_STACK)}*/}
-          {/*/>*/}
-
-          {/*<Button onPress={() => navigate(ScreenKey.B_SCREEN)}*/}
-            {/*labelWrapper={styles.labelButtonWrapper}*/}
-            {/*label={I18n.t('bScreen')}*/}
-            {/*buttonStyle={[styles.buttonWrapper, this.changeforegroundRowFocusStyle(activeItemKey, ScreenKey.B_SCREEN)]}*/}
-            {/*labelText={[this.changeForegroundTextStyle(activeItemKey, ScreenKey.B_SCREEN)]}*/}
-            {/*iconWrapper={styles.iconWrapper}*/}
-            {/*iconType={'MaterialCommunityIcons'}*/}
-            {/*name={'fullscreen-exit'}*/}
-            {/*iconColor={this.changeForegroundIconStyle(activeItemKey, ScreenKey.B_SCREEN)}*/}
-          {/*/>*/}
-
-          {/*<Button onPress={logout}*/}
-            {/*labelWrapper={styles.labelButtonWrapper}*/}
-            {/*label={I18n.t('logout')}*/}
-            {/*buttonStyle={[styles.buttonWrapper]}*/}
-            {/*labelText={styles.labelButtonText}*/}
-            {/*iconWrapper={styles.iconWrapper}*/}
-            {/*iconType={'MaterialCommunityIcons'}*/}
-            {/*name={'logout'}*/}
-            {/*iconColor={Colors.black}*/}
-          {/*/>*/}
         </ScrollView>
       </View>
     )
@@ -122,7 +77,7 @@ const mapStateToProps = (state) => {
 
   // CommonUtils.log('DrawerContainer mapStateToProps state: ', state)
   return {
-    fetching: state.authenticate.fetching
+
   }
 }
 

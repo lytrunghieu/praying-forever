@@ -10,6 +10,11 @@ export default {
         routes :[
             {routeName : ScreenKey.SPLASH_SCREEN}
         ]
-    }
+    },
+
+    pray :Immutable({
+        praySelected : null,
+        prays :[]
+    })
 
 };
