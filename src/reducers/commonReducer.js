@@ -43,6 +43,14 @@ export function commonReducer(state = InitialState.pray, action) {
             return state;
         }
 
+        case ActionTypes.DELETE_PRAY_SUCCESS : {
+            oldState = Immutable.asMutable(state, {deep: true});
+            oldState.prays = oldState.prays.filter(e => e.created !== action.data.created)
+            state = state.set("prays", oldState.prays);
+            commonUtils.storeData(PRAY_LIST, oldState.prays);
+            return state;
+        }
+
         default :
             return state
 

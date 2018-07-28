@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react';
 import {
     View,
-    FlatList
+    FlatList,TouchableHighlight
 } from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -40,6 +40,10 @@ class PrayingInProgress extends PureComponent {
         this.onAcceptDeleteAll = this.onAcceptDeleteAll.bind(this);
     }
 
+    onPressDeleteSpecificPray(item){
+        this.props.commonActions.deletePray(item);
+    }
+
     onPressDeleteAll(){
         this.refs["moreAction"].close();
         this.refs["confirm"].open();
@@ -47,6 +51,7 @@ class PrayingInProgress extends PureComponent {
 
     onAcceptDeleteAll(){
         this.props.commonActions.deleteAllPrayInprogress();
+        this.refs["confirm"].close();
     }
 
     onPressAdd() {
@@ -78,12 +83,25 @@ class PrayingInProgress extends PureComponent {
     }
 
     renderPrayItem({item}) {
+        const rightOptions =[
+            {
+                text:"Finished",
+                onPress : ()=>{}
+            },
+            {
+                text :"Delete",
+                backgroundColor:Colors.red,
+                onPress : this.onPressDeleteSpecificPray.bind(this,item)
+            }
+        ]
+
         return (
             <PrayItem
                 title={item.title}
                 content={item.content}
                 date={moment(item.created).format("DD/MM/YYYY")}
                 onPress ={this.onPressPrayItem.bind(this,item)}
+                rightOptions={rightOptions}
             />
         )
     }

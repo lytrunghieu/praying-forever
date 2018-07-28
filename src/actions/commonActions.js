@@ -19,6 +19,15 @@ export function editPray(params) {
     }
 }
 
+export function deletePray(params) {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.DELETE_PRAY_SUCCESS,
+            data: params
+        });
+    }
+}
+
 export function deleteAllPrayInprogress() {
     return function (dispatch) {
         dispatch({

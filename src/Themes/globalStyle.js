@@ -5,4 +5,5 @@ export default  styles ={
     $heightRow : 54,
     $widthRow : "100%",
     $borderRadius : 5,
+    $widthBorder : 0.5,
 }
