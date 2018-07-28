@@ -45,6 +45,7 @@ ConfirmModal.propTypes = {
     content: PropTypes.string.isRequired,
     acceptText: PropTypes.string.isRequired,
     rejectText: PropTypes.string.isRequired,
+    onAccept : PropTypes.func
 }
 
 

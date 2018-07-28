@@ -22,7 +22,7 @@ export default class NavBar extends PureComponent {
 
         const rightView = (
             <View style={styles.rightContainer}>
-                <Text numberOfLines={1} style={styles.title}>{date}</Text>
+                <Text numberOfLines={1} style={styles.date}>{date}</Text>
             </View>
         );
 
@@ -59,8 +59,8 @@ const styles = EStyleSheet.create({
         backgroundColor: Colors.primary,
         width: "100%",
         height: "$heightRow",
-        paddingLeft: "$padding",
-        paddingRight: "$padding",
+        paddingLeft: "$paddingSmall",
+        paddingRight: "$paddingSmall",
         alignItems: "center",
         borderRadius : 5,
 
@@ -83,6 +83,7 @@ const styles = EStyleSheet.create({
         fontSize: Fonts.size.normal,
         color: Colors.black
     },
+
 
     content: {
         fontFamily: Fonts.type.robotoRegular,

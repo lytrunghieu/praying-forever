@@ -4,17 +4,22 @@
   "createNewPray":"Create New Pray",
   "search":"Search",
   "deleteAll":"Delete All",
+  "deleteConfirm" :"Are you sure want delete all ?",
   "cancel":"CANCEL",
   "inputTitlePray":"Input Title Pray",
   "inputContent":"Input Content",
   "health" :"Health",
   "faith" :"Faith",
   "economic":"Economic",
+  "editPray":"Edit Pray",
   "marriage":"Marriage",
   "done":"DONE",
   "reminder":"Reminder",
   "create":"CREATE",
   "save":"SAVE",
+  "warning":"WARNING",
+  "yes":"YES",
+
 
 
 

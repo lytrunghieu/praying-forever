@@ -20,6 +20,7 @@ export default class TextArea extends PureComponent {
             <View style={[styles.container,ApplicationStyles.screen.shadowContainer]}>
                 <TextInput
                     ref ="textInput"
+                    underlineColorAndroid={'rgba(0,0,0,0)'}
                     style={styles.textInput}
                     {...this.props}
                     multiline ={true}

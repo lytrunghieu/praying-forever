@@ -9,3 +9,29 @@ export function createNewPray(params) {
         });
     }
 }
+
+export function editPray(params) {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.EDIT_PRAY_SUCCESS,
+            data: params
+        });
+    }
+}
+
+export function deleteAllPrayInprogress() {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.DELETE_ALL_PRAY_INPROGRESS_SUCCESS,
+        });
+    }
+}
+
+export function getPrayList(params) {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.GET_PRAY_LIST_SUCCESS,
+            data: params
+        });
+    }
+}

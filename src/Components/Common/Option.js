@@ -103,6 +103,7 @@ const styles = EStyleSheet.create({
     textCenter: {
         paddingLeft: 0,
         textAlign :"center",
+        alignSelf:"center"
     },
 
     count: {
