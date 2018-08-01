@@ -31,32 +31,32 @@ export default {
     // },
 
     retrieveData(key) {
-        return  AsyncStorage.getItem(key,(err , result) =>{
-           console.log("Error retrieve date:",err);
-           console.log("Retrieve data result: ",result);
+        return AsyncStorage.getItem(key, (err, result) => {
+            console.log("Error retrieve date:", err);
+            console.log("Retrieve data result: ", result);
         });
     },
 
     deleteData(key) {
-        if(key){
-            return  AsyncStorage.removeItem(key,(err , result) =>{
-                console.log("Error delete data:",err);
-                console.log("Delete data result: ",result);
+        if (key) {
+            return AsyncStorage.removeItem(key, (err, result) => {
+                console.log("Error delete data:", err);
+                console.log("Delete data result: ", result);
             });
         }
-        else{
-            return AsyncStorage.clear(err =>{
-                console.log("Error clear data:",err);
+        else {
+            return AsyncStorage.clear(err => {
+                console.log("Error clear data:", err);
             });
         }
 
 
     },
 
-    async storeData(key ="", data ={}) {
+    async storeData(key = "", data = {}) {
         try {
             const jsonObject = JSON.stringify(data);
-            await AsyncStorage.setItem(key,jsonObject);
+            await AsyncStorage.setItem(key, jsonObject);
         } catch (error) {
             // Error saving data
             console.log("Error saving data:", error);
@@ -72,5 +72,12 @@ export default {
         if (DebugConfig.isShowLog) {
             console.log(...arg);
         }
+    },
+
+    trim(str) {
+        if (!str) {
+            return str;
+        }
+        return str.replace(/\s/g, '');
     }
 }

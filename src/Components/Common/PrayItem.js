@@ -10,6 +10,21 @@ import Swipeable from 'react-native-swipeable';
 
 export default class PrayItem extends PureComponent {
 
+    constructor(props) {
+        super();
+        this.swipeable = null;
+        this.recenter = this.recenter.bind(this);
+        this.onPress = this.onPress.bind(this);
+    }
+
+    recenter() {
+        this.swipeable.recenter();
+    }
+
+    onPress(callback) {
+        this.recenter();
+        callback();
+    }
 
     render() {
         const {title, content, date, onPress, lefttOptions} = this.props;
@@ -26,15 +41,15 @@ export default class PrayItem extends PureComponent {
 
             return (
                 <TouchableHighlight
-                    onPress={e.onPress}
-                     style={[
+                    onPress={this.onPress.bind(this, e.onPress)}
+                    style={[
                         styles.optionTextContainer,
                         separated && styles.separator,
                         borderRadius && borderRadius,
                         e.backgroundColor && {backgroundColor: e.backgroundColor}
-                     ]}
+                    ]}
                 >
-                    <Text style ={styles.optionText}>
+                    <Text style={styles.optionText}>
                         {e.text}
                     </Text>
                 </TouchableHighlight>);
@@ -58,6 +73,7 @@ export default class PrayItem extends PureComponent {
             <View style={[styles.container, ApplicationStyles.screen.shadowContainer]}>
                 <Swipeable
                     leftButtons={leftButtons}
+                    onRef={ref => this.swipeable = ref}
                 >
                     <TouchableOpacity style={[styles.containerButton]}
                                       ref="container"
@@ -137,7 +153,7 @@ const styles = EStyleSheet.create({
     },
 
     optionTextContainer: {
-        alignSelf:"flex-end",
+        alignSelf: "flex-end",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: Colors.black,

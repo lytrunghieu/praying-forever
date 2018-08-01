@@ -76,6 +76,7 @@ const styles = EStyleSheet.create({
         shadowRadius: 2,
         shadowColor: Colors.black,
         shadowOpacity: 1,
+        paddingRight: "$padding"
     },
 
     emptyIcon: {

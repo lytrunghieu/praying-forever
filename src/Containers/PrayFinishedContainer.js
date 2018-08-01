@@ -23,7 +23,6 @@ class PrayFinished extends PureComponent {
         ]
         this.onPressLeft = this.onPressLeft.bind(this);
         this.onPressRight = this.onPressRight.bind(this);
-
         this.renderPrayItem = this.renderPrayItem.bind(this);
         this.renderSeparate = this.renderSeparate.bind(this);
         this.keyExtractor = this.keyExtractor.bind(this);
