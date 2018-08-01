@@ -1,24 +1,20 @@
-// Libraries
 import React, {PureComponent} from 'react';
-import {
-    View,
-    FlatList
-} from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {CommonActions } from "../actions";
+
+import {
+    View,
+    FlatList,TouchableHighlight
+} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {ScreenKey} from '../Constants';
 import {Colors, Images, ApplicationStyles} from '../Themes';
 import I18n from '../I18n';
 import {NavBar, ImageBackground, ActionSheet, ButtonAction, PrayItem, PlaceHolder,ConfirmModal} from '../Components/Common';
 import moment from "moment";
-import {CommonActions } from "../actions";
-import  commonUtils from "../Utils/CommonUtils";
-import  {AsyncStoreKeys} from "../Constants";
 
-
-class PrayingInProgress extends PureComponent {
-
+class PrayFinished extends PureComponent {
     constructor(props) {
         super(props);
         this.optionActionSheet = [
@@ -27,7 +23,7 @@ class PrayingInProgress extends PureComponent {
         ]
         this.onPressLeft = this.onPressLeft.bind(this);
         this.onPressRight = this.onPressRight.bind(this);
-        this.onPressAdd = this.onPressAdd.bind(this);
+
         this.renderPrayItem = this.renderPrayItem.bind(this);
         this.renderSeparate = this.renderSeparate.bind(this);
         this.keyExtractor = this.keyExtractor.bind(this);
@@ -35,7 +31,7 @@ class PrayingInProgress extends PureComponent {
         this.renderListHeaderComponent = this.renderListHeaderComponent.bind(this);
         this.onAcceptDeleteAll = this.onAcceptDeleteAll.bind(this);
         this.state ={
-            prays : props.prays.filter(e =>e.isFinished)
+          prays : props.prays.filter(e =>e.isFinished)
         };
     }
 
@@ -44,21 +40,24 @@ class PrayingInProgress extends PureComponent {
     componentWillReceiveProps(nextProps){
         if(nextProps.prays !== this.props.prays){
             this.setState({
-                prays : nextProps.prays.filter(e =>!e.isFinished)
+                prays : nextProps.prays.filter(e =>e.isFinished)
             });
         }
     }
+    //endregion
 
-    componentDidMount() {
-        commonUtils.retrieveData(AsyncStoreKeys.PRAY_LIST).then(res => {
-            if(res){
-                this.props.commonActions.getPrayList(JSON.parse(res));
-            }
-        });
+    //region other
+    onPressAdd() {
+        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING);
+    }
+
+
+    keyExtractor(item, index) {
+        return index.toString();
     }
     //endregion
 
-    //region handle modal confirm
+    //region handle confirm modal
 
     onPressDeleteAll(){
         this.refs["moreAction"].close();
@@ -71,17 +70,6 @@ class PrayingInProgress extends PureComponent {
     }
     //endregion
 
-    //region other
-
-    onPressAdd() {
-        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING);
-    }
-
-    keyExtractor(item, index) {
-        return index.toString();
-    }
-    //endregion
-
     //region handle Header
 
     onPressLeft() {
@@ -91,22 +79,22 @@ class PrayingInProgress extends PureComponent {
     onPressRight() {
         this.refs["moreAction"].open();
     }
+
     //endregion
 
-    //region handle Pray Iteam
-    onPressPrayItem(item){
-        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING,item);
-    }
+    //region Handle Pray Item
 
-    onPressFinish(item){
-        this.props.commonActions.changeStatusPray({status:true , pray : item});
+    onPressContinue(item){
+        this.props.commonActions.changeStatusPray({status:false , pray : item});
     }
 
     onPressDeleteSpecificPray(item){
         this.props.commonActions.deletePray(item);
     }
 
-
+    onPressPrayItem(item){
+        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING,item);
+    }
 
     //endregion
 
@@ -115,8 +103,8 @@ class PrayingInProgress extends PureComponent {
     renderPrayItem({item}) {
         const lefttOptions =[
             {
-                text: I18n.t("finished"),
-                onPress : this.onPressFinish.bind(this,item)
+                text:I18n.t("continues"),
+                onPress : this.onPressContinue.bind(this,item)
             },
             {
                 text :I18n.t("delete"),
@@ -156,7 +144,7 @@ class PrayingInProgress extends PureComponent {
         return (
             <View style={ApplicationStyles.screen.mainContainer}>
                 <ImageBackground/>
-                <NavBar title={I18n.t('praying')}
+                <NavBar title={I18n.t('finished')}
                         onPressLeftButton={this.onPressLeft}
                         iconLeft={Images.menu}
                         iconRight={Images.more}
@@ -191,7 +179,6 @@ class PrayingInProgress extends PureComponent {
         );
     }
     //endregion
-
 }
 
 const mapStateToProps = (state) => ({
@@ -202,7 +189,7 @@ const mapDispatchToProps = (dispatch) => ({
     commonActions : bindActionCreators(CommonActions,dispatch)
 })
 
-export const PrayingInProgressContainer = connect(mapStateToProps, mapDispatchToProps)(PrayingInProgress);
+export const PrayFinishedContainer = connect(mapStateToProps, mapDispatchToProps)(PrayFinished);
 
 const styles = EStyleSheet.create({
     flatList: {

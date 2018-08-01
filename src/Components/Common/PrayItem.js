@@ -12,24 +12,29 @@ export default class PrayItem extends PureComponent {
 
 
     render() {
-        const {title, content, date, onPress, rightOptions} = this.props;
+        const {title, content, date, onPress, lefttOptions} = this.props;
 
-        let rightButtons = rightOptions.map((e , index) => {
+        let leftButtons = lefttOptions.map((e, index) => {
             let separated = false;
             let borderRadius = false;
-            if(index < rightOptions.length -1){
+            if (index < lefttOptions.length - 1) {
                 separated = true;
             }
-            if(index == rightOptions.length -1){
+            if (index == lefttOptions.length - 1) {
                 borderRadius = styles.borderRadius;
             }
 
             return (
                 <TouchableHighlight
                     onPress={e.onPress}
-                    style={[styles.optionTextContainer, separated && styles.separator, borderRadius && borderRadius , e.backgroundColor && {backgroundColor : e.backgroundColor}]}
+                     style={[
+                        styles.optionTextContainer,
+                        separated && styles.separator,
+                        borderRadius && borderRadius,
+                        e.backgroundColor && {backgroundColor: e.backgroundColor}
+                     ]}
                 >
-                    <Text style={styles.optionText}>
+                    <Text style ={styles.optionText}>
                         {e.text}
                     </Text>
                 </TouchableHighlight>);
@@ -50,18 +55,18 @@ export default class PrayItem extends PureComponent {
         );
 
         return (
-            <View  style={[styles.container, ApplicationStyles.screen.shadowContainer]}>
-            <Swipeable
-                rightButtons={rightButtons}
-            >
-                <TouchableOpacity style={[styles.containerButton]}
-                                  ref="container"
-                                  onPress={onPress}
+            <View style={[styles.container, ApplicationStyles.screen.shadowContainer]}>
+                <Swipeable
+                    leftButtons={leftButtons}
                 >
-                    {leftView}
-                    {rightView}
-                </TouchableOpacity>
-            </Swipeable>
+                    <TouchableOpacity style={[styles.containerButton]}
+                                      ref="container"
+                                      onPress={onPress}
+                    >
+                        {leftView}
+                        {rightView}
+                    </TouchableOpacity>
+                </Swipeable>
             </View>
         )
     }
@@ -73,7 +78,7 @@ PrayItem.defaultProps = {
     date: "",
     onPress: () => {
     },
-    rightOptions: []
+    lefttOptions: []
 };
 
 PrayItem.propTypes = {
@@ -81,7 +86,7 @@ PrayItem.propTypes = {
     content: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     onPress: PropTypes.func,
-    rightOptions: PropTypes.array
+    lefttOptions: PropTypes.array
 }
 
 const styles = EStyleSheet.create({
@@ -90,7 +95,7 @@ const styles = EStyleSheet.create({
         borderRadius: "$borderRadius",
     },
 
-    containerButton :{
+    containerButton: {
         flexDirection: 'row',
         width: "100%",
         height: "$heightRow",
@@ -132,10 +137,11 @@ const styles = EStyleSheet.create({
     },
 
     optionTextContainer: {
+        alignSelf:"flex-end",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor:Colors.black,
-        width :75,
+        backgroundColor: Colors.black,
+        width: 75,
         height: "$heightRow",
     },
 
@@ -145,16 +151,15 @@ const styles = EStyleSheet.create({
         color: Colors.primary,
     },
 
-    separator :{
-        borderRightWidth:"$widthBorder" ,
+    separator: {
+        borderRightWidth: "$widthBorder",
         borderColor: Colors.white,
     },
 
-    borderRadius :{
-        borderBottomRightRadius : "$borderRadius",
-        borderTopRightRadius : "$borderRadius",
+    borderRadius: {
+        borderTopLeftRadius: "$borderRadius",
+        borderBottomLeftRadius: "$borderRadius",
     }
-
 
 
 });

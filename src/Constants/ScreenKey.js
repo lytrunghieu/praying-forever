@@ -13,6 +13,7 @@ module.exports = {
     C_SCREEN: 'CScreen',
     LIST_COMMON: "ListCommon",
     PRAYING_INPROGESS: "PrayingInProgress",
+    PRAY_FINISHED: "PrayFinished",
     CREATE_PRAYING: "CreatePraying",
 
 };

@@ -19,15 +19,25 @@ import AuthenticateActions from '../Redux/AuthenticateRedux';
 
 class DrawerContainer extends PureComponent {
 
+
+
+  constructor(props){
+    super();
+  }
+
+  onPressOption(screen){
+      const { navigation: { navigate } } = this.props;
+      navigate(screen);
+  }
+
   render() {
     const { navigation: { navigate }, logout, activeItemKey } = this.props;
 
     return (
       <View style={styles.container}>
-
         <ScrollView contentContainerStyle={styles.body}>
-          <Option text={"Praying"}   leftIcon ={Images.inProgress} />
-          <Option text={"Complete"}   leftIcon ={Images.complete} />
+          <Option text={"Praying"}   leftIcon ={Images.inProgress} onPress ={this.onPressOption.bind(this,ScreenKey.PRAYING_INPROGESS)} />
+          <Option text={"Complete"}   leftIcon ={Images.complete} onPress ={this.onPressOption.bind(this,ScreenKey.PRAY_FINISHED)}/>
           <Option text={"About"}   leftIcon ={Images.about} />
           <Option text={"Setting"}   leftIcon ={Images.setting} />
         </ScrollView>

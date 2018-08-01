@@ -13,10 +13,13 @@ import ADetailScreen from '../Containers/ADetailScreen';
 import BScreen from '../Containers/BScreen';
 import ListCommonContainer from '../Containers/ListCommonContainer';
 import {PrayingInProgressContainer} from '../Containers/PrayingInProgressContainer';
+import {PrayFinishedContainer} from '../Containers/PrayFinishedContainer';
 import {CreatePrayingContainer} from '../Containers/CreatePrayingContainer';
 
 const DrawerNav = DrawerNavigator({
     [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressContainer},
+    [ScreenKey.PRAY_FINISHED]: {screen: PrayFinishedContainer},
+
 
 }, {
     contentComponent: DrawerContainer // custom drawer

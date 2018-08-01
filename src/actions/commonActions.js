@@ -19,6 +19,17 @@ export function editPray(params) {
     }
 }
 
+export function changeStatusPray({status , pray}) {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.UPDATE_STATUS_PRAY_SUCCESS,
+            data: pray,
+            status : status
+        });
+    }
+}
+
+
 export function deletePray(params) {
     return function (dispatch) {
         dispatch({
