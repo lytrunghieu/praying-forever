@@ -118,7 +118,7 @@ class PrayFinished extends PureComponent {
                 content={item.content}
                 date={moment(item.created).format("DD/MM/YYYY")}
                 onPress ={this.onPressPrayItem.bind(this,item)}
-                lefttOptions={lefttOptions}
+                leftOptions={lefttOptions}
             />
         )
     }

@@ -34,6 +34,7 @@ class CreatePraying extends PureComponent {
         super(props);
         const dataPassed = props.navigation.state.params;
         this.isEdit = dataPassed ? true : false;
+        this.id = dataPassed && dataPassed.id || null;
         this.created = dataPassed  && dataPassed.created ;
         this.state = {
             title: dataPassed && dataPassed.title || "",
@@ -77,6 +78,7 @@ class CreatePraying extends PureComponent {
         const {title, content, isReminder, timeReminder } = this.state;
         let params = {title, content, isReminder, timeReminder};
         if(this.isEdit){
+            params.id = this.id;
             params.created = this.created;
             this.props.commonActions.editPray(params);
         }

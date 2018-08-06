@@ -3,7 +3,7 @@
  */
 
 import React, {PureComponent} from "react";
-import {View, ScrollView, Text, TouchableOpacity} from "react-native";
+import {View, ScrollView, Text, TouchableOpacity, StyleSheet} from "react-native";
 import {
     NavBar,
     PlaceHolder,
@@ -24,10 +24,9 @@ import {
     TextArea,
     RowItem
 } from "../Components/Common";
-import {Images,Colors} from "../Themes"
+import {Images, Colors} from "../Themes"
 import * as _ from "lodash";
 import I18n from '../I18n';
-
 
 
 export default class ListCommon extends PureComponent {
@@ -46,88 +45,88 @@ export default class ListCommon extends PureComponent {
         this.onChangeHeaderSearch = this.onChangeHeaderSearch.bind(this);
         this.onDeleteTextInputSearch = this.onDeleteTextInputSearch.bind(this);
 
-        this.state ={
-            checkboxList :[
+        this.state = {
+            checkboxList: [
                 {
-                    text :"Option 1",
-                    index : 0,
-                    isChecked : true,
-                    onPress : this.onPressCheckbox
+                    text: "Option 1",
+                    index: 0,
+                    isChecked: true,
+                    onPress: this.onPressCheckbox
                 },
 
                 {
-                    index : 1,
-                    text :"Option 2",
-                    isChecked : false,
-                    onPress : this.onPressCheckbox
+                    index: 1,
+                    text: "Option 2",
+                    isChecked: false,
+                    onPress: this.onPressCheckbox
                 },
                 {
-                    index : 2,
-                    text :"Option 3",
-                    isChecked : false,
-                    onPress : this.onPressCheckbox
+                    index: 2,
+                    text: "Option 3",
+                    isChecked: false,
+                    onPress: this.onPressCheckbox
                 },
                 {
-                    index : 3,
-                    text :"Option 4",
-                    isChecked : false,
-                    onPress : this.onPressCheckbox
+                    index: 3,
+                    text: "Option 4",
+                    isChecked: false,
+                    onPress: this.onPressCheckbox
                 },
                 {
-                    index : 4,
-                    text :"Option 5",
-                    isChecked : false,
-                    onPress : this.onPressCheckbox
+                    index: 4,
+                    text: "Option 5",
+                    isChecked: false,
+                    onPress: this.onPressCheckbox
                 }
             ],
-            switchValue : false,
-            valueTextInput :"",
-            valueHeaderSearch :"",
+            switchValue: false,
+            valueTextInput: "",
+            valueHeaderSearch: "",
         };
     }
 
-    onDeleteTextInputSearch(){
+    onDeleteTextInputSearch() {
         this.setState({
-            valueHeaderSearch : ""
+            valueHeaderSearch: ""
         });
     }
 
-    onDeleteTextInput(){
+    onDeleteTextInput() {
         this.setState({
-            valueTextInput : ""
+            valueTextInput: ""
         });
     }
 
-    onChangeTextInput(text){
+    onChangeTextInput(text) {
         this.setState({
-            valueTextInput : text
+            valueTextInput: text
         });
     }
 
-    onChangeHeaderSearch(text){
+    onChangeHeaderSearch(text) {
         this.setState({
-            valueHeaderSearch : text
+            valueHeaderSearch: text
         });
     }
 
-    onChangeValueSwitch(value){
+    onChangeValueSwitch(value) {
         this.setState({
             switchValue: value
         });
     }
 
-    onPressCheckbox(index){
+    onPressCheckbox(index) {
 
         let checkboxList = _.cloneDeep(this.state.checkboxList);
-        if(!checkboxList[index]){
+        if (!checkboxList[index]) {
             return;
         }
 
 
         checkboxList[index].isChecked = !checkboxList[index].isChecked;
-        checkboxList.map((ch, _index) =>{
-            if(_index !== index){
-               ch.isChecked = false;
+        checkboxList.map((ch, _index) => {
+            if (_index !== index) {
+                ch.isChecked = false;
             }
             return ch;
         })
@@ -151,102 +150,167 @@ export default class ListCommon extends PureComponent {
         this.refs["actionSheet"].open();
     }
 
-    showCheckboxList(){
+    showCheckboxList() {
         this.refs["checkboxList"].open();
     }
 
     render() {
 
-        const {checkboxList ,switchValue} = this.state;
+        const {checkboxList, switchValue} = this.state;
         const options = [
             {text: "Search"},
-            {text: "Delete All" , color : Colors.red}
-            ];
+            {text: "Delete All", color: Colors.red}
+        ];
 
         return (<View style={{flex: 1}}>
                 <ImageBackground/>
-                <ScrollView>
-                    <NavBar title={I18n.t("logInScreen")}/>
-                    <PlaceHolder/>
-                    <NavBar title={"Title"} iconLeft={Images.back}/>
-                    <PlaceHolder/>
-                    <NavBar
-                        ref="navBar"
-                        title={"Title"} iconLeft={Images.back} iconRight={Images.more}
-                        onPressRightButton={this.showDropdownPopup}
-                    />
-                    <PlaceHolder/>
-                    <HeaderSearch
-                        ref={ref => this.headerSearch = ref}
-                        onPressRightIcon={this.onDeleteTextInputSearch}
-                        value ={this.state.valueHeaderSearch}
-                        onChangeText={this.onChangeHeaderSearch}
-                        fit ={true}
-                    />
-                    <PlaceHolder/>
-                    <Text>Separator</Text>
-                    <Separator/>
-                    <PlaceHolder/>
-                    <Text>Option</Text>
-                    <Option text={"Option 1"} leftIcon={Images.inProgress} count={199}/>
-                    <Option text={"Option 2"} leftIcon={Images.about}/>
-                    <Option text={"Option 2"} leftIcon={Images.setting}/>
-                    <Option text={"Option 2"} leftIcon={Images.complete}/>
-                    <PlaceHolder/>
-                    <Button text="Button"/>
-                    <PlaceHolder/>
-                    <Button text="Button Fit" fit={true}/>
-                    <PlaceHolder/>
-                    <PrayItem
-                        content={"a Human is sick in hopostal to near dead need help about money to heal cancer in final period"}
-                        title={"Sick"} date={"23/02/2017"}/>
-                    <PlaceHolder/>
-                    <PrayItem content={"a Human is sick in hopostal to near dead"} title={"Sick"} date={"20/02/2017"}/>
-                    <PlaceHolder/>
-                    <Text onPress={this.showConfirmModal}>Show Confrim Modal</Text>
+                <ScrollView
+                    stickyHeaderIndices={[0, 2,4,6,8,10,12,14,16,18,20,22,24,26,28]}
 
-                    <PlaceHolder/>
-                    <Text onPress={this.showActionSheet}>Show Action Sheet</Text>
-                    <PlaceHolder/>
-                    <Text>Checkbox</Text>
-                    <Checkbox text ={checkboxList[0].text} isChecked ={checkboxList[0].isChecked} onPress ={checkboxList[0].onPress} index ={0}/>
-                    <Checkbox text ={checkboxList[1].text} isChecked ={checkboxList[1].isChecked} onPress ={checkboxList[1].onPress} index ={1}/>
-                    <Text onPress ={this.showCheckboxList} >Show checkbox Modal</Text>
-                    <Text>SwitchRowItem</Text>
-                    <SwitchRowItem
-                        title ={"Reminder"}
-                        value ={switchValue}
-                        onValueChange ={this.onChangeValueSwitch}
-                    />
-                    <PlaceHolder/>
-                    <Input
-                        ref ={"textInput"}
-                        value ={this.state.valueTextInput}
-                        placeholder ="Search"
-                        onChangeText ={this.onChangeTextInput}
-                        onPressRightIcon={this.onDeleteTextInput}
-                        isShowShadow ={true}
-                    />
+                >
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Nav Bar</Text>
+                    </View>
+                    <View>
+                        <NavBar title={I18n.t("logInScreen")}/>
+                        <PlaceHolder/>
+                        <NavBar title={"Title"} iconLeft={Images.back}/>
+                        <PlaceHolder/>
+                        <NavBar
+                            ref="navBar"
+                            title={"Title"} iconLeft={Images.back} iconRight={Images.more}
+                            onPressRightButton={this.showDropdownPopup}
+                        />
+                        <PlaceHolder/>
+                        <HeaderSearch
+                            ref={ref => this.headerSearch = ref}
+                            onPressRightIcon={this.onDeleteTextInputSearch}
+                            value={this.state.valueHeaderSearch}
+                            onChangeText={this.onChangeHeaderSearch}
+                            fit={true}
+                        />
+                        <PlaceHolder/>
+                    </View>
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Separate</Text>
+                    </View>
+                    <View>
+                        <Separator/>
+                        <PlaceHolder/>
+                    </View>
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Option</Text>
+                    </View>
+                    <View>
+                        <Option text={"Option 1"} leftIcon={Images.inProgress} count={199}/>
+                        <Option text={"Option 2"} leftIcon={Images.about}/>
+                        <Option text={"Option 2"} leftIcon={Images.setting}/>
+                        <Option text={"Option 2"} leftIcon={Images.complete}/>
+                        <PlaceHolder/>
+                    </View>
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Button</Text>
+                    </View>
+                    <View>
+                        <Button text="Button"/>
+                        <PlaceHolder/>
+                        <Button text="Button Fit" fit={true}/>
+                        <PlaceHolder/>
+                    </View>
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Pray Item</Text>
+                    </View>
+                    <View>
+                        <PrayItem
+                            content={"a Human is sick in hopostal to near dead need help about money to heal cancer in final period"}
+                            title={"Sick"} date={"23/02/2017"}/>
+                        <PlaceHolder/>
+                        <PrayItem
+                            content={"a Human is sick in hopostal to near dead"}
+                            title={"Sick"}
+                            date={"20/02/2017"}
+                        />
+                        <PlaceHolder/>
+                    </View>
 
-                    <PlaceHolder/>
-                    <Text>textInput Title</Text>
-                    <InputTitle
-                        ref ={"textInputTitle"}
-                        value ={this.state.valueTextInput}
-                        placeholder ="Search"
-                        onChangeText ={this.onChangeTextInput}
-                        onPressRightIcon={this.onDeleteTextInput}
-                    />
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Modal</Text>
+                    </View>
+                    <View>
+                        <Text onPress={this.showConfirmModal}>Show Confrim Modal</Text>
+                        <PlaceHolder/>
+                        <Text onPress={this.showActionSheet}>Show Action Sheet</Text>
+                        <PlaceHolder/>
+                        <Text onPress={this.showCheckboxList}>Show checkbox Modal</Text>
+                        <PlaceHolder/>
+                    </View>
 
-                    <PlaceHolder/>
-                    <Text>Text Area</Text>
-                    <TextArea/>
-                    <PlaceHolder/>
-                    <Text>Row Item</Text>
-                    <RowItem title ={"Reminder"} icon ={Images.edit} />
-                    <Text
-                        onPress ={() =>{this.props.navigation.navigate('DrawerNav')}}
-                    >show drawer</Text>
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Checkbox</Text>
+                    </View>
+                    <View>
+                        <Checkbox text={checkboxList[0].text} isChecked={checkboxList[0].isChecked}
+                                  onPress={checkboxList[0].onPress} index={0}/>
+                        <Checkbox text={checkboxList[1].text} isChecked={checkboxList[1].isChecked}
+                                  onPress={checkboxList[1].onPress} index={1}/>
+                    </View>
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>SwitchRowItem</Text>
+                    </View>
+                    <View>
+                        <SwitchRowItem
+                            title={"Reminder"}
+                            value={switchValue}
+                            onValueChange={this.onChangeValueSwitch}
+                        />
+                        <PlaceHolder/>
+                    </View>
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Input</Text>
+                    </View>
+                    <View>
+                        <Input
+                            ref={"textInput"}
+                            value={this.state.valueTextInput}
+                            placeholder="Search"
+                            onChangeText={this.onChangeTextInput}
+                            onPressRightIcon={this.onDeleteTextInput}
+                            isShowShadow={true}
+                        />
+
+                        <PlaceHolder/>
+                        <InputTitle
+                            ref={"textInputTitle"}
+                            value={this.state.valueTextInput}
+                            placeholder="Search"
+                            onChangeText={this.onChangeTextInput}
+                            onPressRightIcon={this.onDeleteTextInput}
+                        />
+
+                        <PlaceHolder/>
+                        <TextArea/>
+                        <PlaceHolder/>
+                    </View>
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Row Item</Text>
+                    </View>
+
+                    <View>
+                        <RowItem title={"Reminder"} icon={Images.edit}/>
+                        <PlaceHolder/>
+                    </View>
+
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Row Item Regular</Text>
+                    </View>
+                    <RowItem title={"Title"} titleBold ={true}/>
+                    <RowItem value={"Hello This a rowitem contain content so long and height of row can scale follow size of content"} scaled ={true} />
+
+
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Other</Text>
+                    </View>
+                    <Text onPress={() => {this.props.navigation.navigate('DrawerNav')}}>show drawer</Text>
 
                 </ScrollView>
 
@@ -268,7 +332,7 @@ export default class ListCommon extends PureComponent {
                     options={options}
                 />
                 <CheckboxModal
-                    ref ={"checkboxList"}
+                    ref={"checkboxList"}
                     options={checkboxList}
                     textDone={"DONE"}
                 />
@@ -277,3 +341,18 @@ export default class ListCommon extends PureComponent {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    header: {
+        height: 40,
+        width: "100%",
+        backgroundColor: "black",
+    },
+
+    titleHeader: {
+        fontSize: 18,
+        color: "white"
+    }
+
+
+});

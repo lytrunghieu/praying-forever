@@ -157,7 +157,7 @@ class PrayingInProgress extends PureComponent {
 
     //region handle Pray Iteam
     onPressPrayItem(item) {
-        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, item);
+        this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, item);
     }
 
     onPressFinish(item) {
@@ -174,7 +174,7 @@ class PrayingInProgress extends PureComponent {
     //region rendering
 
     renderPrayItem({item}) {
-        const lefttOptions = [
+        const leftOptions = [
             {
                 text: I18n.t("finished"),
                 onPress: this.onPressFinish.bind(this, item)
@@ -192,7 +192,7 @@ class PrayingInProgress extends PureComponent {
                 content={item.content}
                 date={moment(item.created).format("DD/MM/YYYY")}
                 onPress={this.onPressPrayItem.bind(this, item)}
-                lefttOptions={lefttOptions}
+                leftOptions={leftOptions}
             />
         )
     }
@@ -254,7 +254,7 @@ class PrayingInProgress extends PureComponent {
                 <ConfirmModal
                     ref={"confirm"}
                     title={I18n.t("warning")}
-                    content={I18n.t("deleteConfirm")}
+                    content={I18n.t("deleteConfirmAll")}
                     rejectText={I18n.t("cancel")}
                     acceptText={I18n.t("yes")}
                     onAccept={this.onAcceptDeleteAll}

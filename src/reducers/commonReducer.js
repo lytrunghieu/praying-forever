@@ -33,7 +33,7 @@ export function commonReducer(state = InitialState.pray, action) {
         case ActionTypes.EDIT_PRAY_SUCCESS : {
             oldState = Immutable.asMutable(state, {deep: true});
             for (var i in oldState.prays) {
-                if (oldState.prays[i].created === action.data.created) {
+                if (oldState.prays[i].id === action.data.id) {
                     oldState.prays[i] = Object.assign({},action.data );
                     break;
                 }
@@ -46,7 +46,7 @@ export function commonReducer(state = InitialState.pray, action) {
         case ActionTypes.UPDATE_STATUS_PRAY_SUCCESS : {
             oldState = Immutable.asMutable(state, {deep: true});
             for (var i in oldState.prays) {
-                if (oldState.prays[i].created === action.data.created) {
+                if (oldState.prays[i].id === action.data.id) {
                     oldState.prays[i].isFinished = action.status;
                     break;
                 }
@@ -58,7 +58,7 @@ export function commonReducer(state = InitialState.pray, action) {
 
         case ActionTypes.DELETE_PRAY_SUCCESS : {
             oldState = Immutable.asMutable(state, {deep: true});
-            oldState.prays = oldState.prays.filter(e => e.created !== action.data.created)
+            oldState.prays = oldState.prays.filter(e => e.id !== action.data.id)
             state = state.set("prays", oldState.prays);
             commonUtils.storeData(PRAY_LIST, oldState.prays);
             return state;

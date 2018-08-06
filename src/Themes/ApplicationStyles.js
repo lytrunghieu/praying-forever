@@ -30,6 +30,11 @@ const ApplicationStyles = {
             backgroundColor: Colors.transparent
         },
 
+        mainContainerWithBackgroundColor:{
+            flex: 1,
+            backgroundColor: Colors.grayBg
+        },
+
         shadowContainer :{
             shadowOffset: {
                 height: 2,

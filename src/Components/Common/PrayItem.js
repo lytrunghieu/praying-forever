@@ -27,15 +27,15 @@ export default class PrayItem extends PureComponent {
     }
 
     render() {
-        const {title, content, date, onPress, lefttOptions} = this.props;
+        const {title, content, date, onPress, leftOptions} = this.props;
 
-        let leftButtons = lefttOptions.map((e, index) => {
+        let leftButtons = leftOptions.map((e, index) => {
             let separated = false;
             let borderRadius = false;
-            if (index < lefttOptions.length - 1) {
+            if (index < leftOptions.length - 1) {
                 separated = true;
             }
-            if (index == lefttOptions.length - 1) {
+            if (index == leftOptions.length - 1) {
                 borderRadius = styles.borderRadius;
             }
 
@@ -69,10 +69,11 @@ export default class PrayItem extends PureComponent {
             </View>
         );
 
+
         return (
             <View style={[styles.container, ApplicationStyles.screen.shadowContainer]}>
                 <Swipeable
-                    leftButtons={leftButtons}
+                    leftButtons={leftButtons.length > 0 ? leftButtons : null}
                     onRef={ref => this.swipeable = ref}
                 >
                     <TouchableOpacity style={[styles.containerButton]}
@@ -94,7 +95,7 @@ PrayItem.defaultProps = {
     date: "",
     onPress: () => {
     },
-    lefttOptions: []
+    leftOptions: []
 };
 
 PrayItem.propTypes = {
@@ -102,7 +103,7 @@ PrayItem.propTypes = {
     content: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     onPress: PropTypes.func,
-    lefttOptions: PropTypes.array
+    leftOptions: PropTypes.array
 }
 
 const styles = EStyleSheet.create({

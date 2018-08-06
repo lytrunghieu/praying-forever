@@ -1,12 +1,14 @@
 import actionTypes from "./ActionTypes";
-
+const uniqueId = require('react-native-unique-id')
 
 export function createNewPray(params) {
     return function (dispatch) {
-        dispatch({
-            type: actionTypes.CREATE_NEW_PRAY_SUCCESS,
-            data: params
-        });
+        uniqueId().then(id => {
+            dispatch({
+                type: actionTypes.CREATE_NEW_PRAY_SUCCESS,
+                data: {...params , id : id}
+            });
+        }).catch(error => console.error(error))
     }
 }
 

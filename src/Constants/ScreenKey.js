@@ -15,5 +15,6 @@ module.exports = {
     PRAYING_INPROGESS: "PrayingInProgress",
     PRAY_FINISHED: "PrayFinished",
     CREATE_PRAYING: "CreatePraying",
+    PRAY_DETAIL: "PrayDetail",
 
 };

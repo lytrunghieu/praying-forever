@@ -15,6 +15,7 @@ import ListCommonContainer from '../Containers/ListCommonContainer';
 import {PrayingInProgressContainer} from '../Containers/PrayingInProgressContainer';
 import {PrayFinishedContainer} from '../Containers/PrayFinishedContainer';
 import {CreatePrayingContainer} from '../Containers/CreatePrayingContainer';
+import {PrayDetailContainer} from '../Containers/PrayDetailContainer';
 
 const DrawerNav = DrawerNavigator({
     [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressContainer},
@@ -33,9 +34,10 @@ const MainNav = StackNavigator({
         [ScreenKey.SIGNUP_SCREEN]: {screen: SignupScreen},
         [ScreenKey.LIST_COMMON]: {screen: ListCommonContainer},
         [ScreenKey.CREATE_PRAYING]: {screen: CreatePrayingContainer},
+        [ScreenKey.PRAY_DETAIL]: {screen: PrayDetailContainer},
     }, {
         headerMode: 'none',
-        // initialRouteName: ScreenKey.SPLASH_SCREEN,
+        initialRouteName: ScreenKey.SPLASH_SCREEN,
         //   cardStyle: styles.card,
         // transitionConfig: getSlideFromRightTransition, // custom transition animation
         // mode: 'modal'
