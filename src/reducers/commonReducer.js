@@ -34,7 +34,7 @@ export function commonReducer(state = InitialState.pray, action) {
             oldState = Immutable.asMutable(state, {deep: true});
             for (var i in oldState.prays) {
                 if (oldState.prays[i].id === action.data.id) {
-                    oldState.prays[i] = Object.assign({},action.data );
+                    oldState.prays[i] = Object.assign(oldState.prays[i],action.data );
                     break;
                 }
             }

@@ -31,13 +31,14 @@ class DrawerContainer extends PureComponent {
   }
 
   render() {
-    const { navigation: { navigate }, logout, activeItemKey } = this.props;
+    const { navigation: { navigate }, logout, activeItemKey ,prays } = this.props;
+    const praysFinished = prays.filter(e => e.isFinished);
 
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.body}>
-          <Option text={"Praying"}   leftIcon ={Images.inProgress} onPress ={this.onPressOption.bind(this,ScreenKey.PRAYING_INPROGESS)} />
-          <Option text={"Complete"}   leftIcon ={Images.complete} onPress ={this.onPressOption.bind(this,ScreenKey.PRAY_FINISHED)}/>
+          <Option text={"Praying"} count={prays.length - praysFinished.length}  leftIcon ={Images.inProgress} onPress ={this.onPressOption.bind(this,ScreenKey.PRAYING_INPROGESS)} />
+          <Option text={"Complete"}  count={praysFinished.length}    leftIcon ={Images.complete} onPress ={this.onPressOption.bind(this,ScreenKey.PRAY_FINISHED)}/>
           <Option text={"About"}   leftIcon ={Images.about} />
           <Option text={"Setting"}   leftIcon ={Images.setting} />
         </ScrollView>
@@ -84,16 +85,13 @@ class DrawerContainer extends PureComponent {
 }
 
 const mapStateToProps = (state) => {
-
-  // CommonUtils.log('DrawerContainer mapStateToProps state: ', state)
   return {
-
+      prays: state.commonReducer.prays
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    logout: () => dispatch(AuthenticateActions.logout())
   }
 }
 

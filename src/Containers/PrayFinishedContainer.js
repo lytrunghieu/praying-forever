@@ -92,7 +92,7 @@ class PrayFinished extends PureComponent {
     }
 
     onPressPrayItem(item){
-        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING,item);
+        this.props.navigation.navigate(ScreenKey.PRAY_DETAIL,item);
     }
 
     //endregion

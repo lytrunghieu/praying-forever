@@ -1,4 +1,4 @@
-// Libraries
+
 import React, {PureComponent} from 'react';
 import {
     View,
@@ -9,10 +9,6 @@ import {
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
 import {Colors, Fonts} from "../../Themes"
-
-// Utilities
-
-//Components
 
 export default class OptionPopup extends PureComponent {
 
@@ -28,7 +24,7 @@ export default class OptionPopup extends PureComponent {
             textCount = "99+";
         }
         else {
-            if (textCount == 0) {
+            if (textCount <= 0) {
                 textCount = "";
             }
         }
@@ -72,6 +68,7 @@ OptionPopup.propTypes = {
     onPress: PropTypes.func,
     textIsCenter: PropTypes.bool,
     textColor: PropTypes.string,
+    count: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 
 }
 
