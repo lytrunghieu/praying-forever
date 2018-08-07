@@ -20,7 +20,7 @@ class SplashScreen extends Component {
 
   componentDidMount(){
     setTimeout(()=>{
-        this.props.navigation.dispatch({type : NavigationActions.RESET, routeName :ScreenKey.DRAWER_NAV});
+        this.props.navigation.dispatch({type : NavigationActions.RESET, routeName :ScreenKey.LOGIN_SCREEN});
     },2000);
   }
 

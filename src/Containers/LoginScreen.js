@@ -24,6 +24,7 @@ import Button from '../Components/Common/Button';
 // Reduxes
 // import LoginActions from '../Redux/LoginRedux';
 import AuthenticateActions from '../Redux/AuthenticateRedux';
+import firebase  from "react-native-firebase";
 
 class LoginScreen extends PureComponent {
 
@@ -84,7 +85,7 @@ class LoginScreen extends PureComponent {
             buttonStyle={[styles.button]}
             labelStyle={styles.titleText}
             isHideIcon
-            isLoading={authentication.fetching}
+            // isLoading={authentication.fetching}
           />
 
           <Button onPress={() => this.props.navigation.navigate(ScreenKey.SIGNUP_SCREEN)}
@@ -117,13 +118,13 @@ class LoginScreen extends PureComponent {
 const mapStateToProps = (state) => {
   // CommonUtils.log("LoginScreen mapStateToProps state: ", state)
   return {
-    authentication: state.authenticate
+    // authentication: state.authenticate
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    authenticate: (param) => dispatch(AuthenticateActions.authenticateRequest(param))
+    // authenticate: (param) => dispatch(AuthenticateActions.authenticateRequest(param))
   }
 }
 

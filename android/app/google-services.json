@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "456628415377",
+    "firebase_url": "https://prayingforever-bb4d3.firebaseio.com",
+    "project_id": "prayingforever-bb4d3",
+    "storage_bucket": "prayingforever-bb4d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456628415377:android:6b2ff20ffe538192",
+        "android_client_info": {
+          "package_name": "com.personal.PF"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "456628415377-5s80o6fe8q9o8tq0btknuqfdmmn3i1ti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvAbEqrB4SzOaZhvhj1SccUYK6dlWvi3c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
