@@ -54,7 +54,7 @@ Button.propTypes = {
     width: PropTypes.number,
     textColor: PropTypes.string,
     borderWidth: PropTypes.number,
-    borderColor: PropTypes.number,
+    borderColor: PropTypes.string,
     customeBorder: PropTypes.bool,
     backgroundColor: PropTypes.string,
     height: PropTypes.number,

@@ -42,5 +42,6 @@ export {
     RowItem,
     ButtonAction,
     TextError,
-    TextLink
+    TextLink,
+    TextBase
 };

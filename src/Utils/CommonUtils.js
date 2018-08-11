@@ -79,5 +79,6 @@ export default {
             return str;
         }
         return str.replace(/\s/g, '');
-    }
+    },
+
 }

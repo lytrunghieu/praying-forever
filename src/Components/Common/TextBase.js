@@ -14,20 +14,19 @@ export  default class TextBase extends PureComponent {
 }
 
 TextBase.defaultProps = {
-    numerOfLines : 1,
+    numberOfLines : 1,
     allowFontScaling : false,
     style : null
 };
 
 TextBase.propTypes = {
     text : PropTypes.string,
-    numerOfLines : PropTypes.number,
-    style : PropTypes.oneOfType([PropTypes.number , PropTypes.object])
+    numberOfLines : PropTypes.number
 };
 
 const styles = EStyleSheet.create({
     text : {
-        color :Colors.red,
+        color :Colors.black,
         fontSize : Fonts.size.large,
         fontFamily : Fonts.type.robotoRegular,
     }

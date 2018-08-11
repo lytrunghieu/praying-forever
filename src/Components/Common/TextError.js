@@ -7,12 +7,13 @@ import {Colors, Fonts} from "../../Themes";
 export  default class TextError extends PureComponent {
 
     render(){
-        const {text} = this.props;
-        return (<TextBase {...this.props} style ={styles.text}>{"*".concat(text)}</TextBase>);
+        const {text, style} = this.props;
+        return (<TextBase {...this.props} style ={[styles.text,style]}>{"*".concat(text)}</TextBase>);
     }
 }
 
 TextError.defaultProps = {
+    style : null
 };
 
 TextError.propTypes = {

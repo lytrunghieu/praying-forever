@@ -17,7 +17,7 @@ export default class Input extends PureComponent {
     }
 
     render() {
-        const {value, onPressRightIcon, fit, hideDivider, customBorder,customBorderWidth,customBorderColor,customBorderRadius,leftIcon} = this.props;
+        const {value, onPressRightIcon, fit,hideCloseIcon, hideDivider, customBorder,customBorderWidth,customBorderColor,customBorderRadius,leftIcon} = this.props;
 
         return (
             <View style={[styles.container, fit && styles.containerFit, customBorder && {borderWidth: customBorderWidth , borderColor : customBorderColor , borderRadius : customBorderRadius} ]}>
@@ -34,7 +34,7 @@ export default class Input extends PureComponent {
                     {...this.props}
                     ref={"input"}
                 />
-                {value &&
+                {value && !hideCloseIcon &&
                 <TouchableOpacity
                     style={styles.rightIcon}
                     onPress={onPressRightIcon}
@@ -64,6 +64,7 @@ Input.defaultProps = {
     customBorderColor: Colors.black,
     customBorderRadius: globalStyle.$borderRadiusNormal,
     customBorderWidth: globalStyle.$borderWidthLarge,
+    hideCloseIcon: false
 };
 
 Input.propTypes = {
@@ -71,11 +72,12 @@ Input.propTypes = {
     onPressRightIcon: PropTypes.func,
     fit: PropTypes.bool,
     hideDivider: PropTypes.bool,
-    leftIcon: PropTypes.oneOfType[PropTypes.number, PropTypes.string],
+    leftIcon: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     customBorder: PropTypes.bool,
     customBorderColor: PropTypes.string,
     customBorderRadius: PropTypes.number,
     customBorderWidth: PropTypes.number,
+    hideCloseIcon : PropTypes.bool
 };
 
 
