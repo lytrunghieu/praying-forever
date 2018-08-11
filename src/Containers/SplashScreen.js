@@ -39,7 +39,7 @@ class SplashScreen extends Component {
 
         return (
             <View style={styles.container}>
-                <Image source={Images.splash}
+                <Image source={Images.landing}
                        style={styles.backgroundImage}/>
             </View>
         );

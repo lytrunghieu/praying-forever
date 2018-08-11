@@ -3,6 +3,8 @@ const images = {
     // logo: require('../Images/react.png'),
     android: require('../Images/android.png'),
     splash: require('../Images/splash.png'),
+    landing: require('../Images/landing.png'),
+    logout: require('../Images/logout.png'),
     back: require('../Images/back.png'),
     more: require('../Images/more.png'),
     close: require('../Images/close.png'),

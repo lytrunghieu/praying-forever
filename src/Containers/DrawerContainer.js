@@ -47,7 +47,7 @@ class DrawerContainer extends PureComponent {
                             onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FINISHED)}/>
                     <Option text={I18n.t("about")} leftIcon={Images.about}/>
                     <Option text={I18n.t("setting")} leftIcon={Images.setting}/>
-                    <Option text={I18n.t("logout")} leftIcon={Images.setting} onPress={this.onPressLogout}/>
+                    <Option text={I18n.t("logout")} leftIcon={Images.logout} onPress={this.onPressLogout}/>
                 </ScrollView>
             </View>
         )
