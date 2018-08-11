@@ -3,6 +3,7 @@
   "praying":"Praying",
   "createNewPray":"Create New Pray",
   "continues":"Continues",
+  "checkResetPasswordEmail":"Reset password email send success",
   "search":"Search",
   "deleteAll":"Delete All",
   "delete":"Delete",
@@ -19,6 +20,7 @@
   "inputPassword":"Input password",
   "inputFirstName":"Input firstname",
   "inputLastName":"Input Lastname",
+  "inprogress":"Inprogress",
 
   "health" :"Health",
   "faith" :"Faith",
@@ -39,6 +41,9 @@
   "signInWith":"Sign In With",
   "send":"SEND",
   "sendAgain":"Send again",
+  "setting":"Setting",
+  "about":"About",
+
   "createAccount":"Create new account",
   "facebook":"Facebook",
   "google":"Google",

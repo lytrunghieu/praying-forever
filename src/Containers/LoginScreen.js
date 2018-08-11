@@ -29,8 +29,11 @@ class LoginScreen extends PureComponent {
             passWord: "",
             validPassword : true
         };
+
         this.onPressForgot = this.onPressForgot.bind(this);
         this.onPressLogin = this.onPressLogin.bind(this);
+        this.onPressSubmitEmail = this.onPressSubmitEmail.bind(this);
+
         this.onChangeEmailText = this.onChangeEmailText.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
     }
@@ -39,6 +42,8 @@ class LoginScreen extends PureComponent {
     }
     //endregion
 
+
+    //region handle value change
 
     onChangeEmailText(value){
         this.setState({
@@ -51,6 +56,9 @@ class LoginScreen extends PureComponent {
            passWord: value
         });
     }
+    //endregion
+
+    //region handle action press
 
     onPressLogin(){
         const {email,passWord}  = this.state;
@@ -62,14 +70,23 @@ class LoginScreen extends PureComponent {
           valid.validPassword = false;
         }
         if(valid.validPassword && valid.validEmail){
-
+            firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email,passWord).then(res =>{
+              this.props.navigation.navigate(ScreenKey.PRAYING_INPROGESS);
+            }).catch(err =>{
+                alert(err);
+            });
         }
         this.setState(valid);
+    }
+
+    onPressSubmitEmail(){
+        this.refs["textInput2"].focus();
     }
 
     onPressForgot(){
         this.props.navigation.navigate(ScreenKey.FORGOT_PASS);
     }
+    //endregion
 
     //region Rendering
 
@@ -91,6 +108,9 @@ class LoginScreen extends PureComponent {
                         customBorder={true}
                         leftIcon={Images.user}
                         hideCloseIcon ={true}
+                        returnKeyLabel ={"next"}
+                        autoFocus={true}
+                        onSubmitEditing ={this.onPressSubmitEmail}
                     />
 
                     <PlaceHolder/>
@@ -99,7 +119,7 @@ class LoginScreen extends PureComponent {
                     }
 
                     <Input
-                        ref={"textInput"}
+                        ref={"textInput2"}
                         value={this.state.passWord}
                         placeholder={I18n.t("inputPassword")}
                         onChangeText={this.onChangePassword}
@@ -109,6 +129,8 @@ class LoginScreen extends PureComponent {
                         leftIcon={Images.key}
                         hideCloseIcon ={true}
                         secureTextEntry ={true}
+                        returnKeyLabel ={"done"}
+                        onSubmitEditing ={this.onPressLogin}
                     />
 
                     <PlaceHolder/>

@@ -1,62 +1,68 @@
 // Libraries
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
-  View,
-  Image
+    View,
+    Image
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {NavigationActions} from "react-navigation";
-// Utilities
-import { ScreenKey } from '../Constants';
-import { Colors, Metrics, Images } from '../Themes';
-import I18n from '../I18n';
+import {ScreenKey} from '../Constants';
+import {Colors, Metrics, Images} from '../Themes';
+import firebase from 'react-native-firebase';
 
 class SplashScreen extends Component {
 
-  constructor(props) {
-    super(props);
-  }
+    constructor(props) {
+        super(props);
+    }
 
-  componentDidMount(){
-    setTimeout(()=>{
-        this.props.navigation.dispatch({type : NavigationActions.RESET, routeName :ScreenKey.LOGIN_SCREEN});
-    },2000);
-  }
+    componentDidMount() {
+        setTimeout(() => {
+            let unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
 
-  render() {
+                    this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.DRAWER_NAV});
+                }
+                else {
+                    this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
+                }
+                unsubscribe();
+            });
 
-    const { navigate } = this.props.navigation;
+        }, 2000);
+    }
 
-    return (
-      <View style={styles.container}>
-        <Image source={Images.splash}
-          style={styles.backgroundImage} />
-      </View>
-    );
+    render() {
 
-  }
+        const {navigate} = this.props.navigation;
+
+        return (
+            <View style={styles.container}>
+                <Image source={Images.splash}
+                       style={styles.backgroundImage}/>
+            </View>
+        );
+
+    }
 }
 
-const mapStateToProps = (state) => ({
-})
+const mapStateToProps = (state) => ({})
 
-const mapDispatchToProps = (dispatch) => ({
-
-})
+const mapDispatchToProps = (dispatch) => ({})
 
 export default connect(mapStateToProps, mapDispatchToProps)(SplashScreen);
 
 const styles = EStyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.blueSky,
-  },
-  backgroundImage: {
-    // flex: 1,
-    top: 0,
-    left: 0,
-    width: Metrics.screenWidth,
-    height: Metrics.screenHeight,
-  }
+    container: {
+        flex: 1,
+        backgroundColor: Colors.blueSky,
+    },
+    backgroundImage: {
+        // flex: 1,
+        top: 0,
+        left: 0,
+        width: Metrics.screenWidth,
+        height: Metrics.screenHeight,
+    }
 });

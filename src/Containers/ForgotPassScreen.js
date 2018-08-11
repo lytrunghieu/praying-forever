@@ -2,15 +2,12 @@ import React, {PureComponent} from 'react';
 import {
     View,
     Platform,
-    StatusBar,
-    Image,
     ScrollView,
     KeyboardAvoidingView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {ScreenKey} from '../Constants';
-import {Colors, Metrics, Images} from '../Themes';
+import {Colors, Images} from '../Themes';
 import I18n from '../I18n';
 import firebase from 'react-native-firebase';
 import {Input, TextLink, TextError, Button, PlaceHolder, NavBar} from "../Components/Common";
@@ -32,21 +29,27 @@ class ForgotPassScreen extends PureComponent {
         this.onChangeTextInput = this.onChangeTextInput.bind(this);
     }
 
-    componentDidMount() {
-    }
-
+    componentDidMount() {}
 
     //endregion
+
+    //region handle value change
 
     onChangeTextInput(value) {
         this.setState({
             email: value
         });
     }
+    //endregion
+
+    //region handle navbar
 
     onPressBack() {
         this.props.navigation.goBack();
     }
+    //endregion
+
+    //region hanlde action press
 
     onPressSend() {
         if (_.isEmpty(this.state.email)) {
@@ -59,11 +62,14 @@ class ForgotPassScreen extends PureComponent {
                 isSend: true,
                 validEmail: true
             });
+            firebase.auth().sendPasswordResetEmail(this.state.email).then(res =>{
+                alert(I18n.t("checkResetPasswordEmail"));
+            }).catch(err =>{
+                alert(err);
+            })
         }
-
-
     }
-
+    //endregion
 
     //region Rendering
 
@@ -83,6 +89,7 @@ class ForgotPassScreen extends PureComponent {
                         customBorder={true}
                         leftIcon={Images.user}
                         autoFocus={true}
+                        hideCloseIcon={true}
                     />
                     <PlaceHolder height={10}/>
                     {!this.state.validEmail && <TextError text={I18n.t("emailNull")}/> || null}
@@ -135,9 +142,4 @@ const styles = EStyleSheet.create({
         paddingLeft: "$padding",
         paddingRight: "$padding"
     },
-
-    containerTextLinks: {
-        flexDirection: "row",
-        width: "100%",
-    }
 });
