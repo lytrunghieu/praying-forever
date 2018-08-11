@@ -17,6 +17,9 @@ import  InputTitle from "./InputTitle";
 import  TextArea from "./TextArea";
 import  RowItem from "./RowItem";
 import  ButtonAction from "./ButtonAction";
+import  TextError from "./TextError";
+import  TextLink from "./TextLink";
+import  TextBase from "./TextBase";
 
 export {
     NavBar,
@@ -37,5 +40,7 @@ export {
     InputTitle,
     TextArea,
     RowItem,
-    ButtonAction
+    ButtonAction,
+    TextError,
+    TextLink
 };

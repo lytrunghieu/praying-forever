@@ -8,7 +8,7 @@ export default {
     navigation :{
         index : 0,
         routes :[
-            {routeName : ScreenKey.SPLASH_SCREEN}
+            {routeName : ScreenKey.LIST_COMMON}
         ]
     },
 

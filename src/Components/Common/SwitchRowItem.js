@@ -19,7 +19,7 @@ const SwitchRowItem  =({title ="" , onValueChange = () =>{} ,value }) =>{
 const styles = EStyleSheet.create({
 
     container : {
-        height :"$heightRow",
+        height :"$heightRowNormal",
         width :"100%",
         paddingLeft:"$padding",
         paddingRight:"$padding",

@@ -1,16 +1,11 @@
-import {StackNavigator, TabNavigator, TabBarBottom, DrawerNavigator} from 'react-navigation';
+import {StackNavigator, DrawerNavigator} from 'react-navigation';
 
-import getSlideFromRightTransition from './SlideFromRightTransition';
 import {ScreenKey} from '../Constants';
 
 import SplashScreen from '../Containers/SplashScreen';
 import SignupScreen from '../Containers/SignupScreen';
 import LoginScreen from '../Containers/LoginScreen';
-import HomeScreen from '../Containers/HomeScreen';
 import DrawerContainer from '../Containers/DrawerContainer';
-import AScreen from '../Containers/AScreen';
-import ADetailScreen from '../Containers/ADetailScreen';
-import BScreen from '../Containers/BScreen';
 import ListCommonContainer from '../Containers/ListCommonContainer';
 import {PrayingInProgressContainer} from '../Containers/PrayingInProgressContainer';
 import {PrayFinishedContainer} from '../Containers/PrayFinishedContainer';
@@ -37,7 +32,7 @@ const MainNav = StackNavigator({
         [ScreenKey.PRAY_DETAIL]: {screen: PrayDetailContainer},
     }, {
         headerMode: 'none',
-        initialRouteName: ScreenKey.SPLASH_SCREEN,
+        initialRouteName: ScreenKey.LIST_COMMON,
         //   cardStyle: styles.card,
         // transitionConfig: getSlideFromRightTransition, // custom transition animation
         // mode: 'modal'

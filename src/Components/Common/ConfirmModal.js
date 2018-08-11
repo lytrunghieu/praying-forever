@@ -54,7 +54,7 @@ const styles = EStyleSheet.create({
         width: 283,
         height: 136,
         backgroundColor: Colors.primary,
-        borderRadius: "$borderRadius",
+        borderRadius: "$borderRadiusSmall",
         paddingLeft: 12,
         paddingRight: 12,
         paddingTop: 20,

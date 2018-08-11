@@ -1,4 +1,4 @@
-package com.rntemplate;
+package com.PF;
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;

@@ -22,7 +22,9 @@ import {
     Input,
     InputTitle,
     TextArea,
-    RowItem
+    RowItem,
+    TextError,
+    TextLink
 } from "../Components/Common";
 import {Images, Colors} from "../Themes"
 import * as _ from "lodash";
@@ -166,8 +168,14 @@ export default class ListCommon extends PureComponent {
                 <ImageBackground/>
                 <ScrollView
                     stickyHeaderIndices={[0, 2,4,6,8,10,12,14,16,18,20,22,24,26,28]}
-
                 >
+                    <View style={styles.header}>
+                        <Text style={styles.titleHeader}>Text</Text>
+                    </View>
+                    <TextError text={"Text error"}/>
+                    <TextLink text={"Text Link"}/>
+                    <TextLink text={"Text Link Red "} isRed={true}/>
+
                     <View style={styles.header}>
                         <Text style={styles.titleHeader}>Nav Bar</Text>
                     </View>
@@ -216,6 +224,10 @@ export default class ListCommon extends PureComponent {
                         <PlaceHolder/>
                         <Button text="Button Fit" fit={true}/>
                         <PlaceHolder/>
+                        <Button text="Button Transparent" textColor={Colors.black} customeBorder={true}  backgroundColor={Colors.transparent} />
+                        <Button text="Button Lagre" fit={true} height={54} customeBorder={true} borderRadius={0}/>
+                        <PlaceHolder/>
+
                     </View>
                     <View style={styles.header}>
                         <Text style={styles.titleHeader}>Pray Item</Text>
@@ -288,6 +300,33 @@ export default class ListCommon extends PureComponent {
                         />
 
                         <PlaceHolder/>
+
+                        <Input
+                            ref={"textInput"}
+                            value={this.state.valueTextInput}
+                            placeholder="Search"
+                            onChangeText={this.onChangeTextInput}
+                            onPressRightIcon={this.onDeleteTextInput}
+                            isShowShadow={true}
+                            hideDivider={true}
+                            customBorder={true}
+                            leftIcon={Images.user}
+                        />
+
+                        <PlaceHolder/>
+
+                        <Input
+                            ref={"textInput"}
+                            value={this.state.valueTextInput}
+                            placeholder="Search"
+                            onChangeText={this.onChangeTextInput}
+                            onPressRightIcon={this.onDeleteTextInput}
+                            isShowShadow={true}
+                            hideDivider={true}
+                            customBorder={true}
+                            leftIcon={Images.key}
+                        />
+
                         <TextArea/>
                         <PlaceHolder/>
                     </View>

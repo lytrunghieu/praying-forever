@@ -74,7 +74,7 @@ OptionPopup.propTypes = {
 
 const styles = EStyleSheet.create({
     container: {
-        height: "$heightRow",
+        height: "$heightRowNormal",
         width: "100%",
         backgroundColor: Colors.primary,
         flexDirection: "row",

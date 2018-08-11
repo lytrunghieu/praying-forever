@@ -38,7 +38,7 @@ export default class CheckboxModal extends ModalBase {
             optionsComponent = (
                 <ScrollView
                     contentContainerStyle ={{width: "100%" }}
-                    style ={{height: limitShow * globalStyle.$heightRow}}
+                    style ={{height: limitShow * globalStyle.$heightRowNormal}}
                 >
                     {optionsComponent}
                 </ScrollView>

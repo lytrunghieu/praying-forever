@@ -104,18 +104,18 @@ PrayItem.propTypes = {
     date: PropTypes.string.isRequired,
     onPress: PropTypes.func,
     leftOptions: PropTypes.array
-}
+};
 
 const styles = EStyleSheet.create({
     container: {
         backgroundColor: Colors.primary,
-        borderRadius: "$borderRadius",
+        borderRadius: "$borderRadiusSmall",
     },
 
     containerButton: {
         flexDirection: 'row',
         width: "100%",
-        height: "$heightRow",
+        height: "$heightRowNormal",
         paddingLeft: "$paddingSmall",
         paddingRight: "$paddingSmall",
         alignItems: "center",
@@ -159,7 +159,7 @@ const styles = EStyleSheet.create({
         justifyContent: "center",
         backgroundColor: Colors.black,
         width: 75,
-        height: "$heightRow",
+        height: "$heightRowNormal",
     },
 
     optionText: {
@@ -169,13 +169,13 @@ const styles = EStyleSheet.create({
     },
 
     separator: {
-        borderRightWidth: "$widthBorder",
+        borderRightWidth: "$borderWidthSmall",
         borderColor: Colors.white,
     },
 
     borderRadius: {
-        borderTopLeftRadius: "$borderRadius",
-        borderBottomLeftRadius: "$borderRadius",
+        borderTopLeftRadius: "$borderRadiusSmall",
+        borderBottomLeftRadius: "$borderRadiusSmall",
     }
 
 

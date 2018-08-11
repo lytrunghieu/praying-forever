@@ -2,8 +2,14 @@
 export default  styles ={
     $padding : 16,
     $paddingSmall : 10,
-    $heightRow : 54,
+    $heightRowNormal : 54,
+    $heightRowSmall : 32,
     $widthRow : "100%",
-    $borderRadius : 5,
-    $widthBorder : 0.5,
+    $borderRadiusSmall : 5,
+    $borderRadiusNormal : 15,
+    $borderRadiusLarge : 21,
+    $borderWidthLarge:3,
+    $borderWidthNormal:2,
+    $borderWidthSmall : 0.5,
+
 }

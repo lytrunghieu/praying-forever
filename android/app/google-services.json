@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "456628415377",
-    "firebase_url": "https://prayingforever-bb4d3.firebaseio.com",
-    "project_id": "prayingforever-bb4d3",
-    "storage_bucket": "prayingforever-bb4d3.appspot.com"
+    "project_number": "519560419483",
+    "firebase_url": "https://prayingforever-416df.firebaseio.com",
+    "project_id": "prayingforever-416df",
+    "storage_bucket": "prayingforever-416df.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:456628415377:android:6b2ff20ffe538192",
+        "mobilesdk_app_id": "1:519560419483:android:49c3136b0002f74c",
         "android_client_info": {
-          "package_name": "com.personal.PF"
+          "package_name": "com.PF"
         }
       },
       "oauth_client": [
         {
-          "client_id": "456628415377-5s80o6fe8q9o8tq0btknuqfdmmn3i1ti.apps.googleusercontent.com",
+          "client_id": "519560419483-lihrmkv4u3cnrq8aj37r6e880oeevrao.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.PF",
+            "certificate_hash": "28b65997c391167f84948c59d4c6083f1b07a199"
+          }
+        },
+        {
+          "client_id": "519560419483-rsipcvvgk0bnlcp2rgdbpkl81bk8rqic.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDvAbEqrB4SzOaZhvhj1SccUYK6dlWvi3c"
+          "current_key": "AIzaSyBiFiIOzlPRmECLmRJxXvOQyZKL4S5pSJk"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519560419483-rsipcvvgk0bnlcp2rgdbpkl81bk8rqic.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

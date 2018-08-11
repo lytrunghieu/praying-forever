@@ -281,7 +281,7 @@ const styles = EStyleSheet.create({
     buttonCreateContainer: {
         alignItems: "center",
         justifyContent: "center",
-        height: "$heightRow",
+        height: "$heightRowNormal",
     }
 
 });
