@@ -2,6 +2,9 @@
 
   "praying":"Praying",
   "createNewPray":"Create New Pray",
+  "createAccount":"Create new account",
+  "createAccountTitle":"Create Account",
+
   "continues":"Continues",
   "checkResetPasswordEmail":"Reset password email send success",
   "search":"Search",
@@ -12,6 +15,7 @@
   "prayDetail" :"Detail",
   "passwordNull":"Password should not empty",
   "passwordInvalid":"Password must contain at least 6 character",
+  "retypePasswordNotMatch":"Password and Password Confirm is not match",
   "cancel":"CANCEL",
   "inputTitlePray":"Input Title Pray",
   "inputContent":"Input Content",
@@ -19,8 +23,9 @@
   "inputUsername":"Input username",
   "inputPassword":"Input password",
   "inputFirstName":"Input firstname",
-  "inputLastName":"Input Lastname",
+  "inputLastName":"Input lastname",
   "inprogress":"Inprogress",
+  "inputRetypePassword":"Retype password",
 
   "health" :"Health",
   "faith" :"Faith",
@@ -32,7 +37,8 @@
   "editPray":"Edit Pray",
   "edit":"Edit",
   "emailNull":"Email should not empty",
-  "emailInvalid":"Email is invalid",
+  "emailInvalid":"Email address is not valid.",
+  "emailAlreadyUse":"There already exists an account with the given email address.",
   "marriage":"Marriage",
   "done":"DONE",
   "reminder":"Reminder",
@@ -44,13 +50,17 @@
   "setting":"Setting",
   "about":"About",
 
-  "createAccount":"Create new account",
+
   "facebook":"Facebook",
   "google":"Google",
   "warning":"WARNING",
+  "wrongPassword":"The password is invalid for the given email, or the account corresponding to the email does not have a password set.",
   "yes":"YES",
   "userName": "User Name",
   "userNameNull":"Username should not empty",
+  "userNotFoundError":"There is no user corresponding to the given email",
+  "unknowError":"Unknow error",
+  "userDisabled":"The user corresponding to the given email has been disabled.",
 
 
 
@@ -71,5 +81,6 @@
   "title": "Title",
 
   "passWord": "Password",
-  "email": "Email"
+  "email": "Email",
+  "networkError":"network error (such as timeout, interrupted connection or unreachable host) has occurred."
 }

@@ -12,6 +12,7 @@ import I18n from '../I18n';
 import firebase from 'react-native-firebase';
 import {Input, TextLink, TextError, Button, PlaceHolder, NavBar} from "../Components/Common";
 import * as _ from "lodash";
+import {ErrorCodes} from "../Constants";
 
 class ForgotPassScreen extends PureComponent {
 
@@ -65,7 +66,27 @@ class ForgotPassScreen extends PureComponent {
             firebase.auth().sendPasswordResetEmail(this.state.email).then(res =>{
                 alert(I18n.t("checkResetPasswordEmail"));
             }).catch(err =>{
-                alert(err);
+                switch (err.code){
+                    case ErrorCodes.AUTH_USER_NOT_FOUND :{
+                        alert(I18n.t("userNotFoundError"));
+                        break;
+                    }
+
+                    case ErrorCodes.AUTH_INVALID_EMAIL :{
+                        alert(I18n.t("emailInvalid"));
+                        break;
+                    }
+
+                    case ErrorCodes.AUTH_NETWORK_REQUEST_FAILED :{
+                        alert(I18n.t("networkError"));
+                        break;
+                    }
+
+                    default :{
+                        alert(I18n.t("unknowError"));
+                        break
+                    }
+                }
             })
         }
     }
@@ -77,7 +98,7 @@ class ForgotPassScreen extends PureComponent {
         return (
             <View style={styles.container}>
                 <NavBar title={I18n.t("resetPassword")} iconLeft={Images.back} onPressLeftButton={this.onPressBack}/>
-                <ScrollView contentContainerStyle={[styles.body]}>
+                <ScrollView  style ={styles.scrollView}contentContainerStyle={[styles.body]}>
                     <PlaceHolder height={10}/>
                     <Input
                         ref={"textInput"}
@@ -97,6 +118,7 @@ class ForgotPassScreen extends PureComponent {
                     {this.state.isSend &&
                     <TextLink text={I18n.t("sendAgain")} style={{alignSelf:"center"}} onPress={this.onPressSend}/> || null
                     }
+                    <PlaceHolder height={600}/>
 
                 </ScrollView>
                 <KeyboardAvoidingView
@@ -135,10 +157,13 @@ const styles = EStyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.white,
-
     },
+
+    scrollView :{
+        flex :1,
+    },
+
     body: {
-        flex: 1,
         paddingLeft: "$padding",
         paddingRight: "$padding"
     },

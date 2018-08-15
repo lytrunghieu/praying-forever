@@ -1,6 +1,6 @@
 // Libraries
 import React, { PureComponent } from 'react';
-import { View } from 'react-native';
+import { View ,Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-navigation';
@@ -28,6 +28,13 @@ class RootContainer extends PureComponent {
     }
   }
 
+  componentWillReceiveProps(nextProps){
+    if(nextProps.navigationReducer !== this.props.navigationReducer){
+      Keyboard.dismiss();
+    }
+  }
+
+
   render() {
 
     return (
@@ -43,6 +50,7 @@ class RootContainer extends PureComponent {
 }
 
 const mapStateToProps = (state) => ({
+    navigationReducer: state.navigationReducer
 })
 
 // wraps dispatch to create nicer functions to call within our component

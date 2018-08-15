@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {ScreenKey} from '../Constants';
+import {ScreenKey,ErrorCodes } from '../Constants';
 import {Colors, Metrics, Images} from '../Themes';
 import I18n from '../I18n';
 import firebase from 'react-native-firebase';
@@ -27,21 +27,27 @@ class LoginScreen extends PureComponent {
             email: "",
             validEmail : true,
             passWord: "",
-            validPassword : true
+            validPassword : true,
+            indexFocus : 0,
         };
 
         this.onPressForgot = this.onPressForgot.bind(this);
         this.onPressLogin = this.onPressLogin.bind(this);
         this.onPressSubmitEmail = this.onPressSubmitEmail.bind(this);
+        this.onPressCreateAccount = this.onPressCreateAccount.bind(this);
 
         this.onChangeEmailText = this.onChangeEmailText.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
     }
 
-    componentDidMount() {
-    }
+    componentDidMount() {}
     //endregion
 
+    onFocus(index){
+        this.setState({
+            indexFocus: index
+        });
+    }
 
     //region handle value change
 
@@ -60,6 +66,10 @@ class LoginScreen extends PureComponent {
 
     //region handle action press
 
+    onPressCreateAccount(){
+        this.props.navigation.navigate(ScreenKey.CREATE_ACCOUNT)
+    }
+
     onPressLogin(){
         const {email,passWord}  = this.state;
         let valid ={validPassword : true , validEmail : true};
@@ -73,7 +83,37 @@ class LoginScreen extends PureComponent {
             firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email,passWord).then(res =>{
               this.props.navigation.navigate(ScreenKey.PRAYING_INPROGESS);
             }).catch(err =>{
-                alert(err);
+                switch (err.code){
+                    case ErrorCodes.AUTH_USER_NOT_FOUND :{
+                        alert(I18n.t("userNotFoundError"));
+                        break;
+                    }
+
+                    case ErrorCodes.AUTH_INVALID_EMAIL :{
+                        alert(I18n.t("emailInvalid"));
+                        break;
+                    }
+
+                    case ErrorCodes.AUTH_USER_DISABLED :{
+                        alert(I18n.t("userDisabled"));
+                        break;
+                    }
+
+                    case ErrorCodes.AUTH_NETWORK_REQUEST_FAILED :{
+                        alert(I18n.t("networkError"));
+                        break;
+                    }
+
+                    case ErrorCodes.AUTH_WRONG_PASSWORD :{
+                        alert(I18n.t("wrongPassword"));
+                        break;
+                    }
+
+                    default :{
+                        alert(I18n.t("unknowError"));
+                        break
+                    }
+                }
             });
         }
         this.setState(valid);
@@ -91,16 +131,23 @@ class LoginScreen extends PureComponent {
     //region Rendering
 
     render() {
+        const {indexFocus,email,validPassword,validEmail,passWord} = this.state;
         return (
             <View style={styles.container}>
 
-                <ScrollView contentContainerStyle={[styles.body]}>
+                <ScrollView  style ={styles.scrollView} contentContainerStyle={[styles.body]}
+                             keyboardShouldPersistTaps ={"handled"}
+                >
                     <PlaceHolder height={100}/>
                     <Image source={Images.logo}/>
                     <PlaceHolder height={20}/>
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === "ios" ? "padding" : null}
+                        enabled ={indexFocus === 0}
+                    >
                     <Input
                         ref={"textInput"}
-                        value={this.state.email}
+                        value={email}
                         placeholder={I18n.t("inputEmail")}
                         onChangeText={this.onChangeEmailText}
                         isShowShadow={true}
@@ -110,17 +157,24 @@ class LoginScreen extends PureComponent {
                         hideCloseIcon ={true}
                         returnKeyLabel ={"next"}
                         autoFocus={true}
+                        onFocus={this.onFocus.bind(this,0)}
                         onSubmitEditing ={this.onPressSubmitEmail}
+                        keyboardType ={"email-address"}
                     />
+                    </KeyboardAvoidingView>
 
                     <PlaceHolder/>
                     {
-                        !this.state.validEmail && [<TextError text={I18n.t("emailNull")} style={{alignSelf:"flex-start"}}/>, <PlaceHolder/>]
+                        !validEmail && [<TextError key={"TextError"} text={I18n.t("emailNull")} style={{alignSelf:"flex-start"}}/>, <PlaceHolder key={"place holder"}/>]
                     }
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === "ios" ? "padding" : null}
+                        enabled ={indexFocus === 1}
+                    >
 
                     <Input
                         ref={"textInput2"}
-                        value={this.state.passWord}
+                        value={passWord}
                         placeholder={I18n.t("inputPassword")}
                         onChangeText={this.onChangePassword}
                         isShowShadow={true}
@@ -131,11 +185,13 @@ class LoginScreen extends PureComponent {
                         secureTextEntry ={true}
                         returnKeyLabel ={"done"}
                         onSubmitEditing ={this.onPressLogin}
+                        onFocus={this.onFocus.bind(this,1)}
                     />
+                    </KeyboardAvoidingView>
 
                     <PlaceHolder/>
                     {
-                        !this.state.validPassword && [<TextError text={I18n.t("passwordNull")} style={{alignSelf:"flex-start"}}/>, <PlaceHolder/>]
+                        !validPassword && [<TextError text={I18n.t("passwordNull")} style={{alignSelf:"flex-start"}}/>, <PlaceHolder/>]
                     }
 
                     <PlaceHolder height={10}/>
@@ -157,8 +213,9 @@ class LoginScreen extends PureComponent {
                     <View style ={styles.containerTextLinks}>
                         <TextLink text={I18n.t("forgotPassword")} onPress ={this.onPressForgot} />
                         <View style ={{flex :1}}/>
-                        <TextLink isRed={true} text={I18n.t("createAccount")}/>
+                        <TextLink isRed={true} text={I18n.t("createAccount")} onPress ={this.onPressCreateAccount} />
                     </View>
+                    <PlaceHolder height={20}/>
                 </ScrollView>
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : null}
@@ -173,90 +230,14 @@ class LoginScreen extends PureComponent {
     }
     //endregion
 
-//     onPressLogin = () => {
-//         firebase.auth()
-//             .verifyPhoneNumber("+841212515718")
-//             .on('state_changed', (phoneAuthSnapshot) => {
-//                 console.warn("state_changed:", phoneAuthSnapshot)
-//                 // How you handle these state events is entirely up to your ui flow and whether
-//                 // you need to support both ios and android. In short: not all of them need to
-//                 // be handled - it's entirely up to you, your ui and supported platforms.
-//
-//                 // E.g you could handle android specific events only here, and let the rest fall back
-//                 // to the optionalErrorCb or optionalCompleteCb functions
-//                 switch (phoneAuthSnapshot.state) {
-//                     // ------------------------
-//                     //  IOS AND ANDROID EVENTS
-//                     // ------------------------
-//                     case firebase.auth.PhoneAuthState.CODE_SENT: // or 'sent'
-//                         console.warn('code sent');
-//                         // on ios this is the final phone auth state event you'd receive
-//                         // so you'd then ask for user input of the code and build a credential from it
-//                         // as demonstrated in the `signInWithPhoneNumber` example above
-//
-//                         break;
-//                     case firebase.auth.PhoneAuthState.ERROR: // or 'error'
-//                         console.warn('verification error');
-//                         console.warn(phoneAuthSnapshot.error);
-//                         break;
-//
-//                     // ---------------------
-//                     // ANDROID ONLY EVENTS
-//                     // ---------------------
-//                     case firebase.auth.PhoneAuthState.AUTO_VERIFY_TIMEOUT: // or 'timeout'
-//                         console.warn('auto verify on android timed out');
-//                         // proceed with your manual code input flow, same as you would do in
-//                         // CODE_SENT if you were on IOS
-//                         break;
-//                     case firebase.auth.PhoneAuthState.AUTO_VERIFIED: // or 'verified'
-//                         // auto verified means the code has also been automatically confirmed as correct/received
-//                         // phoneAuthSnapshot.code will contain the auto verified sms code - no need to ask the user for input.
-//                         console.warn('auto verified on android');
-//                         console.warn(phoneAuthSnapshot);
-//                         // Example usage if handling here and not in optionalCompleteCb:
-//                         // const { verificationId, code } = phoneAuthSnapshot;
-//                         // const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, code);
-//
-//                         // Do something with your new credential, e.g.:
-//                         // firebase.auth().signInWithCredential(credential);
-//                         // firebase.auth().currentUser.linkWithCredential(credential);
-//                         // etc ...
-//                         break;
-//                 }
-//             }, (error) => {
-//                 // optionalErrorCb would be same logic as the ERROR case above,  if you've already handed
-//                 // the ERROR case in the above observer then there's no need to handle it here
-//                 alert(error);
-//                 // verificationId is attached to error if required
-//                 // alert(error.verificationId);
-//             }, (phoneAuthSnapshot) => {
-//                 // optionalCompleteCb would be same logic as the AUTO_VERIFIED/CODE_SENT switch cases above
-//                 // depending on the platform. If you've already handled those cases in the observer then
-//                 // there's absolutely no need to handle it here.
-//
-//                 // Platform specific logic:
-//                 // - if this is on IOS then phoneAuthSnapshot.code will always be null
-//                 // - if ANDROID auto verified the sms code then phoneAuthSnapshot.code will contain the verified sms code
-//                 //   and there'd be no need to ask for user input of the code - proceed to credential creating logic
-//                 // - if ANDROID auto verify timed out then phoneAuthSnapshot.code would be null, just like ios, you'd
-//                 //   continue with user input logic.
-//                 console.warn(phoneAuthSnapshot);
-//             });
-// // optionally also supports .then & .catch instead of optionalErrorCb &
-// // optionalCompleteCb (with the same resulting args)
-//
-//     }
 }
 
 const mapStateToProps = (state) => {
-    return {
-
-    }
+    return {}
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-    }
+    return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
@@ -267,8 +248,13 @@ const styles = EStyleSheet.create({
         backgroundColor: Colors.white,
 
     },
+
+    scrollView :{
+      flex :1,
+    },
+
     body: {
-        flex: 1,
+        // flex: 1,
         alignItems: 'center',
         paddingLeft: "$padding",
         paddingRight: "$padding"
