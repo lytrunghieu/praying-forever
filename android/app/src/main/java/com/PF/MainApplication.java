@@ -18,6 +18,10 @@ import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 
 //import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+import io.invertase.firebase.database.RNFirebaseDatabasePackage;
+import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 
 
 import java.util.Arrays;
@@ -39,7 +43,11 @@ public class MainApplication extends Application implements ReactApplication {
                     new RNI18nPackage(),
                     new VectorIconsPackage(),
                     new RCTSplashScreenPackage(),
-                    new RNFirebaseAuthPackage() // <-- Add this line
+                    new RNFirebaseAuthPackage(),
+                    new RNFirebaseDatabasePackage(),
+                    new RNFirebaseFirestorePackage(),
+                    new RNFirebaseNotificationsPackage(),
+                    new RNFirebaseMessagingPackage()
             );
         }
 

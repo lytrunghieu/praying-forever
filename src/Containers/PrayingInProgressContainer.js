@@ -24,7 +24,42 @@ import moment from "moment";
 import {CommonActions} from "../actions";
 import commonUtils from "../Utils/CommonUtils";
 import {AsyncStoreKeys} from "../Constants";
+import firebase ,{Notification,NotificationOpen} from 'react-native-firebase';
 
+const ref = firebase.firestore().collection('cities').doc('London');
+
+firebase.messaging().getToken()
+    .then(fcmToken => {
+        if (fcmToken) {
+            // user has a device token
+            console.log("fcmToken :", fcmToken);
+        } else {
+            // user doesn't have a device token yet
+        }
+    });
+
+
+// check permission message
+firebase.messaging().hasPermission()
+    .then(enabled => {
+        if (enabled) {
+            console.log("user have permission");
+        } else {
+            // user doesn't have permission
+        }
+    });
+
+// request permission message
+// firebase.messaging().requestPermission()
+//     .then(() => {
+//         // User has authorised
+//     })
+//     .catch(error => {
+//         // User has rejected permissions
+//     });
+
+
+// firebase.firestore().collection("cities").add({content: "Hi boy" , title :"hello"});
 
 class PrayingInProgress extends PureComponent {
 
@@ -33,7 +68,7 @@ class PrayingInProgress extends PureComponent {
         this.optionActionSheet = [
             {text: I18n.t('search'), onPress: this.onPressSearch.bind(this)},
             {text: I18n.t('deleteAll'), color: Colors.red, onPress: this.onPressDeleteAll.bind(this)}
-        ]
+        ];
         this.onPressLeft = this.onPressLeft.bind(this);
         this.onPressRight = this.onPressRight.bind(this);
         this.onPressAdd = this.onPressAdd.bind(this);
@@ -60,6 +95,38 @@ class PrayingInProgress extends PureComponent {
                 this.props.commonActions.getPrayList(JSON.parse(res));
             }
         });
+
+        this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
+            // Process your token as required
+            console.log("refresh token ", fcmToken);
+        });
+
+        this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
+            // Process your notification as required
+            // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+        });
+        this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
+            // Process your notification as required
+        });
+
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+            // Get the action triggered by the notification being opened
+            const action = notificationOpen.action;
+            // Get information about the notification that was opened
+            const notification: Notification = notificationOpen.notification;
+        });
+
+        firebase.notifications().getInitialNotification()
+            .then((notificationOpen: NotificationOpen) => {
+                if (notificationOpen) {
+                    // App was opened by a notification
+                    // Get the action triggered by the notification being opened
+                    const action = notificationOpen.action;
+                    // Get information about the notification that was opened
+                    const notification: Notification = notificationOpen.notification;
+                }
+            });
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -87,6 +154,13 @@ class PrayingInProgress extends PureComponent {
                 prays: nextProps.prays.filter(e => !e.isFinished)
             });
         }
+    }
+
+    componentWillUnmount() {
+        this.onTokenRefreshListener();
+        this.notificationDisplayedListener();
+        this.notificationListener();
+        this.notificationOpenedListener();
     }
 
     //endregion

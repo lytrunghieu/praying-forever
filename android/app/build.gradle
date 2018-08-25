@@ -106,6 +106,7 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -159,16 +160,20 @@ dependencies {
     compile project(':react-native-i18n')
     compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
+//    compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
     compile project(':react-native-smart-splashscreen')
 
 
-
+    implementation 'com.android.support:multidex:1.0.3'
     // Firebase dependencies
     implementation "com.google.android.gms:play-services-base:15.0.1"
     implementation "com.google.firebase:firebase-core:16.0.1"
     implementation "com.google.firebase:firebase-auth:16.0.2"
+    implementation "com.google.firebase:firebase-database:16.0.1"
+    implementation "com.google.firebase:firebase-firestore:17.0.2"
+    implementation "com.google.firebase:firebase-messaging:17.1.0"
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
 
 
 
