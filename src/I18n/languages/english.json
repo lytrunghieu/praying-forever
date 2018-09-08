@@ -69,6 +69,7 @@
   "logInScreen": "Login Screen",
   "logIn": "LOGIN",
   "lastNameNull" :"Last name should not empty",
+  "listCommonComponent":"List Component",
   "signUpScreen": "SignUp Screen",
   "signUp": "SignUp",
   "homeScreen": "Home Screen",

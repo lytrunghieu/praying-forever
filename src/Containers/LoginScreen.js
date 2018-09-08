@@ -14,7 +14,7 @@ import {ScreenKey,ErrorCodes } from '../Constants';
 import {Colors, Metrics, Images} from '../Themes';
 import I18n from '../I18n';
 import firebase from 'react-native-firebase';
-import {Input, TextLink, TextBase, Button, PlaceHolder, TextError} from "../Components/Common";
+import {Input, TextLink, TextBase, Button, PlaceHolder, TextError,ModalLoading} from "../Components/Common";
 import * as _ from "lodash";
 
 class LoginScreen extends PureComponent {
@@ -35,6 +35,7 @@ class LoginScreen extends PureComponent {
         this.onPressLogin = this.onPressLogin.bind(this);
         this.onPressSubmitEmail = this.onPressSubmitEmail.bind(this);
         this.onPressCreateAccount = this.onPressCreateAccount.bind(this);
+        this.onPressListComponent = this.onPressListComponent.bind(this);
 
         this.onChangeEmailText = this.onChangeEmailText.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
@@ -80,6 +81,7 @@ class LoginScreen extends PureComponent {
           valid.validPassword = false;
         }
         if(valid.validPassword && valid.validEmail){
+            this.refs["loading"].open();
             firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email,passWord).then(res =>{
               this.props.navigation.navigate(ScreenKey.PRAYING_INPROGESS);
             }).catch(err =>{
@@ -114,6 +116,8 @@ class LoginScreen extends PureComponent {
                         break
                     }
                 }
+            }).finally(() =>{
+                this.refs["loading"].close();
             });
         }
         this.setState(valid);
@@ -126,6 +130,11 @@ class LoginScreen extends PureComponent {
     onPressForgot(){
         this.props.navigation.navigate(ScreenKey.FORGOT_PASS);
     }
+
+    onPressListComponent(){
+        this.props.navigation.navigate(ScreenKey.LIST_COMMON);
+    }
+
     //endregion
 
     //region Rendering
@@ -156,7 +165,6 @@ class LoginScreen extends PureComponent {
                         leftIcon={Images.user}
                         hideCloseIcon ={true}
                         returnKeyLabel ={"next"}
-                        autoFocus={true}
                         onFocus={this.onFocus.bind(this,0)}
                         onSubmitEditing ={this.onPressSubmitEmail}
                         keyboardType ={"email-address"}
@@ -215,8 +223,12 @@ class LoginScreen extends PureComponent {
                         <View style ={{flex :1}}/>
                         <TextLink isRed={true} text={I18n.t("createAccount")} onPress ={this.onPressCreateAccount} />
                     </View>
+                    <TextLink text={I18n.t("listCommonComponent")} onPress ={this.onPressListComponent} />
                     <PlaceHolder height={20}/>
                 </ScrollView>
+                <ModalLoading
+                    ref ="loading"
+                />
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : null}
                     enabled

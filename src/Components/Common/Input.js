@@ -63,7 +63,7 @@ Input.defaultProps = {
     customBorder: false,
     customBorderColor: Colors.black,
     customBorderRadius: globalStyle.$borderRadiusNormal,
-    customBorderWidth: globalStyle.$borderWidthLarge,
+    customBorderWidth: globalStyle.$borderWidthNormal,
     hideCloseIcon: false
 };
 

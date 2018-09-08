@@ -20,6 +20,7 @@ import  ButtonAction from "./ButtonAction";
 import  TextError from "./TextError";
 import  TextLink from "./TextLink";
 import  TextBase from "./TextBase";
+import  ModalLoading from "./ModalLoading";
 
 export {
     NavBar,
@@ -43,5 +44,6 @@ export {
     ButtonAction,
     TextError,
     TextLink,
-    TextBase
+    TextBase,
+    ModalLoading
 };

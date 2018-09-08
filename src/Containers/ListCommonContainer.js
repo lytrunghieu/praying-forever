@@ -3,7 +3,7 @@
  */
 
 import React, {PureComponent} from "react";
-import {View, ScrollView, Text, TouchableOpacity, StyleSheet} from "react-native";
+import {View, ScrollView, Text, TouchableOpacity, StyleSheet,ActivityIndicator} from "react-native";
 import {
     NavBar,
     PlaceHolder,
@@ -24,7 +24,8 @@ import {
     TextArea,
     RowItem,
     TextError,
-    TextLink
+    TextLink,
+    ModalLoading
 } from "../Components/Common";
 import {Images, Colors} from "../Themes"
 import * as _ from "lodash";
@@ -39,6 +40,7 @@ export default class ListCommon extends PureComponent {
         this.showDropdownPopup = this.showDropdownPopup.bind(this);
         this.showConfirmModal = this.showConfirmModal.bind(this);
         this.showActionSheet = this.showActionSheet.bind(this);
+        this.showLoadingModal = this.showLoadingModal.bind(this);
         this.onPressCheckbox = this.onPressCheckbox.bind(this);
         this.showCheckboxList = this.showCheckboxList.bind(this);
         this.onChangeValueSwitch = this.onChangeValueSwitch.bind(this);
@@ -85,6 +87,7 @@ export default class ListCommon extends PureComponent {
             valueTextInput: "",
             valueHeaderSearch: "",
         };
+
     }
 
     onDeleteTextInputSearch() {
@@ -154,6 +157,10 @@ export default class ListCommon extends PureComponent {
 
     showCheckboxList() {
         this.refs["checkboxList"].open();
+    }
+
+    showLoadingModal() {
+        this.refs["loading"].open();
     }
 
     render() {
@@ -254,6 +261,8 @@ export default class ListCommon extends PureComponent {
                         <Text onPress={this.showActionSheet}>Show Action Sheet</Text>
                         <PlaceHolder/>
                         <Text onPress={this.showCheckboxList}>Show checkbox Modal</Text>
+                        <PlaceHolder/>
+                        <Text onPress={this.showLoadingModal}>Show Loading Modal</Text>
                         <PlaceHolder/>
                     </View>
 
@@ -374,6 +383,10 @@ export default class ListCommon extends PureComponent {
                     ref={"checkboxList"}
                     options={checkboxList}
                     textDone={"DONE"}
+                />
+
+                <ModalLoading
+                    ref={"loading"}
                 />
 
             </View>

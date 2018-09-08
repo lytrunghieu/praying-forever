@@ -2,7 +2,8 @@ import React, {PureComponent} from "react";
 import Modal from 'react-native-modalbox';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {
-    TouchableOpacity
+    TouchableOpacity,
+    Keyboard
 } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -16,6 +17,8 @@ export default class ModalBase extends PureComponent {
         this.isCenter = true;
         this.animationDuration =500;
         this.backdropOpacity = 0.5;
+        this.backdropPressToClose = true;
+        this.backButtonClose = true;
 
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
@@ -24,6 +27,7 @@ export default class ModalBase extends PureComponent {
 
     open(){
         this.refs["modal"].open();
+        Keyboard.dismiss();
         // this.setState({
         //     visible :true
         // });
@@ -47,13 +51,16 @@ export default class ModalBase extends PureComponent {
                 style={[styles.modal]}
                 ref={"modal"}
                 // isOpen={this.state.visible}
+                backdropPressToClose ={this.backdropPressToClose}
                 animationDuration={this.animationDuration}
                 swipeToClose={false}
                 backdropOpacity={this.backdropOpacity}
+                backButtonClose ={this.backButtonClose}
             >
                 <TouchableOpacity style={[styles.container ,  this.isCenter  && styles.containerCenter ]}
                                   activeOpacity={1}
                                   onPress={this.close}
+                                  disabled ={!this.backdropPressToClose}
 
                 >
                     <TouchableOpacity
@@ -78,9 +85,9 @@ const styles = EStyleSheet.create({
     },
 
     container: {
-        flex: 1,
         alignItems: "center",
         justifyContent:"flex-end",
+        flex: 1,
 
     },
 
