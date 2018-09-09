@@ -69,7 +69,7 @@ const styles = EStyleSheet.create({
     },
 
     fit: {
-        width: null,
+        width: "100%",
         flex: 0,
     },
 

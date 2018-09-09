@@ -77,7 +77,6 @@ class CreateAccountContainer extends PureComponent {
 
         if (indexFocus < inputKey.LASTNAME.index) {
             let ref = "textInput".concat(indexFocus+2);
-            console.log("ref :",ref);
             this.refs[ref].focus();
         }
     }

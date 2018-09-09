@@ -25,20 +25,32 @@ import {
     Button
 } from '../Components/Common';
 import moment from "moment";
-import  commonUtils from "../Utils/CommonUtils"
+import commonUtils from "../Utils/CommonUtils";
+import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
+import {Pray} from "../model";
+import {StatusOfPray} from "../Constants";
 
+
+let collect = firebase.firestore().collection("pray");
 
 class CreatePraying extends PureComponent {
+
+    //region cycle life
 
     constructor(props) {
         super(props);
         const dataPassed = props.navigation.state.params;
+
+        //Need pass to handle edit action
         this.isEdit = dataPassed ? true : false;
-        this.id = dataPassed && dataPassed.id || null;
-        this.created = dataPassed  && dataPassed.created ;
+        this.uid = dataPassed && dataPassed.uid || null;
+        this.created = dataPassed && dataPassed.created;
+        this.owner = dataPassed && dataPassed.owner;
+        this.status = dataPassed && dataPassed.status;
+
         this.state = {
             title: dataPassed && dataPassed.title || "",
-            content: dataPassed && dataPassed.content ||"",
+            content: dataPassed && dataPassed.content || "",
             options: [
                 {
                     text: I18n.t("health"),
@@ -51,9 +63,9 @@ class CreatePraying extends PureComponent {
                     isChecked: false,
                 }
             ],
-            isReminder: dataPassed && dataPassed.isReminder ||false,
-            timeReminder: dataPassed && dataPassed.timeReminder ||  moment().valueOf(),
-            showDateTimePickerIOS : false
+            isReminder: dataPassed && dataPassed.isReminder || false,
+            timeReminder: dataPassed && dataPassed.timeReminder || moment().valueOf(),
+            showDateTimePickerIOS: false
         };
         this.onPressBack = this.onPressBack.bind(this);
         this.onChangeText = this.onChangeText.bind(this);
@@ -70,33 +82,47 @@ class CreatePraying extends PureComponent {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
+    //endregion
+
     onSubmitEditingTitle() {
         this.refs["textArea"].focus();
     }
 
-    onSubmit(){
-        const {title, content, isReminder, timeReminder } = this.state;
-        let params = {title, content, isReminder, timeReminder};
-        if(this.isEdit){
-            params.id = this.id;
-            params.created = this.created;
-            this.props.commonActions.editPray(params);
+    onSubmit() {
+        const {title, content, isReminder, timeReminder} = this.state;
+        let params = {title, content};
+        if (this.isEdit) {
+            params.uid = this.uid;
+            let dataSend =  Pray.removeFieldEmpty(new Pray(params));
+            const result = collect.doc(this.uid);
+            result.update(dataSend).then(res =>{
+                this.props.commonActions.editPray(params);
+            });
         }
-        else{
+        else {
             params.created = moment().valueOf();
-            this.props.commonActions.createNewPray(params);
+            params.owner = {uid: firebase.auth().currentUser.uid};
+            params.status = StatusOfPray.INPROGRESS;
+
+            let dataSend = new Pray(params);
+            collect.add(dataSend).then(res => {
+                res.get().then(res2 => {
+                    let result = new Pray({...res2.data(), uid: res2.id});
+                    this.props.commonActions.createNewPray(result);
+                });
+            })
         }
         this.onPressBack();
     }
 
     onPressEditTimeClock() {
         const {timeReminder} = this.state;
-        if(Platform.OS ==="ios"){
+        if (Platform.OS === "ios") {
             this.setState({
-               showDateTimePickerIOS : !this.state.showDateTimePickerIOS
+                showDateTimePickerIOS: !this.state.showDateTimePickerIOS
             });
         }
-        else{
+        else {
             this.openTimePickerAndroid(timeReminder);
         }
     }
@@ -155,25 +181,25 @@ class CreatePraying extends PureComponent {
         });
     }
 
-    onDateChange(date){
+    onDateChange(date) {
         this.setState({
-           timeReminder : moment(date).valueOf()
+            timeReminder: moment(date).valueOf()
         });
     }
 
-    async openTimePickerAndroid(currentTime){
+    async openTimePickerAndroid(currentTime) {
         try {
             const {action, hour, minute} = await TimePickerAndroid.open({
                 hour: moment(currentTime).hour(),
                 minute: moment(currentTime).minute(),
                 is24Hour: false, // Will display '2 PM'
-                mode :"spinner"
+                mode: "spinner"
             });
             if (action !== TimePickerAndroid.dismissedAction) {
                 // Selected hour (0-23), minute (0-59)
             }
             this.setState({
-                timeReminder : moment({hour: hour , minute:minute}).valueOf()
+                timeReminder: moment({hour: hour, minute: minute}).valueOf()
             })
 
         } catch ({code, message}) {
@@ -217,39 +243,38 @@ class CreatePraying extends PureComponent {
                         onChangeText={this.onChangeContent}
                     />
                     <PlaceHolder/>
-                    <SwitchRowItem title={I18n.t("reminder")}
-                                   onValueChange={this.onChangeReminderStatus}
-                                   value={this.state.isReminder}
-                    />
-                    <PlaceHolder/>
-                    {this.state.isReminder &&
-                    <View>
-                        <RowItem title={moment(timeReminder).format("hh:mm a")} icon={Images.edit}
-                                 onPress={this.onPressEditTimeClock}/>
-                        <PlaceHolder/>
-                    </View> || null
-                    }
-                    {
-                        this.state.showDateTimePickerIOS &&
-                            <DatePickerIOS
-                                date={new Date(this.state.timeReminder)}
-                                mode ="time"
-                                onDateChange ={this.onDateChange}
-                            /> || null
-                    }
+                    {/*<SwitchRowItem title={I18n.t("reminder")}*/}
+                                   {/*onValueChange={this.onChangeReminderStatus}*/}
+                                   {/*value={this.state.isReminder}*/}
+                    {/*/>*/}
+                    {/*<PlaceHolder/>*/}
+                    {/*{this.state.isReminder &&*/}
+                    {/*<View>*/}
+                        {/*<RowItem title={moment(timeReminder).format("hh:mm a")} icon={Images.edit}*/}
+                                 {/*onPress={this.onPressEditTimeClock}/>*/}
+                        {/*<PlaceHolder/>*/}
+                    {/*</View> || null*/}
+                    {/*}*/}
+                    {/*{*/}
+                        {/*this.state.showDateTimePickerIOS &&*/}
+                        {/*<DatePickerIOS*/}
+                            {/*date={new Date(this.state.timeReminder)}*/}
+                            {/*mode="time"*/}
+                            {/*onDateChange={this.onDateChange}*/}
+                        {/*/> || null*/}
+                    {/*}*/}
 
 
                 </ScrollView>
                 <View style={styles.buttonCreateContainer}>
                     {this.state.title && this.state.content &&
-                    <Button
-                        onPress={this.onSubmit}
-                        text={this.isEdit ? I18n.t("save") : I18n.t("create")}
-                    /> || null
+
+                    <Button  text={this.isEdit ? I18n.t("save") : I18n.t("create")} fit={true} height={54} customeBorder={true} borderRadius={0} onPress={this.onSubmit} />
+
+                        || null
                     }
 
                 </View>
-                <PlaceHolder/>
                 <CheckboxModal
                     ref="checkBoxModal"
                     textDone={I18n.t("done")}
@@ -262,9 +287,7 @@ class CreatePraying extends PureComponent {
 
 }
 
-const mapStateToProps = (state) => ({
-
-})
+const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = (dispatch) => ({
     commonActions: bindActionCreators(CommonActions, dispatch),

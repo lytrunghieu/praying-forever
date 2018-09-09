@@ -8,11 +8,16 @@ import {
     FlatList,TouchableHighlight
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {ScreenKey} from '../Constants';
+import {ScreenKey,StatusOfPray} from '../Constants';
 import {Colors, Images, ApplicationStyles} from '../Themes';
 import I18n from '../I18n';
 import {NavBar, ImageBackground, ActionSheet, ButtonAction, PrayItem, PlaceHolder,ConfirmModal} from '../Components/Common';
 import moment from "moment";
+import Pray from "../model/Pray";
+
+import firebase from 'react-native-firebase';
+
+let collect = firebase.firestore().collection("pray");
 
 class PrayFinished extends PureComponent {
     constructor(props) {
@@ -30,7 +35,7 @@ class PrayFinished extends PureComponent {
         this.renderListHeaderComponent = this.renderListHeaderComponent.bind(this);
         this.onAcceptDeleteAll = this.onAcceptDeleteAll.bind(this);
         this.state ={
-          prays : props.prays.filter(e =>e.isFinished)
+          prays : props.prays.filter(e =>e.status == StatusOfPray.COMPLETE)
         };
     }
 
@@ -39,7 +44,7 @@ class PrayFinished extends PureComponent {
     componentWillReceiveProps(nextProps){
         if(nextProps.prays !== this.props.prays){
             this.setState({
-                prays : nextProps.prays.filter(e =>e.isFinished)
+                prays : nextProps.prays.filter(e =>e.status == StatusOfPray.COMPLETE)
             });
         }
     }
@@ -84,7 +89,11 @@ class PrayFinished extends PureComponent {
     //region Handle Pray Item
 
     onPressContinue(item){
-        this.props.commonActions.changeStatusPray({status:false , pray : item});
+        const currentDoc =  collect.doc(item.uid);
+        const dataSend = Pray.removeFieldEmpty( new Pray({status : StatusOfPray.INPROGRESS}));
+        currentDoc.update(dataSend).then(res =>{
+            this.props.commonActions.changeStatusPray({status: StatusOfPray.INPROGRESS, pray: item});
+        });
     }
 
     onPressDeleteSpecificPray(item){

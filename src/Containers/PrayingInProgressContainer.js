@@ -1,4 +1,3 @@
-
 import React, {PureComponent} from 'react';
 import {
     View,
@@ -24,17 +23,21 @@ import moment from "moment";
 import {CommonActions} from "../actions";
 import commonUtils from "../Utils/CommonUtils";
 import {AsyncStoreKeys} from "../Constants";
-import firebase ,{Notification,NotificationOpen} from 'react-native-firebase';
+import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
+import {Pray} from '../model';
+import StatusOfPray from "../Constants/StatusOfPray";
 
-const ref = firebase.firestore().collection('cities').doc('London');
+const collect = firebase.firestore().collection('pray');
+
 
 firebase.messaging().getToken()
     .then(fcmToken => {
         if (fcmToken) {
             // user has a device token
-            console.log("fcmToken :", fcmToken);
+            // console.log("fcmToken :", fcmToken);
         } else {
             // user doesn't have a device token yet
+            console.log("user doesn't have a device token yet");
         }
     });
 
@@ -43,23 +46,13 @@ firebase.messaging().getToken()
 firebase.messaging().hasPermission()
     .then(enabled => {
         if (enabled) {
-            console.log("user have permission");
+            // console.log("user have permission");
         } else {
             // user doesn't have permission
+            console.log("user doesn't have permission");
         }
     });
 
-// request permission message
-// firebase.messaging().requestPermission()
-//     .then(() => {
-//         // User has authorised
-//     })
-//     .catch(error => {
-//         // User has rejected permissions
-//     });
-
-
-// firebase.firestore().collection("cities").add({content: "Hi boy" , title :"hello"});
 
 class PrayingInProgress extends PureComponent {
 
@@ -81,7 +74,7 @@ class PrayingInProgress extends PureComponent {
         this.onChangeKeySearch = this.onChangeKeySearch.bind(this);
         this.onPressBackSearch = this.onPressBackSearch.bind(this);
         this.state = {
-            prays: props.prays.filter(e => e.isFinished),
+            prays: props.prays.filter(e => e.status == StatusOfPray.INPROGRESS),
             isSearch: false,
             keySearch: "",
         };
@@ -90,15 +83,25 @@ class PrayingInProgress extends PureComponent {
     //region cycle life
 
     componentDidMount() {
-        commonUtils.retrieveData(AsyncStoreKeys.PRAY_LIST).then(res => {
-            if (res) {
-                this.props.commonActions.getPrayList(JSON.parse(res));
+
+        let prayList = [];
+        collect.get().then(snapshot => {
+            snapshot.forEach(e => {
+                let data = new Pray( {...e.data() , uid :e.id});
+                if (data.owner && data.owner.uid == firebase.auth().currentUser.uid) {
+                    prayList.push(data);
+                }
+            });
+
+            if (prayList) {
+                this.props.commonActions.getPrayList(prayList);
             }
-        });
+        })
+
 
         this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
             // Process your token as required
-            console.log("refresh token ", fcmToken);
+            // console.log("refresh token ", fcmToken);
         });
 
         this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
@@ -132,7 +135,7 @@ class PrayingInProgress extends PureComponent {
     componentWillReceiveProps(nextProps) {
         if (nextProps.prays !== this.props.prays) {
             this.setState({
-                prays: nextProps.prays.filter(e => !e.isFinished)
+                prays: nextProps.prays.filter(e => e.status == StatusOfPray.INPROGRESS)
             });
         }
     }
@@ -142,7 +145,7 @@ class PrayingInProgress extends PureComponent {
             const {prays} = nextProps;
             const newPrays = prays.filter(e => {
                 let contentFormated = commonUtils.trim(e.content).toUpperCase();
-                return !e.isFinished && contentFormated.indexOf(nextState.keySearch.toUpperCase()) != -1 ? true : false;
+                return e.status == StatusOfPray.INPROGRESS && contentFormated.indexOf(nextState.keySearch.toUpperCase()) != -1 ? true : false;
             });
             this.setState({
                 prays: newPrays
@@ -151,7 +154,7 @@ class PrayingInProgress extends PureComponent {
 
         if (!nextState.isSearch && this.state.isSearch && !nextState.keySearch) {
             this.setState({
-                prays: nextProps.prays.filter(e => !e.isFinished)
+                prays: nextProps.prays.filter(e => e.status == StatusOfPray.COMPLETE)
             });
         }
     }
@@ -180,6 +183,7 @@ class PrayingInProgress extends PureComponent {
             keySearch: ""
         });
     }
+
     //endregion
 
     //region handle action modal
@@ -235,11 +239,21 @@ class PrayingInProgress extends PureComponent {
     }
 
     onPressFinish(item) {
-        this.props.commonActions.changeStatusPray({status: true, pray: item});
+        const currentDoc =  collect.doc(item.uid);
+        const dataSend = Pray.removeFieldEmpty( new Pray({status : StatusOfPray.COMPLETE}));
+        currentDoc.update(dataSend).then(res =>{
+            this.props.commonActions.changeStatusPray({status: StatusOfPray.COMPLETE, pray: item});
+        });
     }
 
     onPressDeleteSpecificPray(item) {
-        this.props.commonActions.deletePray(item);
+        const currentDoc =  collect.doc(item.uid);
+        currentDoc.onSnapshot(obsOrNext => {
+           if(!obsOrNext.data()){
+               this.props.commonActions.deletePray(item);
+           }
+        });
+        currentDoc.delete();
     }
 
 

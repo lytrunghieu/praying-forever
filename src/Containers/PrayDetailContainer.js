@@ -24,7 +24,7 @@ class PrayDetail extends PureComponent {
         super(props);
         const dataPassed = props.navigation.state.params;
         this.pray = dataPassed;
-        this.id = dataPassed && dataPassed.id || null
+        this.uid = dataPassed && dataPassed.uid || null
         this.optionActionSheet = [
             {text: I18n.t('edit'), onPress: this.onPressEdit.bind(this)},
             {text: I18n.t('delete'), color: Colors.red, onPress: this.onPressDelete.bind(this)}
@@ -42,7 +42,7 @@ class PrayDetail extends PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.prays && nextProps.prays !== this.props.prays) {
-            const currentPray = nextProps.prays.find(e => e.id === this.id);
+            const currentPray = nextProps.prays.find(e => e.uid === this.uid);
             if (currentPray) {
                 this.pray = currentPray;
                 this.setState({

@@ -3,11 +3,13 @@ import React, {PureComponent} from 'react'
 import {StyleSheet, Text, View, Image, ScrollView} from 'react-native'
 import {connect} from 'react-redux';
 import I18n from '../I18n';
-import {ScreenKey} from '../Constants';
+import {ScreenKey,StatusOfPray} from '../Constants';
 import {Images, Colors, Metrics} from '../Themes';
 import {Option} from "../Components/Common";
 import firebase from 'react-native-firebase';
 import {NavigationActions} from "react-navigation";
+
+
 
 class DrawerContainer extends PureComponent {
 
@@ -35,7 +37,7 @@ class DrawerContainer extends PureComponent {
 
     render() {
         const {navigation: {navigate}, logout, activeItemKey, prays} = this.props;
-        const praysFinished = prays.filter(e => e.isFinished);
+        const praysFinished = prays.filter(e => e.status == StatusOfPray.COMPLETE);
 
         return (
             <View style={styles.container}>
