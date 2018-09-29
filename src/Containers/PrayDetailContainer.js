@@ -8,9 +8,10 @@ import {
     ScrollView
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {ScreenKey} from '../Constants';
+import {ScreenKey,StatusOfPray} from '../Constants';
 import {Colors, Images, ApplicationStyles} from '../Themes';
 import I18n from '../I18n';
+import Pray from '../model/Pray';
 import {
     NavBar,
     ActionSheet,
@@ -18,17 +19,34 @@ import {
     ConfirmModal,
     RowItem
 } from '../Components/Common';
+import firebase from 'react-native-firebase';
+import PrayStatus from "../model/PrayStatus";
+
+let collect = firebase.firestore().collection("pray");
 
 class PrayDetail extends PureComponent {
     constructor(props) {
         super(props);
         const dataPassed = props.navigation.state.params;
         this.pray = dataPassed;
-        this.uid = dataPassed && dataPassed.uid || null
-        this.optionActionSheet = [
+        this.uid = dataPassed && dataPassed.uid || null;
+        this.optionActionSheet = [];
+        const {status} = this.pray;
+        if(status === StatusOfPray.INPROGRESS){
+            this.optionActionSheet.push(
+                {text: I18n.t('updateToFinish'), onPress: this.onPressChangeToFinished.bind(this)},
+            );
+        }
+        else{
+            this.optionActionSheet.push(
+                {text: I18n.t('continuesPraying'), onPress: this.onPressContinuesPraying.bind(this)},
+            );
+        }
+        this.optionActionSheet = this.optionActionSheet.concat([
             {text: I18n.t('edit'), onPress: this.onPressEdit.bind(this)},
             {text: I18n.t('delete'), color: Colors.red, onPress: this.onPressDelete.bind(this)}
-        ]
+        ]);
+
         this.onPressBack = this.onPressBack.bind(this);
         this.onPressRightHeader = this.onPressRightHeader.bind(this);
         this.onAcceptDelete = this.onAcceptDelete.bind(this);
@@ -56,6 +74,29 @@ class PrayDetail extends PureComponent {
     //endregion
 
     //region handle Action Sheet
+
+
+    onPressContinuesPraying() {
+        const item = this.pray;
+        const currentDoc =  collect.doc(item.uid);
+        const dataSend = Pray.removeFieldEmpty( new Pray({status : StatusOfPray.INPROGRESS}));
+        currentDoc.update(dataSend).then(res =>{
+            this.props.commonActions.changeStatusPray({status: StatusOfPray.INPROGRESS, pray: item});
+            this.onPressBack();
+        });
+    }
+
+
+    onPressChangeToFinished() {
+        const item = this.pray;
+        const currentDoc =  collect.doc(item.uid);
+        const dataSend = Pray.removeFieldEmpty( new Pray({status : StatusOfPray.COMPLETE}));
+        currentDoc.update(dataSend).then(res =>{
+            this.props.commonActions.changeStatusPray({status: StatusOfPray.COMPLETE, pray: item});
+            this.onPressBack();
+        });
+    }
+
 
     onPressEdit() {
         this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, this.pray);

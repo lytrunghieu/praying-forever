@@ -6,6 +6,7 @@
   "createAccountTitle":"Create Account",
 
   "continues":"Continues",
+  "continuesPraying":"Continues Praying",
   "checkResetPasswordEmail":"Reset password email send success",
   "search":"Search",
   "deleteAll":"Delete All",
@@ -61,7 +62,7 @@
   "userNotFoundError":"There is no user corresponding to the given email",
   "unknowError":"Unknow error",
   "userDisabled":"The user corresponding to the given email has been disabled.",
-
+  "updateToFinish":"Change to Finished",
 
 
 
