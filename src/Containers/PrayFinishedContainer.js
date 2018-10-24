@@ -8,16 +8,16 @@ import {
     FlatList,TouchableHighlight
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {ScreenKey,StatusOfPray} from '../Constants';
+import {StatusOfPray,EventRegisterTypes,ScreenKey} from "../Constants";
 import {Colors, Images, ApplicationStyles} from '../Themes';
 import I18n from '../I18n';
 import {NavBar, ImageBackground, ActionSheet, ButtonAction, PrayItem, PlaceHolder,ConfirmModal} from '../Components/Common';
 import moment from "moment";
 import Pray from "../model/Pray";
+import commonUtils from "../Utils/CommonUtils";
 
 import firebase from 'react-native-firebase';
 
-let collect = firebase.firestore().collection("pray");
 
 class PrayFinished extends PureComponent {
     constructor(props) {
@@ -51,10 +51,6 @@ class PrayFinished extends PureComponent {
     //endregion
 
     //region other
-    onPressAdd() {
-        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING);
-    }
-
 
     keyExtractor(item, index) {
         return index.toString();
@@ -69,7 +65,8 @@ class PrayFinished extends PureComponent {
     }
 
     onAcceptDeleteAll(){
-        this.props.commonActions.deleteAllPrayInprogress();
+        const action ={ type :  EventRegisterTypes.DELETE_ALL_PRAY_COMPLETED, params : {inProgress: false}};
+        commonUtils.sendEvent(action);
         this.refs["confirm"].close();
     }
     //endregion
@@ -89,15 +86,13 @@ class PrayFinished extends PureComponent {
     //region Handle Pray Item
 
     onPressContinue(item){
-        const currentDoc =  collect.doc(item.uid);
-        const dataSend = Pray.removeFieldEmpty( new Pray({status : StatusOfPray.INPROGRESS}));
-        currentDoc.update(dataSend).then(res =>{
-            this.props.commonActions.changeStatusPray({status: StatusOfPray.INPROGRESS, pray: item});
-        });
+        const action ={ type :  EventRegisterTypes.UPDATE_STATUS_PRAY, params : {...item, status : StatusOfPray.INPROGRESS}};
+        commonUtils.sendEvent(action);
     }
 
     onPressDeleteSpecificPray(item){
-        this.props.commonActions.deletePray(item);
+        const action ={ type :  EventRegisterTypes.DELETE_PRAY, params : item};
+        commonUtils.sendEvent(action);
     }
 
     onPressPrayItem(item){
@@ -169,7 +164,7 @@ class PrayFinished extends PureComponent {
                     ListFooterComponent ={this.renderListFooterComponent}
 
                 />
-                <ButtonAction onPress={this.onPressAdd}/>
+
                 <ActionSheet
                     options={this.optionActionSheet}
                     ref={"moreAction"}

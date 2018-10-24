@@ -41,18 +41,19 @@ export function deletePray(params) {
     }
 }
 
-export function deleteAllPrayInprogress() {
+export function deleteAllPrayInprogress(params) {
     return function (dispatch) {
         dispatch({
             type: actionTypes.DELETE_ALL_PRAY_INPROGRESS_SUCCESS,
+            data :params
         });
     }
 }
 
-export function getPrayList(params) {
+export function updatePrayList(params) {
     return function (dispatch) {
         dispatch({
-            type: actionTypes.GET_PRAY_LIST_SUCCESS,
+            type: actionTypes.UPDATE_PRAY_LIST_SUCCESS,
             data: params
         });
     }

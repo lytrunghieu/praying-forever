@@ -2,6 +2,7 @@
 export default  styles ={
     $padding : 16,
     $paddingSmall : 10,
+    $heightRowLarge : 74,
     $heightRowNormal : 54,
     $heightRowSmall : 40,
     $widthRow : "100%",

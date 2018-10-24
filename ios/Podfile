@@ -10,12 +10,16 @@ target 'RNTemplate' do
   target 'RNTemplate-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
+
+    pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
+
   end
 
   target 'RNTemplateTests' do
     inherit! :search_paths
     # Pods for testing
   end
+
 
 end
 

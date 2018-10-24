@@ -2,16 +2,14 @@ import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {CommonActions} from "../actions";
-
 import {
     View,
     ScrollView
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {ScreenKey,StatusOfPray} from '../Constants';
+import {ScreenKey,StatusOfPray,EventRegisterTypes} from '../Constants';
 import {Colors, Images, ApplicationStyles} from '../Themes';
 import I18n from '../I18n';
-import Pray from '../model/Pray';
 import {
     NavBar,
     ActionSheet,
@@ -19,10 +17,11 @@ import {
     ConfirmModal,
     RowItem
 } from '../Components/Common';
-import firebase from 'react-native-firebase';
-import PrayStatus from "../model/PrayStatus";
+import commonUtils from "../Utils/CommonUtils";
 
-let collect = firebase.firestore().collection("pray");
+const optionActionSheetForFinished = [
+
+]
 
 class PrayDetail extends PureComponent {
     constructor(props) {
@@ -30,29 +29,27 @@ class PrayDetail extends PureComponent {
         const dataPassed = props.navigation.state.params;
         this.pray = dataPassed;
         this.uid = dataPassed && dataPassed.uid || null;
-        this.optionActionSheet = [];
-        const {status} = this.pray;
-        if(status === StatusOfPray.INPROGRESS){
-            this.optionActionSheet.push(
-                {text: I18n.t('updateToFinish'), onPress: this.onPressChangeToFinished.bind(this)},
-            );
-        }
-        else{
-            this.optionActionSheet.push(
-                {text: I18n.t('continuesPraying'), onPress: this.onPressContinuesPraying.bind(this)},
-            );
-        }
-        this.optionActionSheet = this.optionActionSheet.concat([
+        this.optionActionSheetForFinished = [
+            {text: I18n.t('continuesPraying'), onPress: this.onPressContinuesPraying.bind(this)},
             {text: I18n.t('edit'), onPress: this.onPressEdit.bind(this)},
             {text: I18n.t('delete'), color: Colors.red, onPress: this.onPressDelete.bind(this)}
-        ]);
+        ];
+
+        this.optionActionSheetForInprogress = [
+            {text: I18n.t('updateToFinish'), onPress: this.onPressChangeToFinished.bind(this)},
+            {text: I18n.t('edit'), onPress: this.onPressEdit.bind(this)},
+            {text: I18n.t('delete'), color: Colors.red, onPress: this.onPressDelete.bind(this)}
+        ];
+        const {status} = this.pray;
 
         this.onPressBack = this.onPressBack.bind(this);
         this.onPressRightHeader = this.onPressRightHeader.bind(this);
         this.onAcceptDelete = this.onAcceptDelete.bind(this);
+        this.callbackChangeStatusPray = this.callbackChangeStatusPray.bind(this);
         this.state = {
             title: dataPassed.title,
-            content: dataPassed.content
+            content: dataPassed.content,
+            status : status
         };
     }
 
@@ -76,25 +73,24 @@ class PrayDetail extends PureComponent {
     //region handle Action Sheet
 
 
+    callbackChangeStatusPray(){
+        const {status} = this.state;
+        this.setState({
+           status : status === StatusOfPray.INPROGRESS ? StatusOfPray.COMPLETE : StatusOfPray.INPROGRESS
+        });
+    }
+
     onPressContinuesPraying() {
         const item = this.pray;
-        const currentDoc =  collect.doc(item.uid);
-        const dataSend = Pray.removeFieldEmpty( new Pray({status : StatusOfPray.INPROGRESS}));
-        currentDoc.update(dataSend).then(res =>{
-            this.props.commonActions.changeStatusPray({status: StatusOfPray.INPROGRESS, pray: item});
-            this.onPressBack();
-        });
+        const action ={ type :  EventRegisterTypes.UPDATE_STATUS_PRAY, callback : this.callbackChangeStatusPray , params : {...item, status : StatusOfPray.INPROGRESS}};
+        commonUtils.sendEvent(action);
     }
 
 
     onPressChangeToFinished() {
         const item = this.pray;
-        const currentDoc =  collect.doc(item.uid);
-        const dataSend = Pray.removeFieldEmpty( new Pray({status : StatusOfPray.COMPLETE}));
-        currentDoc.update(dataSend).then(res =>{
-            this.props.commonActions.changeStatusPray({status: StatusOfPray.COMPLETE, pray: item});
-            this.onPressBack();
-        });
+        const action ={ type :  EventRegisterTypes.UPDATE_STATUS_PRAY, callback : this.callbackChangeStatusPray, params : {...item, status : StatusOfPray.COMPLETE}};
+        commonUtils.sendEvent(action);
     }
 
 
@@ -112,9 +108,11 @@ class PrayDetail extends PureComponent {
     //region handle confirm modal
 
     onAcceptDelete() {
-        this.props.commonActions.deletePray(this.pray);
+        const item = this.pray;
+        const action ={ type :  EventRegisterTypes.DELETE_PRAY, params : item};
+        commonUtils.sendEvent(action);
         this.refs["confirm"].close();
-        this.onPressBack()
+        this.onPressBack();
     }
 
     //endregion
@@ -134,7 +132,7 @@ class PrayDetail extends PureComponent {
     //region rendering
 
     render() {
-        const {title, content} = this.state;
+        const {title, content, status} = this.state;
 
         return (
             <View style={ApplicationStyles.screen.mainContainerWithBackgroundColor}>
@@ -151,7 +149,7 @@ class PrayDetail extends PureComponent {
                     <RowItem value={content} canPress={false} scaled={true}/>
                 </ScrollView>
                 <ActionSheet
-                    options={this.optionActionSheet}
+                    options={status === StatusOfPray.INPROGRESS ? this.optionActionSheetForInprogress  : this.optionActionSheetForFinished}
                     ref={"moreAction"}
                 />
                 <ConfirmModal

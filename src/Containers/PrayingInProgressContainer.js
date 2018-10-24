@@ -1,12 +1,11 @@
 import React, {PureComponent} from 'react';
 import {
     View,
-    FlatList
+    FlatList,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {ScreenKey} from '../Constants';
 import {Colors, Images, ApplicationStyles} from '../Themes';
 import I18n from '../I18n';
 import {
@@ -22,12 +21,12 @@ import {
 import moment from "moment";
 import {CommonActions} from "../actions";
 import commonUtils from "../Utils/CommonUtils";
-import {AsyncStoreKeys} from "../Constants";
+import {StatusOfPray,EventRegisterTypes,ScreenKey} from "../Constants";
 import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
-import {Pray} from '../model';
-import StatusOfPray from "../Constants/StatusOfPray";
+import {Pray, PrayLocation} from '../model';
 
 const collect = firebase.firestore().collection('pray');
+// const userPray = collect.doc(firebase.auth().currentUser.uid);
 
 
 firebase.messaging().getToken()
@@ -62,6 +61,7 @@ class PrayingInProgress extends PureComponent {
             {text: I18n.t('search'), onPress: this.onPressSearch.bind(this)},
             {text: I18n.t('deleteAll'), color: Colors.red, onPress: this.onPressDeleteAll.bind(this)}
         ];
+
         this.onPressLeft = this.onPressLeft.bind(this);
         this.onPressRight = this.onPressRight.bind(this);
         this.onPressAdd = this.onPressAdd.bind(this);
@@ -83,21 +83,6 @@ class PrayingInProgress extends PureComponent {
     //region cycle life
 
     componentDidMount() {
-
-        let prayList = [];
-        collect.get().then(snapshot => {
-            snapshot.forEach(e => {
-                let data = new Pray( {...e.data() , uid :e.id});
-                if (data.owner && data.owner.uid == firebase.auth().currentUser.uid) {
-                    prayList.push(data);
-                }
-            });
-
-            if (prayList) {
-                this.props.commonActions.getPrayList(prayList);
-            }
-        })
-
 
         this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
             // Process your token as required
@@ -203,7 +188,8 @@ class PrayingInProgress extends PureComponent {
 
     //region handle modal confirm
     onAcceptDeleteAll() {
-        this.props.commonActions.deleteAllPrayInprogress();
+        const action ={ type :  EventRegisterTypes.DELETE_ALL_PRAY_COMPLETED, params : {inProgress: true}};
+        commonUtils.sendEvent(action);
         this.refs["confirm"].close();
     }
 
@@ -233,29 +219,51 @@ class PrayingInProgress extends PureComponent {
 
     //endregion
 
-    //region handle Pray Iteam
+    //region handle Pray Item
     onPressPrayItem(item) {
         this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, item);
     }
 
     onPressFinish(item) {
-        const currentDoc =  collect.doc(item.uid);
-        const dataSend = Pray.removeFieldEmpty( new Pray({status : StatusOfPray.COMPLETE}));
-        currentDoc.update(dataSend).then(res =>{
-            this.props.commonActions.changeStatusPray({status: StatusOfPray.COMPLETE, pray: item});
-        });
+        const action ={ type :  EventRegisterTypes.UPDATE_STATUS_PRAY, params : {...item, status : StatusOfPray.COMPLETE}};
+        commonUtils.sendEvent(action);
+    }
+
+    onPressShare(item){
+
+    }
+
+    onPressStatusLive(item) {
+        const currentDoc = collect.doc(item.uid);
+
+        if(item.isLive){
+            const dataSend ={
+                isLive:  null
+            };
+            currentDoc.update(dataSend).then(res =>{
+            });
+        }
+        else{
+            navigator.geolocation.getCurrentPosition(success => {
+                const {timestamp, coords} = success;
+                const {longitude, latitude} = coords || {};
+                const location = new PrayLocation({
+                    long: longitude,
+                    lat: latitude
+                });
+                const dataSend = Pray.removeFieldEmpty(new Pray({
+                    isLive:  location
+                }));
+                currentDoc.update(dataSend).then(res =>{
+                });
+            });
+        }
     }
 
     onPressDeleteSpecificPray(item) {
-        const currentDoc =  collect.doc(item.uid);
-        currentDoc.onSnapshot(obsOrNext => {
-           if(!obsOrNext.data()){
-               this.props.commonActions.deletePray(item);
-           }
-        });
-        currentDoc.delete();
+        const action ={ type :  EventRegisterTypes.DELETE_PRAY, params : item};
+        commonUtils.sendEvent(action);
     }
-
 
     //endregion
 
@@ -264,15 +272,30 @@ class PrayingInProgress extends PureComponent {
     renderPrayItem({item}) {
         const leftOptions = [
             {
-                text: I18n.t("finished"),
-                onPress: this.onPressFinish.bind(this, item)
+                text: I18n.t("offline"),
+                onPress: this.onPressStatusLive.bind(this, item)
             },
             {
+                text: I18n.t("inprogress"),
+                onPress: this.onPressFinish.bind(this, item)
+            },
+
+            {
+                text: I18n.t("share"),
+                onPress: this.onPressShare.bind(this, item)
+            },
+
+            {
                 text: I18n.t("delete"),
-                backgroundColor: Colors.red,
                 onPress: this.onPressDeleteSpecificPray.bind(this, item)
             }
-        ]
+        ];
+        if(item.isLive){
+          leftOptions[0] = {
+              text: I18n.t("onlive"),
+              onPress: this.onPressStatusLive.bind(this, item)
+          }
+        }
 
         return (
             <PrayItem

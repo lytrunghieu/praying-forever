@@ -17,6 +17,7 @@ module.exports = {
     CREATE_PRAYING: "CreatePraying",
     CREATE_ACCOUNT: "CreateAccount",
     PRAY_DETAIL: "PrayDetail",
+    PRAY_FOR_OTHER :"PrayForOther",
     FORGOT_PASS: "ForgotPass",
 
 };

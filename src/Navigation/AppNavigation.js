@@ -13,10 +13,12 @@ import {PrayingInProgressContainer} from '../Containers/PrayingInProgressContain
 import {PrayFinishedContainer} from '../Containers/PrayFinishedContainer';
 import {CreatePrayingContainer} from '../Containers/CreatePrayingContainer';
 import {PrayDetailContainer} from '../Containers/PrayDetailContainer';
+import {PrayForOtherContainer} from '../Containers/PrayForOtherContainer';
 
 const DrawerNav = DrawerNavigator({
     [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressContainer},
     [ScreenKey.PRAY_FINISHED]: {screen: PrayFinishedContainer},
+    [ScreenKey.PRAY_FOR_OTHER]: {screen: PrayForOtherContainer},
 
 
 }, {

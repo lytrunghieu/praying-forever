@@ -2,6 +2,8 @@ import PrayUser from "./PrayUser";
 import PrayDelete from "./PrayDelete";
 import PrayStatus from "./PrayStatus";
 import Following from "./Following";
+import PrayLocation from "./PrayLocation";
+
 
 export default class Pray {
     constructor(data={}, initModel = true){
@@ -21,6 +23,7 @@ export default class Pray {
         this.isDelete = data.isDelete && new PrayDelete(data.isDelete) || null;
         this.password = data.password || null;
         this.created = data.created || null;
+        this.isLive = data.isLive && new PrayLocation(data.isLive) || null;
     }
 
     static removeFieldEmpty (data){

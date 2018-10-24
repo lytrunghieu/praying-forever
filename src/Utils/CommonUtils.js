@@ -2,6 +2,7 @@ import {Dimensions, StatusBar, Platform, AsyncStorage} from 'react-native';
 
 import {Device} from '../Constants';
 import DebugConfig from '../Config/DebugConfig';
+import { EventRegister } from 'react-native-event-listeners'
 
 // See https://mydevice.io/devices/ for device dimensions
 const X_WIDTH = 375;
@@ -89,6 +90,10 @@ export default {
     validatePassword(pass) {
         let re = /^[a-zA-Z0-9]{6,}$/;
         return re.test(String(pass));
+    },
+
+    sendEvent(action){
+        EventRegister.emit("listener" , action);
     }
 
 }

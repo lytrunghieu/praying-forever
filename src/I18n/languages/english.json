@@ -14,6 +14,7 @@
   "deleteConfirmAll" :"Are you sure want delete all ?",
   "deleteConfirm" :"Are you sure want delete this?",
   "prayDetail" :"Detail",
+  "prayForOther" :"Pray For Other",
   "passwordNull":"Password should not empty",
   "passwordInvalid":"Password must contain at least 6 character",
   "retypePasswordNotMatch":"Password and Password Confirm is not match",
@@ -84,5 +85,8 @@
 
   "passWord": "Password",
   "email": "Email",
-  "networkError":"network error (such as timeout, interrupted connection or unreachable host) has occurred."
+  "networkError":"network error (such as timeout, interrupted connection or unreachable host) has occurred.",
+
+  "onlive":"onlive",
+  "offline":"offline"
 }

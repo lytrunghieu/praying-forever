@@ -33,6 +33,7 @@ import {StatusOfPray} from "../Constants";
 
 let collect = firebase.firestore().collection("pray");
 
+
 class CreatePraying extends PureComponent {
 
     //region cycle life
@@ -80,6 +81,7 @@ class CreatePraying extends PureComponent {
         this.openTimePickerAndroid = this.openTimePickerAndroid.bind(this);
         this.onDateChange = this.onDateChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.userPray = collect.doc(firebase.auth().currentUser.uid);
     }
 
     //endregion
@@ -94,21 +96,18 @@ class CreatePraying extends PureComponent {
         if (this.isEdit) {
             params.uid = this.uid;
             let dataSend =  Pray.removeFieldEmpty(new Pray(params));
-            const result = collect.doc(this.uid);
-            result.update(dataSend).then(res =>{
-                this.props.commonActions.editPray(params);
-            });
+            this.userPray.collection("data").doc(this.uid).update(dataSend)
         }
         else {
+
             params.created = moment().valueOf();
             params.owner = {uid: firebase.auth().currentUser.uid};
             params.status = StatusOfPray.INPROGRESS;
-
             let dataSend = new Pray(params);
-            collect.add(dataSend).then(res => {
+            this.userPray.collection("data").add(dataSend).then(res => {
                 res.get().then(res2 => {
-                    let result = new Pray({...res2.data(), uid: res2.id});
-                    this.props.commonActions.createNewPray(result);
+                    const docRef = res2.ref;
+                    docRef.update("uid" ,res2.id);
                 });
             })
         }

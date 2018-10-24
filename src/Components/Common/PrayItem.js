@@ -5,8 +5,9 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
 
 // Utilities
-import {Colors, Fonts, ApplicationStyles} from '../../Themes';
+import {Colors, Fonts, ApplicationStyles, Images} from '../../Themes';
 import Swipeable from 'react-native-swipeable';
+import {TextIcon} from "../Modules"
 
 export default class PrayItem extends PureComponent {
 
@@ -26,35 +27,25 @@ export default class PrayItem extends PureComponent {
         callback();
     }
 
+    renderBottomActions(options) {
+        return (
+            <View style={styles.bottomActionsContainer}>
+                {options.map((op, index) => {
+                    return (
+                        <TouchableOpacity
+                            onPress={op.onPress}
+                            key={index}
+                            style={styles.bottomActionsOptionContainer}>
+                            <TextIcon text={op.text} leftIcon={op.img}/>
+                        </TouchableOpacity>);
+                })}
+            </View>
+        )
+    }
+
+
     render() {
         const {title, content, date, onPress, leftOptions} = this.props;
-
-        let leftButtons = leftOptions.map((e, index) => {
-            let separated = false;
-            let borderRadius = false;
-            if (index < leftOptions.length - 1) {
-                separated = true;
-            }
-            if (index == leftOptions.length - 1) {
-                borderRadius = styles.borderRadius;
-            }
-
-            return (
-                <TouchableHighlight
-                    onPress={this.onPress.bind(this, e.onPress)}
-                    style={[
-                        styles.optionTextContainer,
-                        separated && styles.separator,
-                        borderRadius && borderRadius,
-                        e.backgroundColor && {backgroundColor: e.backgroundColor}
-                    ]}
-                >
-                    <Text style={styles.optionText}>
-                        {e.text}
-                    </Text>
-                </TouchableHighlight>);
-        });
-
 
         const leftView = (
             <View style={styles.leftContainer}>
@@ -69,23 +60,18 @@ export default class PrayItem extends PureComponent {
             </View>
         );
 
-
         return (
             <View style={[styles.container, ApplicationStyles.screen.shadowContainer]}>
-                <Swipeable
-                    leftButtons={leftButtons.length > 0 ? leftButtons : null}
-                    onRef={ref => this.swipeable = ref}
+                <TouchableOpacity style={[styles.containerButton]}
+                                  ref="container"
+                                  onPress={onPress}
                 >
-                    <TouchableOpacity style={[styles.containerButton]}
-                                      ref="container"
-                                      onPress={onPress}
-                    >
-                        {leftView}
-                        {rightView}
-                    </TouchableOpacity>
-                </Swipeable>
+                    {leftView}
+                    {rightView}
+                </TouchableOpacity>
+                {this.renderBottomActions(leftOptions)}
             </View>
-        )
+        );
     }
 }
 
@@ -115,19 +101,18 @@ const styles = EStyleSheet.create({
     containerButton: {
         flexDirection: 'row',
         width: "100%",
-        height: "$heightRowNormal",
-        paddingLeft: "$paddingSmall",
-        paddingRight: "$paddingSmall",
-        alignItems: "center",
+        minHeight: "$heightRowNormal",
+        padding: "$paddingSmall"
+        // alignItems: "center",
     },
 
     leftContainer: {
         flex: 1,
-        justifyContent: "center",
+        // justifyContent: "center",
     },
 
     rightContainer: {
-        justifyContent: "center",
+        // justifyContent: "center",
         width: 77,
         flex: -1,
         alignItems: "flex-end"
@@ -176,6 +161,21 @@ const styles = EStyleSheet.create({
     borderRadius: {
         borderTopLeftRadius: "$borderRadiusSmall",
         borderBottomLeftRadius: "$borderRadiusSmall",
+    },
+
+    bottomActionsContainer: {
+        flexDirection: "row",
+        height: "$heightRowSmall",
+        justifyContent: "center",
+        borderTopWidth:"$borderWidthSmall",
+    },
+
+    bottomActionsOptionContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+
     }
 
 

@@ -22,6 +22,7 @@ const images = {
     user: require('../Images/user.png'),
     logo: require('../Images/logo.png'),
     key: require('../Images/key.png'),
+    garbage : require("../Images/garbage.png")
 }
 
 export default images

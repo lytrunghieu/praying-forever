@@ -15,7 +15,6 @@ import thunk from 'redux-thunk';
 
 import {expAppReducer} from "../reducers"
 
-
 // Load middleware
 let middleware = [
     thunk // Allows action creators to return functions (not just plain objects)
@@ -36,7 +35,7 @@ class App extends PureComponent {
       animationType: SplashScreen.animationType.scale,
       duration: 850,
       delay: 500
-    })
+    });
   }
 
   render() {
