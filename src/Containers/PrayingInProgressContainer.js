@@ -276,7 +276,7 @@ class PrayingInProgress extends PureComponent {
                 onPress: this.onPressStatusLive.bind(this, item)
             },
             {
-                text: I18n.t("inprogress"),
+                text: I18n.t("completed"),
                 onPress: this.onPressFinish.bind(this, item)
             },
 

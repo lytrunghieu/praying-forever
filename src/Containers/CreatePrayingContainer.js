@@ -128,7 +128,7 @@ class CreatePraying extends PureComponent {
 
     onSubmitOption() {
         let optionsChecked = this.state.options.filter(e => e.isChecked);
-        if (optionsChecked) {
+        if (optionsChecked && optionsChecked.length > 0) {
             this.setState({
                 title: optionsChecked[0].text
             });

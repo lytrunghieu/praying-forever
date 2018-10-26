@@ -15,7 +15,8 @@ import {
     ActionSheet,
     PlaceHolder,
     ConfirmModal,
-    RowItem
+    RowItem,
+    TextArea
 } from '../Components/Common';
 import commonUtils from "../Utils/CommonUtils";
 
@@ -146,7 +147,10 @@ class PrayDetail extends PureComponent {
                     <PlaceHolder/>
                     <RowItem title={title} canPress={false} titleBold={true}/>
                     <PlaceHolder/>
-                    <RowItem value={content} canPress={false} scaled={true}/>
+                    <TextArea
+                        value={content}
+                        editable ={false}
+                    />
                 </ScrollView>
                 <ActionSheet
                     options={status === StatusOfPray.INPROGRESS ? this.optionActionSheetForInprogress  : this.optionActionSheetForFinished}

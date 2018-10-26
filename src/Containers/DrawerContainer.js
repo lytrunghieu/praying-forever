@@ -74,8 +74,10 @@ class DrawerContainer extends PureComponent {
                 case EventRegisterTypes.UPDATE_STATUS_PRAY : {
                     const {uid, status} = params;
                     const currentPray = docOfCurrentUserPray.collection("data").doc(uid);
-                    currentPray.update("status", status).then(res =>{
-                        callback({success : true , data : res });
+                    currentPray.update("status", status).then(res => {
+                        if (callback) {
+                            callback({success: true, data: res});
+                        }
                     });
                     break;
                 }

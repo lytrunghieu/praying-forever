@@ -4,7 +4,7 @@
   "createNewPray":"Create New Pray",
   "createAccount":"Create new account",
   "createAccountTitle":"Create Account",
-
+  "completed" :"Completed",
   "continues":"Continues",
   "continuesPraying":"Continues Praying",
   "checkResetPasswordEmail":"Reset password email send success",
@@ -50,6 +50,7 @@
   "send":"SEND",
   "sendAgain":"Send again",
   "setting":"Setting",
+  "share":"Share",
   "about":"About",
 
 
@@ -87,6 +88,6 @@
   "email": "Email",
   "networkError":"network error (such as timeout, interrupted connection or unreachable host) has occurred.",
 
-  "onlive":"onlive",
-  "offline":"offline"
+  "onlive":"Onlive",
+  "offline":"Offline"
 }

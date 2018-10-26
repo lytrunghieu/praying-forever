@@ -31,13 +31,16 @@ export default class PrayItem extends PureComponent {
         return (
             <View style={styles.bottomActionsContainer}>
                 {options.map((op, index) => {
-                    return (
+                    return ([
                         <TouchableOpacity
                             onPress={op.onPress}
                             key={index}
                             style={styles.bottomActionsOptionContainer}>
                             <TextIcon text={op.text} leftIcon={op.img}/>
-                        </TouchableOpacity>);
+                        </TouchableOpacity>,
+                        index < options.length -1 ? <View style ={styles.dividerSeparateBottomAction}/> : null
+
+                    ]);
                 })}
             </View>
         )
@@ -176,6 +179,12 @@ const styles = EStyleSheet.create({
         alignItems: "center",
         flexDirection: "row",
 
+    },
+
+    dividerSeparateBottomAction :{
+        height :"100%",
+        width :1,
+        backgroundColor: Colors.gray
     }
 
 
