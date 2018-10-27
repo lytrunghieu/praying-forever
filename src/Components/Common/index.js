@@ -21,6 +21,8 @@ import  TextError from "./TextError";
 import  TextLink from "./TextLink";
 import  TextBase from "./TextBase";
 import  ModalLoading from "./ModalLoading";
+import  ModalScanQR from "./ModalScanQR";
+import  Title from "./Title";
 
 export {
     NavBar,
@@ -45,5 +47,7 @@ export {
     TextError,
     TextLink,
     TextBase,
-    ModalLoading
+    ModalLoading,
+    ModalScanQR,
+    Title
 };

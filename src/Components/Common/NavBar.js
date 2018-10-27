@@ -6,7 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import PropTypes from 'prop-types';
 
 // Utilities
-import {Colors, Metrics, Images,ApplicationStyles} from '../../Themes';
+import {Colors, Metrics, Images, ApplicationStyles} from '../../Themes';
 
 //Components
 import Button from './Button';
@@ -18,7 +18,7 @@ export default class NavBar extends PureComponent {
 
     measure() {
         return new Promise((res, rej) => {
-            this.refs["container"].measure((ox, oy, width, height, px,py) => {
+            this.refs["container"].measure((ox, oy, width, height, px, py) => {
                 //calculate postion
                 res({
                     ox: 20,
@@ -29,7 +29,7 @@ export default class NavBar extends PureComponent {
     }
 
     render() {
-        const {title, onPressLeftButton, onPressRightButton, iconLeft, iconRight} = this.props;
+        const {title, onPressLeftButton, onPressRightButton, iconLeft, iconRight, iconRightList} = this.props;
 
         let leftButtonView = (
             <View style={styles.emptyIcon}/>
@@ -37,6 +37,8 @@ export default class NavBar extends PureComponent {
         let rightButtonView = (
             <View style={styles.emptyIcon}/>
         );
+
+        let listIconRight = null;
 
         if (iconLeft) {
             leftButtonView = (
@@ -58,14 +60,27 @@ export default class NavBar extends PureComponent {
             );
         }
 
+        if (iconRightList && iconRightList.length > 0) {
+            listIconRight = iconRightList.map((e, index) => {
+                const {icon, onPress} = e;
+                return <TouchableOpacity style={styles.rightIconWrapper}
+                                         disabled ={onPress ? false : true}
+                                         onPress={onPress}
+                >
+                    <Image source={icon}/>
+                </TouchableOpacity>
+            });
+        }
+
         return (
-            <View style={[styles.container,ApplicationStyles.screen.shadowContainer]}
+            <View style={[styles.container, ApplicationStyles.screen.shadowContainer]}
                   ref="container"
             >
                 {leftButtonView}
                 <View style={[styles.titleWrapper]}>
                     <Text style={styles.titleText}>{title}</Text>
                 </View>
+                {listIconRight}
                 {rightButtonView}
             </View>
         )
@@ -78,17 +93,18 @@ NavBar.defaultProps = {
     },
     onPressRightButton: () => {
     },
-    iconLeft :null,
-    iconRight : null
+    iconLeft: null,
+    iconRight: null,
+    iconRightList: [],
 };
 
 NavBar.propTypes = {
     title: PropTypes.string,
     onPressLeftButton: PropTypes.func,
     onPressRightButton: PropTypes.func,
-    iconLeft : PropTypes.number,
-    iconRight : PropTypes.number,
-
+    iconLeft: PropTypes.number,
+    iconRight: PropTypes.number,
+    iconRightList: PropTypes.array
 }
 
 const styles = EStyleSheet.create({

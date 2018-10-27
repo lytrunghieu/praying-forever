@@ -16,7 +16,8 @@ import {
     PrayItem,
     PlaceHolder,
     ConfirmModal,
-    HeaderSearch
+    HeaderSearch,
+    ModalScanQR
 } from '../Components/Common';
 import moment from "moment";
 import {CommonActions} from "../actions";
@@ -74,11 +75,15 @@ class PrayingInProgress extends PureComponent {
         this.onAcceptDeleteAll = this.onAcceptDeleteAll.bind(this);
         this.onChangeKeySearch = this.onChangeKeySearch.bind(this);
         this.onPressBackSearch = this.onPressBackSearch.bind(this);
+        this.onPressScanQR = this.onPressScanQR.bind(this);
         this.state = {
             prays: props.prays.filter(e => e.status == StatusOfPray.INPROGRESS),
             isSearch: false,
             keySearch: "",
         };
+        this.listIconRight = [
+            { icon : Images.garbage , onPress : this.onPressScanQR}
+        ];
     }
 
     //region cycle life
@@ -150,6 +155,14 @@ class PrayingInProgress extends PureComponent {
         this.notificationDisplayedListener();
         this.notificationListener();
         this.notificationOpenedListener();
+    }
+
+    //endregion
+
+    //region handle event press
+
+    onPressScanQR(){
+        this.refs["_modalScanQR"].open();
     }
 
     //endregion
@@ -339,7 +352,7 @@ class PrayingInProgress extends PureComponent {
     render() {
         const {prays, isSearch} = this.state;
         return (
-            <View style={ApplicationStyles.screen.mainContainer}>
+            [<View style={ApplicationStyles.screen.mainContainer}>
                 <ImageBackground/>
 
                 {
@@ -357,6 +370,7 @@ class PrayingInProgress extends PureComponent {
                             iconLeft={Images.menu}
                             iconRight={Images.more}
                             onPressRightButton={this.onPressRight}
+                            iconRightList={this.listIconRight}
                     />
                 }
 
@@ -385,7 +399,9 @@ class PrayingInProgress extends PureComponent {
                     onAccept={this.onAcceptDeleteAll}
                 />
 
-            </View>
+            </View>,
+                <ModalScanQR ref ={"_modalScanQR"} />
+            ]
         );
     }
 

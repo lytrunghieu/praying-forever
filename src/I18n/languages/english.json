@@ -7,6 +7,7 @@
   "completed" :"Completed",
   "continues":"Continues",
   "continuesPraying":"Continues Praying",
+  "scanQRCode":"Scan QR Code",
   "checkResetPasswordEmail":"Reset password email send success",
   "search":"Search",
   "deleteAll":"Delete All",

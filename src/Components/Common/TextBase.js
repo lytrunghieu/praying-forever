@@ -21,7 +21,7 @@ TextBase.defaultProps = {
 
 TextBase.propTypes = {
     text : PropTypes.string,
-    numberOfLines : PropTypes.number
+    numberOfLines : PropTypes.number,
 };
 
 const styles = EStyleSheet.create({
