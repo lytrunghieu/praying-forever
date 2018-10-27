@@ -29,6 +29,7 @@
     "react-native-i18n": "2.0.10",
     "react-native-modalbox": "^1.6.0",
     "react-native-permissions": "^1.0.2",
+    "react-native-qrcode": "^0.2.7",
     "react-native-qrcode-scanner": "^1.1.0",
     "react-native-smart-splash-screen": "2.3.5",
     "react-native-swipeable": "^0.6.0",

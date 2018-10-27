@@ -22,6 +22,7 @@ import  TextLink from "./TextLink";
 import  TextBase from "./TextBase";
 import  ModalLoading from "./ModalLoading";
 import  ModalScanQR from "./ModalScanQR";
+import  ModalQR from "./ModalQR";
 import  Title from "./Title";
 
 export {
@@ -49,5 +50,6 @@ export {
     TextBase,
     ModalLoading,
     ModalScanQR,
+    ModalQR,
     Title
 };

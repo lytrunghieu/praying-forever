@@ -17,7 +17,8 @@ import {
     PlaceHolder,
     ConfirmModal,
     HeaderSearch,
-    ModalScanQR
+    ModalScanQR,
+    ModalQR
 } from '../Components/Common';
 import moment from "moment";
 import {CommonActions} from "../actions";
@@ -243,18 +244,19 @@ class PrayingInProgress extends PureComponent {
         commonUtils.sendEvent(action);
     }
 
-    onPressShare(item){
+    onPressShare = (item) = () =>{
         const {owner , uid : uidPray} = item || {};
         const {uid} = owner || {};
         if(_.isEmpty(uid) || _.isEmpty(uidPray)){
             return;
         }
         // const path = "pray".concat("/").concat(uid).concat("/").concat("data").concat("/").concat(uidPray);
-        // const path = uid.concat("/").concat("data").concat("/").concat(uidPray);
+        const path = uid.concat("/").concat("data").concat("/").concat(uidPray);
+        this.refs["_modalQR"].open(path);
         // const doc =collect.doc(path);
         // doc.get().then(documentSnapshot =>{
         //    const data  =documentSnapshot.data();
-        //     console.log("collect ", data);
+        //    console.log("collect ", data);
         //
         // });
 
@@ -309,7 +311,7 @@ class PrayingInProgress extends PureComponent {
 
             {
                 text: I18n.t("share"),
-                onPress: this.onPressShare.bind(this, item)
+                onPress: this.onPressShare(item)
             },
 
             {
@@ -352,7 +354,9 @@ class PrayingInProgress extends PureComponent {
     render() {
         const {prays, isSearch} = this.state;
         return (
-            [<View style={ApplicationStyles.screen.mainContainer}>
+            [<View
+                key={"main"}
+                style={ApplicationStyles.screen.mainContainer}>
                 <ImageBackground/>
 
                 {
@@ -400,7 +404,8 @@ class PrayingInProgress extends PureComponent {
                 />
 
             </View>,
-                <ModalScanQR ref ={"_modalScanQR"} />
+                <ModalScanQR key={"modalScanQRCode"} ref ={"_modalScanQR"} />,
+                <ModalQR key={"modalQRCode"} ref ={"_modalQR"} />
             ]
         );
     }

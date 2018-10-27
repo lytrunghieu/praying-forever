@@ -63,7 +63,7 @@ export default class NavBar extends PureComponent {
         if (iconRightList && iconRightList.length > 0) {
             listIconRight = iconRightList.map((e, index) => {
                 const {icon, onPress} = e;
-                return <TouchableOpacity style={styles.rightIconWrapper}
+                return <TouchableOpacity key ={index} style={styles.rightIconWrapper}
                                          disabled ={onPress ? false : true}
                                          onPress={onPress}
                 >
