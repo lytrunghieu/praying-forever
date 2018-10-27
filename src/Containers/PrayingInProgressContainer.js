@@ -24,6 +24,7 @@ import commonUtils from "../Utils/CommonUtils";
 import {StatusOfPray,EventRegisterTypes,ScreenKey} from "../Constants";
 import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
 import {Pray, PrayLocation} from '../model';
+import * as _ from "lodash";
 
 const collect = firebase.firestore().collection('pray');
 // const userPray = collect.doc(firebase.auth().currentUser.uid);
@@ -230,6 +231,19 @@ class PrayingInProgress extends PureComponent {
     }
 
     onPressShare(item){
+        const {owner , uid : uidPray} = item || {};
+        const {uid} = owner || {};
+        if(_.isEmpty(uid) || _.isEmpty(uidPray)){
+            return;
+        }
+        // const path = "pray".concat("/").concat(uid).concat("/").concat("data").concat("/").concat(uidPray);
+        // const path = uid.concat("/").concat("data").concat("/").concat(uidPray);
+        // const doc =collect.doc(path);
+        // doc.get().then(documentSnapshot =>{
+        //    const data  =documentSnapshot.data();
+        //     console.log("collect ", data);
+        //
+        // });
 
     }
 

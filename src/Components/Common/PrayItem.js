@@ -38,7 +38,7 @@ export default class PrayItem extends PureComponent {
                             style={styles.bottomActionsOptionContainer}>
                             <TextIcon text={op.text} leftIcon={op.img}/>
                         </TouchableOpacity>,
-                        index < options.length -1 ? <View style ={styles.dividerSeparateBottomAction}/> : null
+                        index < options.length -1 ? <View key ={index} style ={styles.dividerSeparateBottomAction}/> : null
 
                     ]);
                 })}
