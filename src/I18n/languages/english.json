@@ -80,6 +80,7 @@
   "passWord": "Password",
   "email": "Email",
   "networkError": "network error (such as timeout, interrupted connection or unreachable host) has occurred.",
+  "notifications": "Notifications",
   "onlive": "Onlive",
   "offline": "Offline",
   "QRCode": "QR Code"

@@ -182,7 +182,7 @@ dependencies {
     implementation "com.google.firebase:firebase-firestore:17.1.0"
     implementation "com.google.firebase:firebase-messaging:17.3.2"
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
-
+    implementation "com.google.firebase:firebase-functions:16.0.1"
 
 
 }

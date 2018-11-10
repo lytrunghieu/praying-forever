@@ -8,15 +8,41 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import Title from "./Title";
 import Button from "./Button";
 import I18n from '../../I18n';
+import firebase from 'react-native-firebase';
+
+const collect = firebase.firestore().collection('pray');
+
 
 export default class ModalScanQR extends ModalBase {
 
     constructor(props) {
         super();
+        this.fetching = false;
     }
 
     onSuccess(e) {
-        console.log(e);
+        if(e.type ==="QR_CODE" && !this.fetching){
+            this.fetching = true;
+            collect.doc(e.data).get().then(snapshot =>{
+                let data = snapshot.data();
+                let ref = snapshot.ref;
+                if(data){
+                    const {following, uid} = data;
+                    const exist = following.findIndex(e => e === firebase.auth().currentUser.uid);
+                    if(exist === -1){
+                        following.push(firebase.auth().currentUser.uid);
+                        ref.update("following", following).then(success =>{
+                            const _collect = firebase.firestore().collection("pray/"+firebase.auth().currentUser.uid+"/data");
+                            _collect.add(data).finally(res =>{
+                                this.fetching = false;
+                                this.close();
+                            });
+                        })
+                    }
+                }
+            })
+        }
+
     }
 
     renderContent() {

@@ -29,32 +29,6 @@ import {Pray, PrayLocation} from '../model';
 import * as _ from "lodash";
 
 const collect = firebase.firestore().collection('pray');
-// const userPray = collect.doc(firebase.auth().currentUser.uid);
-
-
-firebase.messaging().getToken()
-    .then(fcmToken => {
-        if (fcmToken) {
-            // user has a device token
-            // console.log("fcmToken :", fcmToken);
-        } else {
-            // user doesn't have a device token yet
-            console.log("user doesn't have a device token yet");
-        }
-    });
-
-
-// check permission message
-firebase.messaging().hasPermission()
-    .then(enabled => {
-        if (enabled) {
-            // console.log("user have permission");
-        } else {
-            // user doesn't have permission
-            console.log("user doesn't have permission");
-        }
-    });
-
 
 class PrayingInProgress extends PureComponent {
 
@@ -91,36 +65,35 @@ class PrayingInProgress extends PureComponent {
 
     componentDidMount() {
 
-        this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
-            // Process your token as required
-            // console.log("refresh token ", fcmToken);
-        });
 
-        this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-            // Process your notification as required
-            // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
-        });
-        this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-            // Process your notification as required
-        });
 
-        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-            // Get the action triggered by the notification being opened
-            const action = notificationOpen.action;
-            // Get information about the notification that was opened
-            const notification: Notification = notificationOpen.notification;
-        });
-
-        firebase.notifications().getInitialNotification()
-            .then((notificationOpen: NotificationOpen) => {
-                if (notificationOpen) {
-                    // App was opened by a notification
-                    // Get the action triggered by the notification being opened
-                    const action = notificationOpen.action;
-                    // Get information about the notification that was opened
-                    const notification: Notification = notificationOpen.notification;
-                }
-            });
+        // this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
+        //     // Process your notification as required
+        //     // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+        // });
+        // this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
+        //     // Process your notification as required
+        // });
+        //
+        // this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+        //     // Get the action triggered by the notification being opened
+        //
+        //     const action = notificationOpen.action;
+        //     // Get information about the notification that was opened
+        //     const notification: Notification = notificationOpen.notification;
+        //     console.log("notificationOpen ",notification);
+        // });
+        //
+        // firebase.notifications().getInitialNotification()
+        //     .then((notificationOpen: NotificationOpen) => {
+        //         if (notificationOpen) {
+        //             // App was opened by a notification
+        //             // Get the action triggered by the notification being opened
+        //             const action = notificationOpen.action;
+        //             // Get information about the notification that was opened
+        //             const notification: Notification = notificationOpen.notification;
+        //         }
+        //     });
 
     }
 
@@ -152,10 +125,6 @@ class PrayingInProgress extends PureComponent {
     }
 
     componentWillUnmount() {
-        this.onTokenRefreshListener();
-        this.notificationDisplayedListener();
-        this.notificationListener();
-        this.notificationOpenedListener();
     }
 
     //endregion
@@ -244,7 +213,7 @@ class PrayingInProgress extends PureComponent {
         commonUtils.sendEvent(action);
     }
 
-    onPressShare = (item) = () =>{
+    onPressShare = (item) => () =>{
         const {owner , uid : uidPray} = item || {};
         const {uid} = owner || {};
         if(_.isEmpty(uid) || _.isEmpty(uidPray)){
@@ -299,32 +268,46 @@ class PrayingInProgress extends PureComponent {
     //region rendering
 
     renderPrayItem({item}) {
-        const leftOptions = [
-            {
-                text: I18n.t("offline"),
-                onPress: this.onPressStatusLive.bind(this, item)
-            },
-            {
-                text: I18n.t("completed"),
-                onPress: this.onPressFinish.bind(this, item)
-            },
+        let leftOptions =[];
 
-            {
-                text: I18n.t("share"),
-                onPress: this.onPressShare(item)
-            },
+        if(item.owner.uid === firebase.auth().currentUser.uid){
+            leftOptions = [
+                {
+                    text: I18n.t("offline"),
+                    onPress: this.onPressStatusLive.bind(this, item)
+                },
+                {
+                    text: I18n.t("completed"),
+                    onPress: this.onPressFinish.bind(this, item)
+                },
 
-            {
-                text: I18n.t("delete"),
-                onPress: this.onPressDeleteSpecificPray.bind(this, item)
+                {
+                    text: I18n.t("share"),
+                    onPress: this.onPressShare(item)
+                },
+
+                {
+                    text: I18n.t("delete"),
+                    onPress: this.onPressDeleteSpecificPray.bind(this, item)
+                }
+            ];
+            if(item.isLive){
+                leftOptions[0] = {
+                    text: I18n.t("onlive"),
+                    onPress: this.onPressStatusLive.bind(this, item)
+                }
             }
-        ];
-        if(item.isLive){
-          leftOptions[0] = {
-              text: I18n.t("onlive"),
-              onPress: this.onPressStatusLive.bind(this, item)
-          }
         }
+        else{
+            leftOptions = [
+                {
+                    text: I18n.t("delete"),
+                    onPress: this.onPressDeleteSpecificPray.bind(this, item)
+                }
+            ];
+        }
+
+
 
         return (
             <PrayItem

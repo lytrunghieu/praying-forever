@@ -14,7 +14,9 @@ import {Pray} from "../model";
 import {EventRegisterTypes} from "../Constants";
 import {EventRegister} from 'react-native-event-listeners';
 
-const collect = firebase.firestore().collection('pray');
+const prayCollect = firebase.firestore().collection('pray');
+const tokenCollect = firebase.firestore().collection('tokens');
+
 
 class DrawerContainer extends PureComponent {
 
@@ -24,14 +26,14 @@ class DrawerContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const docOfCurrentUserPray = collect.doc(firebase.auth().currentUser.uid);
+        const docOfCurrentUserPray = prayCollect.doc(firebase.auth().currentUser.uid);
         docOfCurrentUserPray.collection("data").onSnapshot(snapshot => {
             let prayList = [];
             snapshot.forEach(e => {
                 let data = new Pray({...e.data(), uid: e.id});
-                if (data.owner && data.owner.uid == firebase.auth().currentUser.uid) {
-                    prayList.push(data);
-                }
+                // if (data.owner && data.owner.uid == firebase.auth().currentUser.uid) {
+                prayList.push(data);
+                // }
             });
 
             if (prayList) {
@@ -74,11 +76,33 @@ class DrawerContainer extends PureComponent {
                 case EventRegisterTypes.UPDATE_STATUS_PRAY : {
                     const {uid, status} = params;
                     const currentPray = docOfCurrentUserPray.collection("data").doc(uid);
+
+
+                    if (status === StatusOfPray.COMPLETE) {
+                        await currentPray.get().then(res => {
+                            const {complete } = res.data();
+                            console.log("complete ", complete );
+                            // if (!complete) {
+                                const title = "test";
+                                const message = "Message";
+                                const endpoint = "addMessage?token={token}&title={title}&message={message}"
+                                    .replace("{token}", "d1mfE-8ZAB4:APA91bHtOp2d36P2tFGDdz1eV4-Pyvb_GpzX5TBp0dvBNosKFB3w-XlWr2X-xJLM2F2dGwihO7CgtU7KzfXD3JHI34p9r62feOG17ckfmOVWQs6lKt1hVXIDjPNpMl3_3t-Sw8ffdHp3")
+                                    .replace("{title}", title)
+                                    .replace("{token}", message);
+                                firebase.functions(firebase.app()).httpsCallable(endpoint)().then(res => {
+                                });
+                            // }
+                        })
+                    }
+
+                    // currentPray.update("status", status, "complete", true).then(res => {
                     currentPray.update("status", status).then(res => {
                         if (callback) {
                             callback({success: true, data: res});
                         }
                     });
+
+
                     break;
                 }
 
@@ -89,10 +113,54 @@ class DrawerContainer extends PureComponent {
             }
 
         });
+
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+            // Get the action triggered by the notification being opened
+            const action = notificationOpen.action;
+            // Get information about the notification that was opened
+            const notification: Notification = notificationOpen.notification;
+            const {navigation: {navigate}} = this.props;
+            navigate(ScreenKey.NOTIFICATIONS);
+
+        });
+
+        this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
+            // Process your token as required
+            // console.log("refresh token ", fcmToken);
+            this.updateToken(fcmToken);
+        });
+
+
+        firebase.messaging().getToken()
+            .then(fcmToken => {
+                if (fcmToken) {
+                    // user has a device token
+                    // console.log("fcmToken :", fcmToken);
+                    this.updateToken(fcmToken);
+                } else {
+                    // user doesn't have a device token yet
+                    console.log("user doesn't have a device token yet");
+                }
+            });
+
+        firebase.notifications().getInitialNotification()
+            .then((notificationOpen: NotificationOpen) => {
+                if (notificationOpen) {
+                    // App was opened by a notification
+                    // Get the action triggered by the notification being opened
+                    const action = notificationOpen.action;
+                    // Get information about the notification that was opened
+                    const notification: Notification = notificationOpen.notification;
+                    const {navigation: {navigate}} = this.props;
+                    navigate(ScreenKey.NOTIFICATIONS);
+                }
+            });
     }
 
     componentWillUnmount() {
         EventRegister.removeEventListener(this.listener);
+        this.notificationOpenedListener();
+        this.onTokenRefreshListener();
     }
 
     //region handle action press
@@ -112,13 +180,22 @@ class DrawerContainer extends PureComponent {
 
     //endregion
 
+    updateToken(fcmToken) {
+        tokenCollect.doc(firebase.auth().currentUser.uid).set({
+            token: fcmToken
+        }).then(res => {
+            this.fcmToken = fcmToken;
+        }).catch(err => {
+        });
+    }
+
     render() {
         const {navigation: {navigate}, logout, activeItemKey, prays} = this.props;
         const praysFinished = prays.filter(e => e.status == StatusOfPray.COMPLETE);
 
         return (
             <View style={styles.container}>
-                <ScrollView contentContainerStyle={styles.body}>
+                <ScrollView style={styles.body}>
                     <Option text={I18n.t("inprogress")} count={prays.length - praysFinished.length}
                             leftIcon={Images.inProgress}
                             onPress={this.onPressOption.bind(this, ScreenKey.PRAYING_INPROGESS)}/>
@@ -126,9 +203,12 @@ class DrawerContainer extends PureComponent {
                             onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FINISHED)}/>
                     <Option text={I18n.t("prayForOther")} leftIcon={Images.complete}
                             onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FOR_OTHER)}/>
+                    <Option text={I18n.t("notifications")} leftIcon={Images.setting}
+                            onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)}/>
                     <Option text={I18n.t("setting")} leftIcon={Images.setting}/>
                     <Option text={I18n.t("about")} leftIcon={Images.about}/>
                     <Option text={I18n.t("logout")} leftIcon={Images.logout} onPress={this.onPressLogout}/>
+                    <Option text={firebase.auth().currentUser.email}/>
                 </ScrollView>
             </View>
         )
@@ -155,6 +235,6 @@ const styles = StyleSheet.create({
     },
 
     body: {
-        flex: 0.6
+        flex: 1,
     }
 })

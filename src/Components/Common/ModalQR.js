@@ -11,6 +11,7 @@ import TextBase from "./TextBase";
 import I18n from '../../I18n';
 import QRCode from 'react-native-qrcode';
 
+
 export default class ModalQR extends ModalBase {
 
     constructor(props) {
@@ -18,7 +19,9 @@ export default class ModalQR extends ModalBase {
     }
 
     open(text) {
-        this.text = text;
+        this.setState({
+            text : text
+        });
         super.open();
     }
 
@@ -32,7 +35,7 @@ export default class ModalQR extends ModalBase {
                 <TextBase>{I18n.t("scanQRCodeIntro")}</TextBase>
                 <View style={styles.QRCodeView}>
                     <QRCode
-                        value={this.text}
+                        value={this.state.text}
                         size={Metrics.screenWidth * 0.75}
                         bgColor='black'
                         fgColor='white'/>
