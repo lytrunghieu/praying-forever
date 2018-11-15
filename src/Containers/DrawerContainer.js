@@ -80,18 +80,19 @@ class DrawerContainer extends PureComponent {
 
                     if (status === StatusOfPray.COMPLETE) {
                         await currentPray.get().then(res => {
-                            const {complete } = res.data();
-                            console.log("complete ", complete );
-                            // if (!complete) {
+                            const {complete, following } = res.data();
+
+                            if (!complete) {
                                 const title = "test";
                                 const message = "Message";
+
                                 const endpoint = "addMessage?token={token}&title={title}&message={message}"
                                     .replace("{token}", "d1mfE-8ZAB4:APA91bHtOp2d36P2tFGDdz1eV4-Pyvb_GpzX5TBp0dvBNosKFB3w-XlWr2X-xJLM2F2dGwihO7CgtU7KzfXD3JHI34p9r62feOG17ckfmOVWQs6lKt1hVXIDjPNpMl3_3t-Sw8ffdHp3")
                                     .replace("{title}", title)
                                     .replace("{token}", message);
                                 firebase.functions(firebase.app()).httpsCallable(endpoint)().then(res => {
                                 });
-                            // }
+                            }
                         })
                     }
 
