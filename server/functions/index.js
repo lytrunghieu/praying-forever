@@ -1,4 +1,7 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
+
+const {paths} = require("./constrants");
+
 const functions = require('firebase-functions');
 
 // The Firebase Admin SDK to access the Firebase Realtime Database.
@@ -11,47 +14,71 @@ const firestore = admin.firestore();
 // Realtime Database under the path /messages/:pushId/original
 
 
-function sendMessage({pushToken, payload}){
+function sendMessage({pushToken, payload}) {
     return admin.messaging().sendToDevice(pushToken, payload);
 }
 
-exports.addMessage = functions.https.onRequest((req, res) => {
-    const {token, title, message, userUID,prayUID} = req.query;
-    const path = "pray/{userUID}/data/{prayUID}".replace("{userUID}",userUID).replace("{prayUID}",prayUID);
-    // console.log("path ", path);      
+function addNotification({userUID, payload}) {
+    const {created, title, content, owner} = payload;
+    const path = paths.notification.replace("{userUID}", userUID);
+    firestore.doc(path).set(payload);
+}
+
+exports.completePrayer = functions.https.onRequest((req, res) => {
+    const {userUID, prayUID} = req.query;
+    const path = paths.pray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
     return firestore
-      .doc(path)
-      .get()
-      .then(doc => {
-        const {following}  = doc.data();
-        const countFcmToken = following.length;
-        let pushFcmToken = [];
-        let promiseRace = [];
-        following.map(fol =>{
-                const pathToken = "tokens/{userUID}".replace("{userUID}",fol);
-                const promise = firestore.doc(pathToken).get().then(docToken =>{
+        .doc(path)
+        .get()
+        .then(doc => {
+            const {following, content, title} = doc.data();
+            const titleNotif = "Lời Cầu Nguyện Đã Ứng Nghiệm";
+            const created = new Date().getTime();
+
+            let pushFcmToken = [];
+            let promiseRace = [];
+            following.map(fol => {
+                const pathToken = "tokens/{userUID}".replace("{userUID}", fol);
+
+                const paramAddNotification = {
+                    payload : {
+                        title : titleNotif,
+                        content :title,
+                        created,
+                        owner : fol
+                    } ,
+                    userUID : fol
+                };
+
+                addNotification(paramAddNotification);
+
+                const promise = firestore.doc(pathToken).get().then(docToken => {
                     pushFcmToken.push(docToken.data().token);
                     return res;
                 });
                 promiseRace.push(promise);
-        });
-        return Promise.race(promiseRace).then(value =>{
-            // console.log("pushFcmToken ", pushFcmToken);
-             let payload = {
-                  notification: {
-                      title:"Title", 
-                      body:"Body",
-                      sound :"default"
-                    }
-            };
-            return sendMessage({pushToken : pushFcmToken , payload}).then(res =>{
-                return res.status("200").send({ success : true , message :"send message success" });
             });
-        });       
-      }).catch(error =>{
-        console.log("LOG ERROR", error);
-        res.status("400").send({ success : false , message :"request failed" });
-      });
+
+
+
+            return res.status("200").send({ success : true , message :"send message success" });
+
+            return Promise.race(promiseRace).then(value => {
+                let payload = {
+                    notification: {
+                        title: titleNotif,
+                        body: title,
+                        sound: "default"
+                    }
+                };
+                // return sendMessage({pushToken : pushFcmToken , payload}).then(resMessage =>{
+                //     return res.status("200").send({ success : true , message :"send message success" });
+                // });
+            });
+        }).catch(error => {
+            console.log("LOG ERROR", error);
+            res.status("400").send({success: false, message: "request failed"});
+        });
 });
 
 
@@ -74,7 +101,7 @@ exports.addMessage = functions.https.onRequest((req, res) => {
 //     // either store the recepient tokens in the document write
 //     const tokens = writeData.tokens;  
 //     return admin.messaging().sendToDevice(tokens, payload);
-    
+
 //     // or collect them by accessing your database
 //     // var pushToken = "";
 //     // return functions
