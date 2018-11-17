@@ -4,5 +4,7 @@ import AsyncStoreKeys from './AsyncStoreKeys';
 import ErrorCodes from './ErrorCodes';
 import StatusOfPray from './StatusOfPray';
 import EventRegisterTypes from './EventRegisterTypes';
+import URL from './URL';
 
-export { ScreenKey, Device ,AsyncStoreKeys,ErrorCodes,StatusOfPray, EventRegisterTypes};
+
+export { ScreenKey, Device ,AsyncStoreKeys,ErrorCodes,StatusOfPray, EventRegisterTypes,URL};

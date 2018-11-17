@@ -3,20 +3,42 @@ import React, {PureComponent} from 'react'
 import {StyleSheet, Text, View, Image, ScrollView} from 'react-native'
 import {connect} from 'react-redux';
 import I18n from '../I18n';
-import {ScreenKey, StatusOfPray} from '../Constants';
 import {Images, Colors, Metrics} from '../Themes';
 import {Option} from "../Components/Common";
 import firebase from 'react-native-firebase';
 import {NavigationActions} from "react-navigation";
 import {bindActionCreators} from 'redux';
-import {CommonActions} from '../actions';
+import {CommonActions, NotificationActions} from '../actions';
 import {Pray} from "../model";
-import {EventRegisterTypes} from "../Constants";
+import {EventRegisterTypes, URL, StatusOfPray, ScreenKey} from "../Constants";
 import {EventRegister} from 'react-native-event-listeners';
+import * as _ from "lodash";
+import moment from "moment";
+import PrayStatus from "../model/PrayStatus";
 
 const prayCollect = firebase.firestore().collection('pray');
+const notificationCollect = firebase.firestore().collection('notification');
 const tokenCollect = firebase.firestore().collection('tokens');
 
+
+moment.updateLocale('en', {
+    relativeTime: {
+        future: "in %s",
+        past: "%s ago",
+        s: 'a few seconds',
+        ss: '%d seconds',
+        m: "a minute",
+        mm: "%d m",
+        h: "an hour",
+        hh: "%d h",
+        d: "yesterday",
+        dd: "%d days",
+        M: "a month",
+        MM: "%d months",
+        y: "a year",
+        yy: "%d years"
+    }
+});
 
 class DrawerContainer extends PureComponent {
 
@@ -27,19 +49,31 @@ class DrawerContainer extends PureComponent {
 
     componentDidMount() {
         const docOfCurrentUserPray = prayCollect.doc(firebase.auth().currentUser.uid);
+        const docOfCurrentUserNotification = notificationCollect.doc(firebase.auth().currentUser.uid);
+
         docOfCurrentUserPray.collection("data").onSnapshot(snapshot => {
             let prayList = [];
             snapshot.forEach(e => {
-                let data = new Pray({...e.data(), uid: e.id});
-                // if (data.owner && data.owner.uid == firebase.auth().currentUser.uid) {
+                let data = new Pray((e.data()));
                 prayList.push(data);
-                // }
             });
 
             if (prayList) {
                 this.props.commonActions.updatePrayList(prayList);
             }
         });
+
+        docOfCurrentUserNotification.collection("data").onSnapshot(snapshot => {
+            let notificationList = [];
+            snapshot.forEach(e => {
+                let data = e.data();
+                notificationList.push(data);
+            });
+            if (notificationList) {
+                this.props.notificationActions.getNotifications(notificationList);
+            }
+        });
+
 
         //Listen event
         this.listener = EventRegister.addEventListener("listener", async (action) => {
@@ -48,62 +82,62 @@ class DrawerContainer extends PureComponent {
                 return;
             }
 
-            const {type, params, callback} = action;
+            const {type, params = {}, callback} = action;
             switch (type) {
-                case EventRegisterTypes.DELETE_ALL_PRAY_COMPLETED : {
-                    const {isInprogress} = params;
-                    const statusSelected = isInprogress ? StatusOfPray.INPROGRESS : StatusOfPray.COMPLETE;
-                    docOfCurrentUserPray.collection("data").get().then(res => {
-                        let docs = res.docs
-                        docs.map(doc => {
-                            const docRef = doc.ref;
-                            const data = doc.data();
-                            if (data.status === statusSelected) {
-                                docRef.delete();
-                            }
-                        })
-                    });
-                    break;
-                }
 
                 case EventRegisterTypes.DELETE_PRAY : {
                     const {uid} = params;
-                    const currentPray = docOfCurrentUserPray.collection("data").doc(uid);
-                    currentPray.delete();
+                    const httpsCallable = firebase.functions(firebase.app()).httpsCallable("deletePray");
+                    httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
+                        .then(data => {
+                        })
+                        .catch(httpsError => {
+                            console.log("ERROR :", httpsError);
+                            console.log(httpsError.code);
+                            console.log(httpsError.message);
+                            console.log(httpsError.details.errorDescription);
+                        });
+
                     break;
                 }
 
                 case EventRegisterTypes.UPDATE_STATUS_PRAY : {
                     const {uid, status} = params;
                     const currentPray = docOfCurrentUserPray.collection("data").doc(uid);
-
-
-                    if (status === StatusOfPray.COMPLETE) {
-                        await currentPray.get().then(res => {
-                            const {complete, following } = res.data();
-
-                            if (!complete) {
-                                const title = "test";
-                                const message = "Message";
-
-                                const endpoint = "addMessage?token={token}&title={title}&message={message}"
-                                    .replace("{token}", "d1mfE-8ZAB4:APA91bHtOp2d36P2tFGDdz1eV4-Pyvb_GpzX5TBp0dvBNosKFB3w-XlWr2X-xJLM2F2dGwihO7CgtU7KzfXD3JHI34p9r62feOG17ckfmOVWQs6lKt1hVXIDjPNpMl3_3t-Sw8ffdHp3")
-                                    .replace("{title}", title)
-                                    .replace("{token}", message);
-                                firebase.functions(firebase.app()).httpsCallable(endpoint)().then(res => {
-                                });
-                            }
-                        })
+                    if (status === StatusOfPray.INPROGRESS) {
+                        const httpsCallable = firebase.functions(firebase.app()).httpsCallable("completePrayer");
+                        httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
+                            .then(data => {
+                            })
+                            .catch(httpsError => {
+                                console.log("ERROR :", httpsError);
+                                console.log(httpsError.code);
+                                console.log(httpsError.message);
+                                console.log(httpsError.details.errorDescription);
+                            });
                     }
+                    else {
+                        currentPray.update("status", status).then(res => {
+                            if (callback) {
+                                callback({success: true, data: res});
+                            }
+                        });
+                    }
+                    break;
+                }
 
-                    // currentPray.update("status", status, "complete", true).then(res => {
-                    currentPray.update("status", status).then(res => {
-                        if (callback) {
-                            callback({success: true, data: res});
-                        }
-                    });
-
-
+                case EventRegisterTypes.DELETE_NOTIFICATION : {
+                    const {uid} = params;
+                    const httpsCallable = firebase.functions(firebase.app()).httpsCallable("deleteNotification");
+                    httpsCallable({userUID: firebase.auth().currentUser.uid, notifUID: uid})
+                        .then(data => {
+                        })
+                        .catch(httpsError => {
+                            console.log("ERROR :", httpsError);
+                            console.log(httpsError.code);
+                            console.log(httpsError.message);
+                            console.log(httpsError.details.errorDescription);
+                        });
                     break;
                 }
 
@@ -224,7 +258,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        commonActions: bindActionCreators(CommonActions, dispatch)
+        commonActions: bindActionCreators(CommonActions, dispatch),
+        notificationActions: bindActionCreators(NotificationActions, dispatch)
     }
 }
 

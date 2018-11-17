@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import {Colors, Fonts, ApplicationStyles, Images} from '../../Themes';
 import Swipeable from 'react-native-swipeable';
 import {TextIcon} from "../Modules"
+import moment from "moment";
 
 export default class PrayItem extends PureComponent {
 
@@ -59,7 +60,7 @@ export default class PrayItem extends PureComponent {
 
         const rightView = (
             <View style={styles.rightContainer}>
-                <Text numberOfLines={1} style={styles.date}>{date}</Text>
+                <Text numberOfLines={1} style={styles.date}>{moment(date).fromNow()}</Text>
             </View>
         );
 
@@ -90,7 +91,7 @@ PrayItem.defaultProps = {
 PrayItem.propTypes = {
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
+    date: PropTypes.oneOfType([PropTypes.string,PropTypes.number]),
     onPress: PropTypes.func,
     leftOptions: PropTypes.array
 };

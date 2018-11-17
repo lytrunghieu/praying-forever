@@ -65,7 +65,7 @@ class PrayFinished extends PureComponent {
     }
 
     onAcceptDeleteAll(){
-        const action ={ type :  EventRegisterTypes.DELETE_ALL_PRAY_COMPLETED, params : {inProgress: false}};
+        const action ={ type :  EventRegisterTypes.DELETE_PRAY};
         commonUtils.sendEvent(action);
         this.refs["confirm"].close();
     }
@@ -86,7 +86,7 @@ class PrayFinished extends PureComponent {
     //region Handle Pray Item
 
     onPressContinue(item){
-        const action ={ type :  EventRegisterTypes.UPDATE_STATUS_PRAY, params : {...item, status : StatusOfPray.INPROGRESS}};
+        const action ={ type :  EventRegisterTypes.UPDATE_STATUS_PRAY, params : item};
         commonUtils.sendEvent(action);
     }
 
@@ -120,7 +120,7 @@ class PrayFinished extends PureComponent {
             <PrayItem
                 title={item.title}
                 content={item.content}
-                date={moment(item.created).format("DD/MM/YYYY")}
+                date={item.created}
                 onPress ={this.onPressPrayItem.bind(this,item)}
                 leftOptions={lefttOptions}
             />

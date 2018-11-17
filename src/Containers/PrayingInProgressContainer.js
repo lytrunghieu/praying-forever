@@ -172,7 +172,7 @@ class PrayingInProgress extends PureComponent {
 
     //region handle modal confirm
     onAcceptDeleteAll() {
-        const action ={ type :  EventRegisterTypes.DELETE_ALL_PRAY_COMPLETED, params : {inProgress: true}};
+        const action ={ type :  EventRegisterTypes.DELETE_PRAY};
         commonUtils.sendEvent(action);
         this.refs["confirm"].close();
     }
@@ -209,7 +209,7 @@ class PrayingInProgress extends PureComponent {
     }
 
     onPressFinish(item) {
-        const action ={ type :  EventRegisterTypes.UPDATE_STATUS_PRAY, params : {...item, status : StatusOfPray.COMPLETE}};
+        const action ={ type :  EventRegisterTypes.UPDATE_STATUS_PRAY, params : item};
         commonUtils.sendEvent(action);
     }
 
@@ -313,7 +313,7 @@ class PrayingInProgress extends PureComponent {
             <PrayItem
                 title={item.title}
                 content={item.content}
-                date={moment(item.created).format("DD/MM/YYYY")}
+                date={item.created}
                 onPress={this.onPressPrayItem.bind(this, item)}
                 leftOptions={leftOptions}
             />

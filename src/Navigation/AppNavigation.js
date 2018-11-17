@@ -15,6 +15,7 @@ import {CreatePrayingContainer} from '../Containers/CreatePrayingContainer';
 import {PrayDetailContainer} from '../Containers/PrayDetailContainer';
 import {PrayForOtherContainer} from '../Containers/PrayForOtherContainer';
 import {NotificationsContainer} from '../Containers/NotificationsContainer';
+import {NotificationDetailContainer} from '../Containers/NotificationDetailContainer';
 
 const DrawerNav = DrawerNavigator({
     [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressContainer},
@@ -36,6 +37,7 @@ const MainNav = StackNavigator({
         [ScreenKey.CREATE_PRAYING]: {screen: CreatePrayingContainer},
         [ScreenKey.PRAY_DETAIL]: {screen: PrayDetailContainer},
         [ScreenKey.CREATE_ACCOUNT]: {screen: CreateAccountContainer},
+        [ScreenKey.NOTIFICATION_DETAIL]: {screen: NotificationDetailContainer},
     }, {
         headerMode: 'none',
         initialRouteName: ScreenKey.SPLASH_SCREEN,

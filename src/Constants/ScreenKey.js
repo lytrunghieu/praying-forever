@@ -19,6 +19,7 @@ module.exports = {
     PRAY_DETAIL: "PrayDetail",
     PRAY_FOR_OTHER :"PrayForOther",
     FORGOT_PASS: "ForgotPass",
-    NOTIFICATIONS :"Notifications"
+    NOTIFICATIONS :"Notifications",
+    NOTIFICATION_DETAIL :"NotificationDetail"
 
 };

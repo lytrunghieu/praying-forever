@@ -15,6 +15,10 @@ export default {
     pray :Immutable({
         praySelected : null,
         prays :[]
+    }),
+
+    notification :Immutable({
+        notifications : []
     })
 
 };

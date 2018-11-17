@@ -16,6 +16,8 @@ import moment from "moment";
 import commonUtils from "../Utils/CommonUtils";
 import firebase from 'react-native-firebase';
 
+
+
 class Notifications extends PureComponent {
     constructor(props) {
         super(props);
@@ -25,16 +27,14 @@ class Notifications extends PureComponent {
         ]
         this.onPressLeft = this.onPressLeft.bind(this);
         this.onPressRight = this.onPressRight.bind(this);
-        this.renderPrayItem = this.renderPrayItem.bind(this);
+        this.renderItem = this.renderItem.bind(this);
         this.renderSeparate = this.renderSeparate.bind(this);
         this.keyExtractor = this.keyExtractor.bind(this);
         this.renderListFooterComponent = this.renderListFooterComponent.bind(this);
         this.renderListHeaderComponent = this.renderListHeaderComponent.bind(this);
         this.onAcceptDeleteAll = this.onAcceptDeleteAll.bind(this);
-        this.state ={
-            notifications : []
-        };
         firebase.notifications().removeAllDeliveredNotifications();
+
     }
 
     //region cycle life
@@ -59,7 +59,7 @@ class Notifications extends PureComponent {
     }
 
     onAcceptDeleteAll(){
-        const action ={ type :  EventRegisterTypes.DELETE_ALL_PRAY_COMPLETED, params : {inProgress: false}};
+        const action ={ type :  EventRegisterTypes.DELETE_NOTIFICATION};
         commonUtils.sendEvent(action);
         this.refs["confirm"].close();
     }
@@ -77,8 +77,12 @@ class Notifications extends PureComponent {
 
     //endregion
 
-    //region Handle Pray Item
+    //region handle press Item
 
+
+    onPressItem=(item) => () => {
+        this.props.navigation.navigate(ScreenKey.NOTIFICATION_DETAIL, item);
+    }
 
     onPressDeleteSpecificPray(item){
         const action ={ type :  EventRegisterTypes.DELETE_PRAY, params : item};
@@ -89,26 +93,14 @@ class Notifications extends PureComponent {
 
     //region rendering
 
-    renderPrayItem({item}) {
-        const lefttOptions =[
-            {
-                text:I18n.t("continues"),
-                onPress : this.onPressContinue.bind(this,item)
-            },
-            {
-                text :I18n.t("delete"),
-                backgroundColor:Colors.red,
-                onPress : this.onPressDeleteSpecificPray.bind(this,item)
-            }
-        ]
-
+    renderItem({item}) {
         return (
             <PrayItem
                 title={item.title}
                 content={item.content}
-                date={moment(item.created).format("DD/MM/YYYY")}
-                onPress ={this.onPressPrayItem.bind(this,item)}
-                leftOptions={lefttOptions}
+                // date={moment(item.created).format("DD/MM/YYYY")}
+                date={item.created}
+                onPress={this.onPressItem(item)}
             />
         )
     }
@@ -128,8 +120,7 @@ class Notifications extends PureComponent {
     }
 
     render() {
-        const {notifications} = this.state;
-
+        const {notifications} = this.props;
         return (
             <View style={ApplicationStyles.screen.mainContainer}>
                 <ImageBackground/>
@@ -144,7 +135,7 @@ class Notifications extends PureComponent {
                     style={styles.flatList}
                     data={notifications}
                     keyExtractor={this.keyExtractor}
-                    renderItem={this.renderPrayItem}
+                    renderItem={this.renderItem}
                     ItemSeparatorComponent={this.renderSeparate}
                     ListHeaderComponent ={this.renderListHeaderComponent}
                     ListFooterComponent ={this.renderListFooterComponent}
@@ -171,6 +162,7 @@ class Notifications extends PureComponent {
 }
 
 const mapStateToProps = (state) => ({
+    notifications : state.notificationReducer.notifications
 })
 
 const mapDispatchToProps = (dispatch) => ({

@@ -21,122 +21,173 @@ function sendMessage({pushToken, payload}) {
 function addNotification({userUID, payload}) {
     const {created, title, content, owner} = payload;
     const path = paths.notification.replace("{userUID}", userUID);
-    firestore.doc(path).set(payload);
+    return firestore.collection(path).add(payload).then(res => {
+        res.set({uid: res.id}, {merge: true});
+        return res;
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        throw new functions.https.HttpsError(
+            "unknown", // code
+            'request failed', // message
+            {success: false, statusCode: 400, body: data, errorDescription: error}
+        );
+    });
 }
 
-exports.completePrayer = functions.https.onRequest((req, res) => {
-    const {userUID, prayUID} = req.query;
+
+exports.completePrayer = functions.https.onCall((data) => {
+    const {userUID, prayUID} = data;
     const path = paths.pray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
     return firestore
         .doc(path)
         .get()
         .then(doc => {
-            const {following, content, title} = doc.data();
-            const titleNotif = "Lời Cầu Nguyện Đã Ứng Nghiệm";
-            const created = new Date().getTime();
+            const {following, title, complete} = doc.data();
+            const docRef = doc.ref;
+            docRef.update("status", 1);
+            if (!complete) {
+                docRef.update("complete", true);
+                const titleNotif = "Lời Cầu Nguyện Đã Ứng Nghiệm";
+                const created = new Date().getTime();
+                let pushFcmToken = [];
+                let promiseRace = [];
+                following.map(fol => {
+                    const pathToken = "tokens/{userUID}".replace("{userUID}", fol);
+                    const paramAddNotification = {
+                        payload: {
+                            title: titleNotif,
+                            content: title,
+                            created,
+                            owner: fol
+                        },
+                        userUID: fol
+                    };
 
-            let pushFcmToken = [];
-            let promiseRace = [];
-            following.map(fol => {
-                const pathToken = "tokens/{userUID}".replace("{userUID}", fol);
+                    addNotification(paramAddNotification);
 
-                const paramAddNotification = {
-                    payload : {
-                        title : titleNotif,
-                        content :title,
-                        created,
-                        owner : fol
-                    } ,
-                    userUID : fol
-                };
-
-                addNotification(paramAddNotification);
-
-                const promise = firestore.doc(pathToken).get().then(docToken => {
-                    pushFcmToken.push(docToken.data().token);
-                    return res;
+                    const promise = firestore.doc(pathToken).get().then(docToken => {
+                        pushFcmToken.push(docToken.data().token);
+                        return docToken;
+                    });
+                    promiseRace.push(promise);
+                    return fol;
                 });
-                promiseRace.push(promise);
-            });
-
-
-
-            return res.status("200").send({ success : true , message :"send message success" });
-
-            return Promise.race(promiseRace).then(value => {
-                let payload = {
-                    notification: {
-                        title: titleNotif,
-                        body: title,
-                        sound: "default"
-                    }
-                };
-                // return sendMessage({pushToken : pushFcmToken , payload}).then(resMessage =>{
-                //     return res.status("200").send({ success : true , message :"send message success" });
-                // });
-            });
+                return Promise.race(promiseRace).then(() => {
+                    let payload = {
+                        notification: {
+                            title: titleNotif,
+                            body: title,
+                            sound: "default"
+                        }
+                    };
+                    return sendMessage({pushToken: pushFcmToken, payload}).then(() => {
+                        return {success: true, statusCode: 200, message: "request success"};
+                    });
+                });
+            }
+            else {
+                return {success: true, statusCode: 200, message: "request success"};
+            }
         }).catch(error => {
             console.log("LOG ERROR", error);
-            res.status("400").send({success: false, message: "request failed"});
+            throw new functions.https.HttpsError(
+                "unknown", // code
+                'request failed', // message
+                {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+            );
         });
 });
 
+exports.deleteNotification = functions.https.onCall((data) => {
+    const {userUID, notifUID} = data;
+    let path = paths.deleteAllNotification.replace("{userUID}", userUID);
+    if (notifUID) {
+        path = paths.deleteNotification.replace("{userUID}", userUID).replace("{notifUID}", notifUID);
+        return firestore
+            .doc(path)
+            .delete()
+            .then(doc => {
+                return {success: true, statusCode: 200, message: "request success"};
+            }).catch(error => {
+                console.log("LOG ERROR", error);
+                throw new functions.https.HttpsError(
+                    "unknown", // code
+                    'request failed', // message
+                    {success: false, statusCode: 400, body: data, errorDescription: error}
+                );
+            });
+    }
+    else {
 
-// exports.sendPushNotification = functions.firestore
-//   .document("some_collection/{some_document}")
-//   .onCreate(event => {
-//     // gets standard JavaScript object from the new write
-//     const writeData = event.data.data();
-//     // access data necessary for push notification 
-//     const sender = writeData.uid;
-//     const senderName = writeData.name;
-//     const recipient = writeData.recipient;
-//     // the payload is what will be delivered to the device(s)
-//     let payload = {
-//       notification: {
-//       title:"Title", 
-//       body:"Body"
-//      }
-//     };
-//     // either store the recepient tokens in the document write
-//     const tokens = writeData.tokens;  
-//     return admin.messaging().sendToDevice(tokens, payload);
+        return firestore.collection(path).get().then(snap => {
+            let batch = firestore.batch();
+            snap.forEach(docSnap => {
+                batch.delete(docSnap.ref)
+            });
+            return batch.commit().then(write => {
+                return {success: true, statusCode: 200, message: "request success"};
+            });
 
-//     // or collect them by accessing your database
-//     // var pushToken = "";
-//     // return functions
-//     //   .firestore
-//     //   .collection("user_data_collection/recipient")
-//     //   .get()
-//     //   .then(doc => {
-//     //      pushToken = doc.data().token;
-//     //      // sendToDevice can also accept an array of push tokens
-//     //      return admin.messaging().sendToDevice(pushToken, payload);
-//     //   });
-// });
+        }).catch(error => {
+            console.log("LOG ERROR", error);
+            throw new functions.https.HttpsError(
+                "unknown", // code
+                'request failed', // message
+                {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+            );
+        });
+    }
+});
+
+exports.deletePray = functions.https.onCall((data) => {
+
+    const {userUID, prayUID} = data;
 
 
-// firestore.doc(pathToken).get().then(docToken =>{
-//     const fcmToken = docToken.data();
-//     pushFcmToken.push(fcmToken);
-//     if(pushFcmToken.length === countFcmToken){
-//         let payload = {
-//                   notification: {
-//                   title:"Title", 
-//                   body:"Body"
-//             }
-//         }
-//         sendMessage({pushToken : pushFcmToken , payload})
-//         .then(res =>{
-//             resolve("success");
-//             return res.status("200").send({ success : true , message :"send message success" });
-//         }).catch(error =>{
-//             reject(error);
-//         });
-//     }
-//     return fcmToken;
-// }).catch(error =>{
-//     // console.log("LOG ERROR: ", error);
-//     // return res.status("400").send({ success : false , message :"request failed" });
-//     reject(error);
-// });
+    let path = paths.deleteAllPray.replace("{userUID}", userUID);
+
+    if (prayUID) {
+
+        path = paths.deletePray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
+        return firestore
+            .doc(path)
+            .delete()
+            .then(doc => {
+                return {success: true, statusCode: 200, message: "request success"};
+            }).catch(error => {
+                console.log("LOG ERROR", error);
+                throw new functions.https.HttpsError(
+                    "unknown", // code
+                    'request failed', // message
+                    {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+                );
+            });
+    }
+    else {
+        return firestore.collection(path).get().then(snap => {
+            let batch = firestore.batch();
+            snap.forEach(docSnap => {
+                batch.delete(docSnap.ref)
+            });
+            return batch.commit().then(write => {
+                return {success: true, statusCode: 200, message: "request success"};
+            });
+
+        }).catch(error => {
+            console.log("LOG ERROR", error);
+            throw new functions.https.HttpsError(
+                "unknown", // code
+                'request failed', // message
+                {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+            );
+        });
+    }
+});
+
+exports.onCreatePray = functions.firestore
+    .document("test/{doc}")
+    .onUpdate(event => {
+        console.log("onUpdatepray");
+        console.log("DATA:", event);
+    });
+
