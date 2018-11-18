@@ -3,6 +3,7 @@
 // };
 
 exports.pray = "pray/{userUID}/data/{prayUID}"
+exports.collectPray ="pray/{userUID}/data";
 exports.deletePray = "pray/{userUID}/data/{prayUID}"
 exports.deleteAllPray = "pray/{userUID}/data"
 

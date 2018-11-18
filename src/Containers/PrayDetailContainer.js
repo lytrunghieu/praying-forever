@@ -19,6 +19,9 @@ import {
     TextArea
 } from '../Components/Common';
 import commonUtils from "../Utils/CommonUtils";
+import firebase from 'react-native-firebase';
+
+const collect = firebase.firestore().collection("pray");
 
 const optionActionSheetForFinished = [
 
@@ -30,6 +33,7 @@ class PrayDetail extends PureComponent {
         const dataPassed = props.navigation.state.params;
         this.pray = dataPassed;
         this.uid = dataPassed && dataPassed.uid || null;
+        this.userUID = dataPassed && dataPassed.owner && dataPassed.owner.uid || null;
         this.optionActionSheetForFinished = [
             {text: I18n.t('continuesPraying'), onPress: this.onPressContinuesPraying.bind(this)},
             {text: I18n.t('edit'), onPress: this.onPressEdit.bind(this)},
@@ -50,7 +54,8 @@ class PrayDetail extends PureComponent {
         this.state = {
             title: dataPassed.title,
             content: dataPassed.content,
-            status : status
+            status : status,
+            available : true
         };
     }
 
@@ -66,6 +71,12 @@ class PrayDetail extends PureComponent {
                     content: currentPray.content
                 })
             }
+        }
+    }
+
+    componentDidMount(){
+        if(this.uid && this.userUID){
+            this.getPray();
         }
     }
 
@@ -130,10 +141,56 @@ class PrayDetail extends PureComponent {
 
     //endregion
 
+    //region functions
+    getPray(){
+        const currentDocRef = collect.doc(this.userUID).collection("data").doc(this.uid);
+        currentDocRef.get().then(snap =>{
+           const data = snap.data();
+           if(data){
+               const { title , content ,status}= data;
+               this.setState({
+                   status, title,content
+               });
+               commonUtils.sendEvent({type : EventRegisterTypes.UPDATE_PRAY, params : {uid : this.uid} });
+           }
+           else{
+               //case : owner of this prayer is login user
+               if(this.userUID === firebase.auth().currentUser.uid){
+                   commonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
+               }
+               //case : owner of this prayer is other user
+               else{
+                   commonUtils.sendEvent({type : EventRegisterTypes.DELETE_PRAY, params : {uid : this.uid} });
+               }
+               this.setState({
+                   available : false
+               })
+           }
+
+        });
+    }
+    //endregion
+
     //region rendering
 
+
+    renderContainer(){
+        const {title, content} = this.state;
+        return (
+            <ScrollView style={styles.scrollView}>
+                <PlaceHolder/>
+                <RowItem title={title} canPress={false} titleBold={true}/>
+                <PlaceHolder/>
+                <TextArea
+                    value={content}
+                    editable ={false}
+                />
+            </ScrollView>
+        )
+    }
+
     render() {
-        const {title, content, status} = this.state;
+        const {status , available} = this.state;
 
         return (
             <View style={ApplicationStyles.screen.mainContainerWithBackgroundColor}>
@@ -143,15 +200,10 @@ class PrayDetail extends PureComponent {
                         iconRight={Images.more}
                         onPressRightButton={this.onPressRightHeader}
                 />
-                <ScrollView style={styles.scrollView}>
-                    <PlaceHolder/>
-                    <RowItem title={title} canPress={false} titleBold={true}/>
-                    <PlaceHolder/>
-                    <TextArea
-                        value={content}
-                        editable ={false}
-                    />
-                </ScrollView>
+                {
+                    available ? this.renderContainer() : null
+                }
+
                 <ActionSheet
                     options={status === StatusOfPray.INPROGRESS ? this.optionActionSheetForInprogress  : this.optionActionSheetForFinished}
                     ref={"moreAction"}

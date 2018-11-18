@@ -10,6 +10,9 @@ admin.initializeApp(functions.config().firebase);
 
 const firestore = admin.firestore();
 
+const settings = {/* your settings... */ timestampsInSnapshots: true};
+firestore.settings(settings);
+
 // Take the text parameter passed to this HTTP endpoint and insert it into the
 // Realtime Database under the path /messages/:pushId/original
 
@@ -34,23 +37,22 @@ function addNotification({userUID, payload}) {
     });
 }
 
-
-exports.completePrayer = functions.https.onCall((data) => {
+exports.updateStatusPrayer =  functions.https.onCall( data => {
     const {userUID, prayUID} = data;
     const path = paths.pray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
     return firestore
         .doc(path)
         .get()
-        .then(doc => {
-            const {following, title, complete} = doc.data();
+        .then( doc =>  {
+            const {following, title, complete, status} = doc.data();
             const docRef = doc.ref;
-            docRef.update("status", 1);
-            if (!complete) {
-                docRef.update("complete", true);
+            const promiseUpdateStatus = docRef.update("status", status === 1 ?  0 : 1);
+            if (!complete && status === 0) {
+                const promiseUpdateComplete = docRef.update("complete", true);
                 const titleNotif = "Lời Cầu Nguyện Đã Ứng Nghiệm";
                 const created = new Date().getTime();
                 let pushFcmToken = [];
-                let promiseRace = [];
+                let promiseRace = [promiseUpdateStatus , promiseUpdateComplete];
                 following.map(fol => {
                     const pathToken = "tokens/{userUID}".replace("{userUID}", fol);
                     const paramAddNotification = {
@@ -63,13 +65,15 @@ exports.completePrayer = functions.https.onCall((data) => {
                         userUID: fol
                     };
 
-                    addNotification(paramAddNotification);
+                    const promiseAllNotification =  addNotification(paramAddNotification);
 
                     const promise = firestore.doc(pathToken).get().then(docToken => {
                         pushFcmToken.push(docToken.data().token);
                         return docToken;
                     });
                     promiseRace.push(promise);
+                    promiseRace.push(promiseAllNotification);
+
                     return fol;
                 });
                 return Promise.race(promiseRace).then(() => {
@@ -80,9 +84,15 @@ exports.completePrayer = functions.https.onCall((data) => {
                             sound: "default"
                         }
                     };
-                    return sendMessage({pushToken: pushFcmToken, payload}).then(() => {
+                    if(pushFcmToken && pushFcmToken.length > 0){
+                        return sendMessage({pushToken: pushFcmToken, payload}).then(() => {
+                            return {success: true, statusCode: 200, message: "request success"};
+                        });
+                    }
+                    else{
                         return {success: true, statusCode: 200, message: "request success"};
-                    });
+                    }
+
                 });
             }
             else {
@@ -183,6 +193,64 @@ exports.deletePray = functions.https.onCall((data) => {
         });
     }
 });
+
+exports.following = functions.https.onCall((data) => {
+    const {userUID, prayUID,userOtherUID} = data;
+    let path = paths.pray.replace("{userUID}", userOtherUID).replace("{prayUID}",prayUID);
+    return firestore.doc(path).get().then(docSnap =>{
+       if(docSnap.data() && docSnap.data().status === 0){
+           let {following} = docSnap.data();
+           let hasFollowing =true
+           if(following && following.length > 0 ){
+               let index = following.findIndex(fo => fo ===userUID);
+               if(index === -1){
+                   hasFollowing = false;
+               }
+           }
+           else{
+               hasFollowing = false
+           }
+           if(!hasFollowing){
+               following.push(userUID);
+               docSnap.ref.update("following", following);
+               let path = paths.pray.replace("{userUID}", userUID).replace("{prayUID}",prayUID);
+               return firestore.doc(path).set(docSnap.data()).then(res=>{
+                   return {success: true, statusCode: 200, message: "request success"};
+               });
+           }
+           else {
+               following = following.filter(fol => fol !== userUID);
+               docSnap.ref.update("following", following);
+               let path = paths.deletePray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
+               return firestore
+                   .doc(path)
+                   .delete()
+                   .then(doc => {
+                       return {success: true, statusCode: 200, message: "request success"};
+                   }).catch(error => {
+                       console.log("LOG ERROR", error);
+                       throw new functions.https.HttpsError(
+                           "unknown", // code
+                           'request failed', // message
+                           {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+                       );
+                   });
+           }
+
+       }
+       else{
+           return {success: false, statusCode: 401, message: "not found prayer"};
+       }
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        throw new functions.https.HttpsError(
+            "unknown", // code
+            'request failed', // message
+            {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+        );
+    });
+});
+
 
 exports.onCreatePray = functions.firestore
     .document("test/{doc}")

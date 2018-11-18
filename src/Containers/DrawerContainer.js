@@ -48,21 +48,7 @@ class DrawerContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const docOfCurrentUserPray = prayCollect.doc(firebase.auth().currentUser.uid);
         const docOfCurrentUserNotification = notificationCollect.doc(firebase.auth().currentUser.uid);
-
-        docOfCurrentUserPray.collection("data").onSnapshot(snapshot => {
-            let prayList = [];
-            snapshot.forEach(e => {
-                let data = new Pray((e.data()));
-                prayList.push(data);
-            });
-
-            if (prayList) {
-                this.props.commonActions.updatePrayList(prayList);
-            }
-        });
-
         docOfCurrentUserNotification.collection("data").onSnapshot(snapshot => {
             let notificationList = [];
             snapshot.forEach(e => {
@@ -74,6 +60,7 @@ class DrawerContainer extends PureComponent {
             }
         });
 
+        this.getPray();
 
         //Listen event
         this.listener = EventRegister.addEventListener("listener", async (action) => {
@@ -102,27 +89,20 @@ class DrawerContainer extends PureComponent {
                 }
 
                 case EventRegisterTypes.UPDATE_STATUS_PRAY : {
-                    const {uid, status} = params;
-                    const currentPray = docOfCurrentUserPray.collection("data").doc(uid);
-                    if (status === StatusOfPray.INPROGRESS) {
-                        const httpsCallable = firebase.functions(firebase.app()).httpsCallable("completePrayer");
-                        httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
-                            .then(data => {
-                            })
-                            .catch(httpsError => {
-                                console.log("ERROR :", httpsError);
-                                console.log(httpsError.code);
-                                console.log(httpsError.message);
-                                console.log(httpsError.details.errorDescription);
-                            });
-                    }
-                    else {
-                        currentPray.update("status", status).then(res => {
-                            if (callback) {
-                                callback({success: true, data: res});
-                            }
+                    const {uid} = params;
+                    const httpsCallable = firebase.functions(firebase.app()).httpsCallable("updateStatusPrayer");
+                    httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
+                        .then(data => {
+                            this.getPray();
+                        })
+                        .catch(httpsError => {
+                            console.log("ERROR :", httpsError);
+                            console.log(httpsError.code);
+                            console.log(httpsError.message);
+                            console.log(httpsError.details.errorDescription);
                         });
-                    }
+
+
                     break;
                 }
 
@@ -138,6 +118,22 @@ class DrawerContainer extends PureComponent {
                             console.log(httpsError.message);
                             console.log(httpsError.details.errorDescription);
                         });
+                    break;
+                }
+
+                case EventRegisterTypes.UPDATE_PRAY :{
+                    const {uid} = params;
+                    const docOfCurrentUserPrayRef = prayCollect.doc(firebase.auth().currentUser.uid).collection("data").doc(uid);
+                    docOfCurrentUserPrayRef.get().then(snap =>{
+                        snap.ref.update(snap.data()).then(res =>{
+                            this.getPray();
+                        });
+                    })
+                    break;
+                }
+
+                case EventRegisterTypes.GET_PRAY :{
+                    this.getPray();
                     break;
                 }
 
@@ -214,6 +210,19 @@ class DrawerContainer extends PureComponent {
     }
 
     //endregion
+
+
+    getPray(){
+        const docOfCurrentUserPray = prayCollect.doc(firebase.auth().currentUser.uid);
+
+        docOfCurrentUserPray.collection("data").get().then(snapCol =>{
+            let array = [];
+            snapCol.forEach(snapDoc =>{
+                array.push(snapDoc.data())
+            });
+            this.props.commonActions.updatePrayList(array);
+        });
+    }
 
     updateToken(fcmToken) {
         tokenCollect.doc(firebase.auth().currentUser.uid).set({

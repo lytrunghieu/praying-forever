@@ -1,4 +1,4 @@
 export default {
-    INPROGRESS: "0",
-    COMPLETE: "1",
+    INPROGRESS: 0,
+    COMPLETE: 1,
 };

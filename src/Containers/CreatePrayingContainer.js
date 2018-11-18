@@ -28,7 +28,7 @@ import moment from "moment";
 import commonUtils from "../Utils/CommonUtils";
 import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
 import {Pray} from "../model";
-import {StatusOfPray} from "../Constants";
+import {StatusOfPray,EventRegisterTypes} from "../Constants";
 
 
 let collect = firebase.firestore().collection("pray");
@@ -92,11 +92,14 @@ class CreatePraying extends PureComponent {
 
     onSubmit() {
         const {title, content, isReminder, timeReminder} = this.state;
-        let params = {title, content};
+        let params = {title, content };
         if (this.isEdit) {
             params.uid = this.uid;
             let dataSend =  Pray.removeFieldEmpty(new Pray(params));
-            this.userPray.collection("data").doc(this.uid).update(dataSend)
+            this.userPray.collection("data").doc(this.uid).update(dataSend).then(res =>{
+                commonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
+                this.onPressBack();
+            });
         }
         else {
 
@@ -107,11 +110,14 @@ class CreatePraying extends PureComponent {
             this.userPray.collection("data").add(dataSend).then(res => {
                 res.get().then(res2 => {
                     const docRef = res2.ref;
-                    docRef.update("uid" ,res2.id);
+                    docRef.update("uid" ,res2.id).then(res2 =>{
+                        commonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
+                        this.onPressBack();
+                    });
                 });
             })
         }
-        this.onPressBack();
+
     }
 
     onPressEditTimeClock() {
@@ -242,28 +248,6 @@ class CreatePraying extends PureComponent {
                         onChangeText={this.onChangeContent}
                     />
                     <PlaceHolder/>
-                    {/*<SwitchRowItem title={I18n.t("reminder")}*/}
-                                   {/*onValueChange={this.onChangeReminderStatus}*/}
-                                   {/*value={this.state.isReminder}*/}
-                    {/*/>*/}
-                    {/*<PlaceHolder/>*/}
-                    {/*{this.state.isReminder &&*/}
-                    {/*<View>*/}
-                        {/*<RowItem title={moment(timeReminder).format("hh:mm a")} icon={Images.edit}*/}
-                                 {/*onPress={this.onPressEditTimeClock}/>*/}
-                        {/*<PlaceHolder/>*/}
-                    {/*</View> || null*/}
-                    {/*}*/}
-                    {/*{*/}
-                        {/*this.state.showDateTimePickerIOS &&*/}
-                        {/*<DatePickerIOS*/}
-                            {/*date={new Date(this.state.timeReminder)}*/}
-                            {/*mode="time"*/}
-                            {/*onDateChange={this.onDateChange}*/}
-                        {/*/> || null*/}
-                    {/*}*/}
-
-
                 </ScrollView>
                 <View style={styles.buttonCreateContainer}>
                     {this.state.title && this.state.content &&

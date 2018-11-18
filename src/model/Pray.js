@@ -18,7 +18,7 @@ export default class Pray {
         this.content = data.content || null;
         this.owner = data.owner && new PrayUser(data.owner) || null;
         this.following = data.following &&  Following.convertFollowing(data.following) || [];
-        this.status = data.status || null;
+        this.status = data.status || 0;
         this.complete = data.complete || false;
         this.isDelete = data.isDelete && new PrayDelete(data.isDelete) || null;
         this.password = data.password || null;
