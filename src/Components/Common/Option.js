@@ -1,4 +1,3 @@
-
 import React, {PureComponent} from 'react';
 import {
     View,
@@ -18,7 +17,7 @@ export default class OptionPopup extends PureComponent {
 
     render() {
 
-        const {text, hideDivider, onPress, index, leftIcon, count, textIsCenter, textColor} = this.props;
+        const {text, hideDivider, onPress, index, leftIcon, count, textIsCenter, textColor, isCircle} = this.props;
         let textCount = count;
         if (textCount > 99) {
             textCount = "99+";
@@ -38,10 +37,14 @@ export default class OptionPopup extends PureComponent {
                 </View>
                 }
 
-                <Text style={[styles.text, textIsCenter && styles.textCenter ,{color :textColor}]}>{text}</Text>
+                <Text style={[styles.text, textIsCenter && styles.textCenter, {color: textColor}]}>{text}</Text>
                 {
                     textCount ?
-                    <Text style ={styles.count}>{textCount}</Text> : null
+                        <View style ={isCircle ? styles.countCircle : null}>
+                            <Text style={[styles.count , isCircle && {color : Colors.white}]}>{textCount}</Text>
+
+                        </View>
+                        : null
                 }
 
             </TouchableOpacity>
@@ -51,14 +54,15 @@ export default class OptionPopup extends PureComponent {
 
 OptionPopup.defaultProps = {
     text: "",
-    textColor :Colors.black,
+    textColor: Colors.black,
     index: 0,
     hideDivider: false,
     onPress: () => {
     },
     leftIcon: null,
     count: 0,
-    textIsCenter: false
+    textIsCenter: false,
+    isCircle : false
 
 }
 
@@ -68,8 +72,8 @@ OptionPopup.propTypes = {
     onPress: PropTypes.func,
     textIsCenter: PropTypes.bool,
     textColor: PropTypes.string,
-    count: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-
+    count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    isCircle : PropTypes.bool
 }
 
 const styles = EStyleSheet.create({
@@ -99,8 +103,8 @@ const styles = EStyleSheet.create({
 
     textCenter: {
         paddingLeft: 0,
-        textAlign :"center",
-        alignSelf:"center"
+        textAlign: "center",
+        alignSelf: "center"
     },
 
     count: {
@@ -110,6 +114,11 @@ const styles = EStyleSheet.create({
         width: 50,
         paddingRight: "$padding",
         textAlign: "right"
+    },
+
+    countCircle : {
+        borderRadius :"$borderRadiusLarge",
+        backgroundColor: Colors.red,
     }
 
 });

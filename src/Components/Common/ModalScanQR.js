@@ -7,8 +7,11 @@ import PropTypes from 'prop-types';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Title from "./Title";
 import Button from "./Button";
+import ModalLoading from "./ModalLoading";
 import I18n from '../../I18n';
 import firebase from 'react-native-firebase';
+import CommonUtils  from "../../Utils/CommonUtils"
+import {EventRegisterTypes}  from "../../Constants"
 
 const collect = firebase.firestore().collection('pray');
 
@@ -21,26 +24,37 @@ export default class ModalScanQR extends ModalBase {
     }
 
     onSuccess(e) {
-        if(e.type ==="QR_CODE" && !this.fetching){
+        if (e.type === "QR_CODE" && !this.fetching) {
             this.fetching = true;
-            collect.doc(e.data).get().then(snapshot =>{
+            this.refs["loading"].open();
+            collect.doc(e.data).get().then(snapshot => {
                 let data = snapshot.data();
                 let ref = snapshot.ref;
-                if(data){
-                    const {following, uid} = data;
-                    const exist = following.findIndex(e => e === firebase.auth().currentUser.uid);
-                    if(exist === -1){
-                        following.push(firebase.auth().currentUser.uid);
-                        ref.update("following", following).then(success =>{
-                            const _collect = firebase.firestore().collection("pray/"+firebase.auth().currentUser.uid+"/data");
-                            _collect.add(data).finally(res =>{
-                                this.fetching = false;
-                                this.close();
-                            });
+                if (data) {
+
+                    const {uid, owner} = data;
+                    const httpsCallable = firebase.functions(firebase.app()).httpsCallable("following");
+                    return httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid,userOtherUID :owner.uid})
+                        .then(data => {
+                            CommonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
                         })
-                    }
+                        .catch(httpsError => {
+                            console.log("ERROR :", httpsError);
+                            console.log(httpsError.code);
+                            console.log(httpsError.message);
+                            console.log(httpsError.details.errorDescription);
+                            throw "error"
+                        });
                 }
-            })
+                throw "error"
+            }).finally(res => {
+                this.refs["loading"].close();
+                if(res ==="error"){
+                    alert("following failed");
+                }
+                this.fetching = false;
+                this.close();
+            });
         }
 
     }
@@ -65,6 +79,9 @@ export default class ModalScanQR extends ModalBase {
                         <Button onPress={this.close} text={I18n.t("cancel")}/>
                     }
                 />
+                <ModalLoading
+                    ref ="loading"
+                />
             </View>
         )
     }
@@ -78,31 +95,30 @@ ModalScanQR.propTypes = {}
 const styles = EStyleSheet.create({
 
 
-    container: {
-    },
+    container: {},
 
     marker: {
         borderColor: Colors.blue
     },
 
-    topView :{
+    topView: {
         backgroundColor: Colors.white,
-        height : "$heightRowNormal",
-        flex : 0,
+        height: "$heightRowNormal",
+        flex: 0,
     },
 
-    cameraStyle :{
-      flex : 1
+    cameraStyle: {
+        flex: 1
     },
 
-    bottomView:{
+    bottomView: {
         backgroundColor: "transparent",
-        height : "$heightRowNormal",
-        flex :0,
-        bottom :0,
-        left : 0,
-        position:"absolute",
-        marginBottom:"$padding"
+        height: "$heightRowNormal",
+        flex: 0,
+        bottom: 0,
+        left: 0,
+        position: "absolute",
+        marginBottom: "$padding"
     }
 
 });

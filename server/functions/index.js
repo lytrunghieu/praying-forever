@@ -25,8 +25,9 @@ function addNotification({userUID, payload}) {
     const {created, title, content, owner} = payload;
     const path = paths.notification.replace("{userUID}", userUID);
     return firestore.collection(path).add(payload).then(res => {
-        res.set({uid: res.id}, {merge: true});
-        return res;
+        return res.update("uid", res.id , "created", admin.firestore.FieldValue.serverTimestamp()).then(res2 =>{
+            return res2;
+        });
     }).catch(error => {
         console.log("LOG ERROR", error);
         throw new functions.https.HttpsError(
@@ -50,7 +51,6 @@ exports.updateStatusPrayer =  functions.https.onCall( data => {
             if (!complete && status === 0) {
                 const promiseUpdateComplete = docRef.update("complete", true);
                 const titleNotif = "Lời Cầu Nguyện Đã Ứng Nghiệm";
-                const created = new Date().getTime();
                 let pushFcmToken = [];
                 let promiseRace = [promiseUpdateStatus , promiseUpdateComplete];
                 following.map(fol => {
@@ -59,8 +59,10 @@ exports.updateStatusPrayer =  functions.https.onCall( data => {
                         payload: {
                             title: titleNotif,
                             content: title,
-                            created,
-                            owner: fol
+                            owner: fol,
+                            isRead : false,
+                            created :"",
+                            uid :"",
                         },
                         userUID: fol
                     };
@@ -214,7 +216,9 @@ exports.following = functions.https.onCall((data) => {
                following.push(userUID);
                docSnap.ref.update("following", following);
                let path = paths.pray.replace("{userUID}", userUID).replace("{prayUID}",prayUID);
-               return firestore.doc(path).set(docSnap.data()).then(res=>{
+               let newData = docSnap.data();
+               newData.following = following;
+               return firestore.doc(path).set( newData).then(res=>{
                    return {success: true, statusCode: 200, message: "request success"};
                });
            }

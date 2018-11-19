@@ -45,6 +45,9 @@ class DrawerContainer extends PureComponent {
     constructor(props) {
         super();
         this.onPressLogout = this.onPressLogout.bind(this);
+        this.state = {
+            notificationNotRead: this.getNotificationNotRead(props.notifications)
+        };
     }
 
     componentDidMount() {
@@ -77,6 +80,7 @@ class DrawerContainer extends PureComponent {
                     const httpsCallable = firebase.functions(firebase.app()).httpsCallable("deletePray");
                     httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
                         .then(data => {
+                            this.getPray();
                         })
                         .catch(httpsError => {
                             console.log("ERROR :", httpsError);
@@ -108,6 +112,7 @@ class DrawerContainer extends PureComponent {
 
                 case EventRegisterTypes.DELETE_NOTIFICATION : {
                     const {uid} = params;
+                    console.log("uid ", uid);
                     const httpsCallable = firebase.functions(firebase.app()).httpsCallable("deleteNotification");
                     httpsCallable({userUID: firebase.auth().currentUser.uid, notifUID: uid})
                         .then(data => {
@@ -121,19 +126,57 @@ class DrawerContainer extends PureComponent {
                     break;
                 }
 
-                case EventRegisterTypes.UPDATE_PRAY :{
+                case EventRegisterTypes.UPDATE_PRAY : {
                     const {uid} = params;
                     const docOfCurrentUserPrayRef = prayCollect.doc(firebase.auth().currentUser.uid).collection("data").doc(uid);
-                    docOfCurrentUserPrayRef.get().then(snap =>{
-                        snap.ref.update(snap.data()).then(res =>{
+                    docOfCurrentUserPrayRef.get().then(snap => {
+                        snap.ref.update(snap.data()).then(res => {
                             this.getPray();
                         });
                     })
                     break;
                 }
 
-                case EventRegisterTypes.GET_PRAY :{
+                case EventRegisterTypes.UPDATE_FOLLOWING : {
+                    const {uid, owner} = params;
+                    const httpsCallable = firebase.functions(firebase.app()).httpsCallable("following");
+                    httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid, userOtherUID: owner.uid})
+                        .then(data => {
+                            this.getPray();
+                        })
+                        .catch(httpsError => {
+                            console.log("ERROR :", httpsError);
+                            console.log(httpsError.code);
+                            console.log(httpsError.message);
+                            console.log(httpsError.details.errorDescription);
+                        });
+                    break;
+                }
+
+                case EventRegisterTypes.GET_PRAY : {
                     this.getPray();
+                    break;
+                }
+
+                case EventRegisterTypes.UPDATE_NOTIFICATION : {
+                    const {uid} = params;
+                    if (uid) {
+                        docOfCurrentUserNotification.collection("data").doc(uid).update("isRead", true).catch(error => {
+                            console.warn("ERROR :", error);
+                        });
+                    }
+                    else {
+                        docOfCurrentUserNotification.collection("data").get().then(colSnap => {
+                            let batch = firebase.firestore().batch();
+                            colSnap.forEach(dataSnap => {
+                                batch.update(dataSnap.ref, "isRead", true);
+                            });
+                            batch.commit().catch(error => {
+                                console.warn("ERROR :", error);
+                            });
+
+                        });
+                    }
                     break;
                 }
 
@@ -194,6 +237,14 @@ class DrawerContainer extends PureComponent {
         this.onTokenRefreshListener();
     }
 
+    componentWillReceiveProps(nextProps, nextState) {
+        if (nextProps.notifications !== this.props.notifications) {
+            this.setState({
+                notificationNotRead: this.getNotificationNotRead(nextProps.notifications)
+            });
+        }
+    }
+
     //region handle action press
 
     onPressOption(screen) {
@@ -211,13 +262,19 @@ class DrawerContainer extends PureComponent {
 
     //endregion
 
+    getNotificationNotRead(notif) {
+        if (!Array.isArray(notif)) {
+            return 0
+        }
+        return notif.filter(no => !no.isRead).length;
+    }
 
-    getPray(){
+    getPray() {
         const docOfCurrentUserPray = prayCollect.doc(firebase.auth().currentUser.uid);
 
-        docOfCurrentUserPray.collection("data").get().then(snapCol =>{
+        docOfCurrentUserPray.collection("data").orderBy("created", "desc").get().then(snapCol => {
             let array = [];
-            snapCol.forEach(snapDoc =>{
+            snapCol.forEach(snapDoc => {
                 array.push(snapDoc.data())
             });
             this.props.commonActions.updatePrayList(array);
@@ -235,6 +292,7 @@ class DrawerContainer extends PureComponent {
 
     render() {
         const {navigation: {navigate}, logout, activeItemKey, prays} = this.props;
+        const {notificationNotRead} = this.state;
         const praysFinished = prays.filter(e => e.status == StatusOfPray.COMPLETE);
 
         return (
@@ -248,7 +306,8 @@ class DrawerContainer extends PureComponent {
                     <Option text={I18n.t("prayForOther")} leftIcon={Images.complete}
                             onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FOR_OTHER)}/>
                     <Option text={I18n.t("notifications")} leftIcon={Images.setting}
-                            onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)}/>
+                            onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)} isCircle={true}
+                            count={notificationNotRead}/>
                     <Option text={I18n.t("setting")} leftIcon={Images.setting}/>
                     <Option text={I18n.t("about")} leftIcon={Images.about}/>
                     <Option text={I18n.t("logout")} leftIcon={Images.logout} onPress={this.onPressLogout}/>
@@ -261,7 +320,8 @@ class DrawerContainer extends PureComponent {
 
 const mapStateToProps = (state) => {
     return {
-        prays: state.commonReducer.prays
+        prays: state.commonReducer.prays,
+        notifications: state.notificationReducer.notifications
     }
 }
 

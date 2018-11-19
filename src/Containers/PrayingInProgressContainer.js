@@ -263,6 +263,11 @@ class PrayingInProgress extends PureComponent {
         commonUtils.sendEvent(action);
     }
 
+    onPressUnfollowing(item) {
+        const action ={ type :  EventRegisterTypes.UPDATE_FOLLOWING, params : item};
+        commonUtils.sendEvent(action);
+    }
+
     //endregion
 
     //region rendering
@@ -301,8 +306,8 @@ class PrayingInProgress extends PureComponent {
         else{
             leftOptions = [
                 {
-                    text: I18n.t("delete"),
-                    onPress: this.onPressDeleteSpecificPray.bind(this, item)
+                    text: I18n.t("unFollowing"),
+                    onPress: this.onPressUnfollowing.bind(this, item)
                 }
             ];
         }

@@ -103,14 +103,14 @@ class CreatePraying extends PureComponent {
         }
         else {
 
-            params.created = moment().valueOf();
+            // params.created = firebase.firestore.FieldValue.serverTimestamp();
             params.owner = {uid: firebase.auth().currentUser.uid};
             params.status = StatusOfPray.INPROGRESS;
             let dataSend = new Pray(params);
             this.userPray.collection("data").add(dataSend).then(res => {
                 res.get().then(res2 => {
                     const docRef = res2.ref;
-                    docRef.update("uid" ,res2.id).then(res2 =>{
+                    docRef.update("uid" ,res2.id ,"created",firebase.firestore.FieldValue.serverTimestamp()).then(res2 =>{
                         commonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
                         this.onPressBack();
                     });

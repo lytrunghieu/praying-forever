@@ -1,30 +1,38 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {CommonActions } from "../actions";
+import {CommonActions} from "../actions";
 
 import {
     View,
-    FlatList,TouchableHighlight
+    FlatList, TouchableHighlight
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {StatusOfPray,EventRegisterTypes,ScreenKey} from "../Constants";
+import {StatusOfPray, EventRegisterTypes, ScreenKey} from "../Constants";
 import {Colors, Images, ApplicationStyles} from '../Themes';
 import I18n from '../I18n';
-import {NavBar, ImageBackground, ActionSheet, ButtonAction, PrayItem, PlaceHolder,ConfirmModal} from '../Components/Common';
+import {
+    NavBar,
+    ImageBackground,
+    ActionSheet,
+    ButtonAction,
+    PrayItem,
+    PlaceHolder,
+    ConfirmModal
+} from '../Components/Common';
 import moment from "moment";
 import commonUtils from "../Utils/CommonUtils";
 import firebase from 'react-native-firebase';
-
 
 
 class Notifications extends PureComponent {
     constructor(props) {
         super(props);
         this.optionActionSheet = [
-            {text: I18n.t('search')},
-            {text: I18n.t('deleteAll'), color: Colors.red , onPress : this.onPressDeleteAll.bind(this)}
-        ]
+            {text: I18n.t('readAll') ,onPress: this.onPressReadAll.bind(this)},
+            {text: I18n.t('deleteAll'), color: Colors.red, onPress: this.onPressDeleteAll.bind(this)}
+        ];
+
         this.onPressLeft = this.onPressLeft.bind(this);
         this.onPressRight = this.onPressRight.bind(this);
         this.renderItem = this.renderItem.bind(this);
@@ -34,14 +42,14 @@ class Notifications extends PureComponent {
         this.renderListHeaderComponent = this.renderListHeaderComponent.bind(this);
         this.onAcceptDeleteAll = this.onAcceptDeleteAll.bind(this);
         firebase.notifications().removeAllDeliveredNotifications();
-
     }
 
     //region cycle life
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
 
     }
+
     //endregion
 
     //region other
@@ -49,20 +57,28 @@ class Notifications extends PureComponent {
     keyExtractor(item, index) {
         return index.toString();
     }
+
     //endregion
 
     //region handle confirm modal
 
-    onPressDeleteAll(){
+
+    onPressReadAll(){
+        const action = {type: EventRegisterTypes.UPDATE_NOTIFICATION};
+        commonUtils.sendEvent(action);
+    }
+
+    onPressDeleteAll() {
         this.refs["moreAction"].close();
         this.refs["confirm"].open();
     }
 
-    onAcceptDeleteAll(){
-        const action ={ type :  EventRegisterTypes.DELETE_NOTIFICATION};
+    onAcceptDeleteAll() {
+        const action = {type: EventRegisterTypes.DELETE_NOTIFICATION};
         commonUtils.sendEvent(action);
         this.refs["confirm"].close();
     }
+
     //endregion
 
     //region handle Header
@@ -79,14 +95,18 @@ class Notifications extends PureComponent {
 
     //region handle press Item
 
-
-    onPressItem=(item) => () => {
-        this.props.navigation.navigate(ScreenKey.NOTIFICATION_DETAIL, item);
+    onPressDeleteItem = (item) => () => {
+        const action = {type: EventRegisterTypes.DELETE_NOTIFICATION, params: item};
+        commonUtils.sendEvent(action);
     }
 
-    onPressDeleteSpecificPray(item){
-        const action ={ type :  EventRegisterTypes.DELETE_PRAY, params : item};
+    onPressRead = (item) => () => {
+        const action = {type: EventRegisterTypes.UPDATE_NOTIFICATION, params: item};
         commonUtils.sendEvent(action);
+    }
+
+    onPressItem = (item) => () => {
+        this.props.navigation.navigate(ScreenKey.NOTIFICATION_DETAIL, item);
     }
 
     //endregion
@@ -94,10 +114,27 @@ class Notifications extends PureComponent {
     //region rendering
 
     renderItem({item}) {
+
+        let optionActionItem = [
+
+            {
+                text: I18n.t("delete"),
+                onPress: this.onPressDeleteItem(item)
+            },
+            {
+                text: I18n.t("read"),
+                onPress: this.onPressRead(item)
+            },
+        ]
+        if(item.isRead){
+            optionActionItem.pop();
+        }
+
         return (
             <PrayItem
                 title={item.title}
                 content={item.content}
+                leftOptions={optionActionItem}
                 // date={moment(item.created).format("DD/MM/YYYY")}
                 date={item.created}
                 onPress={this.onPressItem(item)}
@@ -111,11 +148,11 @@ class Notifications extends PureComponent {
         )
     }
 
-    renderListHeaderComponent(){
+    renderListHeaderComponent() {
         return (<PlaceHolder/>);
     }
 
-    renderListFooterComponent(){
+    renderListFooterComponent() {
         return (<PlaceHolder/>);
     }
 
@@ -137,8 +174,8 @@ class Notifications extends PureComponent {
                     keyExtractor={this.keyExtractor}
                     renderItem={this.renderItem}
                     ItemSeparatorComponent={this.renderSeparate}
-                    ListHeaderComponent ={this.renderListHeaderComponent}
-                    ListFooterComponent ={this.renderListFooterComponent}
+                    ListHeaderComponent={this.renderListHeaderComponent}
+                    ListFooterComponent={this.renderListFooterComponent}
 
                 />
 
@@ -158,15 +195,16 @@ class Notifications extends PureComponent {
             </View>
         );
     }
+
     //endregion
 }
 
 const mapStateToProps = (state) => ({
-    notifications : state.notificationReducer.notifications
+    notifications: state.notificationReducer.notifications
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    commonActions : bindActionCreators(CommonActions,dispatch)
+    commonActions: bindActionCreators(CommonActions, dispatch)
 })
 
 export const NotificationsContainer = connect(mapStateToProps, mapDispatchToProps)(Notifications);

@@ -49,8 +49,8 @@ export default class PrayItem extends PureComponent {
 
 
     render() {
-        const {title, content, date, onPress, leftOptions} = this.props;
 
+        const {title, content, date, onPress, leftOptions} = this.props;
         const leftView = (
             <View style={styles.leftContainer}>
                 <Text numberOfLines={1} style={styles.title}>{title}</Text>
@@ -91,7 +91,7 @@ PrayItem.defaultProps = {
 PrayItem.propTypes = {
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
-    date: PropTypes.oneOfType([PropTypes.string,PropTypes.number]),
+    date: PropTypes.oneOfType([PropTypes.string,PropTypes.number, PropTypes.date]),
     onPress: PropTypes.func,
     leftOptions: PropTypes.array
 };
