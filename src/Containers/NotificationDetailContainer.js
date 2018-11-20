@@ -44,6 +44,10 @@ class NotificationDetail extends PureComponent {
 
     //region cycle life
 
+    componentDidMount(){
+        commonUtils.sendEvent({type : EventRegisterTypes.UPDATE_NOTIFICATION , params: {uid : this.uid}})
+    }
+
     componentWillReceiveProps(nextProps) {
     }
 

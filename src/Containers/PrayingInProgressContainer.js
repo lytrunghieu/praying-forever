@@ -253,6 +253,7 @@ class PrayingInProgress extends PureComponent {
                     isLive:  location
                 }));
                 currentDoc.update(dataSend).then(res =>{
+
                 });
             });
         }
