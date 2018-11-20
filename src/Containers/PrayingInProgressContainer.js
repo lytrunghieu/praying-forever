@@ -27,8 +27,11 @@ import {StatusOfPray,EventRegisterTypes,ScreenKey} from "../Constants";
 import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
 import {Pray, PrayLocation} from '../model';
 import * as _ from "lodash";
+import Permissions from 'react-native-permissions';
+import Geolocation from 'react-native-geolocation-service';
 
 const collect = firebase.firestore().collection('pray');
+const locationCollect = firebase.firestore().collection('location');
 
 class PrayingInProgress extends PureComponent {
 
@@ -171,6 +174,7 @@ class PrayingInProgress extends PureComponent {
     //endregion
 
     //region handle modal confirm
+
     onAcceptDeleteAll() {
         const action ={ type :  EventRegisterTypes.DELETE_PRAY};
         commonUtils.sendEvent(action);
@@ -204,6 +208,20 @@ class PrayingInProgress extends PureComponent {
     //endregion
 
     //region handle Pray Item
+
+    requestLocationPermission(){
+        return Permissions.request('location').then(response => {
+            if(response ==="authorized"){
+                return "success";
+            }
+            else{
+                alert("App need access location to get pray list");
+                return "fail";
+            }
+        })
+
+    }
+
     onPressPrayItem(item) {
         this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, item);
     }
@@ -232,30 +250,57 @@ class PrayingInProgress extends PureComponent {
     }
 
     onPressStatusLive(item) {
-        const currentDoc = collect.doc(item.uid);
-
+        const currentDoc = collect.doc(firebase.auth().currentUser.uid).collection("data").doc(item.uid);
         if(item.isLive){
             const dataSend ={
                 isLive:  null
             };
+
             currentDoc.update(dataSend).then(res =>{
+                locationCollect.doc(item.uid).delete();
+                commonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
             });
         }
         else{
-            navigator.geolocation.getCurrentPosition(success => {
-                const {timestamp, coords} = success;
-                const {longitude, latitude} = coords || {};
-                const location = new PrayLocation({
-                    long: longitude,
-                    lat: latitude
-                });
-                const dataSend = Pray.removeFieldEmpty(new Pray({
-                    isLive:  location
-                }));
-                currentDoc.update(dataSend).then(res =>{
+            this.requestLocationPermission().then(res =>{
+                if(res ==="success"){
+                    Geolocation.getCurrentPosition(
+                        (position) => {
+                            const {timestamp, coords} = position;
+                            const {longitude, latitude} = coords || {};
+                            const location = new PrayLocation({
+                                long: longitude,
+                                lat: latitude
+                            });
+                            const dataSend = Pray.removeFieldEmpty(new Pray({
+                                isLive:  location
+                            }));
+                            currentDoc.update(dataSend).then(res =>{
+                                return currentDoc.get().then(docSnap =>{
+                                    if(docSnap.data()){
+                                        const {uid }= docSnap.data();
+                                        locationCollect.doc(uid).set(docSnap.data());
+                                        commonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
+                                    }
+                                    else{
+                                        throw "error"
+                                    }
 
-                });
+                                }).catch(error =>{
+                                    console.warn("ERROR ", error)
+                                });
+
+                            });
+                        },
+                        (error) => {
+                            // See error code charts below.
+                            console.warn(error.code, error.message);
+                        },
+                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                    );
+                }
             });
+
         }
     }
 
@@ -279,7 +324,7 @@ class PrayingInProgress extends PureComponent {
         if(item.owner.uid === firebase.auth().currentUser.uid){
             leftOptions = [
                 {
-                    text: I18n.t("offline"),
+                    text: I18n.t("public"),
                     onPress: this.onPressStatusLive.bind(this, item)
                 },
                 {
@@ -299,7 +344,7 @@ class PrayingInProgress extends PureComponent {
             ];
             if(item.isLive){
                 leftOptions[0] = {
-                    text: I18n.t("onlive"),
+                    text: I18n.t("private"),
                     onPress: this.onPressStatusLive.bind(this, item)
                 }
             }

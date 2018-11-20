@@ -23,44 +23,44 @@ import {
 import moment from "moment";
 import {CommonActions} from "../actions";
 import commonUtils from "../Utils/CommonUtils";
-import {AsyncStoreKeys} from "../Constants";
+import {AsyncStoreKeys, EventRegisterTypes, StatusOfPray} from "../Constants";
 import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
 import {Pray} from '../model';
-import StatusOfPray from "../Constants/StatusOfPray";
 import geolib from "geolib";
-import Permissions from 'react-native-permissions'
+import Permissions from 'react-native-permissions';
+import Geolocation from 'react-native-geolocation-service';
 
-const collect = firebase.firestore().collection('pray');
+const collect = firebase.firestore().collection('location');
 
 
 class PrayForOther extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.optionActionSheet = [];
+        this.optionActionSheet = [
+            {text: "5Km", onPress: this.onPressOption(0)},
+            {text: "10Km", onPress: this.onPressOption(1)},
+            {text: "15Km", onPress: this.onPressOption(2)}
+        ];
         this.onPressLeft = this.onPressLeft.bind(this);
         this.onPressRight = this.onPressRight.bind(this);
-        this.onPressAdd = this.onPressAdd.bind(this);
+
         this.renderPrayItem = this.renderPrayItem.bind(this);
         this.renderSeparate = this.renderSeparate.bind(this);
         this.keyExtractor = this.keyExtractor.bind(this);
         this.renderListFooterComponent = this.renderListFooterComponent.bind(this);
         this.renderListHeaderComponent = this.renderListHeaderComponent.bind(this);
-        this.onAcceptDeleteAll = this.onAcceptDeleteAll.bind(this);
-
         this.state = {
             prays: [],
             distance: 5000
         };
-        // this.requestAccessLocation();
-
+        this.getPray(5000);
     }
 
     //region cycle life
 
     componentDidMount() {
-        const {distance} = this.state;
-        this.getPray(distance);
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -68,6 +68,9 @@ class PrayForOther extends PureComponent {
     }
 
     componentWillUpdate(nextProps, nextState) {
+        if (nextState.distance != this.state.distance) {
+            this.getPray(nextState.distance);
+        }
 
     }
 
@@ -77,20 +80,20 @@ class PrayForOther extends PureComponent {
     //endregion
 
 
-    getPray(distance){
-        this.requestLocationPermission().then(res =>{
-            if(res ==="success"){
+    getPray(distance) {
+        this.requestLocationPermission().then(res => {
+            if (res === "success") {
                 this.getCurrentLocation(distance);
             }
         });
     }
 
-    requestLocationPermission(){
+    requestLocationPermission() {
         return Permissions.request('location').then(response => {
-            if(response ==="authorized"){
+            if (response === "authorized") {
                 return "success";
             }
-            else{
+            else {
                 alert("App need access location to get pray list");
                 return "fail";
             }
@@ -98,45 +101,77 @@ class PrayForOther extends PureComponent {
 
     }
 
-    getCurrentLocation(distance){
-        return navigator.geolocation.getCurrentPosition((location) => {
-            const {coords} = location;
-            const {longitude, latitude} = coords;
-            collect.get().then(snapshot => {
-                let prayList = [];
-                snapshot.forEach(e => {
-                    let data = new Pray({...e.data(), uid: e.id});
-                    if (data.owner && data.owner.uid == firebase.auth().currentUser.uid) {
-                        prayList.push(data);
-                    }
-                });
-                //filler Pray Live;
-                prayList = prayList.filter(e => e.isLive);
-                prayList = this.getNearby({fromLong : longitude , fromLat: latitude,distance : distance, array : prayList });
-                this.setState({
-                    pray : prayList
-                });
-            })
+    getCurrentLocation(distance) {
 
-        }, (err) => {
-            console.error("getCurrentLocation:", err)
-        }, {enableHighAccuracy: false, timeout: 10000, maximumAge: 0})
+        Geolocation.getCurrentPosition(
+            (position) => {
+                const {coords} = position;
+                const {longitude, latitude} = coords;
+                collect.get().then(snapshot => {
+                    let prayList = [];
+                    snapshot.forEach(e => {
+                        let data = e.data();
+                        if (data.owner && data.owner.uid != firebase.auth().currentUser.uid) {
+                            prayList.push(data);
+                        }
+                    });
+                    //filler Pray Live;
+                    prayList = this.getNearby({
+                        fromLong: longitude,
+                        fromLat: latitude,
+                        distance: distance,
+                        array: prayList
+                    });
+                    this.setState({
+                        prays: prayList
+                    });
+                })
+
+            },
+            (error) => {
+                // See error code charts below.
+                console.warn(error.code, error.message);
+            },
+            {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
+        );
     }
 
-    getNearby({fromLong,fromLat, distance, array}) {
+    getNearby({fromLong, fromLat, distance, array}) {
         if (!Array.isArray(array)) {
             return [];
         }
-        return array.filter(p =>{
+        return array.filter(p => {
             const {long, lat} = p.isLive;
-            return  geolib.isPointInCircle({latitude: fromLat, longitude: fromLong}, {
+            const result = geolib.isPointInCircle({latitude: fromLat, longitude: fromLong}, {
                 latitude: lat,
                 longitude: long
             }, distance);
+            return result;
         });
     }
 
     //region handle action modal
+
+    onPressOption = (index) => () => {
+        let distance = 5000;
+        switch (index) {
+            case 1: {
+                distance = 10000;
+                break;
+            }
+
+            case 2: {
+                distance = 15000;
+                break;
+            }
+        }
+
+        console.log("Press");
+
+        this.setState({
+            distance
+        });
+    }
 
 
     onPressDeleteAll() {
@@ -147,18 +182,10 @@ class PrayForOther extends PureComponent {
     //endregion
 
     //region handle modal confirm
-    onAcceptDeleteAll() {
-        this.props.commonActions.deleteAllPrayInprogress();
-        this.refs["confirm"].close();
-    }
 
     //endregion
 
     //region other
-
-    onPressAdd() {
-        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING);
-    }
 
     keyExtractor(item, index) {
         return index.toString();
@@ -183,22 +210,11 @@ class PrayForOther extends PureComponent {
         this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, item);
     }
 
-    onPressFinish(item) {
-        const currentDoc = collect.doc(item.uid);
-        const dataSend = Pray.removeFieldEmpty(new Pray({status: StatusOfPray.COMPLETE}));
-        currentDoc.update(dataSend).then(res => {
-            this.props.commonActions.changeStatusPray({status: StatusOfPray.COMPLETE, pray: item});
-        });
+    onPressFollowing(item) {
+        commonUtils.sendEvent({type: EventRegisterTypes.UPDATE_FOLLOWING, params: item})
     }
 
-    onPressDeleteSpecificPray(item) {
-        const currentDoc = collect.doc(item.uid);
-        currentDoc.onSnapshot(obsOrNext => {
-            if (!obsOrNext.data()) {
-                this.props.commonActions.deletePray(item);
-            }
-        });
-        currentDoc.delete();
+    onPressReport(item) {
     }
 
 
@@ -209,13 +225,13 @@ class PrayForOther extends PureComponent {
     renderPrayItem({item}) {
         const leftOptions = [
             {
-                text: I18n.t("finished"),
-                onPress: this.onPressFinish.bind(this, item)
+                text: I18n.t("following"),
+                onPress: this.onPressFollowing.bind(this, item)
             },
             {
-                text: I18n.t("delete"),
+                text: I18n.t("report"),
                 backgroundColor: Colors.red,
-                onPress: this.onPressDeleteSpecificPray.bind(this, item)
+                onPress: this.onPressReport.bind(this, item)
             }
         ]
 
@@ -223,7 +239,7 @@ class PrayForOther extends PureComponent {
             <PrayItem
                 title={item.title}
                 content={item.content}
-                date={moment(item.created).format("DD/MM/YYYY")}
+                date={item.created}
                 onPress={this.onPressPrayItem.bind(this, item)}
                 leftOptions={leftOptions}
             />
@@ -267,8 +283,11 @@ class PrayForOther extends PureComponent {
                     ListFooterComponent={this.renderListFooterComponent}
 
                 />
-                <ButtonAction onPress={this.onPressAdd}/>
 
+                <ActionSheet
+                    options={this.optionActionSheet}
+                    ref={"moreAction"}
+                />
                 <ConfirmModal
                     ref={"confirm"}
                     title={I18n.t("warning")}

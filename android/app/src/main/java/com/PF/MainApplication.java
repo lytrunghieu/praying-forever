@@ -3,6 +3,7 @@ package com.PF;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 import org.reactnative.camera.RNCameraPackage;
 
 import io.invertase.firebase.RNFirebasePackage;
@@ -42,6 +43,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new RNFusedLocationPackage(),
             new RNCameraPackage(),
                     new RNFirebasePackage(),
                     new RNI18nPackage(),
