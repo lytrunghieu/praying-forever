@@ -76,19 +76,7 @@ class DrawerContainer extends PureComponent {
             switch (type) {
 
                 case EventRegisterTypes.DELETE_PRAY : {
-                    const {uid} = params;
-                    const httpsCallable = firebase.functions(firebase.app()).httpsCallable("deletePray");
-                    httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
-                        .then(data => {
-                            this.getPray();
-                        })
-                        .catch(httpsError => {
-                            console.log("ERROR :", httpsError);
-                            console.log(httpsError.code);
-                            console.log(httpsError.message);
-                            console.log(httpsError.details.errorDescription);
-                        });
-
+                    this.deletePray(params);
                     break;
                 }
 
@@ -112,7 +100,6 @@ class DrawerContainer extends PureComponent {
 
                 case EventRegisterTypes.DELETE_NOTIFICATION : {
                     const {uid} = params;
-                    console.log("uid ", uid);
                     const httpsCallable = firebase.functions(firebase.app()).httpsCallable("deleteNotification");
                     httpsCallable({userUID: firebase.auth().currentUser.uid, notifUID: uid})
                         .then(data => {
@@ -141,8 +128,16 @@ class DrawerContainer extends PureComponent {
                     const {uid, owner} = params;
                     const httpsCallable = firebase.functions(firebase.app()).httpsCallable("following");
                     httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid, userOtherUID: owner.uid})
-                        .then(data => {
-                            this.getPray();
+                        .then(res => {
+                            const {success, statusCode} = res.data;
+                            if (success) {
+                                this.getPray();
+                            }
+                            else {
+                                if (statusCode === 401) {
+                                    this.deletePray({uid : uid});
+                                }
+                            }
                         })
                         .catch(httpsError => {
                             console.log("ERROR :", httpsError);
@@ -261,6 +256,22 @@ class DrawerContainer extends PureComponent {
     }
 
     //endregion
+
+    deletePray(params = {}) {
+        const {uid} = params;
+        const httpsCallable = firebase.functions(firebase.app()).httpsCallable("deletePray");
+        httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
+            .then(data => {
+                this.getPray();
+            })
+            .catch(httpsError => {
+                console.log("ERROR :", httpsError);
+                console.log(httpsError.code);
+                console.log(httpsError.message);
+                console.log(httpsError.details.errorDescription);
+            });
+
+    }
 
     getNotificationNotRead(notif) {
         if (!Array.isArray(notif)) {
