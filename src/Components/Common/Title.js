@@ -1,40 +1,26 @@
 import React,{PureComponent} from "react"
 import PropTypes from 'prop-types';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {Colors, Fonts} from "../../Themes";
-import TextBase from "./TextBase";
+import {Colors, Fonts} from "../../Themes/index";
 
-export  default class Title extends PureComponent {
+import {Title} from 'native-base';
+
+export  default class TitleComponent extends PureComponent {
 
     render(){
-        const {style,children,color} = this.props;
-        let defaultColor = Colors.black;
-        switch (color){
-            case "white":{
-                defaultColor = Colors.white;
-                break;
-            }
-        }
-        const stringText = children || "";
-        return (<TextBase {...this.props}  style ={[styles.text,{ color : defaultColor}]}>{stringText}</TextBase>);
+        const {children} = this.props;
+        return (<Title  style={styles.title}>{children}</Title>);
     }
 }
 
-Title.defaultProps = {
-    numberOfLines : 1,
-    allowFontScaling : false,
-    color:"black"
+TitleComponent.defaultProps = {
 };
 
-Title.propTypes = {
-    allowFontScaling : PropTypes.bool,
-    numberOfLines : PropTypes.number,
-    color: PropTypes.string
+TitleComponent.propTypes = {
 };
 
 const styles = EStyleSheet.create({
-    text : {
-        fontSize: Fonts.size.large,
-        fontFamily: Fonts.type.robotoMedium
+    title :{
+        color :Colors.black
     }
-})
+});

@@ -24,6 +24,8 @@ import  ModalLoading from "./ModalLoading";
 import  ModalScanQR from "./ModalScanQR";
 import  ModalQR from "./ModalQR";
 import  Title from "./Title";
+import  Icon from "./Icon";
+import  Text from "./Text";
 
 export {
     NavBar,
@@ -51,5 +53,7 @@ export {
     ModalLoading,
     ModalScanQR,
     ModalQR,
-    Title
+    Title,
+    Icon,
+    Text
 };

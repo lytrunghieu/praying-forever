@@ -7,58 +7,68 @@ import globalStyle from '../../Themes/globalStyle';
 
 import {Colors, Fonts} from '../../Themes';
 
-export default class Button extends PureComponent {
+import {Button} from 'native-base';
+
+export default class ButtonComponent extends PureComponent {
 
 
     render() {
-        let {onPress, text, fit, width, textColor, customeBorder, backgroundColor, borderWidth, borderColor, height ,borderRadius} = this.props;
-
-        const styleContainerOption = {
-            width: width, backgroundColor: backgroundColor, height: height ,
-            borderRadius : borderRadius,
-        };
-
-        const styleCustomBorder = customeBorder && {
-            borderWidth: borderWidth, borderColor: borderColor
-        };
-
+        const {onPress,children , transparent} = this.props;
         return (
-            <TouchableOpacity onPress={() => onPress()}
-                              style={[styles.container, styleContainerOption, styleCustomBorder, fit && styles.fit]}>
-                <Text style={[styles.labelText, {color: textColor}]}>{text}</Text>
-            </TouchableOpacity>
-        )
+            <Button transparent ={transparent} onPress={onPress} {...this.props}>
+                {children}
+            </Button>
+        );
+
+        // let {onPress, text, fit, width, textColor, customeBorder, backgroundColor, borderWidth, borderColor, height, borderRadius} = this.props;
+        //
+        // const styleContainerOption = {
+        //     width: width, backgroundColor: backgroundColor, height: height,
+        //     borderRadius: borderRadius,
+        // };
+        //
+        // const styleCustomBorder = customeBorder && {
+        //     borderWidth: borderWidth, borderColor: borderColor
+        // };
+        //
+        // return (
+        //     <TouchableOpacity onPress={() => onPress()}
+        //                       style={[styles.container, styleContainerOption, styleCustomBorder, fit && styles.fit]}>
+        //         <Text style={[styles.labelText, {color: textColor}]}>{text}</Text>
+        //     </TouchableOpacity>
+        // )
     }
 }
 
-Button.defaultProps = {
-    onPress: () => {
-    },
-    text: "",
-    fit: false,
-    width: 184,
-    textColor: Colors.white,
-    borderWidth: globalStyle.$borderWidthNormal,
-    borderColor: Colors.black,
-    backgroundColor: Colors.black,
-    borderRadius: globalStyle.$borderRadiusLarge,
-    customeBorder: false,
-    height: globalStyle.$heightRowSmall,
+ButtonComponent.defaultProps = {
+    transparent :false
+    // onPress: () => {
+    // },
+    // text: "",
+    // fit: false,
+    // width: 184,
+    // textColor: Colors.white,
+    // borderWidth: globalStyle.$borderWidthNormal,
+    // borderColor: Colors.black,
+    // backgroundColor: Colors.black,
+    // borderRadius: globalStyle.$borderRadiusLarge,
+    // customeBorder: false,
+    // height: globalStyle.$heightRowSmall,
 
 };
 
-Button.propTypes = {
-    onPress: PropTypes.func,
-    text: PropTypes.string.isRequired,
-    fit: PropTypes.bool,
-    width: PropTypes.number,
-    textColor: PropTypes.string,
-    borderWidth: PropTypes.number,
-    borderColor: PropTypes.string,
-    customeBorder: PropTypes.bool,
-    backgroundColor: PropTypes.string,
-    height: PropTypes.number,
-    borderRadius: PropTypes.number,
+ButtonComponent.propTypes = {
+    // onPress: PropTypes.func,
+    // text: PropTypes.string.isRequired,
+    // fit: PropTypes.bool,
+    // width: PropTypes.number,
+    // textColor: PropTypes.string,
+    // borderWidth: PropTypes.number,
+    // borderColor: PropTypes.string,
+    // customeBorder: PropTypes.bool,
+    // backgroundColor: PropTypes.string,
+    // height: PropTypes.number,
+    // borderRadius: PropTypes.number,
 }
 
 

@@ -3,7 +3,7 @@ import React, {PureComponent} from 'react'
 import {StyleSheet, Text, View, Image, ScrollView} from 'react-native'
 import {connect} from 'react-redux';
 import I18n from '../I18n';
-import {Images, Colors, Metrics} from '../Themes';
+import {Images, Colors, Metrics,IconName} from '../Themes';
 import {Option} from "../Components/Common";
 import firebase from 'react-native-firebase';
 import {NavigationActions} from "react-navigation";
@@ -15,6 +15,10 @@ import {EventRegister} from 'react-native-event-listeners';
 import * as _ from "lodash";
 import moment from "moment";
 import PrayStatus from "../model/PrayStatus";
+
+import {OptionButton} from "../Components/Modules";
+
+import {ListItem, Left, Right, Badge} from 'native-base';
 
 const prayCollect = firebase.firestore().collection('pray');
 const notificationCollect = firebase.firestore().collection('notification');
@@ -308,22 +312,25 @@ class DrawerContainer extends PureComponent {
 
         return (
             <View style={styles.container}>
-                <ScrollView style={styles.body}>
-                    <Option text={I18n.t("inprogress")} count={prays.length - praysFinished.length}
-                            leftIcon={Images.inProgress}
+                <ListItem>
+                    <OptionButton text={I18n.t("inprogress")}
+                            leftIcon={IconName.prayer_inprogress}
                             onPress={this.onPressOption.bind(this, ScreenKey.PRAYING_INPROGESS)}/>
-                    <Option text={I18n.t("finished")} count={praysFinished.length} leftIcon={Images.complete}
+                    <OptionButton text={I18n.t("finished")}
+                                  leftIcon={IconName.prayer_complete}
                             onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FINISHED)}/>
-                    <Option text={I18n.t("prayForOther")} leftIcon={Images.complete}
+                    <OptionButton text={I18n.t("prayForOther")}
+                                  leftIcon={IconName.prayer_inprogress}
                             onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FOR_OTHER)}/>
-                    <Option text={I18n.t("notifications")} leftIcon={Images.setting}
+                    <OptionButton text={I18n.t("notifications")}
+                                  leftIcon={IconName.prayer_inprogress}
                             onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)} isCircle={true}
                             count={notificationNotRead}/>
-                    <Option text={I18n.t("setting")} leftIcon={Images.setting}/>
-                    <Option text={I18n.t("about")} leftIcon={Images.about}/>
-                    <Option text={I18n.t("logout")} leftIcon={Images.logout} onPress={this.onPressLogout}/>
-                    <Option text={firebase.auth().currentUser.email}/>
-                </ScrollView>
+                    <OptionButton text={I18n.t("setting")} leftIcon={IconName.prayer_inprogress}/>
+                    <OptionButton text={I18n.t("about")} leftIcon={IconName.prayer_inprogress}/>
+                    <OptionButton text={I18n.t("logout")} leftIcon={IconName.prayer_inprogress} onPress={this.onPressLogout}/>
+                    <OptionButton text={firebase.auth().currentUser.email}/>
+                </ListItem>
             </View>
         )
     }

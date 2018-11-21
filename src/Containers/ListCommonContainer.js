@@ -189,11 +189,11 @@ export default class ListCommon extends PureComponent {
                     <View>
                         <NavBar title={I18n.t("logInScreen")}/>
                         <PlaceHolder/>
-                        <NavBar title={"Title"} iconLeft={Images.back}/>
+                        <NavBar title={"TitleComponent"} iconLeft={Images.back}/>
                         <PlaceHolder/>
                         <NavBar
                             ref="navBar"
-                            title={"Title"} iconLeft={Images.back} iconRight={Images.more}
+                            title={"TitleComponent"} iconLeft={Images.back} iconRight={Images.more}
                             onPressRightButton={this.showDropdownPopup}
                         />
                         <PlaceHolder/>
@@ -351,7 +351,7 @@ export default class ListCommon extends PureComponent {
                     <View style={styles.header}>
                         <Text style={styles.titleHeader}>Row Item Regular</Text>
                     </View>
-                    <RowItem title={"Title"} titleBold ={true}/>
+                    <RowItem title={"TitleComponent"} titleBold ={true}/>
                     <RowItem value={"Hello This a rowitem contain content so long and height of row can scale follow size of content"} scaled ={true} />
 
 

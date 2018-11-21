@@ -6,7 +6,7 @@ import {
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {Colors, Images, ApplicationStyles} from '../Themes';
+import {Colors, Images, ApplicationStyles,IconName} from '../Themes';
 import I18n from '../I18n';
 import {
     NavBar,
@@ -33,6 +33,11 @@ import Geolocation from 'react-native-geolocation-service';
 const collect = firebase.firestore().collection('pray');
 const locationCollect = firebase.firestore().collection('location');
 
+
+import {Header}  from "../Components/Modules";
+
+import { Container, Left, Body, Right, Button, Title } from 'native-base';
+
 class PrayingInProgress extends PureComponent {
 
     constructor(props) {
@@ -42,8 +47,22 @@ class PrayingInProgress extends PureComponent {
             {text: I18n.t('deleteAll'), color: Colors.red, onPress: this.onPressDeleteAll.bind(this)}
         ];
 
-        this.onPressLeft = this.onPressLeft.bind(this);
-        this.onPressRight = this.onPressRight.bind(this);
+        this.leftHeader = {
+            icon : IconName.menu,
+            onPress : this.onPressLeft.bind(this)
+        };
+
+        this.rightHeader = [
+            {
+                icon : IconName.qr_code,
+                onPress : this.onPressScanQR.bind(this),
+            }  ,
+            {
+                icon : IconName.more,
+                onPress :this.onPressMoreOption.bind(this)
+            }
+        ];
+
         this.onPressAdd = this.onPressAdd.bind(this);
         this.renderPrayItem = this.renderPrayItem.bind(this);
         this.renderSeparate = this.renderSeparate.bind(this);
@@ -53,15 +72,12 @@ class PrayingInProgress extends PureComponent {
         this.onAcceptDeleteAll = this.onAcceptDeleteAll.bind(this);
         this.onChangeKeySearch = this.onChangeKeySearch.bind(this);
         this.onPressBackSearch = this.onPressBackSearch.bind(this);
-        this.onPressScanQR = this.onPressScanQR.bind(this);
+
         this.state = {
             prays: props.prays.filter(e => e.status == StatusOfPray.INPROGRESS),
             isSearch: false,
             keySearch: "",
         };
-        this.listIconRight = [
-            { icon : Images.garbage , onPress : this.onPressScanQR}
-        ];
     }
 
     //region cycle life
@@ -201,7 +217,7 @@ class PrayingInProgress extends PureComponent {
         this.props.navigation.navigate(ScreenKey.DRAWER_TOGGLE);
     }
 
-    onPressRight() {
+    onPressMoreOption() {
         this.refs["moreAction"].open();
     }
 
@@ -386,6 +402,17 @@ class PrayingInProgress extends PureComponent {
     }
 
     render() {
+
+        return (
+            <Container>
+                <Header
+                    title={I18n.t('praying')}
+                    left ={this.leftHeader}
+                    right ={this.rightHeader}
+                />
+            </Container>
+        );
+
         const {prays, isSearch} = this.state;
         return (
             [<View
@@ -407,7 +434,7 @@ class PrayingInProgress extends PureComponent {
                             onPressLeftButton={this.onPressLeft}
                             iconLeft={Images.menu}
                             iconRight={Images.more}
-                            onPressRightButton={this.onPressRight}
+                            onPressRightButton={this.onPressMoreOption}
                             iconRightList={this.listIconRight}
                     />
                 }
