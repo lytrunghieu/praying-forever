@@ -10,12 +10,17 @@ const names = {
     logout :"sign-out-alt",
     about :"info",
     setting :"sliders-h",
-    delete :"trash-alt",
+    delete :"trash",
     following :"thumbtack",
     unfollowing :"thumbtack",
     share :"share-alt",
     password :"key",
-    user:"user"
+    user:"user",
+    avatar:"user-circle-o",
+    more_h:"ellipsis-h",
+    back :"arrow-left",
+    suggest :"lightbulb-o",
+    clear :"times"
 }
 
 export default names

@@ -23,9 +23,13 @@ export default class OptionButtonComponent extends PureComponent {
                     </Button>
                 </Left>
                 <Right>
-                    <Badge>
-                        <Text>{count}</Text>
-                    </Badge>
+                    {
+                        count ?
+                        <Badge>
+                            <Text>{count}</Text>
+                        </Badge> : null
+                    }
+
                 </Right>
 
             </ListItem>

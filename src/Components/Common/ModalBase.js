@@ -15,7 +15,7 @@ export default class ModalBase extends PureComponent {
             visible :false
         };
         this.isCenter = true;
-        this.animationDuration =500;
+        this.animationDuration =200;
         this.backdropOpacity = 0.5;
         this.backdropPressToClose = true;
         this.backButtonClose = true;
@@ -45,17 +45,19 @@ export default class ModalBase extends PureComponent {
     }
 
     render(){
-
+        const {onClosed} = this.props;
         return (
             <Modal
                 style={[styles.modal]}
                 ref={"modal"}
+                onClosed ={onClosed}
                 // isOpen={this.state.visible}
                 backdropPressToClose ={this.backdropPressToClose}
                 animationDuration={this.animationDuration}
                 swipeToClose={false}
                 backdropOpacity={this.backdropOpacity}
                 backButtonClose ={this.backButtonClose}
+
             >
                 <TouchableOpacity style={[styles.container ,  this.isCenter  && styles.containerCenter ]}
                                   activeOpacity={1}
@@ -76,16 +78,16 @@ export default class ModalBase extends PureComponent {
 }
 
 ModalBase.defaultProps ={
+    onClosed : () =>{}
 }
 
 const styles = EStyleSheet.create({
     modal: {
-        backgroundColor: "rgba(0,0,0,0)",
+        backgroundColor: "$transparent",
         height: "100%",
     },
 
     container: {
-        alignItems: "center",
         justifyContent:"flex-end",
         flex: 1,
 

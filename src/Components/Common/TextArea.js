@@ -3,7 +3,9 @@ import {View, TextInput} from "react-native";
 import {Colors, Fonts, ApplicationStyles} from "../../Themes"
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-export default class TextArea extends PureComponent {
+import { Textarea} from "native-base";
+
+export default class TextAreaComponent extends PureComponent {
 
 
     constructor(props){
@@ -12,10 +14,15 @@ export default class TextArea extends PureComponent {
     }
 
     focus(){
-        this.refs["textInput"].focus();
+        this.refs["_textArea"]._root.focus();
     }
 
     render() {
+        const  { placeholder,...rest} = this.props;
+        return(
+            <Textarea ref="_textArea" rowSpan={5} bordered placeholder={placeholder} {...rest} />
+        );
+
         return (
             <View style={[styles.container,ApplicationStyles.screen.shadowContainer]}>
                 <TextInput

@@ -6,17 +6,30 @@ import PropTypes from 'prop-types';
 import {Colors, Fonts, Images, ApplicationStyles} from "../../Themes";
 import globalStyle from "../../Themes/globalStyle";
 
-export default class Input extends PureComponent {
+import {Input} from "native-base";
+
+export default class InputComponent extends PureComponent {
 
     constructor(props) {
         super(props);
     }
 
     focus() {
-        this.refs["input"].focus();
+       this.refs["input"]._root.focus();
     }
 
+
     render() {
+
+        const { ...rest} = this.props;
+
+        return (
+            <Input
+                 ref ="input"
+                 {...rest}
+            />
+        );
+
         const {value, onPressRightIcon, fit,hideCloseIcon, hideDivider, customBorder,customBorderWidth,customBorderColor,customBorderRadius,leftIcon} = this.props;
 
         return (
@@ -53,35 +66,38 @@ export default class Input extends PureComponent {
     }
 }
 
-Input.defaultProps = {
-    onChangeText: () => {
-    },
-    onPressRightIcon: () => {
-    },
-    fit: false,
-    leftIcon: null,
-    customBorder: false,
-    customBorderColor: Colors.black,
-    customBorderRadius: globalStyle.$borderRadiusNormal,
-    customBorderWidth: globalStyle.$borderWidthNormal,
-    hideCloseIcon: false
+InputComponent.defaultProps = {
+    // onChangeText: () => {
+    // },
+    // onPressRightIcon: () => {
+    // },
+    // fit: false,
+    // leftIcon: null,
+    // customBorder: false,
+    // customBorderColor: Colors.black,
+    // customBorderRadius: globalStyle.$borderRadiusNormal,
+    // customBorderWidth: globalStyle.$borderWidthNormal,
+    // hideCloseIcon: false
 };
 
-Input.propTypes = {
-    onChangeText: PropTypes.func,
-    onPressRightIcon: PropTypes.func,
-    fit: PropTypes.bool,
-    hideDivider: PropTypes.bool,
-    leftIcon: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    customBorder: PropTypes.bool,
-    customBorderColor: PropTypes.string,
-    customBorderRadius: PropTypes.number,
-    customBorderWidth: PropTypes.number,
-    hideCloseIcon : PropTypes.bool
+InputComponent.propTypes = {
+    // onChangeText: PropTypes.func,
+    // onPressRightIcon: PropTypes.func,
+    // fit: PropTypes.bool,
+    // hideDivider: PropTypes.bool,
+    // leftIcon: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    // customBorder: PropTypes.bool,
+    // customBorderColor: PropTypes.string,
+    // customBorderRadius: PropTypes.number,
+    // customBorderWidth: PropTypes.number,
+    // hideCloseIcon : PropTypes.bool
 };
 
 
 const styles = EStyleSheet.create({
+
+
+
 
     container: {
         flexDirection: "row",

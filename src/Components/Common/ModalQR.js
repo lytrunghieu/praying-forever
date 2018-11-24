@@ -1,15 +1,15 @@
 import React from "react";
 import ModalBase from "./ModalBase";
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {View, ActivityIndicator, TouchableOpacity, Text} from "react-native";
+import {View, ActivityIndicator, TouchableOpacity} from "react-native";
 import {Colors, globalStyle, ApplicationStyles, Metrics} from "../../Themes";
 import PropTypes from 'prop-types';
-import Title from "./Title";
-import Button from "./Button";
+import Title from "./Title";;
 import PlaceHolder from "./PlaceHolder";
-import TextBase from "./TextBase";
+import Text from "./Text";
 import I18n from '../../I18n';
 import QRCode from 'react-native-qrcode';
+import {ButtonFooter} from "../Modules";
 
 
 export default class ModalQR extends ModalBase {
@@ -32,7 +32,7 @@ export default class ModalQR extends ModalBase {
                 <View style={styles.topView}>
                     <Title>{I18n.t("QRCode")}</Title>
                 </View>
-                <TextBase>{I18n.t("scanQRCodeIntro")}</TextBase>
+                <Text>{I18n.t("scanQRCodeIntro")}</Text>
                 <View style={styles.QRCodeView}>
                     <QRCode
                         value={this.state.text}
@@ -40,9 +40,7 @@ export default class ModalQR extends ModalBase {
                         bgColor='black'
                         fgColor='white'/>
                 </View>
-                <View style={styles.bottomView}>
-                    <Button onPress={this.close} text={I18n.t("cancel")}/>
-                </View>
+                <ButtonFooter  onPress={this.close} text ={I18n.t("cancel")}/>
             </View>
         )
     }

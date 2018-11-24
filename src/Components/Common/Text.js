@@ -9,7 +9,7 @@ export  default class TextComponent extends PureComponent {
 
     render(){
         const {children, ...rest} = this.props;
-        return (<Text rest>{children}</Text>);
+        return (<Text {...rest}>{children}</Text>);
     }
 }
 

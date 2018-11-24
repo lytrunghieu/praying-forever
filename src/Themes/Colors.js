@@ -7,7 +7,9 @@ const colors = {
     gray :"#AFAFBB",
     grayBg :"#E7E7E5",
     red :"red",
-    blue :"#4A90E2"
+    blue :"#4A90E2",
+    divider :"#AFAFBB",
+    disable :"#AFAFBB"
 }
 
 export default colors

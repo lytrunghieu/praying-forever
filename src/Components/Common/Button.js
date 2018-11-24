@@ -13,9 +13,9 @@ export default class ButtonComponent extends PureComponent {
 
 
     render() {
-        const {onPress,children , transparent} = this.props;
+        const {onPress,children , transparent , ...rest} = this.props;
         return (
-            <Button transparent ={transparent} onPress={onPress} {...this.props}>
+            <Button transparent ={transparent}  onPress={onPress} {...rest}>
                 {children}
             </Button>
         );
@@ -73,15 +73,20 @@ ButtonComponent.propTypes = {
 
 
 const styles = EStyleSheet.create({
-    container: {
-        alignItems: "center",
-        justifyContent: "center",
-    },
 
-    fit: {
-        width: "100%",
-        flex: 0,
-    },
+    // backgroundColor :{
+    //   backgroundColor:Colors.black
+    // },
+    //
+    // container: {
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    // },
+    //
+    // fit: {
+    //     width: "100%",
+    //     flex: 0,
+    // },
 
     labelText: {
         fontSize: Fonts.size.large,

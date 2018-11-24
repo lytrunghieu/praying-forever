@@ -4,7 +4,7 @@ import {StyleSheet, Text, View, Image, ScrollView} from 'react-native'
 import {connect} from 'react-redux';
 import I18n from '../I18n';
 import {Images, Colors, Metrics,IconName} from '../Themes';
-import {Option} from "../Components/Common";
+import {Option,ModalQR} from "../Components/Common";
 import firebase from 'react-native-firebase';
 import {NavigationActions} from "react-navigation";
 import {bindActionCreators} from 'redux';
@@ -18,7 +18,8 @@ import PrayStatus from "../model/PrayStatus";
 
 import {OptionButton} from "../Components/Modules";
 
-import {ListItem, Left, Right, Badge} from 'native-base';
+import {ListItem, List, Left, Right, Badge} from 'native-base';
+
 
 const prayCollect = firebase.firestore().collection('pray');
 const notificationCollect = firebase.firestore().collection('notification');
@@ -179,6 +180,7 @@ class DrawerContainer extends PureComponent {
                     break;
                 }
 
+
                 default : {
                     break;
                 }
@@ -311,13 +313,13 @@ class DrawerContainer extends PureComponent {
         const praysFinished = prays.filter(e => e.status == StatusOfPray.COMPLETE);
 
         return (
-            <View style={styles.container}>
-                <ListItem>
+            [<View style={styles.container} key={"main"}>
+                <List>
                     <OptionButton text={I18n.t("inprogress")}
                             leftIcon={IconName.prayer_inprogress}
                             onPress={this.onPressOption.bind(this, ScreenKey.PRAYING_INPROGESS)}/>
                     <OptionButton text={I18n.t("finished")}
-                                  leftIcon={IconName.prayer_complete}
+                                  leftIcon={IconName.prayer_inprogress}
                             onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FINISHED)}/>
                     <OptionButton text={I18n.t("prayForOther")}
                                   leftIcon={IconName.prayer_inprogress}
@@ -330,8 +332,9 @@ class DrawerContainer extends PureComponent {
                     <OptionButton text={I18n.t("about")} leftIcon={IconName.prayer_inprogress}/>
                     <OptionButton text={I18n.t("logout")} leftIcon={IconName.prayer_inprogress} onPress={this.onPressLogout}/>
                     <OptionButton text={firebase.auth().currentUser.email}/>
-                </ListItem>
-            </View>
+                </List>
+            </View>,
+            ]
         )
     }
 }

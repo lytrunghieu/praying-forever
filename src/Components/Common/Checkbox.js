@@ -1,10 +1,21 @@
 import React ,{PureComponent} from "react";
-import {Option} from "./";
-import {Images}from "../../Themes"
+import {Option,Text} from "./";
+import {Images,Colors}from "../../Themes";
+import {CheckBox} from "native-base";
 
-const Checkbox = ({text,iconActive = Images.checkOn , iconDeactive  = Images.checkOff, isChecked,onPress = ()=>{}, index = -1}) =>{
+import {ListItem,Body}  from "native-base";
 
-    const leftIcon = isChecked ? iconActive : iconDeactive;
+const Checkbox = ({text, checked,onPress = ()=>{}}) =>{
+
+    return (
+        <ListItem onPress ={onPress}>
+            <CheckBox checked={checked} color ={Colors.black} />
+            <Body>
+            <Text>{text}</Text>
+            </Body>
+        </ListItem>
+    )
+
 
     return (
         <Option

@@ -1,35 +1,30 @@
 import React, {PureComponent} from 'react';
 import {
-    View,
-    ScrollView,
     Platform,
     KeyboardAvoidingView,
     TimePickerAndroid,
-    DatePickerIOS,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {Images, ApplicationStyles} from '../Themes';
+import { IconName, Colors} from '../Themes';
 import {CommonActions} from '../actions';
 import I18n from '../I18n';
 import {
-    NavBar,
-    ImageBackground,
-    InputTitle,
     PlaceHolder,
     CheckboxModal,
     TextArea,
-    SwitchRowItem,
-    RowItem,
-    Button
+    Button, Icon, Input, Text
 } from '../Components/Common';
 import moment from "moment";
 import commonUtils from "../Utils/CommonUtils";
-import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
+import firebase, {NotificationOpen} from 'react-native-firebase';
 import {Pray} from "../model";
-import {StatusOfPray,EventRegisterTypes} from "../Constants";
+import {StatusOfPray, EventRegisterTypes} from "../Constants";
 
+import {Header, ButtonFooter} from "../Components/Modules";
+
+import {Container, Content, Item, Form} from 'native-base';
 
 let collect = firebase.firestore().collection("pray");
 
@@ -62,7 +57,7 @@ class CreatePraying extends PureComponent {
                     text: I18n.t("economic"),
                     onPress: this.onSelectOption.bind(this, 1),
                     isChecked: false,
-                }
+                },
             ],
             isReminder: dataPassed && dataPassed.isReminder || false,
             timeReminder: dataPassed && dataPassed.timeReminder || moment().valueOf(),
@@ -82,22 +77,28 @@ class CreatePraying extends PureComponent {
         this.onDateChange = this.onDateChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.userPray = collect.doc(firebase.auth().currentUser.uid);
+
+        this.leftHeader = {
+            icon: IconName.back,
+            onPress: this.onPressBack
+        };
+
     }
 
     //endregion
 
     onSubmitEditingTitle() {
-        this.refs["textArea"].focus();
+        this.refs["_description"].focus();
     }
 
     onSubmit() {
         const {title, content, isReminder, timeReminder} = this.state;
-        let params = {title, content };
+        let params = {title, content};
         if (this.isEdit) {
             params.uid = this.uid;
-            let dataSend =  Pray.removeFieldEmpty(new Pray(params));
-            this.userPray.collection("data").doc(this.uid).update(dataSend).then(res =>{
-                commonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
+            let dataSend = Pray.removeFieldEmpty(new Pray(params));
+            this.userPray.collection("data").doc(this.uid).update(dataSend).then(res => {
+                commonUtils.sendEvent({type: EventRegisterTypes.GET_PRAY});
                 this.onPressBack();
             });
         }
@@ -110,8 +111,8 @@ class CreatePraying extends PureComponent {
             this.userPray.collection("data").add(dataSend).then(res => {
                 res.get().then(res2 => {
                     const docRef = res2.ref;
-                    docRef.update("uid" ,res2.id ,"created",firebase.firestore.FieldValue.serverTimestamp()).then(res2 =>{
-                        commonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
+                    docRef.update("uid", res2.id, "created", firebase.firestore.FieldValue.serverTimestamp()).then(res2 => {
+                        commonUtils.sendEvent({type: EventRegisterTypes.GET_PRAY});
                         this.onPressBack();
                     });
                 });
@@ -213,58 +214,77 @@ class CreatePraying extends PureComponent {
     }
 
     render() {
-        const {timeReminder} = this.state;
+        const {content, title} = this.state;
+
+
         return (
-            <KeyboardAvoidingView style={ApplicationStyles.screen.mainContainer}
-                                  behavior={Platform.OS === "ios" ? "padding" : null}
-                                  enabled
-            >
-                <ImageBackground/>
-                <NavBar title={this.isEdit ? I18n.t("editPray") : I18n.t("createNewPray")}
-                        titleRight={"Save"}
-                        iconLeft={Images.back}
-                        onPressLeftButton={this.onPressBack}
+            [<Container key ="Container">
+                <Header
+                    title={this.isEdit ? I18n.t("editPray") : I18n.t("createNewPray")}
+                    left={this.leftHeader}
                 />
-                <ScrollView
-                    style={styles.scrollView}
+                <Content style={styles.content} >
+                    <Form style={styles.form}>
+                        <Item fixedLabel>
+
+                            <Input
+                                autoFocus ={true}
+                                underlineColorAndroid={'rgba(0,0,0,0)'}
+                                value={this.state.title}
+                                onChangeText={this.onChangeText}
+                                placeholder={I18n.t("inputTitlePray")}
+                                returnKeyType={"next"}
+                                onSubmitEditing={this.onSubmitEditingTitle}
+                            />
+                            {
+                                title ? <Button transparent style={{marginRight: 16}}
+                                    onPress ={this.onPressDeleteInput}
+                                >
+                                    <Icon active name={IconName.clear}/>
+                                </Button> : null
+                            }
+
+
+                            <Button transparent style={{marginRight: 16}}
+                                onPress ={this.onPressRightIconInputTitle}
+                            >
+                                <Icon active name={IconName.suggest}/>
+                            </Button>
+                        </Item>
+                    </Form>
+                    <PlaceHolder/>
+                    <Form style={styles.form}>
+                          <TextArea
+                              ref="_description"
+                              placeholder={I18n.t("inputDescription")}
+                              value={this.state.content}
+                              onChangeText={this.onChangeContent}
+                          />
+
+
+                    </Form>
+
+                </Content>
+
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === "ios" ? "padding" : null}
+                    enabled
                 >
-                    <PlaceHolder/>
-                    <InputTitle
-                        autoFocus={true}
-                        value={this.state.title}
-                        onChangeText={this.onChangeText}
-                        placeholder={I18n.t("inputTitlePray")}
-                        onPressRightIcon={this.onPressDeleteInput}
-                        onPressSuggest={this.onPressRightIconInputTitle}
-                        returnKeyType={"next"}
-                        onSubmitEditing={this.onSubmitEditingTitle}
+                    <ButtonFooter transparent={false} disabled={!title || !content}
+                                  onPress={this.onSubmit}>
+                        <Text>{this.isEdit ? I18n.t("save") : I18n.t("create")}</Text>
+                    </ButtonFooter>
+                </KeyboardAvoidingView>
 
-                    />
-                    <PlaceHolder/>
-                    <TextArea
-                        ref="textArea"
-                        placeholder={I18n.t("inputContent")}
-                        value={this.state.content}
-                        onChangeText={this.onChangeContent}
-                    />
-                    <PlaceHolder/>
-                </ScrollView>
-                <View style={styles.buttonCreateContainer}>
-                    {this.state.title && this.state.content &&
-
-                    <Button  text={this.isEdit ? I18n.t("save") : I18n.t("create")} fit={true} height={54} customeBorder={true} borderRadius={0} onPress={this.onSubmit} />
-
-                        || null
-                    }
-
-                </View>
+            </Container>,
                 <CheckboxModal
+                    key ="CheckboxModal"
                     ref="checkBoxModal"
                     textDone={I18n.t("done")}
                     options={this.state.options}
                     onPressSubmit={this.onSubmitOption}
                 />
-            </KeyboardAvoidingView>
+            ]
         );
     }
 
@@ -279,15 +299,16 @@ const mapDispatchToProps = (dispatch) => ({
 export const CreatePrayingContainer = connect(mapStateToProps, mapDispatchToProps)(CreatePraying);
 
 const styles = EStyleSheet.create({
-    scrollView: {
+
+    content: {
         paddingLeft: "$padding",
         paddingRight: "$padding",
+        paddingTop: "$padding",
     },
 
-    buttonCreateContainer: {
-        alignItems: "center",
-        justifyContent: "center",
-        height: "$heightRowNormal",
-    }
+    form: {
+        backgroundColor: Colors.primary,
+        marginBottom: "$padding",
+    },
 
 });

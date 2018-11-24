@@ -12,5 +12,6 @@ export default  styles ={
     $borderWidthLarge:3,
     $borderWidthNormal:2,
     $borderWidthSmall : 0.5,
+    $transparent: "rgba(0,0,0,0.5)",
 
 }

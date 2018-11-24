@@ -95,7 +95,10 @@ ModalScanQR.propTypes = {}
 const styles = EStyleSheet.create({
 
 
-    container: {},
+    container: {
+        height : "100%",
+        width : "100%",
+    },
 
     marker: {
         borderColor: Colors.blue

@@ -1,14 +1,17 @@
 // Libraries
 import React, {PureComponent} from 'react';
-import {View, TouchableOpacity, Text, TouchableHighlight} from 'react-native';
+import {View, TouchableOpacity, TouchableHighlight} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
 
 // Utilities
-import {Colors, Fonts, ApplicationStyles, Images} from '../../Themes';
+import {Colors, Fonts, ApplicationStyles, Images, IconName} from '../../Themes/index';
 import Swipeable from 'react-native-swipeable';
-import {TextIcon} from "../Modules"
+import {TextIcon} from "./index";
+import {Text, Button, Icon} from "../Common";
 import moment from "moment";
+
+import {Container, Header, Content, Card, CardItem, Thumbnail, Left, Body, Right} from 'native-base';
 
 export default class PrayItem extends PureComponent {
 
@@ -39,7 +42,8 @@ export default class PrayItem extends PureComponent {
                             style={styles.bottomActionsOptionContainer}>
                             <TextIcon text={op.text} leftIcon={op.img}/>
                         </TouchableOpacity>,
-                        index < options.length -1 ? <View key ={"divider".concat(index)} style ={styles.dividerSeparateBottomAction}/> : null
+                        index < options.length - 1 ?
+                            <View key={"divider".concat(index)} style={styles.dividerSeparateBottomAction}/> : null
 
                     ]);
                 })}
@@ -50,19 +54,64 @@ export default class PrayItem extends PureComponent {
 
     render() {
 
-        const {title, content, date, onPress, leftOptions} = this.props;
-        const leftView = (
-            <View style={styles.leftContainer}>
-                <Text numberOfLines={1} style={styles.title}>{title}</Text>
-                <Text numberOfLines={1} style={styles.content}>{content}</Text>
-            </View>
-        );
+        const {onPress, title, date, content, data, onPressMoreAction} = this.props;
 
-        const rightView = (
-            <View style={styles.rightContainer}>
-                <Text numberOfLines={1} style={styles.date}>{moment(date).fromNow()}</Text>
-            </View>
-        );
+        // const {title,date,owner} = data;
+        // const leftView = (
+        //     <View style={styles.leftContainer}>
+        //         <Text numberOfLines={1} style={styles.title}>{title}</Text>
+        //         <Text numberOfLines={1} style={styles.content}>{content}</Text>
+        //     </View>
+        // );
+        //
+        // const rightView = (
+        //     <View style={styles.rightContainer}>
+        //         <Text numberOfLines={1} style={styles.date}>{moment(date).fromNow()}</Text>
+        //     </View>
+        // );
+        //
+
+
+        return (
+            <Card>
+                <CardItem>
+                    <Left>
+                        <Icon name={IconName.avatar}/>
+                        <Body>
+                        <Text numberOfLines={2}>Username</Text>
+                        <Text numberOfLines={2}>{moment(date).fromNow()}</Text>
+                        </Body>
+                    </Left>
+                    <Right>
+                        <Button transparent onPress ={onPressMoreAction}>
+                            <Icon name={IconName.more_h}/>
+                        </Button>
+                    </Right>
+                </CardItem>
+                <CardItem>
+                    <Left>
+                        <Text numberOfLines={2}>{title}</Text>
+                    </Left>
+                </CardItem>
+                <CardItem>
+                    <Left>
+                        <Text numberOfLines={5}>{content}</Text>
+                    </Left>
+                </CardItem>
+                <CardItem>
+                    <Left>
+                        <Text>12 follower</Text>
+                    </Left>
+                    <Body>
+                    <Text>Female</Text>
+                    </Body>
+                    <Right>
+                        <Text>36 ago</Text>
+                    </Right>
+                </CardItem>
+            </Card>
+        )
+
 
         return (
             <View style={[styles.container, ApplicationStyles.screen.shadowContainer]}>
@@ -91,12 +140,18 @@ PrayItem.defaultProps = {
 PrayItem.propTypes = {
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
-    date: PropTypes.oneOfType([PropTypes.string,PropTypes.number, PropTypes.date]),
+    date: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.date]),
     onPress: PropTypes.func,
     leftOptions: PropTypes.array
 };
 
 const styles = EStyleSheet.create({
+
+
+    card: {
+        borderRadius: "$borderRadiusSmall",
+    },
+
     container: {
         backgroundColor: Colors.primary,
         borderRadius: "$borderRadiusSmall",
@@ -171,7 +226,7 @@ const styles = EStyleSheet.create({
         flexDirection: "row",
         height: "$heightRowSmall",
         justifyContent: "center",
-        borderTopWidth:"$borderWidthSmall",
+        borderTopWidth: "$borderWidthSmall",
     },
 
     bottomActionsOptionContainer: {
@@ -182,9 +237,9 @@ const styles = EStyleSheet.create({
 
     },
 
-    dividerSeparateBottomAction :{
-        height :"100%",
-        width :1,
+    dividerSeparateBottomAction: {
+        height: "100%",
+        width: 1,
         backgroundColor: Colors.gray
     }
 

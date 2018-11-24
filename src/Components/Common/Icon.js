@@ -51,7 +51,7 @@ Icon.defaultProps = {
     isHideIcon: false,
     iconType: null,
     color: Colors.black,
-    name: "menu",
+    name: "bars",
     size: 24
 };
 
