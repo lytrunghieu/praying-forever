@@ -20,38 +20,17 @@ export default class TextAreaComponent extends PureComponent {
     render() {
         const  { placeholder,...rest} = this.props;
         return(
-            <Textarea ref="_textArea" rowSpan={5} bordered placeholder={placeholder} {...rest} />
+            <Textarea style={styles.container} ref="_textArea" rowSpan={5} bordered placeholder={placeholder} {...rest} />
         );
 
-        return (
-            <View style={[styles.container,ApplicationStyles.screen.shadowContainer]}>
-                <TextInput
-                    ref ="textInput"
-                    underlineColorAndroid={'rgba(0,0,0,0)'}
-                    style={styles.textInput}
-                    {...this.props}
-                    multiline ={true}
-                />
-            </View>
-        )
     }
 
 }
 
 const styles = EStyleSheet.create({
-
     container: {
         backgroundColor: Colors.primary,
-        padding: 10,
-        height: 162,
-        width :"100%"
     },
-
-    textInput :{
-        color :Colors.black,
-        fontSize : Fonts.size.large,
-        fontFamily : Fonts.type.robotoLightItalic,
-    }
 
 });
 

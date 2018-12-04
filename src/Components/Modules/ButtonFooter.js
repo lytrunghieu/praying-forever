@@ -15,9 +15,9 @@ export default class ButtonFooterComponent extends PureComponent {
         const {onPress, disabled, children, text, ...rest} = this.props;
         return (
             <Button style={[styles.button, disabled && styles.buttonDisabled]} disabled={disabled} transparent={false}
-                    block textStyle={styles.labelText} onPress={onPress} {...rest}>
+                    block  onPress={onPress} {...rest}>
                 {text ?
-                    <Text>{text}</Text> : null
+                    <Text style={styles.labelText}>{text}</Text> : null
                 }
                 {children}
             </Button>

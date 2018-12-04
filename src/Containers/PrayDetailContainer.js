@@ -7,8 +7,8 @@ import {
     ScrollView
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {ScreenKey,StatusOfPray,EventRegisterTypes} from '../Constants';
-import {Colors, Images, ApplicationStyles} from '../Themes';
+import {ScreenKey, StatusOfPray, EventRegisterTypes} from '../Constants';
+import {Colors, Images, ApplicationStyles, IconName} from '../Themes';
 import I18n from '../I18n';
 import {
     NavBar,
@@ -20,12 +20,12 @@ import {
 } from '../Components/Common';
 import commonUtils from "../Utils/CommonUtils";
 import firebase from 'react-native-firebase';
+import {Header} from "../Components/Modules"
 
 const collect = firebase.firestore().collection("pray");
+import {Container, Left, Body, Right, Button, Title, Content} from 'native-base';
 
-const optionActionSheetForFinished = [
-
-]
+const optionActionSheetForFinished = []
 
 class PrayDetail extends PureComponent {
     constructor(props) {
@@ -54,9 +54,23 @@ class PrayDetail extends PureComponent {
         this.state = {
             title: dataPassed.title,
             content: dataPassed.content,
-            status : status,
-            available : true
+            status: status,
+            available: true
         };
+
+        this.leftHeader = {
+            icon: IconName.back,
+            onPress: this.onPressBack.bind(this)
+        };
+
+
+        this.rightHeader = [
+            {
+                icon: IconName.more,
+                onPress: this.onPressRightHeader.bind(this)
+            }
+        ];
+
     }
 
     //region cycle life
@@ -74,8 +88,8 @@ class PrayDetail extends PureComponent {
         }
     }
 
-    componentDidMount(){
-        if(this.uid && this.userUID){
+    componentDidMount() {
+        if (this.uid && this.userUID) {
             this.getPray();
         }
     }
@@ -85,23 +99,31 @@ class PrayDetail extends PureComponent {
     //region handle Action Sheet
 
 
-    callbackChangeStatusPray(){
+    callbackChangeStatusPray() {
         const {status} = this.state;
         this.setState({
-           status : status === StatusOfPray.INPROGRESS ? StatusOfPray.COMPLETE : StatusOfPray.INPROGRESS
+            status: status === StatusOfPray.INPROGRESS ? StatusOfPray.COMPLETE : StatusOfPray.INPROGRESS
         });
     }
 
     onPressContinuesPraying() {
         const item = this.pray;
-        const action ={ type :  EventRegisterTypes.UPDATE_STATUS_PRAY, callback : this.callbackChangeStatusPray , params : {...item, status : StatusOfPray.INPROGRESS}};
+        const action = {
+            type: EventRegisterTypes.UPDATE_STATUS_PRAY,
+            callback: this.callbackChangeStatusPray,
+            params: {...item, status: StatusOfPray.INPROGRESS}
+        };
         commonUtils.sendEvent(action);
     }
 
 
     onPressChangeToFinished() {
         const item = this.pray;
-        const action ={ type :  EventRegisterTypes.UPDATE_STATUS_PRAY, callback : this.callbackChangeStatusPray, params : {...item, status : StatusOfPray.COMPLETE}};
+        const action = {
+            type: EventRegisterTypes.UPDATE_STATUS_PRAY,
+            callback: this.callbackChangeStatusPray,
+            params: {...item, status: StatusOfPray.COMPLETE}
+        };
         commonUtils.sendEvent(action);
     }
 
@@ -121,7 +143,7 @@ class PrayDetail extends PureComponent {
 
     onAcceptDelete() {
         const item = this.pray;
-        const action ={ type :  EventRegisterTypes.DELETE_PRAY, params : item};
+        const action = {type: EventRegisterTypes.DELETE_PRAY, params: item};
         commonUtils.sendEvent(action);
         this.refs["confirm"].close();
         this.onPressBack();
@@ -142,39 +164,40 @@ class PrayDetail extends PureComponent {
     //endregion
 
     //region functions
-    getPray(){
+    getPray() {
         const currentDocRef = collect.doc(this.userUID).collection("data").doc(this.uid);
-        currentDocRef.get().then(snap =>{
-           const data = snap.data();
-           if(data){
-               const { title , content ,status}= data;
-               this.setState({
-                   status, title,content
-               });
-               commonUtils.sendEvent({type : EventRegisterTypes.UPDATE_PRAY, params : {uid : this.uid} });
-           }
-           else{
-               //case : owner of this prayer is login user
-               if(this.userUID === firebase.auth().currentUser.uid){
-                   commonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
-               }
-               //case : owner of this prayer is other user
-               else{
-                   commonUtils.sendEvent({type : EventRegisterTypes.DELETE_PRAY, params : {uid : this.uid} });
-               }
-               this.setState({
-                   available : false
-               })
-           }
+        currentDocRef.get().then(snap => {
+            const data = snap.data();
+            if (data) {
+                const {title, content, status} = data;
+                this.setState({
+                    status, title, content
+                });
+                commonUtils.sendEvent({type: EventRegisterTypes.UPDATE_PRAY, params: {uid: this.uid}});
+            }
+            else {
+                //case : owner of this prayer is login user
+                if (this.userUID === firebase.auth().currentUser.uid) {
+                    commonUtils.sendEvent({type: EventRegisterTypes.GET_PRAY});
+                }
+                //case : owner of this prayer is other user
+                else {
+                    commonUtils.sendEvent({type: EventRegisterTypes.DELETE_PRAY, params: {uid: this.uid}});
+                }
+                this.setState({
+                    available: false
+                })
+            }
 
         });
     }
+
     //endregion
 
     //region rendering
 
 
-    renderContainer(){
+    renderContainer() {
         const {title, content} = this.state;
         return (
             <ScrollView style={styles.scrollView}>
@@ -183,32 +206,38 @@ class PrayDetail extends PureComponent {
                 <PlaceHolder/>
                 <TextArea
                     value={content}
-                    editable ={false}
+                    editable={false}
                 />
             </ScrollView>
         )
     }
 
     render() {
-        const {status , available} = this.state;
+        const {status, available} = this.state;
 
         return (
-            <View style={ApplicationStyles.screen.mainContainerWithBackgroundColor}>
-                <NavBar title={I18n.t('prayDetail')}
-                        onPressLeftButton={this.onPressBack}
-                        iconLeft={Images.back}
-                        iconRight={Images.more}
-                        onPressRightButton={this.onPressRightHeader}
-                />
-                {
-                    available ? this.renderContainer() : null
-                }
+            [<Container key="container">
 
-                <ActionSheet
-                    options={status === StatusOfPray.INPROGRESS ? this.optionActionSheetForInprogress  : this.optionActionSheetForFinished}
-                    ref={"moreAction"}
+                <Header
+                    title={I18n.t('prayDetail')}
+                    left={this.leftHeader}
+                    right={this.rightHeader}
                 />
+                <Content>
+                    {
+                        available ? this.renderContainer() : null
+                    }
+                </Content>
+
+
+            </Container>,
+                <ActionSheet
+                    key ="moreAction"
+                    options={status === StatusOfPray.INPROGRESS ? this.optionActionSheetForInprogress : this.optionActionSheetForFinished}
+                    ref={"moreAction"}
+                />,
                 <ConfirmModal
+                    key ="confirm"
                     ref={"confirm"}
                     title={I18n.t("warning")}
                     content={I18n.t("deleteConfirm")}
@@ -216,8 +245,7 @@ class PrayDetail extends PureComponent {
                     acceptText={I18n.t("yes")}
                     onAccept={this.onAcceptDelete}
                 />
-
-            </View>
+            ]
         );
     }
 

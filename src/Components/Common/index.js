@@ -26,6 +26,7 @@ import  ModalQR from "./ModalQR";
 import  Title from "./Title";
 import  Icon from "./Icon";
 import  Text from "./Text";
+import  Form from "./Form";
 
 export {
     NavBar,
@@ -55,5 +56,6 @@ export {
     ModalQR,
     Title,
     Icon,
-    Text
+    Text,
+    Form
 };

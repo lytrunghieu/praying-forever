@@ -91,7 +91,9 @@ Header.propTypes = {}
 const styles = EStyleSheet.create({
 
     header: {
-        backgroundColor: Colors.white
+        backgroundColor: Colors.white,
+        borderBottomWidth: "$borderWidthSmall",
+        borderColor :Colors.divider
     }
 
 });

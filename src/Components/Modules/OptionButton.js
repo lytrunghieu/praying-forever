@@ -7,7 +7,7 @@ import globalStyle from '../../Themes/globalStyle';
 import {Colors} from '../../Themes';
 import {Button, Icon, Text} from "../Common";
 
-import {ListItem, Left, Right, Badge} from 'native-base';
+import {ListItem, Left, Body,Right,Card,CardItem, Badge} from 'native-base';
 
 export default class OptionButtonComponent extends PureComponent {
 
@@ -15,13 +15,15 @@ export default class OptionButtonComponent extends PureComponent {
     render() {
         let {onPress, text, leftIcon, count} = this.props;
         return (
-            <ListItem button={true} onPress={onPress}>
+            <ListItem icon={true} button={true} onPress={onPress}>
                 <Left>
-                    <Button transparent>
-                        <Icon name={leftIcon}/>
-                        <Text>{text}</Text>
-                    </Button>
+                    <Icon name={leftIcon}/>
+
                 </Left>
+                <Body>
+                    <Text>{text}</Text>
+                </Body>
+
                 <Right>
                     {
                         count ?

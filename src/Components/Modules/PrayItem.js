@@ -51,27 +51,8 @@ export default class PrayItem extends PureComponent {
         )
     }
 
-
     render() {
-
         const {onPress, title, date, content, data, onPressMoreAction} = this.props;
-
-        // const {title,date,owner} = data;
-        // const leftView = (
-        //     <View style={styles.leftContainer}>
-        //         <Text numberOfLines={1} style={styles.title}>{title}</Text>
-        //         <Text numberOfLines={1} style={styles.content}>{content}</Text>
-        //     </View>
-        // );
-        //
-        // const rightView = (
-        //     <View style={styles.rightContainer}>
-        //         <Text numberOfLines={1} style={styles.date}>{moment(date).fromNow()}</Text>
-        //     </View>
-        // );
-        //
-
-
         return (
             <Card>
                 <CardItem>
@@ -88,14 +69,12 @@ export default class PrayItem extends PureComponent {
                         </Button>
                     </Right>
                 </CardItem>
-                <CardItem>
+                <CardItem button={true}  onPress={onPress}>
                     <Left>
+                        <Body>
                         <Text numberOfLines={2}>{title}</Text>
-                    </Left>
-                </CardItem>
-                <CardItem>
-                    <Left>
                         <Text numberOfLines={5}>{content}</Text>
+                        </Body>
                     </Left>
                 </CardItem>
                 <CardItem>
@@ -110,20 +89,6 @@ export default class PrayItem extends PureComponent {
                     </Right>
                 </CardItem>
             </Card>
-        )
-
-
-        return (
-            <View style={[styles.container, ApplicationStyles.screen.shadowContainer]}>
-                <TouchableOpacity style={[styles.containerButton]}
-                                  ref="container"
-                                  onPress={onPress}
-                >
-                    {leftView}
-                    {rightView}
-                </TouchableOpacity>
-                {this.renderBottomActions(leftOptions)}
-            </View>
         );
     }
 }

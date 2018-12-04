@@ -15,37 +15,46 @@ export default class InputComponent extends PureComponent {
     }
 
     focus() {
-       this.refs["input"]._root.focus();
+        this.refs["input"]._root.focus();
     }
 
 
     render() {
 
-        const { ...rest} = this.props;
+        const {...rest} = this.props;
 
         return (
             <Input
-                 ref ="input"
-                 {...rest}
+                ref="input"
+                {...rest}
             />
         );
 
-        const {value, onPressRightIcon, fit,hideCloseIcon, hideDivider, customBorder,customBorderWidth,customBorderColor,customBorderRadius,leftIcon} = this.props;
+        const {value, onPressRightIcon, fit, hideCloseIcon, hideDivider, customBorder, customBorderWidth, customBorderColor, customBorderRadius, leftIcon} = this.props;
 
         return (
-            <View style={[styles.container, fit && styles.containerFit, customBorder && {borderWidth: customBorderWidth , borderColor : customBorderColor , borderRadius : customBorderRadius} ]}>
+            <View style={[styles.container, fit && styles.containerFit, customBorder && {
+                borderWidth: customBorderWidth,
+                borderColor: customBorderColor,
+                borderRadius: customBorderRadius
+            }]}>
                 {
                     leftIcon &&
-                        <View style ={[styles.containerLeftIcon,{borderRightWidth:customBorderWidth , borderColor : customBorderColor }]}>
-                            <Image source ={leftIcon} />
-                        </View> || null
+                    <View style={[styles.containerLeftIcon, {
+                        borderRightWidth: customBorderWidth,
+                        borderColor: customBorderColor
+                    }]}>
+                        <Image source={leftIcon}/>
+                    </View> || null
                 }
 
                 <TextInput
                     style={styles.textInput}
                     underlineColorAndroid={'rgba(0,0,0,0)'}
-                    {...this.props}
+
+
                     ref={"input"}
+                    secureTextEntry={true}
                 />
                 {value && !hideCloseIcon &&
                 <TouchableOpacity
@@ -97,8 +106,6 @@ InputComponent.propTypes = {
 const styles = EStyleSheet.create({
 
 
-
-
     container: {
         flexDirection: "row",
         height: "$heightRowNormal",
@@ -124,11 +131,11 @@ const styles = EStyleSheet.create({
         flex: 1
     },
 
-    containerLeftIcon :{
+    containerLeftIcon: {
         width: "$heightRowNormal",
         height: "$heightRowNormal",
-        alignItems:"center",
-        justifyContent:"center",
+        alignItems: "center",
+        justifyContent: "center",
     }
 
 });

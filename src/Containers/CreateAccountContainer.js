@@ -7,12 +7,17 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {Colors, Images} from '../Themes';
+import {Colors, Images,IconName} from '../Themes';
 import {CommonUtils} from '../Utils';
 import I18n from '../I18n';
 import firebase from 'react-native-firebase';
-import {Input, TextError, Button, PlaceHolder, NavBar} from "../Components/Common";
-import {ErrorCodes,ScreenKey} from "../Constants";
+import {Input, TextError, Button, PlaceHolder, NavBar, ModalLoading} from "../Components/Common";
+import {Header,FormValidate,ButtonFooter} from "../Components/Modules";
+import {ErrorCodes, ScreenKey} from "../Constants";
+
+
+import {Container, Content, Item, Body, Footer, Left,Label} from 'native-base';
+
 
 const inputKey = {
     EMAIL: {name: "email", index: 0},
@@ -49,6 +54,11 @@ class CreateAccountContainer extends PureComponent {
         this.onPressCreate = this.onPressCreate.bind(this);
         this.onChangeTextInput = this.onChangeTextInput.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+
+        this.leftHeader = {
+            icon: IconName.back,
+            onPress: this.onPressBack
+        };
     }
 
     componentDidMount() {
@@ -76,7 +86,7 @@ class CreateAccountContainer extends PureComponent {
         const {indexFocus} = this.state;
 
         if (indexFocus < inputKey.LASTNAME.index) {
-            let ref = "textInput".concat(indexFocus+2);
+            let ref = "textInput".concat(indexFocus + 2);
             this.refs[ref].focus();
         }
     }
@@ -95,30 +105,33 @@ class CreateAccountContainer extends PureComponent {
 
     onPressCreate() {
 
-        const {email,password,retypePassword,firstName,lastName,gender}  = this.state;
+        const {email, password, retypePassword, firstName, lastName, gender} = this.state;
 
         let valid = {
-            validEmail : true,
-            validPassword:true,
+            validEmail: true,
+            validPassword: true,
             validRetypePassword: true,
             validFirstName: true,
             validLastName: true,
             validMatchPassword: true
         };
 
-        if(!CommonUtils.validateEmail(email)){
+        if (!CommonUtils.validateEmail(email)) {
             valid.validEmail = false;
         }
 
-        if(!CommonUtils.validatePassword(password)){
+        if (!CommonUtils.validatePassword(password)) {
             valid.validPassword = false;
         }
 
-        if(!CommonUtils.validatePassword(retypePassword)){
+        if (!CommonUtils.validatePassword(retypePassword)) {
             valid.validRetypePassword = false;
         }
 
-        if(valid.validPassword && valid.validRetypePassword && password !== retypePassword){
+
+        console.log("password != retypePassword ",password != retypePassword);
+
+        if (valid.validPassword && valid.validRetypePassword && password != retypePassword) {
             valid.validMatchPassword = false;
         }
         //
@@ -130,8 +143,11 @@ class CreateAccountContainer extends PureComponent {
         //     valid.validLastName = false;
         // }
 
-        if(valid.validEmail && valid.validMatchPassword){
-            firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email,password).then(res => {
+        if (valid.validEmail && valid.validMatchPassword) {
+            this.setState({
+                isFetching: true
+            });
+            firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password).then(res => {
                 this.props.navigation.navigate(ScreenKey.DRAWER_NAV);
             }).catch(err => {
                 switch (err.code) {
@@ -150,7 +166,7 @@ class CreateAccountContainer extends PureComponent {
                         break;
                     }
 
-                    case ErrorCodes.AUTH_EMAIL_ALREADY_IN_USE :{
+                    case ErrorCodes.AUTH_EMAIL_ALREADY_IN_USE : {
                         alert(I18n.t("emailAlreadyUse"));
                         break;
                     }
@@ -160,6 +176,10 @@ class CreateAccountContainer extends PureComponent {
                         break
                     }
                 }
+            }).finally(e =>{
+                this.setState({
+                    isFetching : false
+                })
             })
         }
         this.setState(valid)
@@ -170,7 +190,113 @@ class CreateAccountContainer extends PureComponent {
     //region Rendering
 
     render() {
-        const {email, password, retypePassword, firstName, lastName, gender, validEmail, validPassword, validFirstName, validLastName, validMatchPassword, validRetypePassword} = this.state;
+        const {email, password, retypePassword, firstName, lastName, gender, validEmail,isFetching, validPassword, validFirstName, validLastName, validMatchPassword, validRetypePassword} = this.state;
+
+
+        return (
+            [<Container style={styles.container}>
+                <Header
+                    title={I18n.t("createAccountTitle")}
+                    left ={this.leftHeader}
+                />
+                <Content style={styles.content}>
+
+
+
+                    <FormValidate
+                        autoFocus={true}
+                        error={!validEmail}
+                        errorText={I18n.t("emailInvalid")}
+                        ref={"textInput1"}
+                        placeholder={I18n.t("inputEmail")}
+                        onChangeText={this.onChangeTextInput.bind(this, inputKey.EMAIL.name)}
+
+                        customBorder={true}
+                        returnKeyLabel={"next"}
+                        onFocus={this.onFocus.bind(this, inputKey.EMAIL.index)}
+
+                        onSubmitEditing={this.onSubmit}
+
+                        keyboardType={"email-address"}
+                    />
+
+
+
+                    <FormValidate
+                        error={!validPassword}
+                        ref={"textInput2"}
+                        errorText={I18n.t("passwordInvalid")}
+                        placeholder={I18n.t("inputPassword")}
+                        onChangeText={this.onChangeTextInput.bind(this, inputKey.PASSWORD.name)}
+                        secureTextEntry={true}
+                        returnKeyLabel={"next"}
+                        onSubmitEditing={this.onSubmit}
+                        onFocus={this.onFocus.bind(this, inputKey.PASSWORD.index)}
+                    />
+
+
+                    <FormValidate
+                        error={!validRetypePassword || !validMatchPassword }
+                        ref={"textInput3"}
+                        errorText={!validMatchPassword  ? I18n.t("retypePasswordNotMatch") :  I18n.t("passwordInvalid")}
+                        placeholder={I18n.t("inputRetypePassword")}
+                        onChangeText={this.onChangeTextInput.bind(this, inputKey.RETYPE_PASSWORD.name)}
+
+                        secureTextEntry={true}
+                        returnKeyLabel={"next"}
+                        onSubmitEditing={this.onSubmit}
+                        onFocus={this.onFocus.bind(this, inputKey.RETYPE_PASSWORD.index)}
+                    />
+
+                    <FormValidate
+
+                        error={!validFirstName}
+                        errorText={I18n.t("firstNameNull")}
+                        ref={"textInput4"}
+                        placeholder={I18n.t("inputFirstName")}
+                        onChangeText={this.onChangeTextInput.bind(this, inputKey.FIRSTNAME.name)}
+
+                        customBorder={true}
+                        returnKeyLabel={"next"}
+                        onFocus={this.onFocus.bind(this, inputKey.FIRSTNAME.index)}
+
+                        onSubmitEditing={this.onSubmit}
+                    />
+
+                    <FormValidate
+                        error={!validLastName}
+                        errorText={I18n.t("lastNameNull")}
+                        ref={"textInput5"}
+                        placeholder={I18n.t("inputLastName")}
+                        onChangeText={this.onChangeTextInput.bind(this, inputKey.LASTNAME.name)}
+
+                        customBorder={true}
+                        returnKeyLabel={"next"}
+                        onFocus={this.onFocus.bind(this, inputKey.LASTNAME.index)}
+
+                        onSubmitEditing={this.onPressCreate}
+
+                    />
+
+
+
+
+
+                </Content>
+
+                <ButtonFooter
+                    onPress={this.onPressCreate}
+                    disabled={isFetching} text={I18n.t("create")}
+                />
+
+
+            </Container>,
+                <ModalLoading
+                    ref="loading"
+                />
+            ]
+        );
+
         return (
             <View style={styles.container}>
                 <NavBar title={I18n.t("createAccountTitle")} iconLeft={Images.back}
@@ -190,7 +316,7 @@ class CreateAccountContainer extends PureComponent {
                         hideCloseIcon={true}
                         onSubmitEditing={this.onSubmit}
                         onFocus={this.onFocus.bind(this, inputKey.EMAIL.index)}
-                        keyboardType ={"email-address"}
+                        keyboardType={"email-address"}
                     />
                     <PlaceHolder height={10}/>
                     {!validEmail && <TextError text={I18n.t("emailInvalid")}/> || null}
@@ -206,7 +332,7 @@ class CreateAccountContainer extends PureComponent {
                         leftIcon={Images.user}
                         hideCloseIcon={true}
                         onSubmitEditing={this.onSubmit}
-                        secureTextEntry ={true}
+                        secureTextEntry={true}
                         onFocus={this.onFocus.bind(this, inputKey.PASSWORD.index)}
                     />
                     <PlaceHolder height={10}/>
@@ -223,7 +349,7 @@ class CreateAccountContainer extends PureComponent {
                         leftIcon={Images.user}
                         hideCloseIcon={true}
                         onSubmitEditing={this.onPressCreate}
-                        secureTextEntry ={true}
+                        secureTextEntry={true}
                         onFocus={this.onFocus.bind(this, inputKey.RETYPE_PASSWORD.index)}
                     />
                     <PlaceHolder height={10}/>
@@ -262,8 +388,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountContain
 
 const styles = EStyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.primary,
+    },
+
+    content :{
+        paddingRight: "$padding"
     },
 
     scrollView: {
