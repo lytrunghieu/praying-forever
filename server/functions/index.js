@@ -25,7 +25,7 @@ function addNotification({userUID, payload}) {
     const {created, title, content, owner} = payload;
     const path = paths.notification.replace("{userUID}", userUID);
     return firestore.collection(path).add(payload).then(res => {
-        return res.update("uid", res.id , "created", admin.firestore.FieldValue.serverTimestamp()).then(res2 =>{
+        return res.update("uid", res.id, "created", admin.firestore.FieldValue.serverTimestamp()).then(res2 => {
             return res2;
         });
     }).catch(error => {
@@ -38,21 +38,21 @@ function addNotification({userUID, payload}) {
     });
 }
 
-exports.updateStatusPrayer =  functions.https.onCall( data => {
+exports.updateStatusPrayer = functions.https.onCall(data => {
     const {userUID, prayUID} = data;
     const path = paths.pray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
     return firestore
         .doc(path)
         .get()
-        .then( doc =>  {
+        .then(doc => {
             const {following, title, complete, status} = doc.data();
             const docRef = doc.ref;
-            const promiseUpdateStatus = docRef.update("status", status === 1 ?  0 : 1);
+            const promiseUpdateStatus = docRef.update("status", status === 1 ? 0 : 1);
             if (!complete && status === 0) {
                 const promiseUpdateComplete = docRef.update("complete", true);
                 const titleNotif = "Lời Cầu Nguyện Đã Ứng Nghiệm";
                 let pushFcmToken = [];
-                let promiseRace = [promiseUpdateStatus , promiseUpdateComplete];
+                let promiseRace = [promiseUpdateStatus, promiseUpdateComplete];
                 following.map(fol => {
                     const pathToken = "tokens/{userUID}".replace("{userUID}", fol);
                     const paramAddNotification = {
@@ -60,14 +60,14 @@ exports.updateStatusPrayer =  functions.https.onCall( data => {
                             title: titleNotif,
                             content: title,
                             owner: fol,
-                            isRead : false,
-                            created :"",
-                            uid :"",
+                            isRead: false,
+                            created: "",
+                            uid: "",
                         },
                         userUID: fol
                     };
 
-                    const promiseAllNotification =  addNotification(paramAddNotification);
+                    const promiseAllNotification = addNotification(paramAddNotification);
 
                     const promise = firestore.doc(pathToken).get().then(docToken => {
                         pushFcmToken.push(docToken.data().token);
@@ -86,12 +86,12 @@ exports.updateStatusPrayer =  functions.https.onCall( data => {
                             sound: "default"
                         }
                     };
-                    if(pushFcmToken && pushFcmToken.length > 0){
+                    if (pushFcmToken && pushFcmToken.length > 0) {
                         return sendMessage({pushToken: pushFcmToken, payload}).then(() => {
                             return {success: true, statusCode: 200, message: "request success"};
                         });
                     }
-                    else{
+                    else {
                         return {success: true, statusCode: 200, message: "request success"};
                     }
 
@@ -112,6 +112,7 @@ exports.updateStatusPrayer =  functions.https.onCall( data => {
 
 exports.deleteNotification = functions.https.onCall((data) => {
     const {userUID, notifUID} = data;
+    admin.auth().createUser()
     let path = paths.deleteAllNotification.replace("{userUID}", userUID);
     if (notifUID) {
         path = paths.deleteNotification.replace("{userUID}", userUID).replace("{notifUID}", notifUID);
@@ -197,54 +198,54 @@ exports.deletePray = functions.https.onCall((data) => {
 });
 
 exports.following = functions.https.onCall((data) => {
-    const {userUID, prayUID,userOtherUID} = data;
-    let path = paths.pray.replace("{userUID}", userOtherUID).replace("{prayUID}",prayUID);
-    return firestore.doc(path).get().then(docSnap =>{
-       if(docSnap.data() && docSnap.data().status === 0){
-           let {following} = docSnap.data();
-           let hasFollowing =true
-           if(following && following.length > 0 ){
-               let index = following.findIndex(fo => fo ===userUID);
-               if(index === -1){
-                   hasFollowing = false;
-               }
-           }
-           else{
-               hasFollowing = false
-           }
-           if(!hasFollowing){
-               following.push(userUID);
-               docSnap.ref.update("following", following);
-               let path = paths.pray.replace("{userUID}", userUID).replace("{prayUID}",prayUID);
-               let newData = docSnap.data();
-               newData.following = following;
-               return firestore.doc(path).set( newData).then(res=>{
-                   return {success: true, statusCode: 200, message: "request success"};
-               });
-           }
-           else {
-               following = following.filter(fol => fol !== userUID);
-               docSnap.ref.update("following", following);
-               let path = paths.deletePray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
-               return firestore
-                   .doc(path)
-                   .delete()
-                   .then(doc => {
-                       return {success: true, statusCode: 200, message: "request success"};
-                   }).catch(error => {
-                       console.log("LOG ERROR", error);
-                       throw new functions.https.HttpsError(
-                           "unknown", // code
-                           'request failed', // message
-                           {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
-                       );
-                   });
-           }
+    const {userUID, prayUID, userOtherUID} = data;
+    let path = paths.pray.replace("{userUID}", userOtherUID).replace("{prayUID}", prayUID);
+    return firestore.doc(path).get().then(docSnap => {
+        if (docSnap.data() && docSnap.data().status === 0) {
+            let {following} = docSnap.data();
+            let hasFollowing = true
+            if (following && following.length > 0) {
+                let index = following.findIndex(fo => fo === userUID);
+                if (index === -1) {
+                    hasFollowing = false;
+                }
+            }
+            else {
+                hasFollowing = false
+            }
+            if (!hasFollowing) {
+                following.push(userUID);
+                docSnap.ref.update("following", following);
+                let path = paths.pray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
+                let newData = docSnap.data();
+                newData.following = following;
+                return firestore.doc(path).set(newData).then(res => {
+                    return {success: true, statusCode: 200, message: "request success"};
+                });
+            }
+            else {
+                following = following.filter(fol => fol !== userUID);
+                docSnap.ref.update("following", following);
+                let path = paths.deletePray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
+                return firestore
+                    .doc(path)
+                    .delete()
+                    .then(doc => {
+                        return {success: true, statusCode: 200, message: "request success"};
+                    }).catch(error => {
+                        console.log("LOG ERROR", error);
+                        throw new functions.https.HttpsError(
+                            "unknown", // code
+                            'request failed', // message
+                            {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+                        );
+                    });
+            }
 
-       }
-       else{
-           return {success: false, statusCode: 401, message: "not found prayer"};
-       }
+        }
+        else {
+            return {success: false, statusCode: 401, message: "not found prayer"};
+        }
     }).catch(error => {
         console.log("LOG ERROR", error);
         throw new functions.https.HttpsError(
@@ -255,6 +256,45 @@ exports.following = functions.https.onCall((data) => {
     });
 });
 
+exports.createUser = functions.https.onCall((data) => {
+    const {email, password, firstName, lastName, birthDay, gender} = data;
+
+    admin.auth().createUser({
+        email,
+        emailVerified: false,
+        password,
+        displayName: firstName.concat(" ").concat(lastName),
+        disabled: false
+    })
+        .then(userRecord => {
+            console.log("userRecord ",userRecord.uid);
+            let path = paths.profileUser.replace("{userUID}", userRecord.uid);
+            return firestore.collection(path).add({
+                displayName: firstName.concat(" ").concat(lastName),
+                email: email,
+                gender: gender || 0,
+                birthDay
+            }).then(() => {
+                return {success: true, statusCode: 200, message: "request success"};
+            }).catch(error => {
+                console.log("LOG ERROR", error);
+                throw new functions.https.HttpsError(
+                    "unknown", // code
+                    'request failed', // message
+                    {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+                );
+            })
+        })
+        .catch(function (error) {
+            console.log("LOG ERROR", error);
+            throw new functions.https.HttpsError(
+                "unknown", // code
+                'request failed', // message
+                {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+            );
+        });
+
+})
 
 exports.onCreatePray = functions.firestore
     .document("test/{doc}")

@@ -77,11 +77,13 @@
   "scanQRCodeIntro": "Let scan QR code to follow the petition",
   "signUpScreen": "SignUp Screen",
   "signUp": "SignUp",
+  "selectDate":"Select Date",
   "homeScreen": "Home Screen",
   "home": "Home",
   "aScreen": "A Screen",
   "aDetailScreen": "A Detail Screen",
   "bScreen": "B Screen",
+  "birthDay":"Birth Day",
   "logout": "Logout",
   "releaseYear": "Release Year",
   "title": "Title",
@@ -91,5 +93,6 @@
   "notifications": "Notifications",
   "onlive": "Onlive",
   "offline": "Offline",
-  "QRCode": "QR Code"
+  "QRCode": "QR Code",
+  "male":"Male"
 }

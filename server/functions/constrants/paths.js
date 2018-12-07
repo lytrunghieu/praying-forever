@@ -10,3 +10,5 @@ exports.deleteAllPray = "pray/{userUID}/data"
 exports.notification = "notification/{userUID}/data";
 exports.deleteNotification = "notification/{userUID}/data/{notifUID}"
 exports.deleteAllNotification = "notification/{userUID}/data"
+
+exports.profileUser ="profile/{userUID}"

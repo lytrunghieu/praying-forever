@@ -27,6 +27,7 @@ import  Title from "./Title";
 import  Icon from "./Icon";
 import  Text from "./Text";
 import  Form from "./Form";
+import  DatePicker from "./DatePicker";
 
 export {
     NavBar,
@@ -57,5 +58,6 @@ export {
     Title,
     Icon,
     Text,
-    Form
+    Form,
+    DatePicker
 };
