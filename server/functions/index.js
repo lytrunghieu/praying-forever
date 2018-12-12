@@ -259,7 +259,7 @@ exports.following = functions.https.onCall((data) => {
 exports.createUser = functions.https.onCall((data) => {
     const {email, password, firstName, lastName, birthDay, gender} = data;
 
-    admin.auth().createUser({
+    return admin.auth().createUser({
         email,
         emailVerified: false,
         password,
@@ -267,13 +267,14 @@ exports.createUser = functions.https.onCall((data) => {
         disabled: false
     })
         .then(userRecord => {
-            console.log("userRecord ",userRecord.uid);
-            let path = paths.profileUser.replace("{userUID}", userRecord.uid);
+            let path = "profile";
             return firestore.collection(path).add({
                 displayName: firstName.concat(" ").concat(lastName),
                 email: email,
                 gender: gender || 0,
-                birthDay
+                birthDay,
+                uid: userRecord.uid,
+                created: admin.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 return {success: true, statusCode: 200, message: "request success"};
             }).catch(error => {
@@ -294,7 +295,7 @@ exports.createUser = functions.https.onCall((data) => {
             );
         });
 
-})
+});
 
 exports.onCreatePray = functions.firestore
     .document("test/{doc}")
@@ -303,3 +304,147 @@ exports.onCreatePray = functions.firestore
         console.log("DATA:", event);
     });
 
+
+//region API INTERNAL
+
+exports.testAPI = functions.https.onRequest((req, res) => {
+    const key = req.headers["private-key"];
+    if (key != "AIzaSyB8Y2nE-6_Q8hvJhRwNWUm77JpcuYDnSYE") {
+        res.send("request failed");
+        return
+    }
+    const message = "request success";
+    res.send(message);
+});
+
+exports.deleteUser = functions.https.onRequest(async (req, res) => {
+    const key = req.headers["private-key"];
+    if (key != "AIzaSyB8Y2nE-6_Q8hvJhRwNWUm77JpcuYDnSYE") {
+        res.send("request failed");
+        return
+    }
+    const {uid} = req.query;
+    let messages = [];
+    const queryDeleteProfile = firestore.collection("profile").where("uid", "==", uid);
+    //delete profile
+    const promiseDeleteProfile = await queryDeleteProfile.get().then(queryShot => {
+        if (queryShot.docs[0] && queryShot.docs[0].ref) {
+            queryShot.docs[0].ref.delete().then(() => {
+                messages.push("delete profile success");
+            }).catch(error => {
+                console.log("LOG ERROR", error);
+                messages.push("delete profile failed :" + error)
+            });
+        }
+        else {
+            messages.push("can not find profile");
+        }
+
+
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        messages.push("delete profile failed :" + error)
+    });
+
+    //delete prayer
+    const promiseDeletePray = await firestore.collection("pray").doc(uid).get().then(snap => {
+        if (snap.ref) {
+            snap.ref.delete().then(() => {
+                messages.push("delete prayer success");
+            }).catch(error => {
+                console.log("LOG ERROR", error);
+                messages.push("delete prayer failed :" + error)
+            })
+        }
+        else {
+            messages.push("can not found prayer");
+
+        }
+
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        messages.push("delete prayer failed :" + error)
+
+    });
+
+    //delete nofication
+    const promiseDeleteNotification = await firestore.collection("notification").doc(uid).get().then(snap => {
+        if (snap.ref) {
+            snap.ref.delete().then(() => {
+                messages.push("delete notification success");
+            }).catch(error => {
+                console.log("LOG ERROR", error);
+                messages.push("delete notification failed :" + error)
+
+            })
+        }
+        else {
+            messages.push("can not found notification");
+
+        }
+
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        messages.push("delete notification failed :" + error)
+
+    });
+
+    //delete location
+    const promiseDeleteLocation = await firestore.collection("location").doc(uid).delete().then(() => {
+        messages.push("delete location success");
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        messages.push("delete location failed :" + error)
+    });
+
+    return Promise.race([
+        promiseDeleteProfile,
+        promiseDeletePray,
+        promiseDeleteNotification,
+        promiseDeleteLocation
+    ]).then(() => {
+
+        res.send(messages);
+    }).catch(e => {
+        console.log("ERROR ", e);
+        res.send("request failed")
+    });
+
+});
+//endregion
+
+//TODO: will use for furtur
+// exports.onDeleteUser = functions.auth.user().onDelete((user) => {
+//     let path = "profile";
+//     const query = firestore.collection(path).where("uid", "==", user.uid);
+//     return query.get(docSnap => {
+//         if (docSnap.ref) {
+//             console.log("Step1", docSnap.data())
+//             return docSnap.ref.delete().then(() => {
+//                 console.log("Success");
+//                 return {success: true, statusCode: 200, message: "request success"};
+//             }).catch(error => {
+//                 console.log("LOG ERROR", error);
+//                 throw new functions.https.HttpsError(
+//                     "unknown", // code
+//                     'request failed', // message
+//                     {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+//                 );
+//             });
+//         }
+//         else {
+//             throw new functions.https.HttpsError(
+//                 "unknown", // code
+//                 'request failed', // message
+//                 {success: false, statusCode: 401, body: data, errorDescription: "user is not found"}
+//             );
+//         }
+//     }).catch(function (error) {
+//         console.log("LOG ERROR", error);
+//         throw new functions.https.HttpsError(
+//             "unknown", // code
+//             'request failed', // message
+//             {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+//         );
+//     });
+// });

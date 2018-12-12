@@ -1,0 +1,310 @@
+[debug] [2018-12-08T14:34:05.508Z] ----------------------------------------------------------------------
+[debug] [2018-12-08T14:34:05.510Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2018-12-08T14:34:05.511Z] CLI Version:   6.1.0
+[debug] [2018-12-08T14:34:05.511Z] Platform:      darwin
+[debug] [2018-12-08T14:34:05.511Z] Node Version:  v8.11.3
+[debug] [2018-12-08T14:34:05.511Z] Time:          Sat Dec 08 2018 21:34:05 GMT+0700 (+07)
+[debug] [2018-12-08T14:34:05.511Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-12-08T14:34:05.522Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-12-08T14:34:05.523Z] > authorizing via signed-in user
+[debug] [2018-12-08T14:34:05.523Z] [iam] checking project prayingforever-416df for permissions ["firebase.projects.get"]
+[debug] [2018-12-08T14:34:05.525Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-12-08T14:34:05.525Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2018-12-08T14:34:05.824Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T14:34:05.834Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df:testIamPermissions  
+
+[debug] [2018-12-08T14:34:07.394Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T14:34:07.395Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df  
+ 
+[debug] [2018-12-08T14:34:08.546Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/admin/Documents/git/PF/server'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-12-08T14:34:09.490Z] Fetching environment
+[debug] [2018-12-08T14:34:09.493Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/519560419483:getServerAppConfig  
+ 
+[debug] [2018-12-08T14:34:09.912Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T14:34:09.913Z] Starting @google-cloud/functions-emulator
+[debug] [2018-12-08T14:34:11.456Z] Parsing function triggers
+[warn] ⚠  functions: Failed to load functions source code. Ensure that you have the latest SDK by running npm i --save firebase-functions inside the functions directory.
+[debug] [2018-12-08T14:34:11.578Z] Error during trigger parsing:  Error occurred while parsing your function triggers.
+
+/Users/admin/Documents/git/PF/server/functions/index.js:298
+}
+^
+
+SyntaxError: missing ) after argument list
+    at createScript (vm.js:80:10)
+    at Object.runInThisContext (vm.js:139:10)
+    at Module._compile (module.js:616:28)
+    at Object.Module._extensions..js (module.js:663:10)
+    at Module.load (module.js:565:32)
+    at tryModuleLoad (module.js:505:12)
+    at Function.Module._load (module.js:497:3)
+    at Module.require (module.js:596:17)
+    at require (internal/module.js:11:18)
+    at /usr/local/lib/node_modules/firebase-tools/lib/triggerParser.js:15:15
+[warn] ⚠  functions: Error from emulator. Error occurred while parsing your function triggers.
+
+/Users/admin/Documents/git/PF/server/functions/index.js:298
+}
+^
+
+SyntaxError: missing ) after argument list
+    at createScript (vm.js:80:10)
+    at Object.runInThisContext (vm.js:139:10)
+    at Module._compile (module.js:616:28)
+    at Object.Module._extensions..js (module.js:663:10)
+    at Module.load (module.js:565:32)
+    at tryModuleLoad (module.js:505:12)
+    at Function.Module._load (module.js:497:3)
+    at Module.require (module.js:596:17)
+    at require (internal/module.js:11:18)
+    at /usr/local/lib/node_modules/firebase-tools/lib/triggerParser.js:15:15
+[debug] [2018-12-08T14:34:11.579Z] 
+[debug] [2018-12-08T14:35:32.173Z] ----------------------------------------------------------------------
+[debug] [2018-12-08T14:35:32.175Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2018-12-08T14:35:32.175Z] CLI Version:   6.1.0
+[debug] [2018-12-08T14:35:32.175Z] Platform:      darwin
+[debug] [2018-12-08T14:35:32.175Z] Node Version:  v8.11.3
+[debug] [2018-12-08T14:35:32.176Z] Time:          Sat Dec 08 2018 21:35:32 GMT+0700 (+07)
+[debug] [2018-12-08T14:35:32.176Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-12-08T14:35:32.188Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-12-08T14:35:32.188Z] > authorizing via signed-in user
+[debug] [2018-12-08T14:35:32.188Z] [iam] checking project prayingforever-416df for permissions ["firebase.projects.get"]
+[debug] [2018-12-08T14:35:32.190Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df:testIamPermissions  
+
+[debug] [2018-12-08T14:35:33.474Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T14:35:33.476Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df  
+ 
+[debug] [2018-12-08T14:35:34.762Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/admin/Documents/git/PF/server'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-12-08T14:35:35.503Z] Fetching environment
+[debug] [2018-12-08T14:35:35.506Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/519560419483:getServerAppConfig  
+ 
+[debug] [2018-12-08T14:35:36.218Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T14:35:36.219Z] Starting @google-cloud/functions-emulator
+[debug] [2018-12-08T14:35:37.770Z] Parsing function triggers
+[info] ✔  functions: deletePray: http://localhost:5000/prayingforever-416df/us-central1/deletePray
+[info] ✔  functions: updateStatusPrayer: http://localhost:5000/prayingforever-416df/us-central1/updateStatusPrayer
+[info] ✔  functions: deleteNotification: http://localhost:5000/prayingforever-416df/us-central1/deleteNotification
+[info] ✔  functions: following: http://localhost:5000/prayingforever-416df/us-central1/following
+[info] ✔  functions: testAPI: http://localhost:5000/prayingforever-416df/us-central1/testAPI
+[info] ✔  functions: createUser: http://localhost:5000/prayingforever-416df/us-central1/createUser
+[debug] [2018-12-08T14:39:47.614Z] ----------------------------------------------------------------------
+[debug] [2018-12-08T14:39:47.616Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2018-12-08T14:39:47.616Z] CLI Version:   6.1.0
+[debug] [2018-12-08T14:39:47.616Z] Platform:      darwin
+[debug] [2018-12-08T14:39:47.616Z] Node Version:  v8.11.3
+[debug] [2018-12-08T14:39:47.617Z] Time:          Sat Dec 08 2018 21:39:47 GMT+0700 (+07)
+[debug] [2018-12-08T14:39:47.617Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-12-08T14:39:47.629Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-12-08T14:39:47.629Z] > authorizing via signed-in user
+[debug] [2018-12-08T14:39:47.629Z] [iam] checking project prayingforever-416df for permissions ["firebase.projects.get"]
+[debug] [2018-12-08T14:39:47.631Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df:testIamPermissions  
+
+[debug] [2018-12-08T14:39:48.836Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T14:39:48.838Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df  
+ 
+[debug] [2018-12-08T14:39:49.990Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/admin/Documents/git/PF/server'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-12-08T14:39:50.722Z] Fetching environment
+[debug] [2018-12-08T14:39:50.724Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/519560419483:getServerAppConfig  
+ 
+[debug] [2018-12-08T14:39:52.056Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T14:39:52.056Z] Starting @google-cloud/functions-emulator
+[debug] [2018-12-08T14:39:53.602Z] Parsing function triggers
+[info] ✔  functions: updateStatusPrayer: http://localhost:5000/prayingforever-416df/us-central1/updateStatusPrayer
+[info] ✔  functions: deleteNotification: http://localhost:5000/prayingforever-416df/us-central1/deleteNotification
+[info] ✔  functions: deletePray: http://localhost:5000/prayingforever-416df/us-central1/deletePray
+[info] ✔  functions: following: http://localhost:5000/prayingforever-416df/us-central1/following
+[info] ✔  functions: testAPI: http://localhost:5000/prayingforever-416df/us-central1/testAPI
+[info] ✔  functions: createUser: http://localhost:5000/prayingforever-416df/us-central1/createUser
+[debug] [2018-12-08T15:24:03.790Z] ----------------------------------------------------------------------
+[debug] [2018-12-08T15:24:03.792Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2018-12-08T15:24:03.792Z] CLI Version:   6.1.0
+[debug] [2018-12-08T15:24:03.792Z] Platform:      darwin
+[debug] [2018-12-08T15:24:03.792Z] Node Version:  v8.11.3
+[debug] [2018-12-08T15:24:03.793Z] Time:          Sat Dec 08 2018 22:24:03 GMT+0700 (+07)
+[debug] [2018-12-08T15:24:03.793Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-12-08T15:24:03.805Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-12-08T15:24:03.805Z] > authorizing via signed-in user
+[debug] [2018-12-08T15:24:03.805Z] [iam] checking project prayingforever-416df for permissions ["firebase.projects.get"]
+[debug] [2018-12-08T15:24:03.807Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-12-08T15:24:03.808Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2018-12-08T15:24:04.597Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T15:24:04.606Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df:testIamPermissions  
+
+[debug] [2018-12-08T15:24:06.393Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T15:24:06.394Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df  
+ 
+[debug] [2018-12-08T15:24:07.783Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/admin/Documents/git/PF/server'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-12-08T15:24:08.514Z] Fetching environment
+[debug] [2018-12-08T15:24:08.516Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/519560419483:getServerAppConfig  
+ 
+[debug] [2018-12-08T15:24:08.917Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T15:24:08.917Z] Starting @google-cloud/functions-emulator
+[debug] [2018-12-08T15:24:10.465Z] Parsing function triggers
+[warn] ⚠  functions: Failed to load functions source code. Ensure that you have the latest SDK by running npm i --save firebase-functions inside the functions directory.
+[debug] [2018-12-08T15:24:10.546Z] Error during trigger parsing:  Error occurred while parsing your function triggers.
+
+/Users/admin/Documents/git/PF/server/functions/index.js:341
+    }
+    ^
+
+SyntaxError: missing ) after argument list
+    at createScript (vm.js:80:10)
+    at Object.runInThisContext (vm.js:139:10)
+    at Module._compile (module.js:616:28)
+    at Object.Module._extensions..js (module.js:663:10)
+    at Module.load (module.js:565:32)
+    at tryModuleLoad (module.js:505:12)
+    at Function.Module._load (module.js:497:3)
+    at Module.require (module.js:596:17)
+    at require (internal/module.js:11:18)
+    at /usr/local/lib/node_modules/firebase-tools/lib/triggerParser.js:15:15
+[warn] ⚠  functions: Error from emulator. Error occurred while parsing your function triggers.
+
+/Users/admin/Documents/git/PF/server/functions/index.js:341
+    }
+    ^
+
+SyntaxError: missing ) after argument list
+    at createScript (vm.js:80:10)
+    at Object.runInThisContext (vm.js:139:10)
+    at Module._compile (module.js:616:28)
+    at Object.Module._extensions..js (module.js:663:10)
+    at Module.load (module.js:565:32)
+    at tryModuleLoad (module.js:505:12)
+    at Function.Module._load (module.js:497:3)
+    at Module.require (module.js:596:17)
+    at require (internal/module.js:11:18)
+    at /usr/local/lib/node_modules/firebase-tools/lib/triggerParser.js:15:15
+[debug] [2018-12-08T15:24:10.547Z] 
+[debug] [2018-12-08T15:24:41.748Z] ----------------------------------------------------------------------
+[debug] [2018-12-08T15:24:41.751Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2018-12-08T15:24:41.751Z] CLI Version:   6.1.0
+[debug] [2018-12-08T15:24:41.751Z] Platform:      darwin
+[debug] [2018-12-08T15:24:41.751Z] Node Version:  v8.11.3
+[debug] [2018-12-08T15:24:41.751Z] Time:          Sat Dec 08 2018 22:24:41 GMT+0700 (+07)
+[debug] [2018-12-08T15:24:41.751Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-12-08T15:24:41.763Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-12-08T15:24:41.763Z] > authorizing via signed-in user
+[debug] [2018-12-08T15:24:41.763Z] [iam] checking project prayingforever-416df for permissions ["firebase.projects.get"]
+[debug] [2018-12-08T15:24:41.765Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df:testIamPermissions  
+
+[debug] [2018-12-08T15:24:43.016Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T15:24:43.018Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df  
+ 
+[debug] [2018-12-08T15:24:44.382Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/admin/Documents/git/PF/server'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-12-08T15:24:44.786Z] Fetching environment
+[debug] [2018-12-08T15:24:44.788Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/519560419483:getServerAppConfig  
+ 
+[debug] [2018-12-08T15:24:45.214Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-08T15:24:45.215Z] Starting @google-cloud/functions-emulator
+[debug] [2018-12-08T15:24:46.253Z] Parsing function triggers
+[info] ✔  functions: deleteNotification: http://localhost:5000/prayingforever-416df/us-central1/deleteNotification
+[info] ✔  functions: updateStatusPrayer: http://localhost:5000/prayingforever-416df/us-central1/updateStatusPrayer
+[info] ✔  functions: deletePray: http://localhost:5000/prayingforever-416df/us-central1/deletePray
+[info] ✔  functions: following: http://localhost:5000/prayingforever-416df/us-central1/following
+[info] ✔  functions: testAPI: http://localhost:5000/prayingforever-416df/us-central1/testAPI
+[info] ✔  functions: createUser: http://localhost:5000/prayingforever-416df/us-central1/createUser
+[info] ✔  functions: deleteUser: http://localhost:5000/prayingforever-416df/us-central1/deleteUser
+[debug] [2018-12-10T06:08:55.967Z] ----------------------------------------------------------------------
+[debug] [2018-12-10T06:08:55.970Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2018-12-10T06:08:55.970Z] CLI Version:   6.1.0
+[debug] [2018-12-10T06:08:55.970Z] Platform:      darwin
+[debug] [2018-12-10T06:08:55.970Z] Node Version:  v8.11.3
+[debug] [2018-12-10T06:08:55.971Z] Time:          Mon Dec 10 2018 13:08:55 GMT+0700 (+07)
+[debug] [2018-12-10T06:08:55.971Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-12-10T06:08:55.989Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-12-10T06:08:55.989Z] > authorizing via signed-in user
+[debug] [2018-12-10T06:08:55.989Z] [iam] checking project prayingforever-416df for permissions ["firebase.projects.get"]
+[debug] [2018-12-10T06:08:55.991Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-12-10T06:08:55.991Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2018-12-10T06:08:56.546Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-10T06:08:56.583Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df:testIamPermissions  
+
+[debug] [2018-12-10T06:08:58.194Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-10T06:08:58.195Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df  
+ 
+[debug] [2018-12-10T06:08:59.708Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/admin/Documents/git/PF/server'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-12-10T06:09:00.601Z] Fetching environment
+[debug] [2018-12-10T06:09:00.605Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/519560419483:getServerAppConfig  
+ 
+[debug] [2018-12-10T06:09:01.511Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-10T06:09:01.511Z] Starting @google-cloud/functions-emulator
+[debug] [2018-12-10T06:09:03.071Z] Parsing function triggers
+[info] ✔  functions: updateStatusPrayer: http://localhost:5000/prayingforever-416df/us-central1/updateStatusPrayer
+[info] ✔  functions: deleteNotification: http://localhost:5000/prayingforever-416df/us-central1/deleteNotification
+[info] ✔  functions: following: http://localhost:5000/prayingforever-416df/us-central1/following
+[info] ✔  functions: testAPI: http://localhost:5000/prayingforever-416df/us-central1/testAPI
+[info] ✔  functions: deletePray: http://localhost:5000/prayingforever-416df/us-central1/deletePray
+[info] ✔  functions: createUser: http://localhost:5000/prayingforever-416df/us-central1/createUser
+[info] ✔  functions: deleteUser: http://localhost:5000/prayingforever-416df/us-central1/deleteUser
+[debug] [2018-12-12T15:23:21.508Z] ----------------------------------------------------------------------
+[debug] [2018-12-12T15:23:21.510Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2018-12-12T15:23:21.510Z] CLI Version:   6.1.0
+[debug] [2018-12-12T15:23:21.510Z] Platform:      darwin
+[debug] [2018-12-12T15:23:21.510Z] Node Version:  v8.11.3
+[debug] [2018-12-12T15:23:21.511Z] Time:          Wed Dec 12 2018 22:23:21 GMT+0700 (+07)
+[debug] [2018-12-12T15:23:21.511Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-12-12T15:23:21.533Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-12-12T15:23:21.534Z] > authorizing via signed-in user
+[debug] [2018-12-12T15:23:21.534Z] [iam] checking project prayingforever-416df for permissions ["firebase.projects.get"]
+[debug] [2018-12-12T15:23:21.536Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-12-12T15:23:21.536Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2018-12-12T15:23:22.435Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-12T15:23:22.445Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df:testIamPermissions  
+
+[debug] [2018-12-12T15:23:23.814Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-12T15:23:23.816Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/prayingforever-416df  
+ 
+[debug] [2018-12-12T15:23:26.058Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/admin/Documents/git/PF/server'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-12-12T15:23:26.812Z] Fetching environment
+[debug] [2018-12-12T15:23:26.815Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/519560419483:getServerAppConfig  
+ 
+[debug] [2018-12-12T15:23:27.533Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-12T15:23:27.533Z] Starting @google-cloud/functions-emulator
+[debug] [2018-12-12T15:23:29.086Z] Parsing function triggers
+[info] ✔  functions: updateStatusPrayer: http://localhost:5000/prayingforever-416df/us-central1/updateStatusPrayer
+[info] ✔  functions: deleteNotification: http://localhost:5000/prayingforever-416df/us-central1/deleteNotification
+[info] ✔  functions: deletePray: http://localhost:5000/prayingforever-416df/us-central1/deletePray
+[info] ✔  functions: following: http://localhost:5000/prayingforever-416df/us-central1/following
+[info] ✔  functions: createUser: http://localhost:5000/prayingforever-416df/us-central1/createUser
+[info] ✔  functions: deleteUser: http://localhost:5000/prayingforever-416df/us-central1/deleteUser
+[info] ✔  functions: testAPI: http://localhost:5000/prayingforever-416df/us-central1/testAPI
