@@ -1,4 +1,8 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
+// Babel output - with Babel REPL settings:
+// * prettify
+// * preset-env Node v6.9
+"use strict";
 
 const {paths} = require("./constrants");
 
@@ -309,7 +313,7 @@ exports.onCreatePray = functions.firestore
 
 exports.testAPI = functions.https.onRequest((req, res) => {
     const key = req.headers["private-key"];
-    if (key != "AIzaSyB8Y2nE-6_Q8hvJhRwNWUm77JpcuYDnSYE") {
+    if (key !== "AIzaSyB8Y2nE-6_Q8hvJhRwNWUm77JpcuYDnSYE") {
         res.send("request failed");
         return
     }
@@ -317,9 +321,9 @@ exports.testAPI = functions.https.onRequest((req, res) => {
     res.send(message);
 });
 
-exports.deleteUser = functions.https.onRequest(async (req, res) => {
+exports.deleteUser = functions.https.onRequest(async(req, res) => {
     const key = req.headers["private-key"];
-    if (key != "AIzaSyB8Y2nE-6_Q8hvJhRwNWUm77JpcuYDnSYE") {
+    if (key !== "AIzaSyB8Y2nE-6_Q8hvJhRwNWUm77JpcuYDnSYE") {
         res.send("request failed");
         return
     }
@@ -331,6 +335,7 @@ exports.deleteUser = functions.https.onRequest(async (req, res) => {
         if (queryShot.docs[0] && queryShot.docs[0].ref) {
             queryShot.docs[0].ref.delete().then(() => {
                 messages.push("delete profile success");
+                return true;
             }).catch(error => {
                 console.log("LOG ERROR", error);
                 messages.push("delete profile failed :" + error)
@@ -339,6 +344,7 @@ exports.deleteUser = functions.https.onRequest(async (req, res) => {
         else {
             messages.push("can not find profile");
         }
+        return true;
 
 
     }).catch(error => {
@@ -351,6 +357,7 @@ exports.deleteUser = functions.https.onRequest(async (req, res) => {
         if (snap.ref) {
             snap.ref.delete().then(() => {
                 messages.push("delete prayer success");
+                return true;
             }).catch(error => {
                 console.log("LOG ERROR", error);
                 messages.push("delete prayer failed :" + error)
@@ -360,6 +367,7 @@ exports.deleteUser = functions.https.onRequest(async (req, res) => {
             messages.push("can not found prayer");
 
         }
+        return true;
 
     }).catch(error => {
         console.log("LOG ERROR", error);
@@ -372,6 +380,7 @@ exports.deleteUser = functions.https.onRequest(async (req, res) => {
         if (snap.ref) {
             snap.ref.delete().then(() => {
                 messages.push("delete notification success");
+                return true;
             }).catch(error => {
                 console.log("LOG ERROR", error);
                 messages.push("delete notification failed :" + error)
@@ -382,6 +391,7 @@ exports.deleteUser = functions.https.onRequest(async (req, res) => {
             messages.push("can not found notification");
 
         }
+        return true;
 
     }).catch(error => {
         console.log("LOG ERROR", error);
@@ -392,10 +402,19 @@ exports.deleteUser = functions.https.onRequest(async (req, res) => {
     //delete location
     const promiseDeleteLocation = await firestore.collection("location").doc(uid).delete().then(() => {
         messages.push("delete location success");
+        return true;
     }).catch(error => {
         console.log("LOG ERROR", error);
         messages.push("delete location failed :" + error)
     });
+
+    const promiseDeleteUser = await admin.auth().deleteUser(uid).then(()=>{
+        messages.push("delete user success");
+        return true;
+    }).catch(error =>{
+        console.log("LOG ERROR", error);
+        messages.push("delete user failed :" + error)
+    })
 
     return Promise.race([
         promiseDeleteProfile,
@@ -404,7 +423,7 @@ exports.deleteUser = functions.https.onRequest(async (req, res) => {
         promiseDeleteLocation
     ]).then(() => {
 
-        res.send(messages);
+        return res.send(messages);
     }).catch(e => {
         console.log("ERROR ", e);
         res.send("request failed")
