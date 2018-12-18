@@ -6,6 +6,8 @@ import {
     Image,
     ScrollView,
     KeyboardAvoidingView,
+    Alert,
+    Linking,
 } from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -30,6 +32,8 @@ import {FormValidate, ButtonFooter} from "../Components/Modules";
 import * as _ from "lodash";
 import {Container, Header, Content, Item, Body, Footer, Left,Label} from 'native-base';
 import {CommonUtils} from "../Utils";
+import {NavigationActions} from "react-navigation";
+
 
 class LoginScreen extends PureComponent {
 
@@ -57,6 +61,7 @@ class LoginScreen extends PureComponent {
     }
 
     componentDidMount() {
+
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -124,7 +129,20 @@ class LoginScreen extends PureComponent {
                 isFetching: true
             });
             firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, passWord).then(res => {
-                this.props.navigation.navigate(ScreenKey.PRAYING_INPROGESS);
+                if(!res.user.emailVerified){
+                    Alert.alert("Email Not Verified","Open your email to verify account to continue",
+
+                        [
+                            {text: 'Ok'},
+                            // {text :"Open Mail"}
+                        ],
+                        { cancelable: true }
+                        )
+                }
+                else{
+                    this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.PRAYING_INPROGESS});
+                }
+
             }).catch(err => {
                 switch (err.code) {
                     case ErrorCodes.AUTH_USER_NOT_FOUND : {

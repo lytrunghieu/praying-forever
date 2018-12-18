@@ -15,6 +15,7 @@ import {Input, TextError, Button, PlaceHolder, NavBar, ModalLoading, Checkbox, D
 import {Header, FormValidate, ButtonFooter} from "../Components/Modules";
 import {ErrorCodes, ScreenKey} from "../Constants";
 import moment from "moment";
+import {NavigationActions} from "react-navigation";
 
 
 import {Container, Content, Item, Body, Footer, Left, Label} from 'native-base';
@@ -49,14 +50,14 @@ class CreateAccountContainer extends PureComponent {
             validMatchPassword: true,
             validFirstName: true,
             validLastName: true,
-            isMale : true,
+            isMale: true,
             birthDay: new Date()
 
         };
         this.onPressBack = this.onPressBack.bind(this);
         this.onPressCreate = this.onPressCreate.bind(this);
         this.onChangeTextInput = this.onChangeTextInput.bind(this);
-        this.onChangeBD= this.onChangeBD.bind(this);
+        this.onChangeBD = this.onChangeBD.bind(this);
         this.onPressGender = this.onPressGender.bind(this);
 
         this.onSubmit = this.onSubmit.bind(this);
@@ -74,7 +75,7 @@ class CreateAccountContainer extends PureComponent {
 
     //region handle value change
 
-    onChangeBD(newDate){
+    onChangeBD(newDate) {
         this.setState({birthDay: newDate});
     }
 
@@ -113,15 +114,15 @@ class CreateAccountContainer extends PureComponent {
 
     //region hanlde action press
 
-    onPressGender(){
+    onPressGender() {
         this.setState({
-           isMale: !this.state.isMale
+            isMale: !this.state.isMale
         });
     }
 
     onPressCreate() {
 
-        const {email, password, retypePassword, firstName, lastName, gender} = this.state;
+        const {email, password, retypePassword, firstName, lastName, gender, birthDay} = this.state;
 
         let valid = {
             validEmail: true,
@@ -144,9 +145,6 @@ class CreateAccountContainer extends PureComponent {
             valid.validRetypePassword = false;
         }
 
-
-        console.log("password != retypePassword ", password != retypePassword);
-
         if (valid.validPassword && valid.validRetypePassword && password != retypePassword) {
             valid.validMatchPassword = false;
         }
@@ -160,44 +158,55 @@ class CreateAccountContainer extends PureComponent {
         // }
 
         if (valid.validEmail && valid.validMatchPassword) {
+            this.refs["loading"].open();
             this.setState({
                 isFetching: true
             });
+            const httpsCallable = firebase.functions(firebase.app()).httpsCallable("createUser");
+            httpsCallable({email, password, firstName, lastName, birthDay, gender})
+                .then(res => {
+                    this.props.navigation.dispatch({
+                        type: NavigationActions.RESET,
+                        routeName: ScreenKey.LOGIN_SCREEN
+                    });
+                })
+                .catch(httpsError => {
+                    // console.log("===ERROR :", httpsError);
+                    console.log(httpsError.message);
+                    console.log(httpsError.details.errorDescription);
+                    const {details = {}} = httpsError;
+                    switch (details.code) {
+                        case ErrorCodes.AUTH_USER_NOT_FOUND : {
+                            alert(I18n.t("userNotFoundError"));
+                            break;
+                        }
 
-            firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password).then(res => {
-                this.props.navigation.navigate(ScreenKey.DRAWER_NAV);
-            }).catch(err => {
-                switch (err.code) {
-                    case ErrorCodes.AUTH_USER_NOT_FOUND : {
-                        alert(I18n.t("userNotFoundError"));
-                        break;
-                    }
+                        case ErrorCodes.AUTH_INVALID_EMAIL : {
+                            alert(I18n.t("emailInvalid"));
+                            break;
+                        }
 
-                    case ErrorCodes.AUTH_INVALID_EMAIL : {
-                        alert(I18n.t("emailInvalid"));
-                        break;
-                    }
+                        case ErrorCodes.AUTH_NETWORK_REQUEST_FAILED : {
+                            alert(I18n.t("networkError"));
+                            break;
+                        }
 
-                    case ErrorCodes.AUTH_NETWORK_REQUEST_FAILED : {
-                        alert(I18n.t("networkError"));
-                        break;
-                    }
+                        case ErrorCodes.AUTH_EMAIL_ALREADY_IS_EXIST : {
+                            alert(I18n.t("emailAlreadyUse"));
+                            break;
+                        }
 
-                    case ErrorCodes.AUTH_EMAIL_ALREADY_IN_USE : {
-                        alert(I18n.t("emailAlreadyUse"));
-                        break;
+                        default : {
+                            alert(I18n.t("unknowError"));
+                            break
+                        }
                     }
-
-                    default : {
-                        alert(I18n.t("unknowError"));
-                        break
-                    }
-                }
-            }).finally(e => {
+                }).finally(e => {
+                this.refs["loading"].close();
                 this.setState({
                     isFetching: false
                 })
-            })
+            });
         }
         this.setState(valid)
     }
@@ -207,7 +216,7 @@ class CreateAccountContainer extends PureComponent {
     //region Rendering
 
     render() {
-        const {email, password, retypePassword, firstName, lastName, gender, validEmail, isFetching,isMale, validPassword, validFirstName, validLastName, validMatchPassword, validRetypePassword} = this.state;
+        const {email, password, retypePassword, firstName, lastName, gender, validEmail, isFetching, isMale, validPassword, validFirstName, validLastName, validMatchPassword, validRetypePassword} = this.state;
 
 
         return (
@@ -294,9 +303,6 @@ class CreateAccountContainer extends PureComponent {
                         onSubmitEditing={this.onPressCreate}
                         onFocus={this.onFocus.bind(this, inputKey.RETYPE_PASSWORD.index)}
                     />
-
-
-
 
 
                 </Content>
