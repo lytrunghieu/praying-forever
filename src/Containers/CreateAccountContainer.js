@@ -11,14 +11,24 @@ import {Colors, Images, IconName} from '../Themes';
 import {CommonUtils} from '../Utils';
 import I18n from '../I18n';
 import firebase from 'react-native-firebase';
-import {Input, TextError, Button, PlaceHolder, NavBar, ModalLoading, Checkbox, DatePicker} from "../Components/Common";
+import {
+    Input,
+    TextError,
+    Button,
+    Icon,
+    PlaceHolder,
+    NavBar,
+    ModalLoading,
+    Checkbox,
+    DatePicker,
+    Text
+} from "../Components/Common";
 import {Header, FormValidate, ButtonFooter} from "../Components/Modules";
 import {ErrorCodes, ScreenKey} from "../Constants";
 import moment from "moment";
 import {NavigationActions} from "react-navigation";
 
-
-import {Container, Content, Item, Body, Footer, Left, Label} from 'native-base';
+import {Container, Content, Item, Body, Footer, Left, Right, Label, CardItem, Card} from 'native-base';
 
 
 const inputKey = {
@@ -51,7 +61,8 @@ class CreateAccountContainer extends PureComponent {
             validFirstName: true,
             validLastName: true,
             isMale: true,
-            birthDay: new Date()
+            birthDay: new Date(),
+            indexStep: 0
 
         };
         this.onPressBack = this.onPressBack.bind(this);
@@ -59,16 +70,29 @@ class CreateAccountContainer extends PureComponent {
         this.onChangeTextInput = this.onChangeTextInput.bind(this);
         this.onChangeBD = this.onChangeBD.bind(this);
         this.onPressGender = this.onPressGender.bind(this);
-
         this.onSubmit = this.onSubmit.bind(this);
 
         this.leftHeader = {
             icon: IconName.back,
             onPress: this.onPressBack
         };
+
     }
 
     componentDidMount() {
+    }
+
+    componentDidUpdate(preProps, preState) {
+        if (preState.indexStep !== this.state.indexStep) {
+            if (preState.indexStep === 0) {
+                let ref = "textInput".concat(inputKey.EMAIL.index + 1);
+                this.refs[ref].focus();
+            }
+            else {
+                let ref = "textInput".concat(inputKey.FIRSTNAME.index + 1);
+                this.refs[ref].focus();
+            }
+        }
     }
 
     //endregion
@@ -80,25 +104,82 @@ class CreateAccountContainer extends PureComponent {
     }
 
     onChangeTextInput(key, value) {
-        this.setState({
-            [key]: value
-        });
+
+        let newState = {[key]: value};
+
+        switch (key) {
+            case inputKey.FIRSTNAME.name : {
+                newState.validFirstName = true;
+                break;
+            }
+
+            case inputKey.LASTNAME.name : {
+                newState.validLastName = true;
+                break;
+            }
+
+            case inputKey.EMAIL.name : {
+                newState.validEmail = true;
+                break;
+            }
+
+            case inputKey.PASSWORD.name : {
+                newState.validPassword = true;
+                break;
+            }
+
+            case inputKey.RETYPE_PASSWORD.name : {
+                newState.validRetypePassword = true;
+                break;
+            }
+        }
+
+        this.setState(newState);
     }
 
     onFocus(index) {
-        if (index < inputKey.RETYPE_PASSWORD.index) {
-            this.setState({
-                indexFocus: index
-            });
+        let newState = {indexFocus: index};
+        switch (index) {
+            case inputKey.FIRSTNAME.index : {
+                newState.validFirstName = true;
+                break;
+            }
+
+            case inputKey.LASTNAME.index : {
+                newState.validLastName = true;
+                break;
+            }
+
+            case inputKey.EMAIL.index : {
+                newState.validEmail = true;
+                break;
+            }
+
+            case inputKey.PASSWORD.index : {
+                newState.validPassword = true;
+                break;
+            }
+
+            case inputKey.RETYPE_PASSWORD.index : {
+                newState.validRetypePassword = true;
+                break;
+            }
         }
+        this.setState(newState);
     }
 
-    onSubmit() {
-        const {indexFocus} = this.state;
-
-        if (indexFocus < inputKey.RETYPE_PASSWORD.index) {
-            let ref = "textInput".concat(indexFocus + 2);
-            this.refs[ref].focus();
+    onSubmit = (index) => () => {
+        if (index < inputKey.RETYPE_PASSWORD.index) {
+            if (index === inputKey.LASTNAME.index) {
+                this.onPressStep(1)();
+            }
+            else {
+                let ref = "textInput".concat(index + 2);
+                this.refs[ref].focus();
+            }
+        }
+        else {
+            this.onPressCreate();
         }
     }
 
@@ -120,6 +201,33 @@ class CreateAccountContainer extends PureComponent {
         });
     }
 
+    onPressStep = (index) => () => {
+        if (index === 1) {
+            const {firstName, lastName} = this.state;
+
+            let valid = {
+                validFirstName: true,
+                validLastName: true,
+            };
+
+            if (_.isEmpty(firstName)) {
+                valid.validFirstName = false;
+            }
+
+            if (_.isEmpty(lastName)) {
+                valid.validLastName = false;
+            }
+            this.setState(valid)
+
+            if (!valid.validLastName || !valid.validFirstName) {
+                return;
+            }
+        }
+        this.setState({
+            indexStep: index
+        });
+    }
+
     onPressCreate() {
 
         const {email, password, retypePassword, firstName, lastName, gender, birthDay} = this.state;
@@ -128,8 +236,6 @@ class CreateAccountContainer extends PureComponent {
             validEmail: true,
             validPassword: true,
             validRetypePassword: true,
-            validFirstName: true,
-            validLastName: true,
             validMatchPassword: true
         };
 
@@ -148,14 +254,6 @@ class CreateAccountContainer extends PureComponent {
         if (valid.validPassword && valid.validRetypePassword && password != retypePassword) {
             valid.validMatchPassword = false;
         }
-        //
-        // if(_.isEmpty(firstName)){
-        //     valid.validFirstName = false;
-        // }
-        //
-        // if(_.isEmpty(lastName)){
-        //     valid.validLastName = false;
-        // }
 
         if (valid.validEmail && valid.validMatchPassword) {
             this.refs["loading"].open();
@@ -215,20 +313,16 @@ class CreateAccountContainer extends PureComponent {
 
     //region Rendering
 
-    render() {
-        const {email, password, retypePassword, firstName, lastName, gender, validEmail, isFetching, isMale, validPassword, validFirstName, validLastName, validMatchPassword, validRetypePassword} = this.state;
 
+    renderStep() {
+        const {email, password, retypePassword, firstName, lastName, gender, validEmail, isFetching, isMale, validPassword, validFirstName, validLastName, validMatchPassword, validRetypePassword, indexStep} = this.state;
 
-        return (
-            [<Container style={styles.container}>
-                <Header
-                    title={I18n.t("createAccountTitle")}
-                    left={this.leftHeader}
-                />
-                <Content style={styles.content}>
-
+        switch (indexStep) {
+            case 0 : {
+                return (<View style={[styles.form]}>
                     <FormValidate
                         autoFocus={true}
+                        value={firstName}
                         error={!validFirstName}
                         errorText={I18n.t("firstNameNull")}
                         ref={"textInput1"}
@@ -239,10 +333,11 @@ class CreateAccountContainer extends PureComponent {
                         returnKeyLabel={"next"}
                         onFocus={this.onFocus.bind(this, inputKey.FIRSTNAME.index)}
 
-                        onSubmitEditing={this.onSubmit}
+                        onSubmitEditing={this.onSubmit(inputKey.FIRSTNAME.index)}
                     />
 
                     <FormValidate
+                        value={lastName}
                         error={!validLastName}
                         errorText={I18n.t("lastNameNull")}
                         ref={"textInput2"}
@@ -253,7 +348,7 @@ class CreateAccountContainer extends PureComponent {
                         returnKeyLabel={"next"}
                         onFocus={this.onFocus.bind(this, inputKey.LASTNAME.index)}
 
-                        onSubmitEditing={this.onSubmit}
+                        onSubmitEditing={this.onSubmit(inputKey.LASTNAME.index)}
 
                     />
 
@@ -261,56 +356,106 @@ class CreateAccountContainer extends PureComponent {
                     <DatePicker label={I18n.t("birthDay")} setDate={this.onChangeBD}/>
 
 
-                    <FormValidate
-                        error={!validEmail}
-                        errorText={I18n.t("emailInvalid")}
-                        ref={"textInput3"}
-                        placeholder={I18n.t("inputEmail")}
-                        onChangeText={this.onChangeTextInput.bind(this, inputKey.EMAIL.name)}
+                    <CardItem>
+                        <Button rounded small
+                                style={{alignSelf: "flex-end"}}
+                                onPress={this.onSubmit(inputKey.LASTNAME.index)}
 
-                        customBorder={true}
-                        returnKeyLabel={"next"}
-                        onFocus={this.onFocus.bind(this, inputKey.EMAIL.index)}
-
-                        onSubmitEditing={this.onSubmit}
-
-                        keyboardType={"email-address"}
-                    />
+                        >
+                            <Text>NEXT</Text>
+                            <Icon color={Colors.white} name={IconName.next}/>
+                        </Button>
+                    </CardItem>
 
 
-                    <FormValidate
-                        error={!validPassword}
-                        ref={"textInput4"}
-                        errorText={I18n.t("passwordInvalid")}
-                        placeholder={I18n.t("inputPassword")}
-                        onChangeText={this.onChangeTextInput.bind(this, inputKey.PASSWORD.name)}
-                        secureTextEntry={true}
-                        returnKeyLabel={"next"}
-                        onSubmitEditing={this.onSubmit}
-                        onFocus={this.onFocus.bind(this, inputKey.PASSWORD.index)}
-                    />
+                </View>);
+            }
+
+            case 1 : {
+                return (
+                    <View style={[styles.form]}>
+                        <FormValidate
+                            autoFocus={true}
+                            error={!validEmail}
+                            errorText={I18n.t("emailInvalid")}
+                            ref={"textInput3"}
+                            value={email}
+                            placeholder={I18n.t("inputEmail")}
+                            onChangeText={this.onChangeTextInput.bind(this, inputKey.EMAIL.name)}
+
+                            customBorder={true}
+                            returnKeyLabel={"next"}
+                            onFocus={this.onFocus.bind(this, inputKey.EMAIL.index)}
+
+                            onSubmitEditing={this.onSubmit(inputKey.EMAIL.index)}
+
+                            keyboardType={"email-address"}
+                        />
 
 
-                    <FormValidate
-                        error={!validRetypePassword || !validMatchPassword}
-                        ref={"textInput5"}
-                        errorText={!validMatchPassword ? I18n.t("retypePasswordNotMatch") : I18n.t("passwordInvalid")}
-                        placeholder={I18n.t("inputRetypePassword")}
-                        onChangeText={this.onChangeTextInput.bind(this, inputKey.RETYPE_PASSWORD.name)}
+                        <FormValidate
+                            error={!validPassword}
+                            value={password}
+                            ref={"textInput4"}
+                            errorText={I18n.t("passwordInvalid")}
+                            placeholder={I18n.t("inputPassword")}
+                            onChangeText={this.onChangeTextInput.bind(this, inputKey.PASSWORD.name)}
+                            secureTextEntry={true}
+                            returnKeyLabel={"next"}
+                            onSubmitEditing={this.onSubmit(inputKey.PASSWORD.index)}
+                            onFocus={this.onFocus.bind(this, inputKey.PASSWORD.index)}
+                        />
 
-                        secureTextEntry={true}
-                        returnKeyLabel={"next"}
-                        onSubmitEditing={this.onPressCreate}
-                        onFocus={this.onFocus.bind(this, inputKey.RETYPE_PASSWORD.index)}
-                    />
+
+                        <FormValidate
+                            error={!validRetypePassword || !validMatchPassword}
+                            ref={"textInput5"}
+                            errorText={!validMatchPassword ? I18n.t("retypePasswordNotMatch") : I18n.t("passwordInvalid")}
+                            placeholder={I18n.t("inputRetypePassword")}
+                            onChangeText={this.onChangeTextInput.bind(this, inputKey.RETYPE_PASSWORD.name)}
+                            value={retypePassword}
+                            secureTextEntry={true}
+                            returnKeyLabel={"next"}
+                            // onSubmitEditing={this.onPressCreate}
+                            onSubmitEditing={this.onSubmit(inputKey.RETYPE_PASSWORD.index)}
+                            onFocus={this.onFocus.bind(this, inputKey.RETYPE_PASSWORD.index)}
+                        />
+                        <CardItem>
+                            <Button rounded small iconLeft onPress={this.onPressStep(0)}
+                            >
+                                <Icon color={Colors.white} name={IconName.previous}/>
+                                <Text>BACK</Text>
+                            </Button>
+                        </CardItem>
+
+                    </View>
+                );
+            }
+        }
+    }
+
+    render() {
+        const {email, password, retypePassword, firstName, lastName, gender, validEmail, isFetching, isMale, validPassword, validFirstName, validLastName, validMatchPassword, validRetypePassword, indexStep} = this.state;
 
 
+        return (
+            [<Container style={styles.container}>
+                <Header
+                    title={I18n.t("createAccountTitle")}
+                    left={this.leftHeader}
+                />
+                <Content style={styles.content}>
+                    {this.renderStep()}
                 </Content>
 
-                <ButtonFooter
-                    onPress={this.onPressCreate}
-                    disabled={isFetching} text={I18n.t("create")}
-                />
+                {
+                    indexStep === 1 ?
+                        <ButtonFooter
+                            onPress={this.onPressCreate}
+                            disabled={isFetching} text={I18n.t("create")}
+                        />
+                        : null
+                }
 
 
             </Container>,
@@ -318,80 +463,6 @@ class CreateAccountContainer extends PureComponent {
                     ref="loading"
                 />
             ]
-        );
-
-        return (
-            <View style={styles.container}>
-                <NavBar title={I18n.t("createAccountTitle")} iconLeft={Images.back}
-                        onPressLeftButton={this.onPressBack}/>
-                <ScrollView style={styles.scrollView} contentContainerStyle={[styles.body]}>
-                    <PlaceHolder height={10}/>
-                    <Input
-                        ref={"textInput1"}
-                        value={email}
-                        placeholder={I18n.t("inputEmail")}
-                        onChangeText={this.onChangeTextInput.bind(this, inputKey.EMAIL.name)}
-                        isShowShadow={true}
-                        hideDivider={true}
-                        customBorder={true}
-                        leftIcon={Images.user}
-                        autoFocus={true}
-                        hideCloseIcon={true}
-                        onSubmitEditing={this.onSubmit}
-                        onFocus={this.onFocus.bind(this, inputKey.EMAIL.index)}
-                        keyboardType={"email-address"}
-                    />
-                    <PlaceHolder height={10}/>
-                    {!validEmail && <TextError text={I18n.t("emailInvalid")}/> || null}
-                    <PlaceHolder height={10}/>
-                    <Input
-                        ref={"textInput2"}
-                        value={password}
-                        placeholder={I18n.t("inputPassword")}
-                        onChangeText={this.onChangeTextInput.bind(this, inputKey.PASSWORD.name)}
-                        isShowShadow={true}
-                        hideDivider={true}
-                        customBorder={true}
-                        leftIcon={Images.user}
-                        hideCloseIcon={true}
-                        onSubmitEditing={this.onSubmit}
-                        secureTextEntry={true}
-                        onFocus={this.onFocus.bind(this, inputKey.PASSWORD.index)}
-                    />
-                    <PlaceHolder height={10}/>
-                    {!validPassword && <TextError text={I18n.t("passwordInvalid")}/> || null}
-                    <PlaceHolder height={10}/>
-                    <Input
-                        ref={"textInput3"}
-                        value={retypePassword}
-                        placeholder={I18n.t("inputRetypePassword")}
-                        onChangeText={this.onChangeTextInput.bind(this, inputKey.RETYPE_PASSWORD.name)}
-                        isShowShadow={true}
-                        hideDivider={true}
-                        customBorder={true}
-                        leftIcon={Images.user}
-                        hideCloseIcon={true}
-                        onSubmitEditing={this.onPressCreate}
-                        secureTextEntry={true}
-                        onFocus={this.onFocus.bind(this, inputKey.RETYPE_PASSWORD.index)}
-                    />
-                    <PlaceHolder height={10}/>
-                    {!validRetypePassword && <TextError text={I18n.t("passwordInvalid")}/> || null}
-                    {!validMatchPassword && <TextError text={I18n.t("retypePasswordNotMatch")}/> || null}
-                    <PlaceHolder height={20}/>
-
-                </ScrollView>
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === "ios" ? "padding" : null}
-                    enabled
-                >
-                    <Button text={I18n.t("create")} onPress={this.onPressCreate} fit={true} height={54}
-                            customeBorder={true} borderRadius={0}/>
-
-                </KeyboardAvoidingView>
-
-
-            </View>
         );
     }
 
@@ -411,11 +482,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountContain
 
 const styles = EStyleSheet.create({
     container: {
-        backgroundColor: Colors.primary,
+        backgroundColor: "transparent",
     },
 
     content: {
-        paddingRight: "$padding"
+        paddingRight: "$padding",
+        paddingLeft: "$padding",
+        paddingTop: "$padding",
+        // backgroundColor:"transparent",
     },
 
     scrollView: {
@@ -426,4 +500,11 @@ const styles = EStyleSheet.create({
         paddingLeft: "$padding",
         paddingRight: "$padding"
     },
+
+    form: {
+        padding: "$padding",
+        backgroundColor: Colors.primary,
+        borderRadius: "$borderRadiusSmall"
+    }
+
 });

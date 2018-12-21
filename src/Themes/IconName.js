@@ -20,7 +20,9 @@ const names = {
     more_h:"ellipsis-h",
     back :"arrow-left",
     suggest :"lightbulb-o",
-    clear :"times"
+    clear :"times",
+    next:"arrow-circle-right",
+    previous :"arrow-circle-left",
 }
 
 export default names
