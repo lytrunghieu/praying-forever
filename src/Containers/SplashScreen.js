@@ -20,8 +20,8 @@ class SplashScreen extends Component {
     componentDidMount() {
         setTimeout(() => {
             let unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-
+                if (user && user.emailVerified) {
+                    // console.log(user.emailVerified);
                     this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.DRAWER_NAV});
                 }
                 else {
@@ -29,7 +29,6 @@ class SplashScreen extends Component {
                 }
                 unsubscribe();
             });
-
         }, 2000);
     }
 

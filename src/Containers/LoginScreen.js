@@ -35,6 +35,11 @@ import {CommonUtils} from "../Utils";
 import {NavigationActions} from "react-navigation";
 
 
+const inputKey = {
+    EMAIL: {name: "email", index: 0},
+    PASSWORD: {name: "password", index: 1},
+}
+
 class LoginScreen extends PureComponent {
 
     //region cycle life
@@ -96,13 +101,15 @@ class LoginScreen extends PureComponent {
 
     onChangeEmailText(value) {
         this.setState({
-            email: value
+            email: value,
+            validEmail: true
         });
     }
 
     onChangePassword(value) {
         this.setState({
-            passWord: value
+            passWord: value,
+            validPassword: true
         });
     }
 
