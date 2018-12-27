@@ -19,6 +19,13 @@ export default {
 
     notification :Immutable({
         notifications : []
+    }),
+
+    profile : Immutable({
+        payload: null,
+        fetching : false,
+        success : false,
+        message : null,
     })
 
 };

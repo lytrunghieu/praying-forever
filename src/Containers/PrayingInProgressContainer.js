@@ -80,6 +80,7 @@ class PrayingInProgress extends PureComponent {
             isSearch: false,
             keySearch: "",
         };
+        console.warn("warning ");
     }
 
     //region cycle life
@@ -243,7 +244,7 @@ class PrayingInProgress extends PureComponent {
         this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, item);
     }
 
-    onPressFinish(item) {
+    onPressFinish = (item) =>() => {
         const action = {type: EventRegisterTypes.UPDATE_STATUS_PRAY, params: item};
         commonUtils.sendEvent(action);
     }
@@ -313,12 +314,12 @@ class PrayingInProgress extends PureComponent {
         }
     }
 
-    onPressDeleteSpecificPray(item) {
+    onPressDeleteSpecificPray =(item) =>() => {
         const action = {type: EventRegisterTypes.DELETE_PRAY, params: item};
         commonUtils.sendEvent(action);
     }
 
-    onPressUnfollowing(item) {
+    onPressUnfollowing = (item) =>() => {
         const action = {type: EventRegisterTypes.UPDATE_FOLLOWING, params: item};
         commonUtils.sendEvent(action);
     }
@@ -428,9 +429,11 @@ class PrayingInProgress extends PureComponent {
                 />,
                 <ActionSheetPrayItem
                     onPressShare ={this.onPressShare}
+                    onPressDelete ={this.onPressDeleteSpecificPray}
+                    onPressUnfollow ={this.onPressUnfollowing}
                     key="ActionSheetPrayItem"
-
                     ref={"_moreActionPray"}
+                    onPressUpdateFinishStatus ={this.onPressFinish}
                 />,
                 <ConfirmModal
                     key="ConfirmModal"

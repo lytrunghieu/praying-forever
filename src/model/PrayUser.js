@@ -13,6 +13,8 @@ export default class PrayUser {
         this.email = data.email ||null;
         this.emailVerified = data.emailVerified || false;
         this.isAnonymous = data.isAnonymous || false;
+        this.birthDay = data.birthDay || new Date();
+        this.gender = data.gender || 0;
     }
 
 }

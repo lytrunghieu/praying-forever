@@ -104,19 +104,25 @@ class CreatePraying extends PureComponent {
         }
         else {
 
-            // params.created = firebase.firestore.FieldValue.serverTimestamp();
-            params.owner = {uid: firebase.auth().currentUser.uid};
-            params.status = StatusOfPray.INPROGRESS;
-            let dataSend = new Pray(params);
-            this.userPray.collection("data").add(dataSend).then(res => {
-                res.get().then(res2 => {
-                    const docRef = res2.ref;
-                    docRef.update("uid", res2.id, "created", firebase.firestore.FieldValue.serverTimestamp()).then(res2 => {
-                        commonUtils.sendEvent({type: EventRegisterTypes.GET_PRAY});
-                        this.onPressBack();
+            const {userReducer ={}} = this.props;
+            const {payload } = userReducer;
+            if(payload){
+                const currentUser = firebase.auth().currentUser;
+                params.owner = {uid: firebase.auth().currentUser.uid , birthDay :payload.birthDay, gender :payload.gender , displayName: payload.displayName };
+                params.status = StatusOfPray.INPROGRESS;
+                let dataSend = new Pray(params);
+                this.userPray.collection("data").add(dataSend).then(res => {
+                    res.get().then(res2 => {
+                        const docRef = res2.ref;
+                        docRef.update("uid", res2.id, "created", firebase.firestore.FieldValue.serverTimestamp()).then(res2 => {
+                            commonUtils.sendEvent({type: EventRegisterTypes.GET_PRAY});
+                            this.onPressBack();
+                        });
                     });
-                });
-            })
+                })
+            }
+
+
         }
 
     }
@@ -290,7 +296,9 @@ class CreatePraying extends PureComponent {
 
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+    userReducer : state.userReducer
+})
 
 const mapDispatchToProps = (dispatch) => ({
     commonActions: bindActionCreators(CommonActions, dispatch),

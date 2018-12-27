@@ -3,12 +3,12 @@ import React, {PureComponent} from 'react'
 import {StyleSheet, Text, View, Image, ScrollView} from 'react-native'
 import {connect} from 'react-redux';
 import I18n from '../I18n';
-import {Images, Colors, Metrics,IconName} from '../Themes';
-import {Option,ModalQR} from "../Components/Common";
+import {Images, Colors, Metrics, IconName} from '../Themes';
+import {Option, ModalQR} from "../Components/Common";
 import firebase from 'react-native-firebase';
 import {NavigationActions} from "react-navigation";
 import {bindActionCreators} from 'redux';
-import {CommonActions, NotificationActions} from '../actions';
+import {CommonActions, NotificationActions, userActions} from '../actions';
 import {Pray} from "../model";
 import {EventRegisterTypes, URL, StatusOfPray, ScreenKey} from "../Constants";
 import {EventRegister} from 'react-native-event-listeners';
@@ -24,6 +24,7 @@ import {ListItem, List, Left, Right, Badge} from 'native-base';
 const prayCollect = firebase.firestore().collection('pray');
 const notificationCollect = firebase.firestore().collection('notification');
 const tokenCollect = firebase.firestore().collection('tokens');
+const profileCollect = firebase.firestore().collection('profile');
 
 
 moment.updateLocale('en', {
@@ -69,6 +70,8 @@ class DrawerContainer extends PureComponent {
         });
 
         this.getPray();
+        const {userActions} = this.props;
+        userActions.getProfile();
 
         //Listen event
         this.listener = EventRegister.addEventListener("listener", async (action) => {
@@ -140,7 +143,7 @@ class DrawerContainer extends PureComponent {
                             }
                             else {
                                 if (statusCode === 401) {
-                                    this.deletePray({uid : uid});
+                                    this.deletePray({uid: uid});
                                 }
                             }
                         })
@@ -265,7 +268,7 @@ class DrawerContainer extends PureComponent {
 
     deletePray(params = {}) {
         const {uid} = params;
-        const httpsCallable = firebase.functions(firebase.app()).httpsCallable("deletePray");
+         const httpsCallable =firebase.functions(firebase.app()).httpsCallable("deletePray");
         httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
             .then(data => {
                 this.getPray();
@@ -277,6 +280,21 @@ class DrawerContainer extends PureComponent {
                 console.log(httpsError.details.errorDescription);
             });
 
+
+
+        // const {uid} = params;
+        // const httpsCallable = firebase.functions(firebase.app()).httpsCallable("updateStatusPrayer");
+        // httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
+        //     .then(data => {
+        //         this.getPray();
+        //     })
+        //     .catch(httpsError => {
+        //         console.log("ERROR :", httpsError);
+        //         console.log(httpsError.code);
+        //         console.log(httpsError.message);
+        //         console.log(httpsError.details.errorDescription);
+        //     });
+
     }
 
     getNotificationNotRead(notif) {
@@ -284,6 +302,43 @@ class DrawerContainer extends PureComponent {
             return 0
         }
         return notif.filter(no => !no.isRead).length;
+    }
+
+    getProfile() {
+
+        // const userUID = firebase.auth().currentUser.uid;
+        // profileCollect.where("uid", "==", userUID).get().then(queryShot => {
+        //     if (queryShot.docs[0] && queryShot.docs[0].data()) {
+        //         queryShot.docs[0].data();
+        //     }
+        //     else {
+        //         throw  {message: I18n.t("cannotGetProfile")};
+        //     }
+        //
+        // }).catch(err => {
+        //     console.log("LOG ERROR ", err);
+        //     if (err.message) {
+        //         alert(err.message);
+        //     }
+        // });
+
+
+        // const promiseDeleteProfile = await queryDeleteProfile.get().then(queryShot => {
+        //     if (queryShot.docs[0] && queryShot.docs[0].ref) {
+        //         queryShot.docs[0].ref.delete().then(() => {
+        //             messages.push("delete profile success");
+        //             return true;
+        //         }).catch(error => {
+        //             console.log("LOG ERROR", error);
+        //             messages.push("delete profile failed :" + error)
+        //         });
+        //     }
+        //     else {
+        //         messages.push("can not find profile");
+        //     }
+        //     return true;
+        //
+        // }
     }
 
     getPray() {
@@ -316,21 +371,22 @@ class DrawerContainer extends PureComponent {
             [<View style={styles.container} key={"main"}>
                 <List>
                     <OptionButton text={I18n.t("inprogress")}
-                            leftIcon={IconName.prayer_inprogress}
-                            onPress={this.onPressOption.bind(this, ScreenKey.PRAYING_INPROGESS)}/>
+                                  leftIcon={IconName.prayer_inprogress}
+                                  onPress={this.onPressOption.bind(this, ScreenKey.PRAYING_INPROGESS)}/>
                     <OptionButton text={I18n.t("finished")}
                                   leftIcon={IconName.prayer_inprogress}
-                            onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FINISHED)}/>
+                                  onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FINISHED)}/>
                     <OptionButton text={I18n.t("prayForOther")}
                                   leftIcon={IconName.prayer_inprogress}
-                            onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FOR_OTHER)}/>
+                                  onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FOR_OTHER)}/>
                     <OptionButton text={I18n.t("notifications")}
                                   leftIcon={IconName.prayer_inprogress}
-                            onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)} isCircle={true}
-                            count={notificationNotRead}/>
+                                  onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)} isCircle={true}
+                                  count={notificationNotRead}/>
                     <OptionButton text={I18n.t("setting")} leftIcon={IconName.prayer_inprogress}/>
                     <OptionButton text={I18n.t("about")} leftIcon={IconName.prayer_inprogress}/>
-                    <OptionButton text={I18n.t("logout")} leftIcon={IconName.prayer_inprogress} onPress={this.onPressLogout}/>
+                    <OptionButton text={I18n.t("logout")} leftIcon={IconName.prayer_inprogress}
+                                  onPress={this.onPressLogout}/>
                     <OptionButton text={firebase.auth().currentUser.email}/>
                 </List>
             </View>,
@@ -349,7 +405,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         commonActions: bindActionCreators(CommonActions, dispatch),
-        notificationActions: bindActionCreators(NotificationActions, dispatch)
+        notificationActions: bindActionCreators(NotificationActions, dispatch),
+        userActions: bindActionCreators(userActions, dispatch)
     }
 }
 

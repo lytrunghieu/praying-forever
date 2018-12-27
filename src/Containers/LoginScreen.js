@@ -60,6 +60,7 @@ class LoginScreen extends PureComponent {
         this.onPressSubmitEmail = this.onPressSubmitEmail.bind(this);
         this.onPressCreateAccount = this.onPressCreateAccount.bind(this);
         this.onPressListComponent = this.onPressListComponent.bind(this);
+        this.onPressResendEmail = this.onPressResendEmail.bind(this);
 
         this.onChangeEmailText = this.onChangeEmailText.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
@@ -117,6 +118,14 @@ class LoginScreen extends PureComponent {
 
     //region handle action press
 
+    onPressResendEmail(){
+        firebase.auth().currentUser.sendEmailVerification().then(res =>{
+            alert(I18n.t("resendVerifyEmailSuccess"));
+        }).catch(error =>{
+            alert(I18n.t("resendVerifyEmailFailed"))
+        });
+    }
+
     onPressCreateAccount() {
         this.props.navigation.navigate(ScreenKey.CREATE_ACCOUNT)
     }
@@ -137,17 +146,16 @@ class LoginScreen extends PureComponent {
             });
             firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, passWord).then(res => {
                 if(!res.user.emailVerified){
-                    Alert.alert("Email Not Verified","Open your email to verify account to continue",
-
+                    Alert.alert(I18n.t("notVerifyEmail"),I18n.t("notVerifyEmailContent"),
                         [
-                            {text: 'Ok'},
-                            // {text :"Open Mail"}
+                            {text: I18n.t("ok")},
+                            {text : I18n.t("resendVerifyEmail"), onPress : this.onPressResendEmail}
                         ],
                         { cancelable: true }
                         )
                 }
                 else{
-                    this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.PRAYING_INPROGESS});
+                    this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.DRAWER_NAV});
                 }
 
             }).catch(err => {
