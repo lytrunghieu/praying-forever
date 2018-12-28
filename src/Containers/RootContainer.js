@@ -14,7 +14,7 @@ import StatusBar from '../Components/Common/StatusBar';
 //Reduxes
 import StartupActions from '../Redux/StartupRedux';
 
-import {CommonActions} from '../actions';
+import {commonActions} from '../actions';
 
 // Persist
 import ReduxPersist from '../Config/ReduxPersist';
@@ -69,7 +69,7 @@ const mapStateToProps = (state) => ({
 // wraps dispatch to create nicer functions to call within our component
 const mapDispatchToProps = (dispatch) => ({
     startup: () => dispatch(StartupActions.startup()),
-    commonActions: bindActionCreators(CommonActions, dispatch)
+    commonActions: bindActionCreators(commonActions, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(RootContainer);

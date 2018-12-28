@@ -21,7 +21,7 @@ import {
     HeaderSearch
 } from '../Components/Common';
 import moment from "moment";
-import {CommonActions} from "../actions";
+import {commonActions} from "../actions";
 import commonUtils from "../Utils/CommonUtils";
 import {AsyncStoreKeys, EventRegisterTypes, StatusOfPray} from "../Constants";
 import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
@@ -310,7 +310,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    commonActions: bindActionCreators(CommonActions, dispatch)
+    commonActions: bindActionCreators(commonActions, dispatch)
 })
 
 export const PrayForOtherContainer = connect(mapStateToProps, mapDispatchToProps)(PrayForOther);

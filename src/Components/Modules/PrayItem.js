@@ -51,25 +51,54 @@ export default class PrayItem extends PureComponent {
         )
     }
 
+
+    renderOld(birthDay) {
+        if (!moment(birthDay).isValid()) {
+            return null
+        }
+
+        return ( <Text>{moment().years() - moment(birthDay).years() + " old"}</Text>);
+    }
+
+    renderGender(gender) {
+        if (gender) {
+            return <Text>Male</Text>
+        }
+        else {
+            return <Text>Female</Text>
+        }
+    }
+
+    renderFollowingCount(following) {
+        if (Array.isArray(following) && following.length > 0) {
+            return (
+                <Text>{following}</Text>
+            )
+        }
+        return null
+    }
+
     render() {
-        const {onPress, title, date, content, data, onPressMoreAction} = this.props;
+        const {onPress, onPressMoreAction, item = {}} = this.props;
+        const {title, created, following, owner = {}, content} = item;
+        const {displayName, birthDay, gender} = owner
         return (
             <Card>
                 <CardItem>
                     <Left>
                         <Icon name={IconName.avatar}/>
                         <Body>
-                        <Text numberOfLines={2}>Username</Text>
-                        <Text numberOfLines={2}>{moment(date).fromNow()}</Text>
+                        <Text numberOfLines={2}>{displayName}</Text>
+                        <Text numberOfLines={2}>{moment(created).fromNow()}</Text>
                         </Body>
                     </Left>
                     <Right>
-                        <Button transparent onPress ={onPressMoreAction}>
+                        <Button transparent onPress={onPressMoreAction}>
                             <Icon name={IconName.more_h}/>
                         </Button>
                     </Right>
                 </CardItem>
-                <CardItem button={true}  onPress={onPress}>
+                <CardItem button={true} onPress={onPress}>
                     <Left>
                         <Body>
                         <Text numberOfLines={2}>{title}</Text>
@@ -79,13 +108,13 @@ export default class PrayItem extends PureComponent {
                 </CardItem>
                 <CardItem>
                     <Left>
-                        <Text>12 follower</Text>
+                        {this.renderFollowingCount(following)}
                     </Left>
                     <Body>
-                    <Text>Female</Text>
+                    {this.renderGender(gender)}
                     </Body>
                     <Right>
-                        <Text>36 ago</Text>
+                        {this.renderOld(birthDay)}
                     </Right>
                 </CardItem>
             </Card>

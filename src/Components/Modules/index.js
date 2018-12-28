@@ -5,6 +5,9 @@ import PrayItem from "./PrayItem";
 import ActionSheetPrayItem from "./ActionSheetPrayItem";
 import ButtonFooter from "./ButtonFooter";
 import FormValidate from "./FormValidate";
+import LoadingBar from "./LoadingBar";
+import Container from "./Container";
+import Content from "./Content";
 
 export {
     TextIcon,
@@ -12,5 +15,8 @@ export {
     OptionButton,
     ActionSheetPrayItem,
     ButtonFooter,
-    FormValidate
+    FormValidate,
+    LoadingBar,
+    Container,
+    Content
 };

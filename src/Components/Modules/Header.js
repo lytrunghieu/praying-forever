@@ -3,10 +3,9 @@ import React, {PureComponent} from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
 
-// Utilities
 import {Colors} from '../../Themes';
 
-import {Icon, Title ,Button} from "../Common";
+import {Icon, Title ,Button,TextBase} from "../Common";
 
 import {Header as HeaderBase, Left, Body, Right} from 'native-base';
 
@@ -17,8 +16,6 @@ export default class Header extends PureComponent {
 
         let leftComp = null;
         let righComp = null;
-
-        let listIconRight = null;
 
         if (left) {
             const {icon, onPress} = left;
@@ -63,24 +60,11 @@ export default class Header extends PureComponent {
             <HeaderBase style={styles.header}>
                 {leftComp}
                 <Body>
-                <Title>{title}</Title>
+                <TextBase large={true} bold={true} >{title}</TextBase>
                 </Body>
                 {righComp}
             </HeaderBase>
-        )
-
-        return (
-            <View style={[styles.container, ApplicationStyles.screen.shadowContainer]}
-                  ref="container"
-            >
-                {leftComp}
-                <View style={[styles.titleWrapper]}>
-                    <Text style={styles.titleText}>{title}</Text>
-                </View>
-                {listIconRight}
-                {righComp}
-            </View>
-        )
+        );
     }
 }
 

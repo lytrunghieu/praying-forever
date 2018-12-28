@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {CommonActions} from "../actions";
+import {commonActions} from "../actions";
 
 import {
     View,
@@ -204,7 +204,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    commonActions: bindActionCreators(CommonActions, dispatch)
+    commonActions: bindActionCreators(commonActions, dispatch)
 })
 
 export const NotificationsContainer = connect(mapStateToProps, mapDispatchToProps)(Notifications);

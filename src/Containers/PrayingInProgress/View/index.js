@@ -6,8 +6,8 @@ import {
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {Colors, Images, ApplicationStyles, IconName} from '../Themes';
-import I18n from '../I18n';
+import {Colors, Images, ApplicationStyles, IconName} from '../../../Themes';
+import I18n from '../../../I18n';
 import {
     NavBar,
     ImageBackground,
@@ -19,13 +19,13 @@ import {
     HeaderSearch,
     ModalScanQR,
     ModalQR
-} from '../Components/Common';
+} from '../../../Components/Common';
 import moment from "moment";
-import {CommonActions} from "../actions";
-import commonUtils from "../Utils/CommonUtils";
-import {StatusOfPray, EventRegisterTypes, ScreenKey} from "../Constants";
+
+import commonUtils from "../../../Utils/CommonUtils";
+import {StatusOfPray, EventRegisterTypes, ScreenKey} from "../../../Constants";
 import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
-import {Pray, PrayLocation} from '../model';
+import {Pray, PrayLocation} from '../../../model';
 import * as _ from "lodash";
 import Permissions from 'react-native-permissions';
 import Geolocation from 'react-native-geolocation-service';
@@ -35,11 +35,9 @@ const collect = firebase.firestore().collection('pray');
 const locationCollect = firebase.firestore().collection('location');
 
 
-import {Header, ActionSheetPrayItem} from "../Components/Modules";
+import {Header, ActionSheetPrayItem, LoadingBar, Container,Content} from "../../../Components/Modules";
 
-import {Container, Left, Body, Right, Button, Title, Content} from 'native-base';
-
-class PrayingInProgress extends PureComponent {
+export default class  PrayingInProgress extends PureComponent {
 
     constructor(props) {
         super(props);
@@ -80,41 +78,12 @@ class PrayingInProgress extends PureComponent {
             isSearch: false,
             keySearch: "",
         };
-        console.warn("warning ");
+        console.log(" TEST ", this.props.prayingReducer);
     }
 
     //region cycle life
 
     componentDidMount() {
-
-
-        // this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-        //     // Process your notification as required
-        //     // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
-        // });
-        // this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-        //     // Process your notification as required
-        // });
-        //
-        // this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-        //     // Get the action triggered by the notification being opened
-        //
-        //     const action = notificationOpen.action;
-        //     // Get information about the notification that was opened
-        //     const notification: Notification = notificationOpen.notification;
-        //     console.log("notificationOpen ",notification);
-        // });
-        //
-        // firebase.notifications().getInitialNotification()
-        //     .then((notificationOpen: NotificationOpen) => {
-        //         if (notificationOpen) {
-        //             // App was opened by a notification
-        //             // Get the action triggered by the notification being opened
-        //             const action = notificationOpen.action;
-        //             // Get information about the notification that was opened
-        //             const notification: Notification = notificationOpen.notification;
-        //         }
-        //     });
 
     }
 
@@ -240,11 +209,11 @@ class PrayingInProgress extends PureComponent {
 
     }
 
-    onPressPrayItem(item) {
+    onPressPrayItem = (item) => () => {
         this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, item);
     }
 
-    onPressFinish = (item) =>() => {
+    onPressFinish = (item) => () => {
         const action = {type: EventRegisterTypes.UPDATE_STATUS_PRAY, params: item};
         commonUtils.sendEvent(action);
     }
@@ -259,7 +228,7 @@ class PrayingInProgress extends PureComponent {
         this.refs["_modalQR"].open(path);
     }
 
-    onPressStatusLive(item) {
+    onPressStatusLive =(item) =>() => {
         const currentDoc = collect.doc(firebase.auth().currentUser.uid).collection("data").doc(item.uid);
         if (item.isLive) {
             const dataSend = {
@@ -314,12 +283,12 @@ class PrayingInProgress extends PureComponent {
         }
     }
 
-    onPressDeleteSpecificPray =(item) =>() => {
+    onPressDeleteSpecificPray = (item) => () => {
         const action = {type: EventRegisterTypes.DELETE_PRAY, params: item};
         commonUtils.sendEvent(action);
     }
 
-    onPressUnfollowing = (item) =>() => {
+    onPressUnfollowing = (item) => () => {
         const action = {type: EventRegisterTypes.UPDATE_FOLLOWING, params: item};
         commonUtils.sendEvent(action);
     }
@@ -334,53 +303,10 @@ class PrayingInProgress extends PureComponent {
 
     renderPrayItem({item}) {
         const {onPressShare} = this.props;
-        // let leftOptions = [];
-        //
-        if (item.owner.uid === firebase.auth().currentUser.uid) {
-            // leftOptions = [
-            //     {
-            //         text: I18n.t("public"),
-            //         onPress: this.onPressStatusLive.bind(this, item)
-            //     },
-            //     {
-            //         text: I18n.t("completed"),
-            //         onPress: this.onPressFinish.bind(this, item)
-            //     },
-            //
-            //     {
-            //         text: I18n.t("share"),
-            //         onPress: onPressShare(item)
-            //     },
-            //
-            //     {
-            //         text: I18n.t("delete"),
-            //         onPress: this.onPressDeleteSpecificPray.bind(this, item)
-            //     }
-            // ];
-            // if (item.isLive) {
-            //     leftOptions[0] = {
-            //         text: I18n.t("private"),
-            //         onPress: this.onPressStatusLive.bind(this, item)
-            //     }
-            // }
-        }
-        else {
-            leftOptions = [
-                {
-                    text: I18n.t("unFollowing"),
-                    onPress: this.onPressUnfollowing.bind(this, item)
-                }
-            ];
-        }
-
-
         return (
             <PrayItem
-                title={item.title}
-                content={item.content}
-                date={item.created}
-                onPress={this.onPressPrayItem.bind(this, item)}
-                // leftOptions={leftOptions}
+                item={item}
+                onPress={this.onPressPrayItem(item)}
                 onPressMoreAction={this.onPressMoreAction(item)}
             />
         )
@@ -428,12 +354,12 @@ class PrayingInProgress extends PureComponent {
                     ref={"moreAction"}
                 />,
                 <ActionSheetPrayItem
-                    onPressShare ={this.onPressShare}
-                    onPressDelete ={this.onPressDeleteSpecificPray}
-                    onPressUnfollow ={this.onPressUnfollowing}
+                    onPressShare={this.onPressShare}
+                    onPressDelete={this.onPressDeleteSpecificPray}
+                    onPressUnfollow={this.onPressUnfollowing}
                     key="ActionSheetPrayItem"
                     ref={"_moreActionPray"}
-                    onPressUpdateFinishStatus ={this.onPressFinish}
+                    onPressUpdateFinishStatus={this.onPressFinish}
                 />,
                 <ConfirmModal
                     key="ConfirmModal"
@@ -445,7 +371,8 @@ class PrayingInProgress extends PureComponent {
                     onAccept={this.onAcceptDeleteAll}
                 />,
                 <ModalScanQR key={"modalScanQRCode"} ref={"_modalScanQR"}/>,
-                <ModalQR key={"modalQRCode"} ref ={"_modalQR"} />
+                <ModalQR key={"modalQRCode"} ref={"_modalQR"}/>,
+                <LoadingBar/>
             ]
         );
 
@@ -455,19 +382,14 @@ class PrayingInProgress extends PureComponent {
 
 }
 
-const mapStateToProps = (state) => ({
-    prays: state.commonReducer.prays
-})
+// const mapStateToProps = (state) => ({
+//     prays: state.commonReducer.prays
+// })
+//
+// const mapDispatchToProps = (dispatch) => ({
+//     commonActions: bindActionCreators(commonActions, dispatch)
+// })
+//
+// export const PrayingInProgressContainer = connect(mapStateToProps, mapDispatchToProps)(PrayingInProgress);
 
-const mapDispatchToProps = (dispatch) => ({
-    commonActions: bindActionCreators(CommonActions, dispatch)
-})
-
-export const PrayingInProgressContainer = connect(mapStateToProps, mapDispatchToProps)(PrayingInProgress);
-
-const styles = EStyleSheet.create({
-    flatList: {
-        paddingRight: "$paddingSmall",
-        paddingLeft: "$paddingSmall",
-    }
-});
+const styles = EStyleSheet.create({});

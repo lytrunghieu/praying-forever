@@ -1,12 +1,12 @@
-import  * as CommonActions from "./commonActions";
-import  * as NotificationActions from "./notificationActions";
+import  * as commonActions from "./commonActions";
+import  * as notificationActions from "./notificationActions";
 import  * as userActions from "./userActions";
 import  ActionTypes from "./ActionTypes";
 
 export {
-    CommonActions,
+    commonActions,
     ActionTypes,
-    NotificationActions,
+    notificationActions,
     userActions
 };
 

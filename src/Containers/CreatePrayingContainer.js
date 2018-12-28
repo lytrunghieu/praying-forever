@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { IconName, Colors} from '../Themes';
-import {CommonActions} from '../actions';
+import {commonActions} from '../actions';
 import I18n from '../I18n';
 import {
     PlaceHolder,
@@ -301,7 +301,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    commonActions: bindActionCreators(CommonActions, dispatch),
+    commonActions: bindActionCreators(commonActions, dispatch),
 })
 
 export const CreatePrayingContainer = connect(mapStateToProps, mapDispatchToProps)(CreatePraying);

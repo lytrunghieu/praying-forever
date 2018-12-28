@@ -9,7 +9,7 @@ import ForgotPassScreen from '../Containers/ForgotPassScreen';
 import DrawerContainer from '../Containers/DrawerContainer';
 import ListCommonContainer from '../Containers/ListCommonContainer';
 import CreateAccountContainer from '../Containers/CreateAccountContainer';
-import {PrayingInProgressContainer} from '../Containers/PrayingInProgressContainer';
+import  {container as PrayingInProgress} from '../Containers/PrayingInProgress';
 import {PrayFinishedContainer} from '../Containers/PrayFinishedContainer';
 import {CreatePrayingContainer} from '../Containers/CreatePrayingContainer';
 import {PrayDetailContainer} from '../Containers/PrayDetailContainer';
@@ -18,7 +18,7 @@ import {NotificationsContainer} from '../Containers/NotificationsContainer';
 import {NotificationDetailContainer} from '../Containers/NotificationDetailContainer';
 
 const DrawerNav = DrawerNavigator({
-    [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressContainer},
+    [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgress},
     [ScreenKey.PRAY_FINISHED]: {screen: PrayFinishedContainer},
     [ScreenKey.PRAY_FOR_OTHER]: {screen: PrayForOtherContainer},
     [ScreenKey.NOTIFICATIONS]: {screen: NotificationsContainer},

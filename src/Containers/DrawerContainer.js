@@ -8,7 +8,7 @@ import {Option, ModalQR} from "../Components/Common";
 import firebase from 'react-native-firebase';
 import {NavigationActions} from "react-navigation";
 import {bindActionCreators} from 'redux';
-import {CommonActions, NotificationActions, userActions} from '../actions';
+import {commonActions, notificationActions, userActions} from '../actions';
 import {Pray} from "../model";
 import {EventRegisterTypes, URL, StatusOfPray, ScreenKey} from "../Constants";
 import {EventRegister} from 'react-native-event-listeners';
@@ -404,8 +404,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        commonActions: bindActionCreators(CommonActions, dispatch),
-        notificationActions: bindActionCreators(NotificationActions, dispatch),
+        commonActions: bindActionCreators(commonActions, dispatch),
+        notificationActions: bindActionCreators(notificationActions, dispatch),
         userActions: bindActionCreators(userActions, dispatch)
     }
 }

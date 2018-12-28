@@ -8,7 +8,7 @@ export  default class TextError extends PureComponent {
 
     render(){
         const {text, style} = this.props;
-        return (<TextBase {...this.props} style ={[styles.text,style]}>{"*".concat(text)}</TextBase>);
+        return (<TextBase {...this.props }  >{"*".concat(text)}</TextBase>);
     }
 }
 
