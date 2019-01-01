@@ -22,7 +22,8 @@ ContentComponent.propTypes = {}
 
 const styles = EStyleSheet.create({
     container :{
-        paddingLeft:"$padding",
-        paddingRight:"$padding"
+        paddingRight: "$padding",
+        paddingLeft: "$padding",
+        paddingTop: "$padding",
     }
 });

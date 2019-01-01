@@ -1,19 +1,18 @@
 import {combineReducers} from 'redux';
 import {navigationReducer} from "./navigationReducer";
-import {commonReducer} from "./commonReducer";
+import {prayerReducer} from "./prayerReducer";
 import {notificationReducer} from "./notificationReducer";
 import {userReducer} from "./userReducer";
 
-import {prayingInProgress} from "../Containers";
+import {prayingInProgress, createPrayer} from "../Containers";
+const {reducer : createPrayerReducer} =createPrayer;
 
 const appReducer = combineReducers({
     navigationReducer,
-    commonReducer,
+    prayerReducer,
     notificationReducer,
     userReducer,
-    prayingReducer : prayingInProgress.reducer
+    createPrayerReducer
 })
-
-console.log("prayingReducer ", prayingInProgress.reducer);
 
 export const  expAppReducer = appReducer;

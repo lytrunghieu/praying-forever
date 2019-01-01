@@ -4,7 +4,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {View} from "react-native";
 import {Colors, ApplicationStyles} from "../../Themes";
 import PropTypes from 'prop-types';
-import {Button, Text, Title} from "./";
+import {Button, TextBase, Title} from "./";
 import {ButtonFooter} from "../Modules"
 import I18n from '../../I18n';
 import {Body, Content, Container, Row, Grid} from "native-base";
@@ -41,9 +41,7 @@ export default class ActionSheet extends ModalBase {
 
             <Button key={index} block style={styles.buttonOption}
                     onPress={this.onPressOption.bind(this, option.onPress)}>
-                <Text style={[styles.textButtonOption, {color: option.color}]}>
-                    {option.text}
-                </Text>
+                <TextBase>{option.text}</TextBase>
             </Button>
         )
     }
@@ -53,18 +51,15 @@ export default class ActionSheet extends ModalBase {
         return (
             <View style={[styles.container]}>
                 <View style={styles.header}>
-                    <Title>{title}</Title>
+                    <TextBase large={true} bold={true} textTransform={"uppercase"}>{title}</TextBase>
                 </View>
                 <View style={styles.content}>
                     {options.map((op, index) => {
                         return this.renderOptionRow(op, index);
                     })}
 
-                    <ButtonFooter onPress={this.close} block
+                    <ButtonFooter onPress={this.close} text={submitText}
                     >
-                        <Text>
-                            {submitText}
-                        </Text>
                     </ButtonFooter>
                 </View>
 
@@ -99,6 +94,9 @@ const styles = EStyleSheet.create({
         height: "$heightRowSmall",
         borderTopLeftRadius: "$borderRadiusSmall",
         borderTopRightRadius: "$borderRadiusSmall",
+        alignItems:"center",
+        justifyContent:"center",
+
 
     },
 

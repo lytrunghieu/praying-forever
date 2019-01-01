@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {commonActions } from "../actions";
+import {prayerActions } from "../Action";
 
 import {
     View,
@@ -185,11 +185,11 @@ class PrayFinished extends PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-    prays: state.commonReducer.prays
+    prays: state.prayerReducer.prays
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    commonActions : bindActionCreators(commonActions,dispatch)
+    prayersActions : bindActionCreators(prayerActions,dispatch)
 })
 
 export const PrayFinishedContainer = connect(mapStateToProps, mapDispatchToProps)(PrayFinished);

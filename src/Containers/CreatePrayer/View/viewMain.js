@@ -3,33 +3,33 @@ import {
     Platform,
     KeyboardAvoidingView,
     TimePickerAndroid,
+    View
 } from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { IconName, Colors} from '../Themes';
-import {commonActions} from '../actions';
-import I18n from '../I18n';
+import {IconName, Colors} from '../../../Themes';
+import I18n from '../../../I18n';
 import {
     PlaceHolder,
     CheckboxModal,
     TextArea,
     Button, Icon, Input, Text
-} from '../Components/Common';
+} from '../../../Components/Common';
 import moment from "moment";
-import commonUtils from "../Utils/CommonUtils";
+import commonUtils from "../../../Utils/CommonUtils";
 import firebase, {NotificationOpen} from 'react-native-firebase';
-import {Pray} from "../model";
-import {StatusOfPray, EventRegisterTypes} from "../Constants";
+import {Pray} from "../../../model";
+import {StatusOfPray, EventRegisterTypes} from "../../../Constants";
 
-import {Header, ButtonFooter} from "../Components/Modules";
+import {Header, ButtonFooter, Container, Content} from "../../../Components/Modules";
 
-import {Container, Content, Item, Form} from 'native-base';
+import {Item, Form} from 'native-base';
 
-let collect = firebase.firestore().collection("pray");
+let collect = firebase.firestore().collection("prayer");
+
+import {style as styles} from "../Style";
 
 
-class CreatePraying extends PureComponent {
+export default class CreatePraying extends PureComponent {
 
     //region cycle life
 
@@ -82,7 +82,22 @@ class CreatePraying extends PureComponent {
             icon: IconName.back,
             onPress: this.onPressBack
         };
+        console.log("createPrayerReducer", props.createPrayerReducer);
 
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.createPrayerReducer !== this.props.createPrayerReducer) {
+            if (nextProps.createPrayerReducer.message) {
+                alert(nextProps.createPrayerReducer.message);
+            }
+            else{
+                if(nextProps.createPrayerReducer.success !== this.props.createPrayerReducer.success && nextProps.createPrayerReducer.success){
+                    this.onPressBack();
+                }
+            }
+
+        }
     }
 
     //endregion
@@ -104,22 +119,19 @@ class CreatePraying extends PureComponent {
         }
         else {
 
-            const {userReducer ={}} = this.props;
-            const {payload } = userReducer;
-            if(payload){
+            const {userReducer = {}, prayersActions} = this.props;
+            const {payload} = userReducer;
+            if (payload) {
                 const currentUser = firebase.auth().currentUser;
-                params.owner = {uid: firebase.auth().currentUser.uid , birthDay :payload.birthDay, gender :payload.gender , displayName: payload.displayName };
+                params.owner = {
+                    uid: firebase.auth().currentUser.uid,
+                    birthDay: payload.birthDay,
+                    gender: payload.gender,
+                    displayName: payload.displayName
+                };
                 params.status = StatusOfPray.INPROGRESS;
                 let dataSend = new Pray(params);
-                this.userPray.collection("data").add(dataSend).then(res => {
-                    res.get().then(res2 => {
-                        const docRef = res2.ref;
-                        docRef.update("uid", res2.id, "created", firebase.firestore.FieldValue.serverTimestamp()).then(res2 => {
-                            commonUtils.sendEvent({type: EventRegisterTypes.GET_PRAY});
-                            this.onPressBack();
-                        });
-                    });
-                })
+                prayersActions.createNewPrayer(dataSend);
             }
 
 
@@ -221,45 +233,48 @@ class CreatePraying extends PureComponent {
 
     render() {
         const {content, title} = this.state;
-
+        const {createPrayerReducer} = this.props;
+        const {fetching} = createPrayerReducer;
 
         return (
-            [<Container key ="Container">
+            [<Container key="Container" pointerEvents={fetching ? "none" : "auto"}>
                 <Header
-                    title={this.isEdit ? I18n.t("editPray") : I18n.t("createNewPray")}
+                    title={this.isEdit ? I18n.t("editPray") : I18n.t("createNewPrayer")}
                     left={this.leftHeader}
+                    isFetching={fetching}
                 />
-                <Content style={styles.content} >
-                    <Form style={styles.form}>
-                        <Item fixedLabel>
+                <Content>
+                    <View style={[styles.form]}>
+                        <Form>
+                            <Item fixedLabel>
 
-                            <Input
-                                autoFocus ={true}
-                                underlineColorAndroid={'rgba(0,0,0,0)'}
-                                value={this.state.title}
-                                onChangeText={this.onChangeText}
-                                placeholder={I18n.t("inputTitlePray")}
-                                returnKeyType={"next"}
-                                onSubmitEditing={this.onSubmitEditingTitle}
-                            />
-                            {
-                                title ? <Button transparent style={{marginRight: 16}}
-                                    onPress ={this.onPressDeleteInput}
+                                <Input
+                                    autoFocus={true}
+                                    underlineColorAndroid={'rgba(0,0,0,0)'}
+                                    value={this.state.title}
+                                    onChangeText={this.onChangeText}
+                                    placeholder={I18n.t("inputTitlePray")}
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={this.onSubmitEditingTitle}
+                                />
+                                {
+                                    title ? <Button transparent style={{marginRight: 16}}
+                                                    onPress={this.onPressDeleteInput}
+                                    >
+                                        <Icon active name={IconName.clear}/>
+                                    </Button> : null
+                                }
+
+
+                                <Button transparent style={{marginRight: 16}}
+                                        onPress={this.onPressRightIconInputTitle}
                                 >
-                                    <Icon active name={IconName.clear}/>
-                                </Button> : null
-                            }
-
-
-                            <Button transparent style={{marginRight: 16}}
-                                onPress ={this.onPressRightIconInputTitle}
-                            >
-                                <Icon active name={IconName.suggest}/>
-                            </Button>
-                        </Item>
-                    </Form>
-                    <PlaceHolder/>
-                    <Form style={styles.form}>
+                                    <Icon active name={IconName.suggest}/>
+                                </Button>
+                            </Item>
+                        </Form>
+                        <PlaceHolder/>
+                        <Form>
                           <TextArea
                               ref="_description"
                               placeholder={I18n.t("inputDescription")}
@@ -268,7 +283,8 @@ class CreatePraying extends PureComponent {
                           />
 
 
-                    </Form>
+                        </Form>
+                    </View>
 
                 </Content>
 
@@ -276,7 +292,7 @@ class CreatePraying extends PureComponent {
                     behavior={Platform.OS === "ios" ? "padding" : null}
                     enabled
                 >
-                    <ButtonFooter transparent={false} disabled={!title || !content}
+                    <ButtonFooter transparent={false} disabled={!title || !content || fetching}
                                   onPress={this.onSubmit}>
                         <Text>{this.isEdit ? I18n.t("save") : I18n.t("create")}</Text>
                     </ButtonFooter>
@@ -284,39 +300,16 @@ class CreatePraying extends PureComponent {
 
             </Container>,
                 <CheckboxModal
-                    key ="CheckboxModal"
+                    key="CheckboxModal"
                     ref="checkBoxModal"
                     textDone={I18n.t("done")}
                     options={this.state.options}
                     onPressSubmit={this.onSubmitOption}
-                />
+                />,
+
             ]
         );
     }
 
 }
 
-const mapStateToProps = (state) => ({
-    userReducer : state.userReducer
-})
-
-const mapDispatchToProps = (dispatch) => ({
-    commonActions: bindActionCreators(commonActions, dispatch),
-})
-
-export const CreatePrayingContainer = connect(mapStateToProps, mapDispatchToProps)(CreatePraying);
-
-const styles = EStyleSheet.create({
-
-    content: {
-        paddingLeft: "$padding",
-        paddingRight: "$padding",
-        paddingTop: "$padding",
-    },
-
-    form: {
-        backgroundColor: Colors.primary,
-        marginBottom: "$padding",
-    },
-
-});

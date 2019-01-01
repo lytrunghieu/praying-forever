@@ -6,12 +6,12 @@ import SplashScreen from '../Containers/SplashScreen';
 import SignupScreen from '../Containers/SignupScreen';
 import LoginScreen from '../Containers/LoginScreen';
 import ForgotPassScreen from '../Containers/ForgotPassScreen';
-import DrawerContainer from '../Containers/DrawerContainer';
+import {container as Drawer} from '../Containers/Drawer';
 import ListCommonContainer from '../Containers/ListCommonContainer';
 import CreateAccountContainer from '../Containers/CreateAccountContainer';
 import  {container as PrayingInProgress} from '../Containers/PrayingInProgress';
 import {PrayFinishedContainer} from '../Containers/PrayFinishedContainer';
-import {CreatePrayingContainer} from '../Containers/CreatePrayingContainer';
+import {container as CreatePrayingContainer} from '../Containers/CreatePrayer';
 import {PrayDetailContainer} from '../Containers/PrayDetailContainer';
 import {PrayForOtherContainer} from '../Containers/PrayForOtherContainer';
 import {NotificationsContainer} from '../Containers/NotificationsContainer';
@@ -23,7 +23,7 @@ const DrawerNav = DrawerNavigator({
     [ScreenKey.PRAY_FOR_OTHER]: {screen: PrayForOtherContainer},
     [ScreenKey.NOTIFICATIONS]: {screen: NotificationsContainer},
 }, {
-    contentComponent: DrawerContainer // custom drawer
+    contentComponent: Drawer // custom drawer
 });
 
 const MainNav = StackNavigator({

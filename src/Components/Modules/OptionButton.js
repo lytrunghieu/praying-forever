@@ -41,15 +41,17 @@ export default class OptionButtonComponent extends PureComponent {
 }
 
 OptionButtonComponent.defaultProps = {
-    // onPress: null,
+    onPress: ()=>{},
     // leftIcon : null,
-    // text : ""
+    text : "",
+    count : 0
 };
 
 OptionButtonComponent.propTypes = {
-    // onPress: PropTypes.func,
+    count: PropTypes.number,
+    onPress: PropTypes.func,
     // leftIcon: PropTypes.node,
-    // text :PropTypes.string.isRequired
+    text :PropTypes.string.isRequired
 };
 
 

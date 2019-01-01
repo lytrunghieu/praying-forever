@@ -8,6 +8,7 @@ import FormValidate from "./FormValidate";
 import LoadingBar from "./LoadingBar";
 import Container from "./Container";
 import Content from "./Content";
+import loadingIndicator from "./loadingIndicator";
 
 export {
     TextIcon,
@@ -18,5 +19,6 @@ export {
     FormValidate,
     LoadingBar,
     Container,
-    Content
+    Content,
+    loadingIndicator
 };

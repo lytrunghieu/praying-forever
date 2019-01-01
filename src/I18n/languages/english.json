@@ -1,6 +1,6 @@
 {
   "praying": "Praying",
-  "createNewPray": "Create New Pray",
+  "createNewPrayer": "Create New Pray",
   "createAccount": "Create new account",
   "createAccountTitle": "Create Account",
   "completed": "Completed",
@@ -64,6 +64,7 @@
   "about": "About",
   "facebook": "Facebook",
   "google": "Google",
+  "genericErrorMessage":"Your request was not completed due to an error on our side. Please try again",
   "warning": "WARNING",
   "wrongPassword": "The password is invalid for the given email, or the account corresponding to the email does not have a password set.",
   "yes": "YES",

@@ -1,4 +1,4 @@
-import actionTypes from "./ActionTypes";
+import actionTypes from "./actionTypes";
 
 export function getNotifications(payload) {
     return function (dispatch) {

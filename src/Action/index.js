@@ -1,11 +1,11 @@
-import  * as commonActions from "./commonActions";
+import  * as prayerActions from "./prayerActions";
 import  * as notificationActions from "./notificationActions";
 import  * as userActions from "./userActions";
-import  ActionTypes from "./ActionTypes";
+import  actionTypes from "./actionTypes";
 
 export {
-    commonActions,
-    ActionTypes,
+    prayerActions,
+    actionTypes,
     notificationActions,
     userActions
 };

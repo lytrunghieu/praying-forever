@@ -14,7 +14,7 @@ import StatusBar from '../Components/Common/StatusBar';
 //Reduxes
 import StartupActions from '../Redux/StartupRedux';
 
-import {commonActions} from '../actions';
+import {prayerActions} from '../Action';
 
 // Persist
 import ReduxPersist from '../Config/ReduxPersist';
@@ -26,7 +26,7 @@ import {EventRegisterTypes} from "../Constants";
 import {EventRegister} from 'react-native-event-listeners';
 import {bindActionCreators} from 'redux';
 import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
-// const collect = firebase.firestore().collection('pray');
+// const collect = firebase.firestore().collection('prayer');
 // const docOfCurrentUserPray = collect.doc(firebase.auth().currentUser.uid);
 
 class RootContainer extends PureComponent {
@@ -69,7 +69,7 @@ const mapStateToProps = (state) => ({
 // wraps dispatch to create nicer functions to call within our component
 const mapDispatchToProps = (dispatch) => ({
     startup: () => dispatch(StartupActions.startup()),
-    commonActions: bindActionCreators(commonActions, dispatch)
+    prayersActions: bindActionCreators(prayerActions, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(RootContainer);

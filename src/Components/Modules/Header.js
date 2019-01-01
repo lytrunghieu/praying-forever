@@ -6,13 +6,14 @@ import PropTypes from 'prop-types';
 import {Colors} from '../../Themes';
 
 import {Icon, Title ,Button,TextBase} from "../Common";
+import LoadingIndicator from "./loadingIndicator";
 
-import {Header as HeaderBase, Left, Body, Right} from 'native-base';
+import {Header as HeaderBase, Left, Body, Right, Footer} from 'native-base';
 
 export default class Header extends PureComponent {
 
     render() {
-        const {title, right, left} = this.props;
+        const {title, right, left, isFetching} = this.props;
 
         let leftComp = null;
         let righComp = null;
@@ -57,20 +58,29 @@ export default class Header extends PureComponent {
         }
 
         return (
-            <HeaderBase style={styles.header}>
+            [<HeaderBase style={styles.header}>
                 {leftComp}
                 <Body>
                 <TextBase large={true} bold={true} >{title}</TextBase>
                 </Body>
                 {righComp}
-            </HeaderBase>
+            </HeaderBase>,
+               <LoadingIndicator visible ={isFetching}/>
+            ]
         );
     }
 }
 
-Header.defaultProps = {};
+Header.defaultProps = {
 
-Header.propTypes = {}
+};
+
+Header.propTypes = {
+    title : PropTypes.string.isRequired,
+    right : PropTypes.node,
+    left : PropTypes.node,
+    isFetching : PropTypes.bool,
+}
 
 const styles = EStyleSheet.create({
 

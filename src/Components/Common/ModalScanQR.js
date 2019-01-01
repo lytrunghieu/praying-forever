@@ -13,7 +13,7 @@ import firebase from 'react-native-firebase';
 import CommonUtils  from "../../Utils/CommonUtils"
 import {EventRegisterTypes}  from "../../Constants"
 
-const collect = firebase.firestore().collection('pray');
+const collect = firebase.firestore().collection('prayer');
 
 
 export default class ModalScanQR extends ModalBase {

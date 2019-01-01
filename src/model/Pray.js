@@ -3,6 +3,7 @@ import PrayDelete from "./PrayDelete";
 import PrayStatus from "./PrayStatus";
 import Following from "./Following";
 import PrayLocation from "./PrayLocation";
+import moment from "moment";
 
 
 export default class Pray {
@@ -22,7 +23,14 @@ export default class Pray {
         this.complete = data.complete || false;
         this.isDelete = data.isDelete && new PrayDelete(data.isDelete) || null;
         this.password = data.password || null;
-        this.created = data.created || null;
+        if( data.created &&  data.created._seconds){
+            let newDate = new Date();
+            newDate.setTime(data.created._seconds * 1000);
+            this.created = newDate;
+        }
+        else {
+            this.created = data.created || null;
+        }
         this.isLive = data.isLive && new PrayLocation(data.isLive) || null;
     }
 

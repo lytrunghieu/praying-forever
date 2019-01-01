@@ -21,7 +21,7 @@ import {
     HeaderSearch
 } from '../Components/Common';
 import moment from "moment";
-import {commonActions} from "../actions";
+import {prayerActions} from "../Action";
 import commonUtils from "../Utils/CommonUtils";
 import {AsyncStoreKeys, EventRegisterTypes, StatusOfPray} from "../Constants";
 import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
@@ -94,7 +94,7 @@ class PrayForOther extends PureComponent {
                 return "success";
             }
             else {
-                alert("App need access location to get pray list");
+                alert("App need access location to get prayer list");
                 return "fail";
             }
         })
@@ -306,11 +306,11 @@ class PrayForOther extends PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-    prays: state.commonReducer.prays
+    prays: state.prayerReducer.prays
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    commonActions: bindActionCreators(commonActions, dispatch)
+    prayersActions: bindActionCreators(prayerActions, dispatch)
 })
 
 export const PrayForOtherContainer = connect(mapStateToProps, mapDispatchToProps)(PrayForOther);

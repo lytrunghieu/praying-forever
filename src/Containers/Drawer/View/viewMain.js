@@ -1,31 +1,19 @@
 // Libraries
 import React, {PureComponent} from 'react'
-import {StyleSheet, Text, View, Image, ScrollView} from 'react-native'
-import {connect} from 'react-redux';
-import I18n from '../I18n';
-import {Images, Colors, Metrics, IconName} from '../Themes';
-import {Option, ModalQR} from "../Components/Common";
+import {View} from 'react-native'
+import I18n from '../../../I18n/index';
+import {IconName} from '../../../Themes/index';
 import firebase from 'react-native-firebase';
 import {NavigationActions} from "react-navigation";
-import {bindActionCreators} from 'redux';
-import {commonActions, notificationActions, userActions} from '../actions';
-import {Pray} from "../model";
-import {EventRegisterTypes, URL, StatusOfPray, ScreenKey} from "../Constants";
+import {EventRegisterTypes, URL, StatusOfPray, ScreenKey} from "../../../Constants/index";
 import {EventRegister} from 'react-native-event-listeners';
-import * as _ from "lodash";
 import moment from "moment";
-import PrayStatus from "../model/PrayStatus";
+import {OptionButton} from "../../../Components/Modules/index";
+import {List} from 'native-base';
 
-import {OptionButton} from "../Components/Modules";
-
-import {ListItem, List, Left, Right, Badge} from 'native-base';
-
-
-const prayCollect = firebase.firestore().collection('pray');
+const prayCollect = firebase.firestore().collection('prayer');
 const notificationCollect = firebase.firestore().collection('notification');
 const tokenCollect = firebase.firestore().collection('tokens');
-const profileCollect = firebase.firestore().collection('profile');
-
 
 moment.updateLocale('en', {
     relativeTime: {
@@ -46,11 +34,12 @@ moment.updateLocale('en', {
     }
 });
 
-class DrawerContainer extends PureComponent {
+export default class DrawerContainer extends PureComponent {
 
     constructor(props) {
         super();
         this.onPressLogout = this.onPressLogout.bind(this);
+        this.getPray = this.getPray.bind(this);
         this.state = {
             notificationNotRead: this.getNotificationNotRead(props.notifications)
         };
@@ -268,7 +257,7 @@ class DrawerContainer extends PureComponent {
 
     deletePray(params = {}) {
         const {uid} = params;
-         const httpsCallable =firebase.functions(firebase.app()).httpsCallable("deletePray");
+        const httpsCallable =firebase.functions(firebase.app()).httpsCallable("deletePray");
         httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
             .then(data => {
                 this.getPray();
@@ -279,22 +268,6 @@ class DrawerContainer extends PureComponent {
                 console.log(httpsError.message);
                 console.log(httpsError.details.errorDescription);
             });
-
-
-
-        // const {uid} = params;
-        // const httpsCallable = firebase.functions(firebase.app()).httpsCallable("updateStatusPrayer");
-        // httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
-        //     .then(data => {
-        //         this.getPray();
-        //     })
-        //     .catch(httpsError => {
-        //         console.log("ERROR :", httpsError);
-        //         console.log(httpsError.code);
-        //         console.log(httpsError.message);
-        //         console.log(httpsError.details.errorDescription);
-        //     });
-
     }
 
     getNotificationNotRead(notif) {
@@ -304,53 +277,9 @@ class DrawerContainer extends PureComponent {
         return notif.filter(no => !no.isRead).length;
     }
 
-    getProfile() {
-
-        // const userUID = firebase.auth().currentUser.uid;
-        // profileCollect.where("uid", "==", userUID).get().then(queryShot => {
-        //     if (queryShot.docs[0] && queryShot.docs[0].data()) {
-        //         queryShot.docs[0].data();
-        //     }
-        //     else {
-        //         throw  {message: I18n.t("cannotGetProfile")};
-        //     }
-        //
-        // }).catch(err => {
-        //     console.log("LOG ERROR ", err);
-        //     if (err.message) {
-        //         alert(err.message);
-        //     }
-        // });
-
-
-        // const promiseDeleteProfile = await queryDeleteProfile.get().then(queryShot => {
-        //     if (queryShot.docs[0] && queryShot.docs[0].ref) {
-        //         queryShot.docs[0].ref.delete().then(() => {
-        //             messages.push("delete profile success");
-        //             return true;
-        //         }).catch(error => {
-        //             console.log("LOG ERROR", error);
-        //             messages.push("delete profile failed :" + error)
-        //         });
-        //     }
-        //     else {
-        //         messages.push("can not find profile");
-        //     }
-        //     return true;
-        //
-        // }
-    }
-
     getPray() {
-        const docOfCurrentUserPray = prayCollect.doc(firebase.auth().currentUser.uid);
-
-        docOfCurrentUserPray.collection("data").orderBy("created", "desc").get().then(snapCol => {
-            let array = [];
-            snapCol.forEach(snapDoc => {
-                array.push(snapDoc.data())
-            });
-            this.props.commonActions.updatePrayList(array);
-        });
+        const {prayerActions} = this.props;
+        prayerActions.getPrayer();
     }
 
     updateToken(fcmToken) {
@@ -363,18 +292,20 @@ class DrawerContainer extends PureComponent {
     }
 
     render() {
-        const {navigation: {navigate}, logout, activeItemKey, prays} = this.props;
+        const {navigation: {navigate}, logout, activeItemKey, prayerReducer} = this.props;
         const {notificationNotRead} = this.state;
-        const praysFinished = prays.filter(e => e.status == StatusOfPray.COMPLETE);
+
+        const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE)|| [];
 
         return (
-            [<View style={styles.container} key={"main"}>
+            [<View key={"main"}>
                 <List>
                     <OptionButton text={I18n.t("inprogress")}
                                   leftIcon={IconName.prayer_inprogress}
                                   onPress={this.onPressOption.bind(this, ScreenKey.PRAYING_INPROGESS)}/>
                     <OptionButton text={I18n.t("finished")}
                                   leftIcon={IconName.prayer_inprogress}
+                                  count = {praysFinished.length}
                                   onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FINISHED)}/>
                     <OptionButton text={I18n.t("prayForOther")}
                                   leftIcon={IconName.prayer_inprogress}
@@ -395,29 +326,5 @@ class DrawerContainer extends PureComponent {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        prays: state.commonReducer.prays,
-        notifications: state.notificationReducer.notifications
-    }
-}
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        commonActions: bindActionCreators(commonActions, dispatch),
-        notificationActions: bindActionCreators(notificationActions, dispatch),
-        userActions: bindActionCreators(userActions, dispatch)
-    }
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(DrawerContainer);
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-
-    body: {
-        flex: 1,
-    }
-})

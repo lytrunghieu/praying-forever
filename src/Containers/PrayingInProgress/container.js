@@ -1,20 +1,14 @@
 
-
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-
-import {commonActions} from "./Action";
-import View from "./View";
-
+import {viewMain} from "./View";
 
 const mapStateToProps = (state) => ({
-    prays: state.commonReducer.prays,
-    prayingReducer : state.prayingReducer
-})
+    prayerReducer: state.prayerReducer,
+});
 
 const mapDispatchToProps = (dispatch) => ({
-    commonActions: bindActionCreators(commonActions, dispatch)
-})
+});
 
-export default  connect(mapStateToProps, mapDispatchToProps)(View);
+export default  connect(mapStateToProps, mapDispatchToProps)(viewMain);
 

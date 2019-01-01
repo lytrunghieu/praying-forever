@@ -1,22 +1,22 @@
-import {ActionTypes} from '../actions';
+import {actionTypes} from '../Action';
 import InitialState from "./initialStates";
 import Immutable from 'seamless-immutable';
 import commonUtils from '../Utils/CommonUtils';
 import {PRAY_LIST} from '../Constants/AsyncStoreKeys';
 import StatusOfPray from "../Constants/StatusOfPray";
 
-export function commonReducer(state = InitialState.pray, action) {
+export function commonReducer(state = InitialState.prayer, action) {
     let oldState;
     const {type,data} = action;
     switch (action.type) {
 
-        case ActionTypes.UPDATE_PRAY_LIST_SUCCESS : {
+        case actionTypes.UPDATE_PRAY_LIST_SUCCESS : {
             state = state.set("prays", action.data);
             return state;
         }
 
 
-        case ActionTypes.CREATE_NEW_PRAY_SUCCESS : {
+        case actionTypes.CREATE_NEW_PRAY_SUCCESS : {
             oldState = Immutable.asMutable(state, {deep: true});
             oldState.prays.push(action.data);
             state = state.set("prays", oldState.prays);
@@ -24,7 +24,7 @@ export function commonReducer(state = InitialState.pray, action) {
             return state;
         }
 
-        case ActionTypes.DELETE_ALL_PRAY_INPROGRESS_SUCCESS : {
+        case actionTypes.DELETE_ALL_PRAY_INPROGRESS_SUCCESS : {
             oldState = Immutable.asMutable(state, {deep: true});
             const {inprogress} = data;
             const statusDeleted = inprogress ? StatusOfPray.INPROGRESS : StatusOfPray.COMPLETE
@@ -34,7 +34,7 @@ export function commonReducer(state = InitialState.pray, action) {
             return state;
         }
 
-        case ActionTypes.EDIT_PRAY_SUCCESS : {
+        case actionTypes.EDIT_PRAY_SUCCESS : {
             oldState = Immutable.asMutable(state, {deep: true});
             for (var i in oldState.prays) {
                 if (oldState.prays[i].uid === action.data.uid) {
@@ -47,7 +47,7 @@ export function commonReducer(state = InitialState.pray, action) {
             return state;
         }
 
-        case ActionTypes.UPDATE_STATUS_PRAY_SUCCESS : {
+        case actionTypes.UPDATE_STATUS_PRAY_SUCCESS : {
             oldState = Immutable.asMutable(state, {deep: true});
             for (var i in oldState.prays) {
                 if (oldState.prays[i].uid === action.data.uid) {
@@ -60,7 +60,7 @@ export function commonReducer(state = InitialState.pray, action) {
             return state;
         }
 
-        case ActionTypes.DELETE_PRAY_SUCCESS : {
+        case actionTypes.DELETE_PRAY_SUCCESS : {
             oldState = Immutable.asMutable(state, {deep: true});
             oldState.prays = oldState.prays.filter(e => e.uid !== action.data.uid)
             state = state.set("prays", oldState.prays);

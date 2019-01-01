@@ -1,0 +1,14 @@
+
+const ActionTypes ={
+    CREATE_PRAYER_PENDING: "CREATE_PRAYER_PENDING",
+    CREATE_PRAYER_SUCCESS: "CREATE_PRAYER_SUCCESS",
+    CREATE_PRAYER_FAILED: "CREATE_PRAYER_FAILED",
+}
+
+
+export const actionTypes = ActionTypes;
+
+
+
+
+

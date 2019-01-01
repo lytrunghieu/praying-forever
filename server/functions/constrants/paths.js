@@ -1,11 +1,12 @@
 // const paths = {
-//     pray : "pray/{userUID}/data/{prayUID}",
+//     prayer : "prayer/{userUID}/data/{prayUID}",
 // };
 
-exports.pray = "pray/{userUID}/data/{prayUID}"
-exports.collectPray ="pray/{userUID}/data";
-exports.deletePray = "pray/{userUID}/data/{prayUID}"
-exports.deleteAllPray = "pray/{userUID}/data"
+exports.prayer = "prayer/{userUID}/data/{prayUID}"
+exports.collectPrayerOfUser ="prayer/{userUID}/data";
+exports.specificPrayerOfUser ="prayer/{userUID}/data/{prayerUID}";
+exports.deletePray = "prayer/{userUID}/data/{prayUID}"
+exports.deleteAllPray = "prayer/{userUID}/data"
 
 exports.notification = "notification/{userUID}/data";
 exports.deleteNotification = "notification/{userUID}/data/{notifUID}"

@@ -12,9 +12,11 @@ export default {
         ]
     },
 
-    pray :Immutable({
-        praySelected : null,
-        prays :[]
+    prayer :Immutable({
+        payload: null,
+        fetching : false,
+        success : false,
+        message : null,
     }),
 
     notification :Immutable({

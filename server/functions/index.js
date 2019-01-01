@@ -44,7 +44,7 @@ function addNotification({userUID, payload}) {
 
 exports.updateStatusPrayer = functions.https.onCall(data => {
     const {userUID, prayUID} = data;
-    const path = paths.pray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
+    const path = paths.prayer.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
     return firestore
         .doc(path)
         .get()
@@ -203,7 +203,7 @@ exports.deletePray = functions.https.onCall((data) => {
 
 exports.following = functions.https.onCall((data) => {
     const {userUID, prayUID, userOtherUID} = data;
-    let path = paths.pray.replace("{userUID}", userOtherUID).replace("{prayUID}", prayUID);
+    let path = paths.prayer.replace("{userUID}", userOtherUID).replace("{prayUID}", prayUID);
     return firestore.doc(path).get().then(docSnap => {
         if (docSnap.data() && docSnap.data().status === 0) {
             let {following} = docSnap.data();
@@ -220,7 +220,7 @@ exports.following = functions.https.onCall((data) => {
             if (!hasFollowing) {
                 following.push(userUID);
                 docSnap.ref.update("following", following);
-                let path = paths.pray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
+                let path = paths.prayer.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
                 let newData = docSnap.data();
                 newData.following = following;
                 return firestore.doc(path).set(newData).then(res => {
@@ -294,7 +294,13 @@ exports.createUser = functions.https.onCall((data) => {
             throw new functions.https.HttpsError(
                 "unknown", // code
                 'request failed', // message
-                {success: false, statusCode: 400, code : error.code || null, body: data, errorDescription: error.toString()}
+                {
+                    success: false,
+                    statusCode: 400,
+                    code: error.code || null,
+                    body: data,
+                    errorDescription: error.toString()
+                }
             );
         });
 
@@ -307,6 +313,50 @@ exports.onCreatePray = functions.firestore
         console.log("DATA:", event);
     });
 
+exports.createPrayer = functions.https.onCall((data = {}) => {
+        const {userUID, prayer} = data;
+        const path = paths.collectPrayerOfUser.replace("{userUID}", userUID);
+        const prayerCollect = firestore.collection(path);
+        prayerCollect.add(prayer).then(docRef => {
+            return docRef.update("uid", docRef.id, "created", admin.firestore.FieldValue.serverTimestamp()).then(() => {
+                return {success: true, statusCode: 200, message: "request success"};
+            }).catch(error => {
+                console.log("LOG ERROR", error);
+                throw new functions.https.HttpsError(
+                    "unknown", // code
+                    'request failed', // message
+                    {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+                );
+            })
+        }).catch(error => {
+            console.log("LOG ERROR", error);
+            throw new functions.https.HttpsError(
+                "unknown", // code
+                'request failed', // message
+                {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+            );
+        })
+
+});
+
+exports.getPrayer = functions.https.onCall(async ( data ={})=>{
+    const {userUID, prayerUID} = data;
+    let path = paths.collectPrayerOfUser.replace("{userUID}", userUID);
+    const prayerCollect = firestore.collection(path);
+    let collectSnap = null;
+    if(prayerUID){
+        collectSnap  =  await  prayerCollect.where("uid","==",prayerUID).get();
+    }
+    else{
+        collectSnap = await prayerCollect.get();
+    }
+    const docs = []
+    collectSnap.forEach(doc =>{
+        docs.push(doc.data());
+    });
+
+    return {success: true, statusCode: 200, data : docs,message: "request success"};
+})
 
 //region API INTERNAL
 
@@ -320,7 +370,7 @@ exports.testAPI = functions.https.onRequest((req, res) => {
     res.send(message);
 });
 
-exports.deleteUser = functions.https.onRequest(async(req, res) => {
+exports.deleteUser = functions.https.onRequest(async (req, res) => {
     const key = req.headers["private-key"];
     if (key !== "AIzaSyB8Y2nE-6_Q8hvJhRwNWUm77JpcuYDnSYE") {
         res.send("request failed");
@@ -352,7 +402,7 @@ exports.deleteUser = functions.https.onRequest(async(req, res) => {
     });
 
     //delete prayer
-    const promiseDeletePray = await firestore.collection("pray").doc(uid).get().then(snap => {
+    const promiseDeletePray = await firestore.collection("prayer").doc(uid).get().then(snap => {
         if (snap.ref) {
             snap.ref.delete().then(() => {
                 messages.push("delete prayer success");
@@ -407,10 +457,10 @@ exports.deleteUser = functions.https.onRequest(async(req, res) => {
         messages.push("delete location failed :" + error)
     });
 
-    const promiseDeleteUser = await admin.auth().deleteUser(uid).then(()=>{
+    const promiseDeleteUser = await admin.auth().deleteUser(uid).then(() => {
         messages.push("delete user success");
         return true;
-    }).catch(error =>{
+    }).catch(error => {
         console.log("LOG ERROR", error);
         messages.push("delete user failed :" + error)
     })

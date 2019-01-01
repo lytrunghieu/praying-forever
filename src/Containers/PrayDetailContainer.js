@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {commonActions} from "../actions";
+import {prayerActions} from "../Action";
 import {
     View,
     ScrollView
@@ -22,7 +22,7 @@ import commonUtils from "../Utils/CommonUtils";
 import firebase from 'react-native-firebase';
 import {Header} from "../Components/Modules"
 
-const collect = firebase.firestore().collection("pray");
+const collect = firebase.firestore().collection("prayer");
 import {Container, Left, Body, Right, Button, Title, Content} from 'native-base';
 
 const optionActionSheetForFinished = []
@@ -31,7 +31,7 @@ class PrayDetail extends PureComponent {
     constructor(props) {
         super(props);
         const dataPassed = props.navigation.state.params;
-        this.pray = dataPassed;
+        this.prayer = dataPassed;
         this.uid = dataPassed && dataPassed.uid || null;
         this.userUID = dataPassed && dataPassed.owner && dataPassed.owner.uid || null;
         this.optionActionSheetForFinished = [
@@ -45,7 +45,7 @@ class PrayDetail extends PureComponent {
             {text: I18n.t('edit'), onPress: this.onPressEdit.bind(this)},
             {text: I18n.t('delete'), color: Colors.red, onPress: this.onPressDelete.bind(this)}
         ];
-        const {status} = this.pray;
+        const {status} = this.prayer;
 
         this.onPressBack = this.onPressBack.bind(this);
         this.onPressRightHeader = this.onPressRightHeader.bind(this);
@@ -79,7 +79,7 @@ class PrayDetail extends PureComponent {
         if (nextProps.prays && nextProps.prays !== this.props.prays) {
             const currentPray = nextProps.prays.find(e => e.uid === this.uid);
             if (currentPray) {
-                this.pray = currentPray;
+                this.prayer = currentPray;
                 this.setState({
                     title: currentPray.title,
                     content: currentPray.content
@@ -107,7 +107,7 @@ class PrayDetail extends PureComponent {
     }
 
     onPressContinuesPraying() {
-        const item = this.pray;
+        const item = this.prayer;
         const action = {
             type: EventRegisterTypes.UPDATE_STATUS_PRAY,
             callback: this.callbackChangeStatusPray,
@@ -118,7 +118,7 @@ class PrayDetail extends PureComponent {
 
 
     onPressChangeToFinished() {
-        const item = this.pray;
+        const item = this.prayer;
         const action = {
             type: EventRegisterTypes.UPDATE_STATUS_PRAY,
             callback: this.callbackChangeStatusPray,
@@ -129,7 +129,7 @@ class PrayDetail extends PureComponent {
 
 
     onPressEdit() {
-        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, this.pray);
+        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, this.prayer);
     }
 
     onPressDelete() {
@@ -142,7 +142,7 @@ class PrayDetail extends PureComponent {
     //region handle confirm modal
 
     onAcceptDelete() {
-        const item = this.pray;
+        const item = this.prayer;
         const action = {type: EventRegisterTypes.DELETE_PRAY, params: item};
         commonUtils.sendEvent(action);
         this.refs["confirm"].close();
@@ -253,11 +253,11 @@ class PrayDetail extends PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-    prays: state.commonReducer.prays
+    prays: state.prayerReducer.prays
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    commonActions: bindActionCreators(commonActions, dispatch)
+    prayersActions: bindActionCreators(prayerActions, dispatch)
 })
 
 export const PrayDetailContainer = connect(mapStateToProps, mapDispatchToProps)(PrayDetail);

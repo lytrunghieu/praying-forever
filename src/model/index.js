@@ -4,6 +4,7 @@ import PrayStatus from "./PrayStatus";
 import Pray from "./Pray";
 import PrayUser from "./PrayUser";
 import PrayLocation from "./PrayLocation";
+import response from "./response";
 
 export {
     Following,
@@ -11,5 +12,6 @@ export {
     PrayUser,
     Pray,
     PrayStatus,
-    PrayLocation
+    PrayLocation,
+    response
 }

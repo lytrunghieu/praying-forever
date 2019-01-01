@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {commonActions} from "../actions";
+import {prayerActions} from "../Action";
 import {
     View,
     ScrollView
@@ -65,7 +65,7 @@ class NotificationDetail extends PureComponent {
     //region handle confirm modal
 
     onAcceptDelete() {
-        const item = this.pray;
+        const item = this.prayer;
         const action ={ type :  EventRegisterTypes.DELETE_NOTIFICATION, params : item};
         commonUtils.sendEvent(action);
         this.refs["confirm"].close();
@@ -127,11 +127,11 @@ class NotificationDetail extends PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-    prays: state.commonReducer.prays
+    prays: state.prayerReducer.prays
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    commonActions: bindActionCreators(commonActions, dispatch)
+    prayersActions: bindActionCreators(prayerActions, dispatch)
 })
 
 export const NotificationDetailContainer = connect(mapStateToProps, mapDispatchToProps)(NotificationDetail);

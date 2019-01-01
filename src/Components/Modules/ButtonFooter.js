@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import globalStyle from '../../Themes/globalStyle';
 
 import {Colors, Fonts} from '../../Themes';
-import {Button, Text} from "../Common";
+import {Button, TextBase} from "../Common";
 
 export default class ButtonFooterComponent extends PureComponent {
 
@@ -17,37 +17,25 @@ export default class ButtonFooterComponent extends PureComponent {
             <Button style={[styles.button, disabled && styles.buttonDisabled]} disabled={disabled} transparent={false}
                     block  onPress={onPress} {...rest}>
                 {text ?
-                    <Text style={styles.labelText}>{text}</Text> : null
+                    <TextBase bold={true} large={true} highlight={true} textTransform={"uppercase"} >{text}</TextBase> : null
                 }
                 {children}
             </Button>
         );
-
-        // let {onPress, text, fit, width, textColor, customeBorder, backgroundColor, borderWidth, borderColor, height, borderRadius} = this.props;
-        //
-        // const styleContainerOption = {
-        //     width: width, backgroundColor: backgroundColor, height: height,
-        //     borderRadius: borderRadius,
-        // };
-        //
-        // const styleCustomBorder = customeBorder && {
-        //     borderWidth: borderWidth, borderColor: borderColor
-        // };
-        //
-        // return (
-        //     <TouchableOpacity onPress={() => onPress()}
-        //                       style={[styles.container, styleContainerOption, styleCustomBorder, fit && styles.fit]}>
-        //         <Text style={[styles.labelText, {color: textColor}]}>{text}</Text>
-        //     </TouchableOpacity>
-        // )
     }
 }
 
 ButtonFooterComponent.defaultProps = {
-    transparent: true
+    transparent: true,
+    onPress : () =>{},
+    disabled : false,
 };
 
-ButtonFooterComponent.propTypes = {}
+ButtonFooterComponent.propTypes = {
+    text : PropTypes.string,
+    disabled : PropTypes.bool,
+    onPress : PropTypes.func
+}
 
 
 const styles = EStyleSheet.create({
