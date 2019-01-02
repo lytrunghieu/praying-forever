@@ -10,6 +10,7 @@ export default class TextBase extends PureComponent {
         const {
             style, children,
             large,
+            largeX,
             medium,
             small,
             bold,
@@ -22,7 +23,7 @@ export default class TextBase extends PureComponent {
         const stringText = children || "";
         const customeStyle = {
             fontFamily: italic && Fonts.type.robotoItalic || bold && Fonts.type.robotoBold || Fonts.type.robotoRegular,
-            fontSize:  large && Fonts.size.large || small && Fonts.size.small || Fonts.size.normal,
+            fontSize:  largeX && Fonts.size.largeX ||  large && Fonts.size.large || small && Fonts.size.small || Fonts.size.normal,
             color : highlight && Colors.white || error && Colors.red || Colors.black ,
         }
         return (<Text {...this.props} style={[styles.text , customeStyle, style ]}>{stringText}</Text>);
@@ -33,6 +34,7 @@ TextBase.defaultProps = {
     numberOfLines: 1,
     allowFontScaling: false,
     style: null,
+    largeX :false,
     large: false,
     small: false,
     bold: false,
@@ -44,6 +46,7 @@ TextBase.defaultProps = {
 TextBase.propTypes = {
     text: PropTypes.string,
     numberOfLines: PropTypes.number,
+    largeX: PropTypes.bool,
     large: PropTypes.bool,
     small: PropTypes.bool,
     bold: PropTypes.bool,

@@ -304,19 +304,19 @@ export default class DrawerContainer extends PureComponent {
                                   leftIcon={IconName.prayer_inprogress}
                                   onPress={this.onPressOption.bind(this, ScreenKey.PRAYING_INPROGESS)}/>
                     <OptionButton text={I18n.t("finished")}
-                                  leftIcon={IconName.prayer_inprogress}
+                                  leftIcon={IconName.prayer_complete}
                                   count = {praysFinished.length}
                                   onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FINISHED)}/>
                     <OptionButton text={I18n.t("prayForOther")}
-                                  leftIcon={IconName.prayer_inprogress}
+                                  leftIcon={IconName.prayer_help}
                                   onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FOR_OTHER)}/>
                     <OptionButton text={I18n.t("notifications")}
-                                  leftIcon={IconName.prayer_inprogress}
+                                  leftIcon={IconName.notification}
                                   onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)} isCircle={true}
                                   count={notificationNotRead}/>
-                    <OptionButton text={I18n.t("setting")} leftIcon={IconName.prayer_inprogress}/>
-                    <OptionButton text={I18n.t("about")} leftIcon={IconName.prayer_inprogress}/>
-                    <OptionButton text={I18n.t("logout")} leftIcon={IconName.prayer_inprogress}
+                    <OptionButton text={I18n.t("setting")} leftIcon={IconName.setting}/>
+                    <OptionButton text={I18n.t("about")} leftIcon={IconName.about}/>
+                    <OptionButton text={I18n.t("logout")} leftIcon={IconName.logout}
                                   onPress={this.onPressLogout}/>
                     <OptionButton text={firebase.auth().currentUser.email}/>
                 </List>

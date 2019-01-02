@@ -3,13 +3,13 @@ const names = {
     menu :"bars",
     more :"ellipsis-v",
     qr_code:"qrcode",
-    prayer_complete :"praying-hands",
-    prayer_inprogress :"tasks",
-    prayer_help :"smile-beam",
-    notification :"bell",
-    logout :"sign-out-alt",
-    about :"info",
-    setting :"sliders-h",
+    prayer_complete :"marker-check",
+    prayer_inprogress :"format-list-bulleted",
+    prayer_help :"account-switch",
+    notification :"message-text",
+    logout :"logout-variant",
+    about :"information",
+    setting :"settings-box",
     delete :"trash",
     following :"thumbtack",
     unfollowing :"thumbtack",
@@ -23,6 +23,7 @@ const names = {
     clear :"times",
     next:"arrow-circle-right",
     previous :"arrow-circle-left",
+
 }
 
 export default names

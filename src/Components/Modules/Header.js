@@ -61,7 +61,7 @@ export default class Header extends PureComponent {
             [<HeaderBase style={styles.header}>
                 {leftComp}
                 <Body>
-                <TextBase large={true} bold={true} >{title}</TextBase>
+                <TextBase largeX={true} bold={true} >{title}</TextBase>
                 </Body>
                 {righComp}
             </HeaderBase>,
@@ -87,7 +87,7 @@ const styles = EStyleSheet.create({
     header: {
         backgroundColor: Colors.white,
         borderBottomWidth: "$borderWidthSmall",
-        borderColor :Colors.divider
+        borderBottomColor :Colors.divider
     }
 
 });

@@ -17,7 +17,7 @@ export default class OptionButtonComponent extends PureComponent {
         return (
             <ListItem icon={true} button={true} onPress={onPress}>
                 <Left>
-                    <Icon name={leftIcon}/>
+                    <Icon iconType={"MaterialCommunityIcons"} name={leftIcon}/>
 
                 </Left>
                 <Body>

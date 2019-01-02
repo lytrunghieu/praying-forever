@@ -319,7 +319,7 @@ export default class  PrayingInProgress extends PureComponent {
         const {prayerReducer}  =this.props;
         const {fetching} = prayerReducer;
         return (
-            [<Container key="container">
+            [<Container key="container"  pointerEvents={fetching ? "none" : "auto"}>
                 <Header
                     title={I18n.t('praying')}
                     left={this.leftHeader}
@@ -328,12 +328,11 @@ export default class  PrayingInProgress extends PureComponent {
 
                 <Content>
                     <FlatList
-                        style={styles.flatList}
                         data={prays}
                         keyExtractor={this.keyExtractor}
                         renderItem={this.renderPrayItem}
                         ItemSeparatorComponent={this.renderSeparate}
-                        ListHeaderComponent={this.renderListHeaderComponent}
+                        // ListHeaderComponent={this.renderListHeaderComponent}
                         ListFooterComponent={this.renderListFooterComponent}
 
                     />

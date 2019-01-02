@@ -22,12 +22,27 @@ export default class Icon extends PureComponent {
         return this.renderIcon(this.props);
     }
 
-    renderIcon({name, size, color, iconType}) {
+    renderIcon({name, iconType,large,medium, dark}) {
+        let size = 24;
+        let color = Colors.black;
+        if(large){
+            size = 40;
+        }
+        else {
+            if(medium){
+                size = 32;
+            }
+        }
+
+        if(!dark){
+            color = Colors.white;
+        }
 
         let MaterialCommunityIconsView = null;
 
         switch (iconType) {
             case 'MaterialCommunityIcons':
+
                 MaterialCommunityIconsView = (<MaterialCommunityIcons name={name} size={size} color={color}/>);
                 return MaterialCommunityIconsView;
             case 'Ionicons':
@@ -52,7 +67,7 @@ Icon.defaultProps = {
     iconType: null,
     color: Colors.black,
     name: "bars",
-    size: 24
+    dark : true,
 };
 
 Icon.propTypes = {
@@ -60,7 +75,9 @@ Icon.propTypes = {
     iconType: PropTypes.string,
     color: PropTypes.string,
     name: PropTypes.string,
-    size: PropTypes.number
+    large : PropTypes.bool,
+    medium : PropTypes.bool,
+    dark : PropTypes.bool
 }
 
 const styles = EStyleSheet.create({

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import {Colors, Fonts, ApplicationStyles, Images, IconName} from '../../Themes/index';
 import Swipeable from 'react-native-swipeable';
 import {TextIcon} from "./index";
-import {Text, Button, Icon} from "../Common";
+import {TextBase, Button, Icon} from "../Common";
 import moment from "moment";
 
 import {Container, Header, Content, Card, CardItem, Thumbnail, Left, Body, Right} from 'native-base';
@@ -57,22 +57,22 @@ export default class PrayItem extends PureComponent {
             return null
         }
 
-        return ( <Text>{moment().years() - moment(birthDay).years() + " old"}</Text>);
+        return ( <TextBase>{moment().years() - moment(birthDay).years() + " old"}</TextBase>);
     }
 
     renderGender(gender) {
         if (gender) {
-            return <Text>Male</Text>
+            return <TextBase>Male</TextBase>
         }
         else {
-            return <Text>Female</Text>
+            return <TextBase>Female</TextBase>
         }
     }
 
     renderFollowingCount(following) {
         if (Array.isArray(following) && following.length > 0) {
             return (
-                <Text>{following}</Text>
+                <TextBase>{following}</TextBase>
             )
         }
         return null
@@ -81,15 +81,16 @@ export default class PrayItem extends PureComponent {
     render() {
         const {onPress, onPressMoreAction, item = {}} = this.props;
         const {title, created, following, owner = {}, content} = item;
-        const {displayName, birthDay, gender} = owner
+        const {displayName, birthDay, gender} = owner;
+
         return (
             <Card>
                 <CardItem>
                     <Left>
-                        <Icon name={IconName.avatar}/>
+                        <Icon name={IconName.avatar} large={true}/>
                         <Body>
-                        <Text numberOfLines={2}>{displayName}</Text>
-                        <Text numberOfLines={2}>{moment(created).fromNow()}</Text>
+                        <TextBase bold={true}>{displayName}</TextBase>
+                        <TextBase italic={true}>{moment(created).fromNow()}</TextBase>
                         </Body>
                     </Left>
                     <Right>
@@ -101,8 +102,8 @@ export default class PrayItem extends PureComponent {
                 <CardItem button={true} onPress={onPress}>
                     <Left>
                         <Body>
-                        <Text numberOfLines={2}>{title}</Text>
-                        <Text numberOfLines={5}>{content}</Text>
+                        <TextBase large={true} bold={true} numberOfLines={2}>{title}</TextBase>
+                        <TextBase numberOfLines={5}>{content}</TextBase>
                         </Body>
                     </Left>
                 </CardItem>
