@@ -5,7 +5,6 @@ import Separator from './Separator';
 import Option from './Option';
 import  DropdowPopup from "./DropdowPopup";
 import  Button from "./Button";
-import  PrayItem from "../Modules/PrayItem";
 import  ImageBackground from "./ImageBackground";
 import  ActionSheet from "./ActionSheet";
 import  ConfirmModal from "./ConfirmModal";
@@ -37,7 +36,6 @@ export {
     Option,
     DropdowPopup,
     Button,
-    PrayItem,
     ImageBackground,
     ActionSheet,
     ConfirmModal,

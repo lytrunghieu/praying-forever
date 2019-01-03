@@ -119,7 +119,7 @@ export default class CreatePraying extends PureComponent {
         }
         else {
 
-            const {userReducer = {}, prayersActions} = this.props;
+            const {userReducer = {}, action} = this.props;
             const {payload} = userReducer;
             if (payload) {
                 const currentUser = firebase.auth().currentUser;
@@ -131,12 +131,9 @@ export default class CreatePraying extends PureComponent {
                 };
                 params.status = StatusOfPray.INPROGRESS;
                 let dataSend = new Pray(params);
-                prayersActions.createNewPrayer(dataSend);
+                action.createNewPrayer(dataSend);
             }
-
-
         }
-
     }
 
     onPressEditTimeClock() {

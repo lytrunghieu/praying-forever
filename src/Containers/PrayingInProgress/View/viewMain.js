@@ -6,7 +6,6 @@ import {Colors, IconName} from '../../../Themes';
 import I18n from '../../../I18n';
 import {
     ActionSheet,
-    PrayItem,
     PlaceHolder,
     ConfirmModal,
     ModalScanQR,
@@ -24,7 +23,7 @@ import {style} from "../Style";
 const collect = firebase.firestore().collection('prayer');
 const locationCollect = firebase.firestore().collection('location');
 
-import {Header, ActionSheetPrayItem, LoadingBar, Container,Content} from "../../../Components/Modules";
+import {Header, ActionSheetPrayItem, LoadingBar, Container,Content,PrayItem} from "../../../Components/Modules";
 
 export default class  PrayingInProgress extends PureComponent {
 

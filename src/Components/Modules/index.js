@@ -10,6 +10,7 @@ import Container from "./Container";
 import Content from "./Content";
 import loadingIndicator from "./loadingIndicator";
 
+
 export {
     TextIcon,
     Header,
@@ -20,5 +21,6 @@ export {
     LoadingBar,
     Container,
     Content,
-    loadingIndicator
+    loadingIndicator,
+    PrayItem
 };

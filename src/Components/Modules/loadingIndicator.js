@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import * as Progress from 'react-native-progress';
-import {Dimensions} from "react-native";
+import {Dimensions,View} from "react-native";
 import {Colors} from "../../Themes";
 
 
@@ -23,7 +23,7 @@ export default class LoadingIndicator extends PureComponent {
                     animationConfig={{bounciness: 0}}
                     useNativeDriver={true}
                     color ={Colors.blue}
-                    borderRadius={0} height={3} animationType="timing" width={width}/> : null
+                    borderRadius={0} height={3} animationType="timing" width={width}/> : <View style ={{height : 3}}/>
         );
     }
 }

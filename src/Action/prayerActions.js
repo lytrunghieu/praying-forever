@@ -4,30 +4,6 @@ import firebase from 'react-native-firebase';
 const uniqueId = require('react-native-unique-id');
 import {prayerService} from "../Service";
 
-export function createNewPrayer(params) {
-    return function (dispatch) {
-        dispatch({
-            type: actionTypes.CREATE_PRAYER_PENDING,
-        });
-        new prayerService().createNewPrayer(params).then(res => {
-            if (res.success) {
-                dispatch({
-                    type: actionTypes.CREATE_PRAYER_SUCCESS,
-                });
-                dispatch(getPrayer());
-            }
-            else {
-                dispatch({
-                    type: actionTypes.CREATE_PRAYER_FAILED,
-                    data: {
-                        message: res.message
-                    }
-                });
-            }
-        });
-    }
-}
-
 export function getPrayer({userUID,prayerUID,search} ={}) {
     return function (dispatch) {
         dispatch({
@@ -56,6 +32,7 @@ export function getPrayer({userUID,prayerUID,search} ={}) {
     }
 }
 
+
 export function editPray(params) {
     return function (dispatch) {
         dispatch({
@@ -64,6 +41,8 @@ export function editPray(params) {
         });
     }
 }
+
+
 
 export function changeStatusPray({status, pray}) {
     return function (dispatch) {

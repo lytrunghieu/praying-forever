@@ -101,6 +101,8 @@
   "onlive": "Onlive",
   "offline": "Offline",
   "ok":"Ok",
+  "opps":"Oops",
   "QRCode": "QR Code",
-  "male":"Male"
+  "male":"Male",
+  "notFoundPrayer":"Not found Prayer"
 }

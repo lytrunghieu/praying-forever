@@ -317,7 +317,7 @@ exports.createPrayer = functions.https.onCall((data = {}) => {
         const {userUID, prayer} = data;
         const path = paths.collectPrayerOfUser.replace("{userUID}", userUID);
         const prayerCollect = firestore.collection(path);
-        prayerCollect.add(prayer).then(docRef => {
+        return prayerCollect.add(prayer).then(docRef => {
             return docRef.update("uid", docRef.id, "created", admin.firestore.FieldValue.serverTimestamp()).then(() => {
                 return {success: true, statusCode: 200, message: "request success"};
             }).catch(error => {

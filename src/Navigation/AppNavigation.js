@@ -12,7 +12,7 @@ import CreateAccountContainer from '../Containers/CreateAccountContainer';
 import  {container as PrayingInProgress} from '../Containers/PrayingInProgress';
 import {PrayFinishedContainer} from '../Containers/PrayFinishedContainer';
 import {container as CreatePrayingContainer} from '../Containers/CreatePrayer';
-import {PrayDetailContainer} from '../Containers/PrayDetailContainer';
+import {container as PrayerDetailContainer} from '../Containers/PrayerDetail';
 import {PrayForOtherContainer} from '../Containers/PrayForOtherContainer';
 import {NotificationsContainer} from '../Containers/NotificationsContainer';
 import {NotificationDetailContainer} from '../Containers/NotificationDetailContainer';
@@ -35,7 +35,7 @@ const MainNav = StackNavigator({
         [ScreenKey.SIGNUP_SCREEN]: {screen: SignupScreen},
         [ScreenKey.LIST_COMMON]: {screen: ListCommonContainer},
         [ScreenKey.CREATE_PRAYING]: {screen: CreatePrayingContainer},
-        [ScreenKey.PRAY_DETAIL]: {screen: PrayDetailContainer},
+        [ScreenKey.PRAY_DETAIL]: {screen: PrayerDetailContainer},
         [ScreenKey.CREATE_ACCOUNT]: {screen: CreateAccountContainer},
         [ScreenKey.NOTIFICATION_DETAIL]: {screen: NotificationDetailContainer},
     }, {

@@ -79,7 +79,7 @@ export default class PrayItem extends PureComponent {
     }
 
     render() {
-        const {onPress, onPressMoreAction, item = {}} = this.props;
+        const {onPress, onPressMoreAction, item = {}, allowScaleHeight, actionMore} = this.props;
         const {title, created, following, owner = {}, content} = item;
         const {displayName, birthDay, gender} = owner;
 
@@ -93,17 +93,21 @@ export default class PrayItem extends PureComponent {
                         <TextBase italic={true}>{moment(created).fromNow()}</TextBase>
                         </Body>
                     </Left>
-                    <Right>
-                        <Button transparent onPress={onPressMoreAction}>
-                            <Icon name={IconName.more_h}/>
-                        </Button>
-                    </Right>
+                    {
+                        actionMore ?
+                            <Right>
+                                <Button transparent onPress={onPressMoreAction}>
+                                    <Icon name={IconName.more_h}/>
+                                </Button>
+                            </Right> : null
+                    }
+
                 </CardItem>
                 <CardItem button={true} onPress={onPress}>
                     <Left>
                         <Body>
-                        <TextBase large={true} bold={true} numberOfLines={2}>{title}</TextBase>
-                        <TextBase numberOfLines={5}>{content}</TextBase>
+                        <TextBase large={true} bold={true} numberOfLines={allowScaleHeight ? 0 : 2}>{title}</TextBase>
+                        <TextBase numberOfLines={allowScaleHeight ? 0 : 5}>{content}</TextBase>
                         </Body>
                     </Left>
                 </CardItem>
@@ -124,20 +128,20 @@ export default class PrayItem extends PureComponent {
 }
 
 PrayItem.defaultProps = {
-    title: "",
-    content: "",
-    date: "",
     onPress: () => {
     },
-    leftOptions: []
+    leftOptions: [],
+    allowScaleHeight: false,
+    actionMore: true
 };
 
 PrayItem.propTypes = {
-    title: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-    date: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.date]),
+    item: PropTypes.node,
     onPress: PropTypes.func,
-    leftOptions: PropTypes.array
+    leftOptions: PropTypes.array,
+    allowScaleHeight: PropTypes.bool,
+    actionMore: PropTypes.bool
+
 };
 
 const styles = EStyleSheet.create({
