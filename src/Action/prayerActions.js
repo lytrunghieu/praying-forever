@@ -33,16 +33,6 @@ export function getPrayer({userUID,prayerUID,search} ={}) {
 }
 
 
-export function editPray(params) {
-    return function (dispatch) {
-        dispatch({
-            type: actionTypes.EDIT_PRAY_SUCCESS,
-            data: params
-        });
-    }
-}
-
-
 
 export function changeStatusPray({status, pray}) {
     return function (dispatch) {

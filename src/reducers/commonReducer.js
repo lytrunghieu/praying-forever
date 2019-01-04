@@ -34,18 +34,7 @@ export function commonReducer(state = InitialState.prayer, action) {
             return state;
         }
 
-        case actionTypes.EDIT_PRAY_SUCCESS : {
-            oldState = Immutable.asMutable(state, {deep: true});
-            for (var i in oldState.prays) {
-                if (oldState.prays[i].uid === action.data.uid) {
-                    oldState.prays[i] = {...oldState[i],...action.data};
-                    break;
-                }
-            }
-            state = state.set("prays", oldState.prays);
-            // commonUtils.storeData(PRAY_LIST, oldState.prays);
-            return state;
-        }
+
 
         case actionTypes.UPDATE_STATUS_PRAY_SUCCESS : {
             oldState = Immutable.asMutable(state, {deep: true});

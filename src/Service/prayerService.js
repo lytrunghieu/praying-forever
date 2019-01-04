@@ -1,5 +1,5 @@
 import baseService from "./baseService";
-import {CREATE_PRAYER,GET_PRAYER} from "./nameCloudFunction"
+import {CREATE_PRAYER,GET_PRAYER,EDIT_PRAYER} from "./nameCloudFunction"
 import moment from "moment";
 import {Pray} from "../model";
 
@@ -7,6 +7,10 @@ class PrayerService extends baseService {
 
     createNewPrayer(params){
         return super.executeHttp(CREATE_PRAYER, {prayer :params});
+    }
+
+    editPrayer(params){
+        return super.executeHttp(EDIT_PRAYER, {prayer :params});
     }
 
     getPrayer({userUID, prayerUID,search}){

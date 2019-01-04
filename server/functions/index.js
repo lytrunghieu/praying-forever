@@ -339,6 +339,24 @@ exports.createPrayer = functions.https.onCall((data = {}) => {
 
 });
 
+exports.editPrayer = functions.https.onCall((data = {}) => {
+    const {userUID, prayer ={}} = data;
+    const {uid,title,content} = prayer;
+    const path = paths.specificPrayerOfUser.replace("{userUID}", userUID).replace("{prayerUID}", uid);
+    const prayerDoc = firestore.doc(path);
+    return prayerDoc.update("title", title, "content", content).then(() => {
+        return {success: true, statusCode: 200, message: "request success"};
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        throw new functions.https.HttpsError(
+            "unknown", // code
+            'request failed', // message
+            {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+        );
+    })
+});
+
+
 exports.getPrayer = functions.https.onCall(async ( data ={})=>{
     const {userUID, prayerUID} = data;
     let path = paths.collectPrayerOfUser.replace("{userUID}", userUID);

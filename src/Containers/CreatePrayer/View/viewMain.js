@@ -82,8 +82,6 @@ export default class CreatePraying extends PureComponent {
             icon: IconName.back,
             onPress: this.onPressBack
         };
-        console.log("createPrayerReducer", props.createPrayerReducer);
-
     }
 
     componentWillReceiveProps(nextProps) {
@@ -91,8 +89,8 @@ export default class CreatePraying extends PureComponent {
             if (nextProps.createPrayerReducer.message) {
                 alert(nextProps.createPrayerReducer.message);
             }
-            else{
-                if(nextProps.createPrayerReducer.success !== this.props.createPrayerReducer.success && nextProps.createPrayerReducer.success){
+            else {
+                if (nextProps.createPrayerReducer.success !== this.props.createPrayerReducer.success && nextProps.createPrayerReducer.success) {
                     this.onPressBack();
                 }
             }
@@ -108,21 +106,19 @@ export default class CreatePraying extends PureComponent {
 
     onSubmit() {
         const {title, content, isReminder, timeReminder} = this.state;
+        const {action} = this.props;
         let params = {title, content};
         if (this.isEdit) {
             params.uid = this.uid;
             let dataSend = Pray.removeFieldEmpty(new Pray(params));
-            this.userPray.collection("data").doc(this.uid).update(dataSend).then(res => {
-                commonUtils.sendEvent({type: EventRegisterTypes.GET_PRAY});
-                this.onPressBack();
-            });
+            action.editPrayer(dataSend);
+
         }
         else {
 
-            const {userReducer = {}, action} = this.props;
+            const {userReducer = {}} = this.props;
             const {payload} = userReducer;
             if (payload) {
-                const currentUser = firebase.auth().currentUser;
                 params.owner = {
                     uid: firebase.auth().currentUser.uid,
                     birthDay: payload.birthDay,

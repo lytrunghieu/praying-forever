@@ -70,14 +70,12 @@ export default class PrayerDetail extends PureComponent {
     //region cycle life
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.prayerReducer && nextProps.prayerReducer !== this.props.prayerReducer) {
-            const currentPray = nextProps.prays.find(e => e.uid === this.uid);
+        if (nextProps.prayerReducer && nextProps.prayerReducer !== this.props.prayerReducer && nextProps.prayerReducer.payload) {
+            const currentPray = nextProps.prayerReducer.payload.find(e => e.uid === this.uid);
             if (currentPray) {
                 this.prayer = currentPray;
                 this.setState({
                     item: currentPray
-                    // title: currentPray.title,
-                    // content: currentPray.content
                 })
             }
         }
