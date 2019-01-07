@@ -4,20 +4,25 @@ import {TouchableOpacity, Text} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
 import globalStyle from '../../Themes/globalStyle';
+import getTheme from './native-base-theme/components';
+import material from './native-base-theme/variables/material';
 
 import {Colors, Fonts} from '../../Themes';
 
-import {Button} from 'native-base';
+import {Button, StyleProvider} from 'native-base';
 
 export default class ButtonComponent extends PureComponent {
 
 
     render() {
-        const {onPress,children , transparent , ...rest} = this.props;
+        const {onPress, children, transparent, action, ...rest} = this.props;
+
         return (
-            <Button transparent ={transparent}  onPress={onPress} {...rest}>
+
+            <Button transparent={transparent} onPress={onPress}  {...rest}  >
                 {children}
             </Button>
+
         );
 
         // let {onPress, text, fit, width, textColor, customeBorder, backgroundColor, borderWidth, borderColor, height, borderRadius} = this.props;
@@ -41,7 +46,7 @@ export default class ButtonComponent extends PureComponent {
 }
 
 ButtonComponent.defaultProps = {
-    transparent :false
+    transparent: false
     // onPress: () => {
     // },
     // text: "",
@@ -58,6 +63,7 @@ ButtonComponent.defaultProps = {
 };
 
 ButtonComponent.propTypes = {
+    transparent: PropTypes.bool
     // onPress: PropTypes.func,
     // text: PropTypes.string.isRequired,
     // fit: PropTypes.bool,
@@ -87,6 +93,7 @@ const styles = EStyleSheet.create({
     //     width: "100%",
     //     flex: 0,
     // },
+
 
     labelText: {
         fontSize: Fonts.size.large,

@@ -43,8 +43,8 @@ function addNotification({userUID, payload}) {
 }
 
 exports.updateStatusPrayer = functions.https.onCall(data => {
-    const {userUID, prayUID} = data;
-    const path = paths.prayer.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
+    const {userUID, prayerUID} = data;
+    const path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
     return firestore
         .doc(path)
         .get()
@@ -156,16 +156,16 @@ exports.deleteNotification = functions.https.onCall((data) => {
     }
 });
 
-exports.deletePray = functions.https.onCall((data) => {
+exports.deletePrayer = functions.https.onCall((data) => {
 
-    const {userUID, prayUID} = data;
+    const {userUID, prayerUID} = data;
 
 
-    let path = paths.deleteAllPray.replace("{userUID}", userUID);
+    let path = paths.prayers.replace("{userUID}", userUID);
 
-    if (prayUID) {
+    if (prayerUID) {
 
-        path = paths.deletePray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
+        path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
         return firestore
             .doc(path)
             .delete()
@@ -201,11 +201,20 @@ exports.deletePray = functions.https.onCall((data) => {
     }
 });
 
-exports.following = functions.https.onCall((data) => {
-    const {userUID, prayUID, userOtherUID} = data;
-    let path = paths.prayer.replace("{userUID}", userOtherUID).replace("{prayUID}", prayUID);
+exports.following = functions.https.onCall( async (data) => {
+    const {userUID, prayerUID, userOtherUID,follow} = data;
+    let path = paths.prayer.replace("{userUID}", userOtherUID).replace("{prayerUID}", prayerUID);
+    let pathDelete = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
+    if(!follow){
+        let prayerOfUser =  await firestore.doc(pathDelete).get();
+        if(prayerOfUser.ref){
+            await prayerOfUser.ref.delete();
+        }
+    }
+
     return firestore.doc(path).get().then(docSnap => {
         if (docSnap.data() && docSnap.data().status === 0) {
+
             let {following} = docSnap.data();
             let hasFollowing = true
             if (following && following.length > 0) {
@@ -217,24 +226,28 @@ exports.following = functions.https.onCall((data) => {
             else {
                 hasFollowing = false
             }
-            if (!hasFollowing) {
-                following.push(userUID);
-                docSnap.ref.update("following", following);
-                let path = paths.prayer.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
-                let newData = docSnap.data();
-                newData.following = following;
-                return firestore.doc(path).set(newData).then(res => {
-                    return {success: true, statusCode: 200, message: "request success"};
-                });
+            if (follow) {
+                if(!hasFollowing){
+                    following.push(userUID);
+                    docSnap.ref.update("following", following);
+                    let path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
+                    let newData = docSnap.data();
+                    newData.following = following;
+                    return firestore.doc(path).set(newData).then(res => {
+                        return {success: true, statusCode: 200, message: "request success"};
+                    });
+                }
+                else{
+                    return {success: false, statusCode: 402, message: "the prayer had following before"};
+                }
             }
             else {
-                following = following.filter(fol => fol !== userUID);
-                docSnap.ref.update("following", following);
-                let path = paths.deletePray.replace("{userUID}", userUID).replace("{prayUID}", prayUID);
-                return firestore
-                    .doc(path)
-                    .delete()
-                    .then(doc => {
+                if(!hasFollowing){
+                    return {success: false, statusCode: 403, message: "the prayer had remove following before"};
+                }
+                else {
+                    following = following.filter(fol => fol !== userUID);
+                    return docSnap.ref.update("following", following).then(doc => {
                         return {success: true, statusCode: 200, message: "request success"};
                     }).catch(error => {
                         console.log("LOG ERROR", error);
@@ -244,6 +257,7 @@ exports.following = functions.https.onCall((data) => {
                             {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
                         );
                     });
+                }
             }
 
         }
@@ -315,7 +329,7 @@ exports.onCreatePray = functions.firestore
 
 exports.createPrayer = functions.https.onCall((data = {}) => {
         const {userUID, prayer} = data;
-        const path = paths.collectPrayerOfUser.replace("{userUID}", userUID);
+        const path = paths.prayers.replace("{userUID}", userUID);
         const prayerCollect = firestore.collection(path);
         return prayerCollect.add(prayer).then(docRef => {
             return docRef.update("uid", docRef.id, "created", admin.firestore.FieldValue.serverTimestamp()).then(() => {
@@ -342,7 +356,7 @@ exports.createPrayer = functions.https.onCall((data = {}) => {
 exports.editPrayer = functions.https.onCall((data = {}) => {
     const {userUID, prayer ={}} = data;
     const {uid,title,content} = prayer;
-    const path = paths.specificPrayerOfUser.replace("{userUID}", userUID).replace("{prayerUID}", uid);
+    const path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", uid);
     const prayerDoc = firestore.doc(path);
     return prayerDoc.update("title", title, "content", content).then(() => {
         return {success: true, statusCode: 200, message: "request success"};
@@ -359,7 +373,7 @@ exports.editPrayer = functions.https.onCall((data = {}) => {
 
 exports.getPrayer = functions.https.onCall(async ( data ={})=>{
     const {userUID, prayerUID} = data;
-    let path = paths.collectPrayerOfUser.replace("{userUID}", userUID);
+    let path = paths.prayers.replace("{userUID}", userUID);
     const prayerCollect = firestore.collection(path);
     let collectSnap = null;
     if(prayerUID){

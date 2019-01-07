@@ -9,6 +9,7 @@ import LoadingBar from "./LoadingBar";
 import Container from "./Container";
 import Content from "./Content";
 import loadingIndicator from "./loadingIndicator";
+import ActionPrayerModal from "./actionPrayerModal";
 
 
 export {
@@ -22,5 +23,6 @@ export {
     Container,
     Content,
     loadingIndicator,
-    PrayItem
+    PrayItem,
+    ActionPrayerModal
 };

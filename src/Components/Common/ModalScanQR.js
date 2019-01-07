@@ -21,40 +21,50 @@ export default class ModalScanQR extends ModalBase {
     constructor(props) {
         super();
         this.fetching = false;
+        this.onSuccess = this.onSuccess.bind(this);
     }
 
     onSuccess(e) {
-        if (e.type === "QR_CODE" && !this.fetching) {
-            this.fetching = true;
-            this.refs["loading"].open();
-            collect.doc(e.data).get().then(snapshot => {
-                let data = snapshot.data();
-                let ref = snapshot.ref;
-                if (data) {
-
-                    const {uid, owner} = data;
-                    const httpsCallable = firebase.functions(firebase.app()).httpsCallable("following");
-                    return httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid,userOtherUID :owner.uid})
-                        .then(data => {
-                            CommonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
-                        })
-                        .catch(httpsError => {
-                            console.log("ERROR :", httpsError);
-                            console.log(httpsError.code);
-                            console.log(httpsError.message);
-                            console.log(httpsError.details.errorDescription);
-                            throw "error"
-                        });
-                }
-                throw "error"
-            }).finally(res => {
-                this.refs["loading"].close();
-                if(res ==="error"){
-                    alert("following failed");
-                }
-                this.fetching = false;
+        if (e.type === "QR_CODE") {
+            const {followingPrayer} = this.props;
+            const {data =""} = e;
+            const strs = data.toString().split(",");
+            const prayerUID = strs[0] ||"";
+            const userOtherUID =strs[1] || "";
+            if(prayerUID && userOtherUID){
+                followingPrayer({prayerUID, userOtherUID, follow : true});
                 this.close();
-            });
+            }
+            // this.fetching = true;
+            // this.refs["loading"].open();
+            // collect.doc(e.data).get().then(snapshot => {
+            //     let data = snapshot.data();
+            //     let ref = snapshot.ref;
+            //     if (data) {
+            //
+            //         const {uid, owner} = data;
+            //         const httpsCallable = firebase.functions(firebase.app()).httpsCallable("following");
+            //         return httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid,userOtherUID :owner.uid})
+            //             .then(data => {
+            //                 CommonUtils.sendEvent({type : EventRegisterTypes.GET_PRAY});
+            //             })
+            //             .catch(httpsError => {
+            //                 console.log("ERROR :", httpsError);
+            //                 console.log(httpsError.code);
+            //                 console.log(httpsError.message);
+            //                 console.log(httpsError.details.errorDescription);
+            //                 throw "error"
+            //             });
+            //     }
+            //     throw "error"
+            // }).finally(res => {
+            //     this.refs["loading"].close();
+            //     if(res ==="error"){
+            //         alert("following failed");
+            //     }
+            //     this.fetching = false;
+            //     this.close();
+            // });
         }
 
     }
@@ -69,7 +79,7 @@ export default class ModalScanQR extends ModalBase {
                     }
                     fadeIn={false}
                     topViewStyle={styles.topView}
-                    onRead={this.onSuccess.bind(this)}
+                    onRead={this.onSuccess}
                     showMarker={true}
                     // containerStyle={}
                     cameraStyle={styles.cameraStyle}
@@ -87,9 +97,13 @@ export default class ModalScanQR extends ModalBase {
     }
 }
 
-ModalScanQR.defaultProps = {}
+ModalScanQR.defaultProps = {
+    followingPrayer: () =>{}
+};
 
-ModalScanQR.propTypes = {}
+ModalScanQR.propTypes = {
+    followingPrayer : PropTypes.func
+}
 
 
 const styles = EStyleSheet.create({

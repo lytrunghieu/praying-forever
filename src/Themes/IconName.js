@@ -20,9 +20,11 @@ const names = {
     more_h:"ellipsis-h",
     back :"arrow-left",
     suggest :"lightbulb-o",
+    search :"search",
     clear :"times",
     next:"arrow-circle-right",
     previous :"arrow-circle-left",
+    close :"close",
 
 }
 

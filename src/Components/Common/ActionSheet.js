@@ -17,6 +17,17 @@ export default class ActionSheet extends ModalBase {
         this.isCenter = false;
         this.backdropOpacity = 0;
         this.onPressOption = this.onPressOption.bind(this);
+        this.onPressOption = this.onPressOption.bind(this);
+        this.cb = null;
+    }
+
+    componentDidUpdate(preProps,preState){
+        if(preState.visible !== this.state.visible && preState.visible){
+            if(this.cb){
+                this.cb();
+                this.cb = null;
+            }
+        }
     }
 
     onPressOption(cb) {
@@ -26,17 +37,14 @@ export default class ActionSheet extends ModalBase {
         }
         //callback
         if (cb) {
-            cb();
+            this.cb = cb;
         }
-
     }
 
     renderOptionRow(option = {
         text: "", color: Colors.black, onPress: () => {
         }
     }, index) {
-
-
         return (
 
             <Button key={index} block style={styles.buttonOption}
@@ -51,7 +59,7 @@ export default class ActionSheet extends ModalBase {
         return (
             <View style={[styles.container]}>
                 <View style={styles.header}>
-                    <TextBase large={true} bold={true} textTransform={"uppercase"}>{title}</TextBase>
+                    <TextBase large={true}  highlight={true} bold={true} upperCase ={true}>{title}</TextBase>
                 </View>
                 <View style={styles.content}>
                     {options.map((op, index) => {
@@ -90,12 +98,12 @@ const styles = EStyleSheet.create({
     },
 
     header: {
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.black,
         height: "$heightRowSmall",
         borderTopLeftRadius: "$borderRadiusSmall",
         borderTopRightRadius: "$borderRadiusSmall",
-        alignItems:"center",
-        justifyContent:"center",
+        alignItems: "center",
+        justifyContent: "center",
 
 
     },
@@ -113,6 +121,7 @@ const styles = EStyleSheet.create({
         borderBottomWidth: "$borderWidthSmall",
         borderColor: Colors.divider,
         backgroundColor: Colors.primary,
+        borderRadius:0,
     },
 
     textButtonOption: {}

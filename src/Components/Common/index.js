@@ -7,7 +7,7 @@ import  DropdowPopup from "./DropdowPopup";
 import  Button from "./Button";
 import  ImageBackground from "./ImageBackground";
 import  ActionSheet from "./ActionSheet";
-import  ConfirmModal from "./ConfirmModal";
+import  ConfirmModal from "../Modules/ConfirmModal";
 import  Checkbox from "./Checkbox";
 import  CheckboxModal from "./CheckboxModal";
 import  SwitchRowItem from "./SwitchRowItem";

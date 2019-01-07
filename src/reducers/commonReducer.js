@@ -1,62 +1,29 @@
 import {actionTypes} from '../Action';
 import InitialState from "./initialStates";
-import Immutable from 'seamless-immutable';
-import commonUtils from '../Utils/CommonUtils';
-import {PRAY_LIST} from '../Constants/AsyncStoreKeys';
-import StatusOfPray from "../Constants/StatusOfPray";
 
-export function commonReducer(state = InitialState.prayer, action) {
-    let oldState;
+export function commonReducer(state = InitialState.common, action) {
     const {type,data} = action;
     switch (action.type) {
-
-        case actionTypes.UPDATE_PRAY_LIST_SUCCESS : {
-            state = state.set("prays", action.data);
+        case actionTypes.FOLLOWING_PRAYER_PENDING : {
+            state = state.set("fetching", true);
+            state = state.set("success", false);
+            state = state.set("message", null);
             return state;
         }
 
-
-        case actionTypes.CREATE_NEW_PRAY_SUCCESS : {
-            oldState = Immutable.asMutable(state, {deep: true});
-            oldState.prays.push(action.data);
-            state = state.set("prays", oldState.prays);
-            // commonUtils.storeData(PRAY_LIST, oldState.prays);
+        case actionTypes.FOLLOWING_PRAYER_SUCCESS : {
+            state = state.set("fetching", false);
+            state = state.set("success", true);
+            state = state.set("message", null);
             return state;
         }
 
-        case actionTypes.DELETE_ALL_PRAY_INPROGRESS_SUCCESS : {
-            oldState = Immutable.asMutable(state, {deep: true});
-            const {inprogress} = data;
-            const statusDeleted = inprogress ? StatusOfPray.INPROGRESS : StatusOfPray.COMPLETE
-            oldState.prays = oldState.prays.filter(e => e.status === statusDeleted);
-            state = state.set("prays", oldState.prays);
-            // commonUtils.storeData(PRAY_LIST, oldState.prays);
+        case actionTypes.FOLLOWING_PRAYER_FAILED : {
+            state = state.set("fetching", false);
+            state = state.set("success", false);
+            state = state.set("message", data.message);
             return state;
         }
-
-
-
-        case actionTypes.UPDATE_STATUS_PRAY_SUCCESS : {
-            oldState = Immutable.asMutable(state, {deep: true});
-            for (var i in oldState.prays) {
-                if (oldState.prays[i].uid === action.data.uid) {
-                    oldState.prays[i].status = action.status;
-                    break;
-                }
-            }
-            state = state.set("prays", oldState.prays);
-            // commonUtils.storeData(PRAY_LIST, oldState.prays);
-            return state;
-        }
-
-        case actionTypes.DELETE_PRAY_SUCCESS : {
-            oldState = Immutable.asMutable(state, {deep: true});
-            oldState.prays = oldState.prays.filter(e => e.uid !== action.data.uid)
-            state = state.set("prays", oldState.prays);
-            // commonUtils.storeData(PRAY_LIST, oldState.prays);
-            return state;
-        }
-
         default :
             return state
 

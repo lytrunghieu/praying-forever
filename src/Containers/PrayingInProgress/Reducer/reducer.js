@@ -1,5 +1,6 @@
 import {actionTypes} from '../Action';
 import InitialState from "./initialStates";
+import {actionTypes as commonActionTypes} from '../../../Action';
 
 export function reducer(state = InitialState, action) {
     let oldState;
@@ -26,6 +27,32 @@ export function reducer(state = InitialState, action) {
             state = state.set("message", data.message);
             return state;
         }
+
+
+        //region DEPENDENCIES
+
+        case commonActionTypes.UPDATE_STATUS_PRAYER_PENDING :{
+            state = state.set("fetching", true);
+            state = state.set("success", false);
+            state = state.set("message", null);
+            return state;
+        }
+
+        case commonActionTypes.UPDATE_STATUS_PRAYER_SUCCESS :{
+            state = state.set("fetching", false);
+            state = state.set("success", true);
+            state = state.set("message", null);
+            return state
+        }
+
+        case commonActionTypes.UPDATE_STATUS_PRAYER_FAILED :{
+            state = state.set("fetching", false);
+            state = state.set("success", false);
+            state = state.set("message", data.message);
+            return state;
+        }
+        //endregion
+
 
         default :
             return state

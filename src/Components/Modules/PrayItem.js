@@ -10,6 +10,7 @@ import Swipeable from 'react-native-swipeable';
 import {TextIcon} from "./index";
 import {TextBase, Button, Icon} from "../Common";
 import moment from "moment";
+import I18n from "../../I18n";
 
 import {Container, Header, Content, Card, CardItem, Thumbnail, Left, Body, Right} from 'native-base';
 
@@ -72,7 +73,7 @@ export default class PrayItem extends PureComponent {
     renderFollowingCount(following) {
         if (Array.isArray(following) && following.length > 0) {
             return (
-                <TextBase>{following}</TextBase>
+                <TextBase>{following.length.toString().concat(" ").concat(I18n.t("follower"))}</TextBase>
             )
         }
         return null
@@ -148,7 +149,11 @@ const styles = EStyleSheet.create({
 
 
     card: {
-        borderRadius: "$borderRadiusSmall",
+        borderRadius: "$borderRadiusNormal",
+    },
+
+    cardHeaderContainer:{
+        borderTopLeftRadius:"$borderRadiusNormal"
     },
 
     container: {

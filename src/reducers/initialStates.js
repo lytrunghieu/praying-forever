@@ -12,6 +12,13 @@ export default {
         ]
     },
 
+    common : Immutable({
+        payload: null,
+        fetching : false,
+        success : false,
+        message : null,
+    }),
+
     prayer :Immutable({
         payload: null,
         fetching : false,

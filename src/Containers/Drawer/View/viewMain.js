@@ -236,6 +236,12 @@ export default class DrawerContainer extends PureComponent {
                 notificationNotRead: this.getNotificationNotRead(nextProps.notifications)
             });
         }
+
+        if (nextProps.commonReducer.fetching !== this.props.commonReducer.fetching && !nextProps.commonReducer.fetching) {
+            if (!nextProps.commonReducer.success && nextProps.commonReducer.message) {
+                alert(nextProps.commonReducer.message);
+            }
+        }
     }
 
     //region handle action press
@@ -257,7 +263,7 @@ export default class DrawerContainer extends PureComponent {
 
     deletePray(params = {}) {
         const {uid} = params;
-        const httpsCallable =firebase.functions(firebase.app()).httpsCallable("deletePray");
+        const httpsCallable = firebase.functions(firebase.app()).httpsCallable("deletePray");
         httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
             .then(data => {
                 this.getPray();
@@ -295,7 +301,7 @@ export default class DrawerContainer extends PureComponent {
         const {navigation: {navigate}, logout, activeItemKey, prayerReducer} = this.props;
         const {notificationNotRead} = this.state;
 
-        const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE)|| [];
+        const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE) || [];
 
         return (
             [<View key={"main"}>
@@ -305,7 +311,7 @@ export default class DrawerContainer extends PureComponent {
                                   onPress={this.onPressOption.bind(this, ScreenKey.PRAYING_INPROGESS)}/>
                     <OptionButton text={I18n.t("finished")}
                                   leftIcon={IconName.prayer_complete}
-                                  count = {praysFinished.length}
+                                  count={praysFinished.length}
                                   onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FINISHED)}/>
                     <OptionButton text={I18n.t("prayForOther")}
                                   leftIcon={IconName.prayer_help}

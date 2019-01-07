@@ -18,7 +18,8 @@ export default class TextBase extends PureComponent {
             regular,
             error,
             normal,
-            highlight
+            highlight,
+            upperCase
         } = this.props;
         const stringText = children || "";
         const customeStyle = {
@@ -26,7 +27,7 @@ export default class TextBase extends PureComponent {
             fontSize:  largeX && Fonts.size.largeX ||  large && Fonts.size.large || small && Fonts.size.small || Fonts.size.normal,
             color : highlight && Colors.white || error && Colors.red || Colors.black ,
         }
-        return (<Text {...this.props} style={[styles.text , customeStyle, style ]}>{stringText}</Text>);
+        return (<Text {...this.props}   style={[styles.text , customeStyle, style]}>{stringText}</Text>);
     }
 }
 

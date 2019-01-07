@@ -146,7 +146,7 @@ class LoginScreen extends PureComponent {
             });
             firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, passWord).then(res => {
                 if(!res.user.emailVerified){
-                    Alert.alert(I18n.t("notVerifyEmail"),I18n.t("notVerifyEmailContent"),
+                    Alert.alert(I18n.t("notVerifyEmailTitle"),I18n.t("notVerifyEmailContent"),
                         [
                             {text: I18n.t("ok")},
                             {text : I18n.t("resendVerifyEmail"), onPress : this.onPressResendEmail}
@@ -155,6 +155,7 @@ class LoginScreen extends PureComponent {
                         )
                 }
                 else{
+                    console.log("res.user.providerData ",res.user.providerData);
                     this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.DRAWER_NAV});
                 }
 

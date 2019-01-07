@@ -23,9 +23,17 @@ import {style} from "../Style";
 const collect = firebase.firestore().collection('prayer');
 const locationCollect = firebase.firestore().collection('location');
 
-import {Header, ActionSheetPrayItem, LoadingBar, Container,Content,PrayItem} from "../../../Components/Modules";
+import {
+    Header,
+    ActionSheetPrayItem,
+    LoadingBar,
+    Container,
+    Content,
+    PrayItem,
+    ActionPrayerModal
+} from "../../../Components/Modules";
 
-export default class  PrayingInProgress extends PureComponent {
+export default class PrayingInProgress extends PureComponent {
 
     constructor(props) {
         super(props);
@@ -33,7 +41,7 @@ export default class  PrayingInProgress extends PureComponent {
         this.optionActionSheet = [
             {text: I18n.t('createNewPrayer'), onPress: this.onPressAdd.bind(this)},
             {text: I18n.t('search'), onPress: this.onPressSearch.bind(this)},
-            {text: I18n.t('deleteAll'), color: Colors.red, onPress: this.onPressDeleteAll.bind(this)}
+            {text: I18n.t('deleteAll'), color: Colors.red, onPress: this.onPressDeletePrayer.bind(this)}
         ];
         this.leftHeader = {
             icon: IconName.menu,
@@ -56,14 +64,18 @@ export default class  PrayingInProgress extends PureComponent {
         this.keyExtractor = this.keyExtractor.bind(this);
         this.renderListFooterComponent = this.renderListFooterComponent.bind(this);
         this.renderListHeaderComponent = this.renderListHeaderComponent.bind(this);
-        this.onAcceptDeleteAll = this.onAcceptDeleteAll.bind(this);
+        this.onAcceptDeletePrayer = this.onAcceptDeletePrayer.bind(this);
         this.onChangeKeySearch = this.onChangeKeySearch.bind(this);
         this.onPressBackSearch = this.onPressBackSearch.bind(this);
+        this.onCloseActionPrayerModal = this.onCloseActionPrayerModal.bind(this);
+        this.onCloseSearchBar = this.onCloseSearchBar.bind(this);
+        this.onPressShare = this.onPressShare.bind(this);
 
         this.state = {
-            prays:  props.prayerReducer.payload && props.prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [],
+            prays: props.prayerReducer.payload && props.prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [],
             isSearch: false,
             keySearch: "",
+            prayerSelected: null,
         };
     }
 
@@ -76,28 +88,48 @@ export default class  PrayingInProgress extends PureComponent {
     componentWillReceiveProps(nextProps) {
         if (nextProps.prayerReducer !== this.props.prayerReducer && nextProps.prayerReducer.payload) {
             this.setState({
-                prays:nextProps.prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS)
+                prays: nextProps.prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS)
             });
         }
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextState.keySearch !== this.state.keySearch && nextState.keySearch.length > 3 && nextProps.prayerReducer.payload ) {
+        if (nextState.keySearch !== this.state.keySearch && nextProps.prayerReducer.payload) {
             const {prayerReducer} = nextProps;
-            const {payload} = prayerReducer
-            const newPrays = payload.filter(e => {
-                let contentFormated = commonUtils.trim(e.content).toUpperCase();
-                return e.status == StatusOfPray.INPROGRESS && contentFormated.indexOf(nextState.keySearch.toUpperCase()) != -1 ? true : false;
-            });
-            this.setState({
-                prays: newPrays
-            })
+            const {payload} = prayerReducer;
+            if (nextState.keySearch.length > 3) {
+                const newPrays = payload.filter(e => {
+                    let contentFormated = commonUtils.trim(e.content).toUpperCase();
+                    return e.status == StatusOfPray.INPROGRESS && contentFormated.indexOf(nextState.keySearch.toUpperCase()) != -1 ? true : false;
+                });
+                this.setState({
+                    prays: newPrays
+                });
+            }
+            else {
+                const newPrays = payload.filter(e => {
+                    return e.status == StatusOfPray.INPROGRESS;
+                });
+                this.setState({
+                    prays: newPrays
+                });
+            }
         }
 
-        if (!nextState.isSearch && this.state.isSearch && !nextState.keySearch && nextProps.prayerReducer.payload) {
-            this.setState({
-                prays:  nextProps.prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE)
-            });
+        // if (!nextState.isSearch && this.state.isSearch && !nextState.keySearch !== this. && nextProps.prayerReducer.payload) {
+        //     this.setState({
+        //         prays: nextProps.prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE)
+        //     });
+        // }
+
+        if (nextState.prayerSelected !== this.state.prayerSelected && nextState.prayerSelected) {
+            this.refs["_moreActionPray"].open();
+        }
+    }
+
+    componentDidUpdate(preProps, preState) {
+        if (preState.prayerSelected !== this.state.prayerSelected && !preState.prayerSelected && this.state.prayerSelected) {
+            this.refs["_moreActionPray"].open();
         }
     }
 
@@ -120,7 +152,6 @@ export default class  PrayingInProgress extends PureComponent {
         this.setState({
             keySearch: value
         });
-        const {prayerReducer} = this.props;
     }
 
     onPressBackSearch() {
@@ -133,6 +164,7 @@ export default class  PrayingInProgress extends PureComponent {
     //endregion
 
     //region handle action modal
+
     onPressSearch() {
         this.setState({
             isSearch: true
@@ -140,19 +172,19 @@ export default class  PrayingInProgress extends PureComponent {
         this.refs["moreAction"].close();
     }
 
-    onPressDeleteAll() {
-        this.refs["moreAction"].close();
-        this.refs["confirm"].open();
+    onCloseActionPrayerModal() {
+        this.setState({
+            prayerSelected: null
+        });
     }
 
     //endregion
 
     //region handle modal confirm
 
-    onAcceptDeleteAll() {
-        const action = {type: EventRegisterTypes.DELETE_PRAY};
-        commonUtils.sendEvent(action);
-        this.refs["confirm"].close();
+    onAcceptDeletePrayer(data) {
+        const {prayerActions} = this.props;
+        prayerActions.deletePrayer(data ? data.uid : null);
     }
 
     //endregion
@@ -169,7 +201,14 @@ export default class  PrayingInProgress extends PureComponent {
 
     //endregion
 
-    //region handle Header
+    //region HANDLE HEADER
+
+    onCloseSearchBar() {
+        this.setState({
+            isSearch: false,
+            keySearch: "",
+        });
+    }
 
     onPressLeft() {
         this.props.navigation.navigate(ScreenKey.DRAWER_TOGGLE);
@@ -181,7 +220,7 @@ export default class  PrayingInProgress extends PureComponent {
 
     //endregion
 
-    //region handle Pray Item
+    //region HANDLE PRAY ITEM
 
     requestLocationPermission() {
         return Permissions.request('location').then(response => {
@@ -200,22 +239,7 @@ export default class  PrayingInProgress extends PureComponent {
         this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, item);
     }
 
-    onPressFinish = (item) => () => {
-        const action = {type: EventRegisterTypes.UPDATE_STATUS_PRAY, params: item};
-        commonUtils.sendEvent(action);
-    }
-
-    onPressShare = (item) => () => {
-        const {owner, uid: uidPray} = item || {};
-        const {uid} = owner || {};
-        if (_.isEmpty(uid) || _.isEmpty(uidPray)) {
-            return;
-        }
-        const path = uid.concat("/").concat("data").concat("/").concat(uidPray);
-        this.refs["_modalQR"].open(path);
-    }
-
-    onPressStatusLive =(item) =>() => {
+    onPressStatusLive = (item) => () => {
         const currentDoc = collect.doc(firebase.auth().currentUser.uid).collection("data").doc(item.uid);
         if (item.isLive) {
             const dataSend = {
@@ -270,26 +294,27 @@ export default class  PrayingInProgress extends PureComponent {
         }
     }
 
-    onPressDeleteSpecificPray = (item) => () => {
-        const action = {type: EventRegisterTypes.DELETE_PRAY, params: item};
-        commonUtils.sendEvent(action);
-    }
-
-    onPressUnfollowing = (item) => () => {
-        const action = {type: EventRegisterTypes.UPDATE_FOLLOWING, params: item};
-        commonUtils.sendEvent(action);
+    onPressDeletePrayer(item) {
+        this.refs["confirmDeleteOnePrayer"].open(item);
     }
 
     onPressMoreAction = (item) => () => {
-        this.refs["_moreActionPray"].open(item);
+        this.setState({
+            prayerSelected: item
+        });
+    }
+
+    onPressShare(item){
+        const {uid} = item;
+        let stringText = uid;
+        stringText = stringText.concat(",").concat(firebase.auth().currentUser.uid);
+        this.refs["_modalQR"].open(stringText);
     }
 
     //endregion
 
-    //region rendering
-
+    //region RENDERING
     renderPrayItem({item}) {
-        const {onPressShare} = this.props;
         return (
             <PrayItem
                 item={item}
@@ -301,7 +326,7 @@ export default class  PrayingInProgress extends PureComponent {
 
     renderSeparate() {
         return (
-            <PlaceHolder/>
+            <PlaceHolder small={true}/>
         )
     }
 
@@ -314,24 +339,27 @@ export default class  PrayingInProgress extends PureComponent {
     }
 
     render() {
-        const {prays, isSearch} = this.state;
-        const {prayerReducer}  =this.props;
+        const {prays, isSearch, prayerSelected, keySearch} = this.state;
+        const {prayerReducer, navigation, prayerActions} = this.props;
         const {fetching} = prayerReducer;
         return (
-            [<Container key="container"  pointerEvents={fetching ? "none" : "auto"}>
+            [<Container key="container" pointerEvents={fetching ? "none" : "auto"}>
+
                 <Header
                     title={I18n.t('praying')}
                     left={this.leftHeader}
                     right={this.rightHeader}
+                    searchBar={isSearch}
+                    keySearch={keySearch}
+                    onChangeTextSearch={this.onChangeKeySearch}
+                    onCloseSearchBar={this.onCloseSearchBar}
                 />
-
                 <Content>
                     <FlatList
                         data={prays}
                         keyExtractor={this.keyExtractor}
                         renderItem={this.renderPrayItem}
                         ItemSeparatorComponent={this.renderSeparate}
-                        // ListHeaderComponent={this.renderListHeaderComponent}
                         ListFooterComponent={this.renderListFooterComponent}
 
                     />
@@ -342,14 +370,19 @@ export default class  PrayingInProgress extends PureComponent {
                     options={this.optionActionSheet}
                     ref={"moreAction"}
                 />,
-                <ActionSheetPrayItem
-                    onPressShare={this.onPressShare}
-                    onPressDelete={this.onPressDeleteSpecificPray}
-                    onPressUnfollow={this.onPressUnfollowing}
-                    key="ActionSheetPrayItem"
+
+                <ActionPrayerModal
+                    onClosed={this.onCloseActionPrayerModal}
+                    action={prayerActions}
+                    key="_moreActionPray"
+                    data={prayerSelected}
                     ref={"_moreActionPray"}
-                    onPressUpdateFinishStatus={this.onPressFinish}
+                    navigation={navigation}
+                    onPressDelete={this.onPressDeletePrayer}
+                    onPressStatusLive ={this.onPressStatusLive}
+                    onPressShareOption={this.onPressShare}
                 />,
+
                 <ConfirmModal
                     key="ConfirmModal"
                     ref={"confirm"}
@@ -357,9 +390,20 @@ export default class  PrayingInProgress extends PureComponent {
                     content={I18n.t("deleteConfirmAll")}
                     rejectText={I18n.t("cancel")}
                     acceptText={I18n.t("yes")}
-                    onAccept={this.onAcceptDeleteAll}
+                    onAccept={this.onAcceptDeletePrayer}
                 />,
-                <ModalScanQR key={"modalScanQRCode"} ref={"_modalScanQR"}/>,
+
+                <ConfirmModal
+                    key="ConfirmDeleteOnePrayer"
+                    ref={"confirmDeleteOnePrayer"}
+                    title={I18n.t("warning")}
+                    content={I18n.t("deleteConfirm")}
+                    rejectText={I18n.t("cancel")}
+                    acceptText={I18n.t("yes")}
+                    onAccept={this.onAcceptDeletePrayer}
+                />,
+
+                <ModalScanQR key={"modalScanQRCode"} ref={"_modalScanQR"} followingPrayer={prayerActions.followingPrayer}/>,
                 <ModalQR key={"modalQRCode"} ref={"_modalQR"}/>,
                 <LoadingBar visible={fetching}/>
             ]

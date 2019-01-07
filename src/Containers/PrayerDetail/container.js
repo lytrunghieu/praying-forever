@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {viewMain} from "./View";
 import {action} from './Action';
+import {prayerActions} from '../../Action';
 
 const mapStateToProps = (state) => ({
     prayerReducer: state.prayerReducer,
@@ -11,6 +12,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     action: bindActionCreators(action, dispatch),
+    prayerActions: bindActionCreators(prayerActions, dispatch),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(viewMain);

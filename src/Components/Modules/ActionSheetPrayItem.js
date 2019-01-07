@@ -98,7 +98,7 @@ export default class ActionSheetPrayItem extends PureComponent {
                 //The Prayer is following
                 options = [
                     {
-                        text: "unfollowing",
+                        text: I18n.t('unFollowing'),
                         onPress: onPressUpdateFollowingStatus(item)
                     },
                 ];

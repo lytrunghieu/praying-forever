@@ -16,11 +16,9 @@ import {
 import commonUtils from "../../../Utils/CommonUtils";
 import firebase from 'react-native-firebase';
 import {Header, Container, Content, PrayItem} from "../../../Components/Modules";
-import {style as styles} from "../Style";
+import {ActionSheetPrayItem} from "../../../Components/Modules";
 
 const collect = firebase.firestore().collection("prayer");
-
-const optionActionSheetForFinished = [];
 
 export default class PrayerDetail extends PureComponent {
     constructor(props) {
@@ -29,23 +27,14 @@ export default class PrayerDetail extends PureComponent {
         this.prayer = dataPassed;
         this.uid = dataPassed && dataPassed.uid || null;
         this.userUID = dataPassed && dataPassed.owner && dataPassed.owner.uid || null;
-        this.optionActionSheetForFinished = [
-            {text: I18n.t('continuesPraying'), onPress: this.onPressContinuesPraying.bind(this)},
-            {text: I18n.t('edit'), onPress: this.onPressEdit.bind(this)},
-            {text: I18n.t('delete'), color: Colors.red, onPress: this.onPressDelete.bind(this)}
-        ];
 
-        this.optionActionSheetForInprogress = [
-            {text: I18n.t('updateToFinish'), onPress: this.onPressChangeToFinished.bind(this)},
-            {text: I18n.t('edit'), onPress: this.onPressEdit.bind(this)},
-            {text: I18n.t('delete'), color: Colors.red, onPress: this.onPressDelete.bind(this)}
-        ];
         const {status} = this.prayer;
 
         this.onPressBack = this.onPressBack.bind(this);
         this.onPressRightHeader = this.onPressRightHeader.bind(this);
         this.onAcceptDelete = this.onAcceptDelete.bind(this);
         this.callbackChangeStatusPray = this.callbackChangeStatusPray.bind(this);
+        this.onPressDelete = this.onPressDelete.bind(this);
         this.state = {
             item: dataPassed,
             status: status,
@@ -56,7 +45,6 @@ export default class PrayerDetail extends PureComponent {
             icon: IconName.back,
             onPress: this.onPressBack.bind(this)
         };
-
 
         this.rightHeader = [
             {
@@ -77,6 +65,9 @@ export default class PrayerDetail extends PureComponent {
                 this.setState({
                     item: currentPray
                 })
+            }
+            else{
+                this.onPressBack();
             }
         }
 
@@ -126,35 +117,34 @@ export default class PrayerDetail extends PureComponent {
         });
     }
 
-    onPressContinuesPraying() {
-        const item = this.prayer;
-        const action = {
-            type: EventRegisterTypes.UPDATE_STATUS_PRAY,
-            callback: this.callbackChangeStatusPray,
-            params: {...item, status: StatusOfPray.INPROGRESS}
-        };
-        commonUtils.sendEvent(action);
-    }
-
-
-    onPressChangeToFinished() {
-        const item = this.prayer;
-        const action = {
-            type: EventRegisterTypes.UPDATE_STATUS_PRAY,
-            callback: this.callbackChangeStatusPray,
-            params: {...item, status: StatusOfPray.COMPLETE}
-        };
-        commonUtils.sendEvent(action);
-    }
-
-
-    onPressEdit() {
-        const {item} = this.state;
-        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, item);
-    }
-
+    // onPressContinuesPraying() {
+    //     const item = this.prayer;
+    //     const action = {
+    //         type: EventRegisterTypes.UPDATE_STATUS_PRAY,
+    //         callback: this.callbackChangeStatusPray,
+    //         params: {...item, status: StatusOfPray.INPROGRESS}
+    //     };
+    //     commonUtils.sendEvent(action);
+    // }
+    //
+    //
+    // onPressChangeToFinished() {
+    //     const item = this.prayer;
+    //     const action = {
+    //         type: EventRegisterTypes.UPDATE_STATUS_PRAY,
+    //         callback: this.callbackChangeStatusPray,
+    //         params: {...item, status: StatusOfPray.COMPLETE}
+    //     };
+    //     commonUtils.sendEvent(action);
+    // }
+    //
+    //
+    // onPressEdit() {
+    //     const {item} = this.state;
+    //     this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, item);
+    // }
+    //
     onPressDelete() {
-        this.refs["moreAction"].close();
         this.refs["confirm"].open();
     }
 
@@ -163,11 +153,14 @@ export default class PrayerDetail extends PureComponent {
     //region handle confirm modal
 
     onAcceptDelete() {
-        const item = this.prayer;
-        const action = {type: EventRegisterTypes.DELETE_PRAY, params: item};
-        commonUtils.sendEvent(action);
-        this.refs["confirm"].close();
-        this.onPressBack();
+        const {item ={}} = this.state;
+        const {uid} = item;
+        const {prayerActions} = this.props;
+        prayerActions.deletePrayer(uid);
+        // const action = {type: EventRegisterTypes.DELETE_PRAY, params: item};
+        // commonUtils.sendEvent(action);
+        // this.refs["confirm"].close();
+        // this.onPressBack();
     }
 
     //endregion
@@ -201,7 +194,8 @@ export default class PrayerDetail extends PureComponent {
     }
 
     render() {
-        const {status, available} = this.state;
+        const {status, available, item} = this.state;
+        const {navigation,prayerActions} = this.props;
         const {fetching} = this.props.prayerDetailReducer;
         const {fetching : fetchingPrayers} = this.props.prayerReducer;
 
@@ -219,11 +213,14 @@ export default class PrayerDetail extends PureComponent {
                     }
                 </Content>
             </Container>,
-                <ActionSheet
-                    key="moreAction"
-                    options={status === StatusOfPray.INPROGRESS ? this.optionActionSheetForInprogress : this.optionActionSheetForFinished}
-                    ref={"moreAction"}
-                />,
+               <ActionSheetPrayItem
+                   action={prayerActions}
+                   key="moreAction"
+                   data ={item}
+                   ref={"moreAction"}
+                   navigation={navigation}
+                   onPressDelete={this.onPressDelete}
+               />,
                 <ConfirmModal
                     key="confirm"
                     ref={"confirm"}

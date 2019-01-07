@@ -9,14 +9,12 @@ export default class Following {
     }
 
    static convertFollowing(data){
-        if( typeof data !="object"){
-            return null;
+        if(!Array.isArray(data) || data.length === 0){
+            return [];
         }
-        let object = {};
-        for (let key of data){
-            object[key] = new PrayUser(data[key]);
-        }
-        return object;
+
+
+        return data;
    }
 
 }

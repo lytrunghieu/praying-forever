@@ -7,7 +7,8 @@ import {prayerActions, notificationActions, userActions} from '../../Action/inde
 const mapStateToProps = (state) => {
     return {
         notifications: state.notificationReducer.notifications,
-        prayerReducer : state.prayerReducer
+        prayerReducer : state.prayerReducer,
+        commonReducer : state.commonReducer,
     }
 }
 

@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 
 //Components
 
-export default class Separator extends PureComponent {
+export default class PlaceHolder extends PureComponent {
 
     constructor(props) {
         super(props);
@@ -18,24 +18,29 @@ export default class Separator extends PureComponent {
 
     render() {
         let props = this.props;
+        const {small} = props;
         return (
-            <View style={[styles.container , {height : props.height}]} />
+            <View style={[styles.container , small ? styles.smallStyle : {height : props.height}]} />
         );
     }
 }
 
-Separator.defaultProps = {
+PlaceHolder.defaultProps = {
     height : 10,
 }
 
-Separator.propTypes = {
+PlaceHolder.propTypes = {
     height : PropTypes.number,
+    small : PropTypes.bool
 
 }
 
 const styles = EStyleSheet.create({
     container :{
         backgroundColor:"transparent"
+    },
+    smallStyle :{
+        height : 4,
     }
 
 });

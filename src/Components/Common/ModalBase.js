@@ -12,25 +12,49 @@ export default class ModalBase extends PureComponent {
     constructor(props) {
         super(props);
         this.state={
-            visible :false
+            visible :false,
+            data : null,
         };
         this.isCenter = true;
-        this.animationDuration =200;
+        this.animationDuration =300;
         this.backdropOpacity = 0.5;
         this.backdropPressToClose = true;
         this.backButtonClose = true;
 
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
+        this.onClosed = this.onClosed.bind(this);
+        this.onOpened = this.onOpened.bind(this);
 
     }
 
-    open(){
+    onOpened(){
+        this.setState({
+            visible:true
+        })
+    }
+
+    onClosed(){
+        const {onClosed} = this.props;
+        this.setState({
+            visible:false
+        });
+        if(onClosed){
+            onClosed();
+        }
+        this.setState({
+           data : null
+        });
+    }
+
+    open(data){
         this.refs["modal"].open();
         Keyboard.dismiss();
-        // this.setState({
-        //     visible :true
-        // });
+        if(data){
+            this.setState({
+                data : data
+            });
+        }
     }
 
     close(){
@@ -45,13 +69,13 @@ export default class ModalBase extends PureComponent {
     }
 
     render(){
-        const {onClosed} = this.props;
+
         return (
             <Modal
                 style={[styles.modal]}
                 ref={"modal"}
-                onClosed ={onClosed}
-                // isOpen={this.state.visible}
+                onOpened={this.onOpened}
+                onClosed ={this.onClosed}
                 backdropPressToClose ={this.backdropPressToClose}
                 animationDuration={this.animationDuration}
                 swipeToClose={false}
