@@ -2,7 +2,7 @@ import actionTypes from "./actionTypes";
 import firebase from 'react-native-firebase';
 
 const uniqueId = require('react-native-unique-id');
-import {prayerService} from "../Service";
+import {prayerService ,locationService} from "../Service";
 
 export function getPrayer({userUID, prayerUID, search} = {}) {
     return function (dispatch) {
@@ -131,5 +131,74 @@ export function followingPrayer(params) {
     }
 }
 
+export function updateLiveStatusPrayer({live = false,prayerUID}) {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.UPDATE_STATUS_PRAYER_PENDING,
+        });
+        //get location to public prayer
+        if(live){
+            return  new locationService().getLocationPermission().then(res => {
+                if (res.success) {
+                    return new locationService().getCurrentLocation().then(_res =>{
+                        if(_res.success) {
+                            return new prayerService().updateLiveStatusPrayer({live, prayerUID, location : _res.data}).then(__res => {
+                                if (__res.success) {
+                                    dispatch({
+                                        type: actionTypes.UPDATE_LIVE_STATUS_SUCCESS,
+                                    });
+                                    dispatch(getPrayer());
+                                }
+                                else{
+                                    dispatch({
+                                        type: actionTypes.UPDATE_LIVE_STATUS_FAILED,
+                                        data :{
+                                            message : __res.message
+                                        }
+                                    });
+                                }
+                            })
+                        }
+                        else{
+                            dispatch({
+                                type: actionTypes.UPDATE_LIVE_STATUS_FAILED,
+                                data :{
+                                    message : _res.message
+                                }
+                            });
+                        }
+                    })
+                }
+                else {
+                    dispatch({
+                        type: actionTypes.UPDATE_LIVE_STATUS_FAILED,
+                        data :{
+                            message : res.message
+                        }
+                    });
+                }
+            })
+        }
+        else{
+            //disabled live status
+            return new prayerService().updateLiveStatusPrayer({live, prayerUID}).then(__res => {
+                if (__res.success) {
+                    dispatch({
+                        type: actionTypes.UPDATE_LIVE_STATUS_SUCCESS,
+                    });
+                    dispatch(getPrayer());
+                }
+                else{
+                    dispatch({
+                        type: actionTypes.UPDATE_LIVE_STATUS_FAILED,
+                        data :{
+                            message : __res.message
+                        }
+                    });
+                }
+            })
+        }
 
+    }
+}
 

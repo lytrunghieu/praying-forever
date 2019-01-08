@@ -239,7 +239,7 @@ export default class PrayingInProgress extends PureComponent {
         this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, item);
     }
 
-    onPressStatusLive = (item) => () => {
+    onPressChangeLiveStatus = (item) => () => {
         const currentDoc = collect.doc(firebase.auth().currentUser.uid).collection("data").doc(item.uid);
         if (item.isLive) {
             const dataSend = {
@@ -379,8 +379,9 @@ export default class PrayingInProgress extends PureComponent {
                     ref={"_moreActionPray"}
                     navigation={navigation}
                     onPressDelete={this.onPressDeletePrayer}
-                    onPressStatusLive ={this.onPressStatusLive}
+                    onPressChangeLiveStatus ={this.onPressChangeLiveStatus}
                     onPressShareOption={this.onPressShare}
+
                 />,
 
                 <ConfirmModal

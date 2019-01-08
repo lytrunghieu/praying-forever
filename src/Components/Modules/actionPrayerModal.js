@@ -7,6 +7,7 @@ import {
 } from '../Common/index';
 import firebase from 'react-native-firebase';
 import Proptypes from "prop-types";
+import {CommonUtils} from "../../Utils";
 
 export default class ActionPrayerModal extends PureComponent {
 
@@ -56,8 +57,14 @@ export default class ActionPrayerModal extends PureComponent {
         onPressShareOption(data);
     }
 
-    onPressUpdatePublicStatus = (isLive) => {
+    _onPressChangeLiveStatus = (data,live) =>() => {
+        const  {uid : prayerUID} = data;
+        CommonUtils.sendEvent({type : EventRegisterTypes.UPDATE_LIVE_STATUS , params :{prayerUID, live}})
 
+        // if(action.updateLiveStatusPrayer){
+        //     action.updateLiveStatusPrayer({live: live ,prayerUID })
+        // }
+        // onPressChangeLiveStatus(data,isLive)
     }
 
     //endregion
@@ -85,12 +92,12 @@ export default class ActionPrayerModal extends PureComponent {
 
                     if (isLive) {
                         options = options.concat(
-                            {text: I18n.t('disablePublic'), onPress: this.onPressUpdatePublicStatus(true)},
+                            {text: I18n.t('disablePublic'), onPress: this._onPressChangeLiveStatus(data,false)},
                         );
                     }
                     else {
                         options = options.concat(
-                            {text: I18n.t('public'), onPress: this.onPressUpdatePublicStatus(false)},
+                            {text: I18n.t('public'), onPress: this._onPressChangeLiveStatus(data,true)},
                         );
                     }
 
@@ -144,6 +151,8 @@ ActionPrayerModal.defaultProps = {
     onPressDelete: () => {
     },
     onPressShare: () => {
+    },
+    onPressPublic: () =>{
     }
 };
 
@@ -152,5 +161,6 @@ ActionPrayerModal.propTypes = {
     data: Proptypes.any.isRequired,
     action: Proptypes.any.isRequired,
     onPressDelete: Proptypes.func,
-    onPressShareOption: Proptypes.func
+    onPressShareOption: Proptypes.func,
+    onPressChangeLiveStatus : Proptypes.func,
 };

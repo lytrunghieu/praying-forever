@@ -5,6 +5,7 @@
 "use strict";
 
 const {paths} = require("./constrants");
+const {createModel} = require("./utils");
 
 const functions = require('firebase-functions');
 
@@ -201,13 +202,13 @@ exports.deletePrayer = functions.https.onCall((data) => {
     }
 });
 
-exports.following = functions.https.onCall( async (data) => {
-    const {userUID, prayerUID, userOtherUID,follow} = data;
+exports.following = functions.https.onCall(async (data) => {
+    const {userUID, prayerUID, userOtherUID, follow} = data;
     let path = paths.prayer.replace("{userUID}", userOtherUID).replace("{prayerUID}", prayerUID);
     let pathDelete = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
-    if(!follow){
-        let prayerOfUser =  await firestore.doc(pathDelete).get();
-        if(prayerOfUser.ref){
+    if (!follow) {
+        let prayerOfUser = await firestore.doc(pathDelete).get();
+        if (prayerOfUser.ref) {
             await prayerOfUser.ref.delete();
         }
     }
@@ -227,7 +228,7 @@ exports.following = functions.https.onCall( async (data) => {
                 hasFollowing = false
             }
             if (follow) {
-                if(!hasFollowing){
+                if (!hasFollowing) {
                     following.push(userUID);
                     docSnap.ref.update("following", following);
                     let path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
@@ -237,12 +238,12 @@ exports.following = functions.https.onCall( async (data) => {
                         return {success: true, statusCode: 200, message: "request success"};
                     });
                 }
-                else{
+                else {
                     return {success: false, statusCode: 402, message: "the prayer had following before"};
                 }
             }
             else {
-                if(!hasFollowing){
+                if (!hasFollowing) {
                     return {success: false, statusCode: 403, message: "the prayer had remove following before"};
                 }
                 else {
@@ -328,20 +329,12 @@ exports.onCreatePray = functions.firestore
     });
 
 exports.createPrayer = functions.https.onCall((data = {}) => {
-        const {userUID, prayer} = data;
-        const path = paths.prayers.replace("{userUID}", userUID);
-        const prayerCollect = firestore.collection(path);
-        return prayerCollect.add(prayer).then(docRef => {
-            return docRef.update("uid", docRef.id, "created", admin.firestore.FieldValue.serverTimestamp()).then(() => {
-                return {success: true, statusCode: 200, message: "request success"};
-            }).catch(error => {
-                console.log("LOG ERROR", error);
-                throw new functions.https.HttpsError(
-                    "unknown", // code
-                    'request failed', // message
-                    {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
-                );
-            })
+    const {userUID, prayer} = data;
+    const path = paths.prayers.replace("{userUID}", userUID);
+    const prayerCollect = firestore.collection(path);
+    return prayerCollect.add(prayer).then(docRef => {
+        return docRef.update("uid", docRef.id, "created", admin.firestore.FieldValue.serverTimestamp()).then(() => {
+            return {success: true, statusCode: 200, message: "request success"};
         }).catch(error => {
             console.log("LOG ERROR", error);
             throw new functions.https.HttpsError(
@@ -350,12 +343,20 @@ exports.createPrayer = functions.https.onCall((data = {}) => {
                 {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
             );
         })
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        throw new functions.https.HttpsError(
+            "unknown", // code
+            'request failed', // message
+            {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+        );
+    })
 
 });
 
 exports.editPrayer = functions.https.onCall((data = {}) => {
-    const {userUID, prayer ={}} = data;
-    const {uid,title,content} = prayer;
+    const {userUID, prayer = {}} = data;
+    const {uid, title, content} = prayer;
     const path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", uid);
     const prayerDoc = firestore.doc(path);
     return prayerDoc.update("title", title, "content", content).then(() => {
@@ -370,24 +371,145 @@ exports.editPrayer = functions.https.onCall((data = {}) => {
     })
 });
 
-
-exports.getPrayer = functions.https.onCall(async ( data ={})=>{
+exports.getPrayer = functions.https.onCall(async (data = {}) => {
     const {userUID, prayerUID} = data;
     let path = paths.prayers.replace("{userUID}", userUID);
     const prayerCollect = firestore.collection(path);
     let collectSnap = null;
-    if(prayerUID){
-        collectSnap  =  await  prayerCollect.where("uid","==",prayerUID).get();
+    if (prayerUID) {
+        collectSnap = await  prayerCollect.where("uid", "==", prayerUID).get();
     }
-    else{
+    else {
         collectSnap = await prayerCollect.get();
     }
     const docs = []
-    collectSnap.forEach(doc =>{
+    collectSnap.forEach(doc => {
         docs.push(doc.data());
     });
 
-    return {success: true, statusCode: 200, data : docs,message: "request success"};
+    return {success: true, statusCode: 200, data: docs, message: "request success"};
+})
+
+exports.updateLiveStatus = functions.https.onCall(async (data = {}) => {
+    const {userUID, prayerUID, live, location} = data;
+    let path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
+    return firestore.doc(path).get().then(docSnap => {
+        if (docSnap.data()) {
+            const {owner, isLive} = docSnap.data();
+            const {uid: ownerUID} = owner;
+            if (ownerUID === userUID) {
+                if (live && location && createModel.createLocationModel(location)) {
+                    if (isLive) {
+                        return {success: false, statusCode: 403, message: "the prayer had public"};
+                    }
+                    else {
+                        return docSnap.ref.update("isLive", createModel.createLocationModel(location)).then(docRef => {
+                            let path = paths.locationPrayer.replace("{prayerUID}", prayerUID);
+                            let prayer = Object.assign({}, docSnap.data(), {isLive : createModel.createLocationModel(location)});
+                            return firestore.doc(path).get().then(_docSnap => {
+                                return _docSnap.ref.set(prayer).then(_docRef => {
+                                    return {success: true, statusCode: 200, message: "request success"};
+                                }).catch(error => {
+                                    console.log("LOG ERROR", error);
+                                    throw new functions.https.HttpsError(
+                                        "unknown", // code
+                                        'request failed', // message
+                                        {
+                                            success: false,
+                                            statusCode: 400,
+                                            body: data,
+                                            errorDescription: error.toString()
+                                        }
+                                    );
+                                })
+                            }).catch(error => {
+                                console.log("LOG ERROR", error);
+                                throw new functions.https.HttpsError(
+                                    "unknown", // code
+                                    'request failed', // message
+                                    {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+                                );
+                            })
+                        }).catch(error => {
+                            console.log("LOG ERROR", error);
+                            throw new functions.https.HttpsError(
+                                "unknown", // code
+                                'request failed', // message
+                                {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+                            );
+                        });
+                    }
+
+                }
+                else {
+                    if (!live) {
+                        if (isLive) {
+                            return docSnap.ref.update("isLive", null).then(docRef => {
+                                let path = paths.locationPrayer.replace("{prayerUID}", prayerUID);
+                                return firestore.doc(path).get().then(_docSnap => {
+                                    let prayer = Object.assign({}, docSnap.data(), {isLive : null});
+                                    return _docSnap.ref.delete().then(_docRef => {
+                                        return {success: true, statusCode: 200, message: "request success"};
+                                    }).catch(error => {
+                                        console.log("LOG ERROR", error);
+                                        throw new functions.https.HttpsError(
+                                            "unknown", // code
+                                            'request failed', // message
+                                            {
+                                                success: false,
+                                                statusCode: 400,
+                                                body: data,
+                                                errorDescription: error.toString()
+                                            }
+                                        );
+                                    })
+                                }).catch(error => {
+                                    console.log("LOG ERROR", error);
+                                    throw new functions.https.HttpsError(
+                                        "unknown", // code
+                                        'request failed', // message
+                                        {
+                                            success: false,
+                                            statusCode: 400,
+                                            body: data,
+                                            errorDescription: error.toString()
+                                        }
+                                    );
+                                })
+                            }).catch(error => {
+                                console.log("LOG ERROR", error);
+                                throw new functions.https.HttpsError(
+                                    "unknown", // code
+                                    'request failed', // message
+                                    {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+                                );
+                            });
+                        }
+                        else {
+                            return {success: false, statusCode: 402, message: "The prayer had unpublic"};
+                        }
+                    }
+                    else {
+                        return {success: false, statusCode: 400, message: "request failed"};
+
+                    }
+                }
+            }
+            else {
+                return {success: false, statusCode: 401, message: "user not is owner of this prayer"};
+            }
+        }
+        else {
+            return {success: false, statusCode: 400, message: "not found prayer"};
+        }
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        throw new functions.https.HttpsError(
+            "unknown", // code
+            'request failed', // message
+            {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+        );
+    });
 })
 
 //region API INTERNAL

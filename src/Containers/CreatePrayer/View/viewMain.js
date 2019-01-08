@@ -5,7 +5,6 @@ import {
     TimePickerAndroid,
     View
 } from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
 import {IconName, Colors} from '../../../Themes';
 import I18n from '../../../I18n';
 import {
@@ -15,10 +14,9 @@ import {
     Button, Icon, Input, Text
 } from '../../../Components/Common';
 import moment from "moment";
-import commonUtils from "../../../Utils/CommonUtils";
 import firebase, {NotificationOpen} from 'react-native-firebase';
 import {Pray} from "../../../model";
-import {StatusOfPray, EventRegisterTypes} from "../../../Constants";
+import {StatusOfPray} from "../../../Constants";
 
 import {Header, ButtonFooter, Container, Content} from "../../../Components/Modules";
 

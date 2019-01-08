@@ -59,7 +59,7 @@ export default class DrawerContainer extends PureComponent {
         });
 
         this.getPray();
-        const {userActions} = this.props;
+        const {userActions,prayerActions} = this.props;
         userActions.getProfile();
 
         //Listen event
@@ -172,6 +172,14 @@ export default class DrawerContainer extends PureComponent {
                     break;
                 }
 
+                case EventRegisterTypes.UPDATE_LIVE_STATUS:{
+                    const {prayerUID, live} = params;
+                    if (prayerUID) {
+                        prayerActions.updateLiveStatusPrayer({prayerUID,live});
+                    }
+                    break;
+                }
+
 
                 default : {
                     break;
@@ -260,6 +268,20 @@ export default class DrawerContainer extends PureComponent {
     }
 
     //endregion
+
+
+    requestLocationPermission() {
+        return Permissions.request('location').then(response => {
+            if (response === "authorized") {
+                return "success";
+            }
+            else {
+                alert("App need access location to get prayer list");
+                return "fail";
+            }
+        })
+
+    }
 
     deletePray(params = {}) {
         const {uid} = params;

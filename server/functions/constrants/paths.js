@@ -5,8 +5,11 @@
 exports.prayer = "prayer/{userUID}/data/{prayerUID}";
 exports.prayers ="prayer/{userUID}/data";
 
+exports.locationPrayer ="location/{prayerUID}";
+exports.locationPrayers ="location";
+
 exports.notification = "notification/{userUID}/data";
 exports.deleteNotification = "notification/{userUID}/data/{notifUID}"
 exports.deleteAllNotification = "notification/{userUID}/data"
 
-exports.profileUser ="profile/{userUID}"
+exports.profileUser ="profile/{userUID}";
