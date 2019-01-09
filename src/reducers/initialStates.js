@@ -55,4 +55,10 @@ export default {
         statusCode: null,
     }),
 
+    forgot :Immutable({
+        fetching : false,
+        success : false,
+        message : null,
+    })
+
 };

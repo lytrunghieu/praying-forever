@@ -60,6 +60,8 @@
   "create": "CREATE",
   "checkEmailTitle":"Check mail inbox",
   "checkEmailContent":"Verify email has sent to inbox",
+  "checkForgotEmailTitle":"Check mail inbox",
+  "checkForgotEmailContent":"Reset password link has sent to inbox",
   "save": "SAVE",
   "signInWith": "Sign In With",
   "send": "SEND",

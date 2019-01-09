@@ -7,6 +7,7 @@ import {commonReducer} from "./commonReducer";
 import {errorMessageReducer} from "./errorMessageReducer";
 import {loginReducer} from "./loginReducer";
 import {registerReducer} from "./registerReducer";
+import {forgotPasswordReducer} from "./forgotPasswordReducer";
 
 import {prayingInProgress, createPrayer,prayerDetail} from "../Containers";
 const {reducer : createPrayerReducer} =createPrayer;
@@ -22,7 +23,8 @@ const appReducer = combineReducers({
     commonReducer,
     errorMessageReducer,
     loginReducer,
-    registerReducer
+    registerReducer,
+    forgotPasswordReducer
 })
 
 export const  expAppReducer = appReducer;

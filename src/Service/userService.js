@@ -103,22 +103,26 @@ class UserService extends baseService {
                 }
                 switch (err.code) {
                     case ErrorCodes.AUTH_USER_NOT_FOUND : {
-                        alert(I18n.t("userNotFoundError"));
+                        result.data.statusCode = 401;
+                        result.data.message = I18n.t("userNotFoundError");
                         break;
                     }
 
                     case ErrorCodes.AUTH_INVALID_EMAIL : {
-                        alert(I18n.t("emailInvalid"));
+                        result.data.statusCode = 401;
+                        result.data.message = I18n.t("emailInvalid");
                         break;
                     }
 
                     case ErrorCodes.AUTH_NETWORK_REQUEST_FAILED : {
-                        alert(I18n.t("networkError"));
+                        result.data.statusCode = 401;
+                        result.data.message = I18n.t("networkError");
                         break;
                     }
 
                     case ErrorCodes.AUTH_EMAIL_ALREADY_IS_EXIST : {
-                        alert(I18n.t("emailAlreadyUse"));
+                        result.data.statusCode = 401;
+                        result.data.message = I18n.t("emailAlreadyUse");
                         break;
                     }
 
@@ -129,6 +133,53 @@ class UserService extends baseService {
                 }
                 return result;
             })
+    }
+
+    sendForgotPassword({email}){
+        return firebase.auth().sendPasswordResetEmail(email).then(res=>{
+            const result = {
+                data: {
+                    success: true,
+                    message: null,
+                    statusCode: 200,
+                }
+            }
+
+            return result;
+        }) .catch(err => {
+            const result = {
+                data: {
+                    statusCode: 400,
+                    message: I18n.t("unknowError")
+                }
+            }
+            switch (err.code) {
+                case ErrorCodes.AUTH_USER_NOT_FOUND : {
+                    result.data.statusCode = 401;
+                    result.data.message = I18n.t("userNotFoundError");
+                    break;
+                }
+
+                case ErrorCodes.AUTH_INVALID_EMAIL : {
+                    result.data.statusCode = 401;
+                    result.data.message = I18n.t("emailInvalid");
+                    break;
+                }
+
+                case ErrorCodes.AUTH_NETWORK_REQUEST_FAILED : {
+                    result.data.statusCode = 401;
+                    result.data.message = I18n.t("networkError");
+                    break;
+                }
+
+                default : {
+                    break
+                }
+            }
+            return result;
+        }).finally((res) => {
+            return new response(res)
+        });
     }
 }
 

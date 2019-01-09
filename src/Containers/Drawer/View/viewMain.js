@@ -243,11 +243,6 @@ export default class DrawerContainer extends PureComponent {
             });
         }
 
-        if (nextProps.commonReducer.fetching !== this.props.commonReducer.fetching && !nextProps.commonReducer.fetching) {
-            if (!nextProps.commonReducer.success && nextProps.commonReducer.message) {
-                alert(nextProps.commonReducer.message);
-            }
-        }
     }
 
     //region handle action press

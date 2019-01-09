@@ -47,7 +47,7 @@ export function login({email, password}) {
                     type: actionTypes.LOGIN_FAILED,
                     data: {
                         message: res.message,
-                        statusCode : res.statusCode
+                        statusCode: res.statusCode
                     }
                 });
             }
@@ -73,12 +73,39 @@ export function register({email, password, firstName, lastName, birthDay, gender
                     type: actionTypes.REGISTER_FAILED,
                     data: {
                         message: res.message,
-                        statusCode : res.statusCode
+                        statusCode: res.statusCode
                     }
                 });
             }
         })
     }
 }
+
+export function sendForgotPassword({email}) {
+
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.SEND_FORGOT_PENDING,
+        });
+
+        return new userService().sendForgotPassword({email}).then(res => {
+            if (res.success) {
+                dispatch({
+                    type: actionTypes.SEND_FORGOT_SUCCESS,
+                });
+            }
+            else {
+                dispatch({
+                    type: actionTypes.SEND_FORGOT_FAILED,
+                    data: {
+                        message: res.message,
+                    }
+                });
+            }
+        })
+    }
+}
+
+
 
 
