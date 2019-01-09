@@ -11,12 +11,12 @@ export default class ModalBase extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.state={
-            visible :false,
-            data : null,
+        this.state = {
+            visible: false,
+            data: null,
         };
         this.isCenter = true;
-        this.animationDuration =300;
+        this.animationDuration = 300;
         this.backdropOpacity = 0.5;
         this.backdropPressToClose = true;
         this.backButtonClose = true;
@@ -28,71 +28,71 @@ export default class ModalBase extends PureComponent {
 
     }
 
-    onOpened(){
+    onOpened() {
         this.setState({
-            visible:true
+            visible: true
         })
     }
 
-    onClosed(){
+    onClosed() {
         const {onClosed} = this.props;
         this.setState({
-            visible:false
+            visible: false
         });
-        if(onClosed){
+        if (onClosed) {
             onClosed();
         }
         this.setState({
-           data : null
+            data: null
         });
     }
 
-    open(data){
+    open(data) {
         this.refs["modal"].open();
         Keyboard.dismiss();
-        if(data){
+        if (data) {
             this.setState({
-                data : data
+                data: data
             });
         }
     }
 
-    close(){
+    close() {
         this.refs["modal"].close();
         // this.setState({
         //     visible :false
         // });
     }
 
-    renderContent(){
+    renderContent() {
         return null;
     }
 
-    render(){
+    render() {
 
         return (
             <Modal
                 style={[styles.modal]}
                 ref={"modal"}
                 onOpened={this.onOpened}
-                onClosed ={this.onClosed}
-                backdropPressToClose ={this.backdropPressToClose}
+                onClosed={this.onClosed}
+                backdropPressToClose={this.backdropPressToClose}
                 animationDuration={this.animationDuration}
                 swipeToClose={false}
                 backdropOpacity={this.backdropOpacity}
-                backButtonClose ={this.backButtonClose}
+                backButtonClose={this.backButtonClose}
 
             >
-                <TouchableOpacity style={[styles.container ,  this.isCenter  && styles.containerCenter ]}
+                <TouchableOpacity style={[styles.container, this.isCenter && styles.containerCenter]}
                                   activeOpacity={1}
                                   onPress={this.close}
-                                  disabled ={!this.backdropPressToClose}
+                                  disabled={!this.backdropPressToClose}
 
                 >
                     <TouchableOpacity
                         activeOpacity={1}
                     >
-                    {this.renderContent()}
+                        {this.renderContent()}
                     </TouchableOpacity>
                 </TouchableOpacity>
             </Modal>
@@ -101,8 +101,9 @@ export default class ModalBase extends PureComponent {
 
 }
 
-ModalBase.defaultProps ={
-    onClosed : () =>{}
+ModalBase.defaultProps = {
+    onClosed: () => {
+    }
 }
 
 const styles = EStyleSheet.create({
@@ -112,14 +113,14 @@ const styles = EStyleSheet.create({
     },
 
     container: {
-        justifyContent:"flex-end",
+        justifyContent: "flex-end",
         flex: 1,
 
     },
 
-    containerCenter :{
+    containerCenter: {
 
-        justifyContent:"center",
+        justifyContent: "center",
     }
 
 

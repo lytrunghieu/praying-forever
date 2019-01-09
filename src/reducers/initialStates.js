@@ -35,6 +35,10 @@ export default {
         fetching : false,
         success : false,
         message : null,
-    })
+    }),
+
+    errorMessage :Immutable({
+        message: null,
+    }),
 
 };

@@ -11,9 +11,9 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {ScreenKey, ErrorCodes} from '../Constants';
-import {Colors, Metrics, Images, IconName} from '../Themes';
-import I18n from '../I18n';
+import {ScreenKey, ErrorCodes} from '../../../Constants/index';
+import {Colors, Metrics, Images, IconName} from '../../../Themes/index';
+import I18n from '../../../I18n/index';
 import firebase from 'react-native-firebase';
 import {
     Input,
@@ -27,11 +27,11 @@ import {
     Icon,
     ImageBackground,
 
-} from "../Components/Common";
-import {FormValidate, ButtonFooter} from "../Components/Modules";
+} from "../../../Components/Common/index";
+import {FormValidate, ButtonFooter} from "../../../Components/Modules/index";
 import * as _ from "lodash";
 import {Container, Header, Content, Item, Body, Footer, Left,Label} from 'native-base';
-import {CommonUtils} from "../Utils";
+import {CommonUtils} from "../../../Utils/index";
 import {NavigationActions} from "react-navigation";
 
 

@@ -9,3 +9,5 @@ import URL from './URL';
 
 
 export { ScreenKey, Device ,AsyncStoreKeys,ErrorCodes,StatusOfPray, EventRegisterTypes,URL,collection};
+
+export default module.exports

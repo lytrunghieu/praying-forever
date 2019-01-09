@@ -77,21 +77,12 @@ export default class DrawerContainer extends PureComponent {
                     break;
                 }
 
-                case EventRegisterTypes.UPDATE_STATUS_PRAY : {
-                    const {uid} = params;
-                    const httpsCallable = firebase.functions(firebase.app()).httpsCallable("updateStatusPrayer");
-                    httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
-                        .then(data => {
-                            this.getPray();
-                        })
-                        .catch(httpsError => {
-                            console.log("ERROR :", httpsError);
-                            console.log(httpsError.code);
-                            console.log(httpsError.message);
-                            console.log(httpsError.details.errorDescription);
-                        });
+                case EventRegisterTypes.UPDATE_PRAYER_STATUS : {
 
-
+                    const {prayerUID} = params;
+                    if(prayerUID){
+                        prayerActions.updateStatusPrayer(prayerUID);
+                    }
                     break;
                 }
 
@@ -180,6 +171,13 @@ export default class DrawerContainer extends PureComponent {
                     break;
                 }
 
+                case EventRegisterTypes.FOLLOWING_PRAYER:{
+                    const {prayerUID, userOtherUID,follow} = params
+                    if (prayerUID && userOtherUID) {
+                        prayerActions.followingPrayer({prayerUID, userOtherUID,follow});
+                    }
+                    break;
+                }
 
                 default : {
                     break;

@@ -1,40 +1,23 @@
 import React, {PureComponent} from 'react';
 import {
-    ScrollView,
     Alert,
 } from 'react-native';
-import {ScreenKey, StatusOfPray, EventRegisterTypes} from '../../../Constants';
-import {Colors, IconName} from '../../../Themes';
+import { EventRegisterTypes} from '../../../Constants';
+import { IconName} from '../../../Themes';
 import I18n from '../../../I18n';
-import {
-    ActionSheet,
-    PlaceHolder,
-    ConfirmModal,
-    RowItem,
-    TextArea
-} from '../../../Components/Common';
-import commonUtils from "../../../Utils/CommonUtils";
-import firebase from 'react-native-firebase';
+import {CommonUtils} from "../../../Utils";
 import {Header, Container, Content, PrayItem} from "../../../Components/Modules";
-import {ActionSheetPrayItem} from "../../../Components/Modules";
-
-const collect = firebase.firestore().collection("prayer");
 
 export default class PrayerDetail extends PureComponent {
     constructor(props) {
         super(props);
         const dataPassed = props.navigation.state.params;
+        const {status} = dataPassed;
+
         this.prayer = dataPassed;
         this.uid = dataPassed && dataPassed.uid || null;
         this.userUID = dataPassed && dataPassed.owner && dataPassed.owner.uid || null;
 
-        const {status} = this.prayer;
-
-        this.onPressBack = this.onPressBack.bind(this);
-        this.onPressRightHeader = this.onPressRightHeader.bind(this);
-        this.onAcceptDelete = this.onAcceptDelete.bind(this);
-        this.callbackChangeStatusPray = this.callbackChangeStatusPray.bind(this);
-        this.onPressDelete = this.onPressDelete.bind(this);
         this.state = {
             item: dataPassed,
             status: status,
@@ -64,9 +47,9 @@ export default class PrayerDetail extends PureComponent {
                 this.prayer = currentPray;
                 this.setState({
                     item: currentPray
-                })
+                });
             }
-            else{
+            else {
                 this.onPressBack();
             }
         }
@@ -85,13 +68,10 @@ export default class PrayerDetail extends PureComponent {
                         item: null
                     });
 
-                    Alert.alert(I18n.t("oops"),I18n.t("notFoundPrayer"),[
-                        {text : I18n.t("done") , onPress : this.onPressBack}
+                    Alert.alert(I18n.t("oops"), I18n.t("notFoundPrayer"), [
+                        {text: I18n.t("done"), onPress: this.onPressBack}
                     ]);
                 }
-            }
-            else {
-                alert(nextProps.prayerDetailReducer.message);
             }
         }
 
@@ -110,58 +90,9 @@ export default class PrayerDetail extends PureComponent {
     //region handle Action Sheet
 
 
-    callbackChangeStatusPray() {
-        const {status} = this.state;
-        this.setState({
-            status: status === StatusOfPray.INPROGRESS ? StatusOfPray.COMPLETE : StatusOfPray.INPROGRESS
-        });
-    }
-
-    // onPressContinuesPraying() {
-    //     const item = this.prayer;
-    //     const action = {
-    //         type: EventRegisterTypes.UPDATE_STATUS_PRAY,
-    //         callback: this.callbackChangeStatusPray,
-    //         params: {...item, status: StatusOfPray.INPROGRESS}
-    //     };
-    //     commonUtils.sendEvent(action);
-    // }
-    //
-    //
-    // onPressChangeToFinished() {
-    //     const item = this.prayer;
-    //     const action = {
-    //         type: EventRegisterTypes.UPDATE_STATUS_PRAY,
-    //         callback: this.callbackChangeStatusPray,
-    //         params: {...item, status: StatusOfPray.COMPLETE}
-    //     };
-    //     commonUtils.sendEvent(action);
-    // }
-    //
-    //
-    // onPressEdit() {
-    //     const {item} = this.state;
-    //     this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, item);
-    // }
-    //
-    onPressDelete() {
-        this.refs["confirm"].open();
-    }
-
     //endregion
 
     //region handle confirm modal
-
-    onAcceptDelete() {
-        const {item ={}} = this.state;
-        const {uid} = item;
-        const {prayerActions} = this.props;
-        prayerActions.deletePrayer(uid);
-        // const action = {type: EventRegisterTypes.DELETE_PRAY, params: item};
-        // commonUtils.sendEvent(action);
-        // this.refs["confirm"].close();
-        // this.onPressBack();
-    }
 
     //endregion
 
@@ -172,35 +103,32 @@ export default class PrayerDetail extends PureComponent {
     }
 
     onPressRightHeader() {
-        this.refs["moreAction"].open();
+        const {item: data} = this.state;
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_PRAYER_OPTION, params: {data}});
+
     }
 
     //endregion
 
     //region functions
 
-    retriveData({userUID, prayerUID}) {
-
-    }
 
     //endregion
 
     //region rendering
 
-
     renderContainer() {
-        const {item ={}} = this.state;
-        return (<PrayItem allowScaleHeight={true} item={item} actionMore={false} />)
+        const {item = {}} = this.state;
+        return (<PrayItem allowScaleHeight={true} item={item} actionMore={false}/>)
     }
 
     render() {
-        const {status, available, item} = this.state;
-        const {navigation,prayerActions} = this.props;
+        const {available} = this.state;
         const {fetching} = this.props.prayerDetailReducer;
-        const {fetching : fetchingPrayers} = this.props.prayerReducer;
+        const {fetching: fetchingPrayers} = this.props.prayerReducer;
 
         return (
-            [<Container key="container" pointerEvents={fetching ? "none" : fetchingPrayers ? "none":"auto"}>
+            [<Container key="container" pointerEvents={fetching ? "none" : fetchingPrayers ? "none" : "auto"}>
                 <Header
                     title={I18n.t('prayDetail')}
                     left={this.leftHeader}
@@ -212,24 +140,7 @@ export default class PrayerDetail extends PureComponent {
                         available ? this.renderContainer() : null
                     }
                 </Content>
-            </Container>,
-               <ActionSheetPrayItem
-                   action={prayerActions}
-                   key="moreAction"
-                   data ={item}
-                   ref={"moreAction"}
-                   navigation={navigation}
-                   onPressDelete={this.onPressDelete}
-               />,
-                <ConfirmModal
-                    key="confirm"
-                    ref={"confirm"}
-                    title={I18n.t("warning")}
-                    content={I18n.t("deleteConfirm")}
-                    rejectText={I18n.t("cancel")}
-                    acceptText={I18n.t("yes")}
-                    onAccept={this.onAcceptDelete}
-                />
+            </Container>
             ]
         );
     }

@@ -5,14 +5,15 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
 
 // Utilities
-import {Colors, Fonts, ApplicationStyles, Images, IconName} from '../../Themes/index';
-import Swipeable from 'react-native-swipeable';
+import {Colors, Fonts, IconName} from '../../Themes/index';
 import {TextIcon} from "./index";
 import {TextBase, Button, Icon} from "../Common";
 import moment from "moment";
 import I18n from "../../I18n";
+import {CommonUtils} from "../../Utils";
+import {EventRegisterTypes} from "../../Constants";
 
-import {Container, Header, Content, Card, CardItem, Thumbnail, Left, Body, Right} from 'native-base';
+import {Card, CardItem, Left, Body, Right} from 'native-base';
 
 export default class PrayItem extends PureComponent {
 
@@ -30,6 +31,10 @@ export default class PrayItem extends PureComponent {
     onPress(callback) {
         this.recenter();
         callback();
+    }
+
+    onPressMoreAction = (data) => () => {
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_PRAYER_OPTION, params : {data}});
     }
 
     renderBottomActions(options) {
@@ -80,7 +85,7 @@ export default class PrayItem extends PureComponent {
     }
 
     render() {
-        const {onPress, onPressMoreAction, item = {}, allowScaleHeight, actionMore} = this.props;
+        const {onPress, item = {}, allowScaleHeight, actionMore} = this.props;
         const {title, created, following, owner = {}, content} = item;
         const {displayName, birthDay, gender} = owner;
 
@@ -97,7 +102,7 @@ export default class PrayItem extends PureComponent {
                     {
                         actionMore ?
                             <Right>
-                                <Button transparent onPress={onPressMoreAction}>
+                                <Button transparent onPress={this.onPressMoreAction(item)}>
                                     <Icon name={IconName.more_h}/>
                                 </Button>
                             </Right> : null
@@ -152,8 +157,8 @@ const styles = EStyleSheet.create({
         borderRadius: "$borderRadiusNormal",
     },
 
-    cardHeaderContainer:{
-        borderTopLeftRadius:"$borderRadiusNormal"
+    cardHeaderContainer: {
+        borderTopLeftRadius: "$borderRadiusNormal"
     },
 
     container: {

@@ -14,11 +14,7 @@ const handleHardwareBack = (props, navigation) => () => {
 
 // here is our redux-aware our smart component
 const ReduxNavigation = (props) => {
-  const { dispatch, nav } = props
-  const navigation = ReactNavigation.addNavigationHelpers({
-    dispatch,
-    state: nav
-  })
+  const {navigation} = props;
 
   // Android back button
   BackHandler.addEventListener('hardwareBackPress', handleHardwareBack(props, navigation))

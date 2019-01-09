@@ -86,7 +86,7 @@ class PrayFinished extends PureComponent {
     //region Handle Pray Item
 
     onPressContinue(item){
-        const action ={ type :  EventRegisterTypes.UPDATE_STATUS_PRAY, params : item};
+        const action ={ type :  EventRegisterTypes.UPDATE_PRAYER_STATUS, params : item};
         commonUtils.sendEvent(action);
     }
 

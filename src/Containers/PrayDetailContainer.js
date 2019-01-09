@@ -109,7 +109,7 @@ class PrayDetail extends PureComponent {
     onPressContinuesPraying() {
         const item = this.prayer;
         const action = {
-            type: EventRegisterTypes.UPDATE_STATUS_PRAY,
+            type: EventRegisterTypes.UPDATE_PRAYER_STATUS,
             callback: this.callbackChangeStatusPray,
             params: {...item, status: StatusOfPray.INPROGRESS}
         };
@@ -120,7 +120,7 @@ class PrayDetail extends PureComponent {
     onPressChangeToFinished() {
         const item = this.prayer;
         const action = {
-            type: EventRegisterTypes.UPDATE_STATUS_PRAY,
+            type: EventRegisterTypes.UPDATE_PRAYER_STATUS,
             callback: this.callbackChangeStatusPray,
             params: {...item, status: StatusOfPray.COMPLETE}
         };

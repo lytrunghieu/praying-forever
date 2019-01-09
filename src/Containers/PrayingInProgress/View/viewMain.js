@@ -69,7 +69,6 @@ export default class PrayingInProgress extends PureComponent {
         this.onPressBackSearch = this.onPressBackSearch.bind(this);
         this.onCloseActionPrayerModal = this.onCloseActionPrayerModal.bind(this);
         this.onCloseSearchBar = this.onCloseSearchBar.bind(this);
-        this.onPressShare = this.onPressShare.bind(this);
 
         this.state = {
             prays: props.prayerReducer.payload && props.prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [],
@@ -116,21 +115,10 @@ export default class PrayingInProgress extends PureComponent {
             }
         }
 
-        // if (!nextState.isSearch && this.state.isSearch && !nextState.keySearch !== this. && nextProps.prayerReducer.payload) {
-        //     this.setState({
-        //         prays: nextProps.prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE)
-        //     });
-        // }
 
-        if (nextState.prayerSelected !== this.state.prayerSelected && nextState.prayerSelected) {
-            this.refs["_moreActionPray"].open();
-        }
     }
 
     componentDidUpdate(preProps, preState) {
-        if (preState.prayerSelected !== this.state.prayerSelected && !preState.prayerSelected && this.state.prayerSelected) {
-            this.refs["_moreActionPray"].open();
-        }
     }
 
     componentWillUnmount() {
@@ -141,7 +129,7 @@ export default class PrayingInProgress extends PureComponent {
     //region handle event press
 
     onPressScanQR() {
-        this.refs["_modalScanQR"].open();
+        commonUtils.sendEvent({type : EventRegisterTypes.SHOW_SCANNER});
     }
 
     //endregion
@@ -169,7 +157,6 @@ export default class PrayingInProgress extends PureComponent {
         this.setState({
             isSearch: true
         });
-        this.refs["moreAction"].close();
     }
 
     onCloseActionPrayerModal() {
@@ -222,93 +209,12 @@ export default class PrayingInProgress extends PureComponent {
 
     //region HANDLE PRAY ITEM
 
-    requestLocationPermission() {
-        return Permissions.request('location').then(response => {
-            if (response === "authorized") {
-                return "success";
-            }
-            else {
-                alert("App need access location to get prayer list");
-                return "fail";
-            }
-        })
-
-    }
-
     onPressPrayItem = (item) => () => {
         this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, item);
     }
 
-    onPressChangeLiveStatus = (item) => () => {
-        const currentDoc = collect.doc(firebase.auth().currentUser.uid).collection("data").doc(item.uid);
-        if (item.isLive) {
-            const dataSend = {
-                isLive: null
-            };
-
-            currentDoc.update(dataSend).then(res => {
-                locationCollect.doc(item.uid).delete();
-                commonUtils.sendEvent({type: EventRegisterTypes.GET_PRAY});
-            });
-        }
-        else {
-            this.requestLocationPermission().then(res => {
-                if (res === "success") {
-                    Geolocation.getCurrentPosition(
-                        (position) => {
-                            const {timestamp, coords} = position;
-                            const {longitude, latitude} = coords || {};
-                            const location = new PrayLocation({
-                                long: longitude,
-                                lat: latitude
-                            });
-                            const dataSend = Pray.removeFieldEmpty(new Pray({
-                                isLive: location
-                            }));
-                            currentDoc.update(dataSend).then(res => {
-                                return currentDoc.get().then(docSnap => {
-                                    if (docSnap.data()) {
-                                        const {uid} = docSnap.data();
-                                        locationCollect.doc(uid).set(docSnap.data());
-                                        commonUtils.sendEvent({type: EventRegisterTypes.GET_PRAY});
-                                    }
-                                    else {
-                                        throw "error"
-                                    }
-
-                                }).catch(error => {
-                                    console.warn("ERROR ", error)
-                                });
-
-                            });
-                        },
-                        (error) => {
-                            // See error code charts below.
-                            console.warn(error.code, error.message);
-                        },
-                        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
-                    );
-                }
-            });
-
-        }
-    }
-
-    onPressDeletePrayer(item) {
-        this.refs["confirmDeleteOnePrayer"].open(item);
-    }
-
-    onPressMoreAction = (item) => () => {
-        this.setState({
-            prayerSelected: item
-        });
-    }
-
-    onPressShare(item){
-        const {uid} = item;
-        let stringText = uid;
-        stringText = stringText.concat(",").concat(firebase.auth().currentUser.uid);
-        this.refs["_modalQR"].open(stringText);
+    onPressDeletePrayer() {
+        commonUtils.sendEvent({type : EventRegisterTypes.SHOW_CONFIRM_MODAL});
     }
 
     //endregion
@@ -319,7 +225,6 @@ export default class PrayingInProgress extends PureComponent {
             <PrayItem
                 item={item}
                 onPress={this.onPressPrayItem(item)}
-                onPressMoreAction={this.onPressMoreAction(item)}
             />
         )
     }
@@ -371,41 +276,6 @@ export default class PrayingInProgress extends PureComponent {
                     ref={"moreAction"}
                 />,
 
-                <ActionPrayerModal
-                    onClosed={this.onCloseActionPrayerModal}
-                    action={prayerActions}
-                    key="_moreActionPray"
-                    data={prayerSelected}
-                    ref={"_moreActionPray"}
-                    navigation={navigation}
-                    onPressDelete={this.onPressDeletePrayer}
-                    onPressChangeLiveStatus ={this.onPressChangeLiveStatus}
-                    onPressShareOption={this.onPressShare}
-
-                />,
-
-                <ConfirmModal
-                    key="ConfirmModal"
-                    ref={"confirm"}
-                    title={I18n.t("warning")}
-                    content={I18n.t("deleteConfirmAll")}
-                    rejectText={I18n.t("cancel")}
-                    acceptText={I18n.t("yes")}
-                    onAccept={this.onAcceptDeletePrayer}
-                />,
-
-                <ConfirmModal
-                    key="ConfirmDeleteOnePrayer"
-                    ref={"confirmDeleteOnePrayer"}
-                    title={I18n.t("warning")}
-                    content={I18n.t("deleteConfirm")}
-                    rejectText={I18n.t("cancel")}
-                    acceptText={I18n.t("yes")}
-                    onAccept={this.onAcceptDeletePrayer}
-                />,
-
-                <ModalScanQR key={"modalScanQRCode"} ref={"_modalScanQR"} followingPrayer={prayerActions.followingPrayer}/>,
-                <ModalQR key={"modalQRCode"} ref={"_modalQR"}/>,
                 <LoadingBar visible={fetching}/>
             ]
         );

@@ -4,7 +4,7 @@ import {ScreenKey} from '../Constants';
 
 import SplashScreen from '../Containers/SplashScreen';
 import SignupScreen from '../Containers/SignupScreen';
-import LoginScreen from '../Containers/LoginScreen';
+import LoginScreen from '../Containers/Login/View/LoginScreen';
 import ForgotPassScreen from '../Containers/ForgotPassScreen';
 import {container as Drawer} from '../Containers/Drawer';
 import ListCommonContainer from '../Containers/ListCommonContainer';

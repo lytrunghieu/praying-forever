@@ -1,15 +1,15 @@
 import React from "react";
-import ModalBase from "./ModalBase";
+import ModalBase from "../Common/ModalBase";
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {View, ActivityIndicator, TouchableOpacity} from "react-native";
-import {Colors, globalStyle, ApplicationStyles, Metrics} from "../../Themes";
+import {Colors, globalStyle, ApplicationStyles, Metrics} from "../../Themes/index";
 import PropTypes from 'prop-types';
-import Title from "./Title";;
-import PlaceHolder from "./PlaceHolder";
-import Text from "./Text";
-import I18n from '../../I18n';
+import Title from "../Common/Title";;
+import PlaceHolder from "../Common/PlaceHolder";
+import Text from "../Common/Text";
+import I18n from '../../I18n/index';
 import QRCode from 'react-native-qrcode';
-import {ButtonFooter} from "../Modules";
+import {ButtonFooter} from "./index";
 
 
 export default class ModalQR extends ModalBase {

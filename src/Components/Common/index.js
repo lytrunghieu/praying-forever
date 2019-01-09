@@ -20,13 +20,14 @@ import  TextError from "./TextError";
 import  TextLink from "./TextLink";
 import  TextBase from "./TextBase";
 import  ModalLoading from "./ModalLoading";
-import  ModalScanQR from "./ModalScanQR";
-import  ModalQR from "./ModalQR";
+import  ModalScanQR from "../Modules/ModalScanQR";
+import  ModalQR from "../Modules/ModalQR";
 import  Title from "./Title";
 import  Icon from "./Icon";
 import  Text from "./Text";
 import  Form from "./Form";
 import  DatePicker from "./DatePicker";
+import  StatusBar from "./StatusBar";
 
 export {
     NavBar,
@@ -57,5 +58,6 @@ export {
     Icon,
     Text,
     Form,
-    DatePicker
+    DatePicker,
+    StatusBar
 };
