@@ -9,7 +9,7 @@ import {container as ForgotPasswordScreen } from '../Containers/ForgotPassword';
 import {container as Drawer} from '../Containers/Drawer';
 import ListCommonContainer from '../Containers/ListCommonContainer';
 import  {container as PrayingInProgressScreen} from '../Containers/PrayingInProgress';
-import {PrayFinishedContainer} from '../Containers/PrayFinishedContainer';
+import {PrayFinishedContainer} from '../Containers/PrayerFinished/View/PrayFinishedContainer';
 import {container as CreatePrayerScreen} from '../Containers/CreatePrayer';
 import {container as PrayerDetailScreen} from '../Containers/PrayerDetail';
 import {PrayForOtherContainer} from '../Containers/PrayForOtherContainer';

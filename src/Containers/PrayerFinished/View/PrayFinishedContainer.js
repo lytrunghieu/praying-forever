@@ -1,20 +1,20 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {prayerActions } from "../Action";
+import {prayerActions } from "../../../Action/index";
 
 import {
     View,
     FlatList,TouchableHighlight
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {StatusOfPray,EventRegisterTypes,ScreenKey} from "../Constants";
-import {Colors, Images, ApplicationStyles} from '../Themes';
-import I18n from '../I18n';
-import {NavBar, ImageBackground, ActionSheet, ButtonAction, PrayItem, PlaceHolder,ConfirmModal} from '../Components/Common';
+import {StatusOfPray,EventRegisterTypes,ScreenKey} from "../../../Constants/index";
+import {Colors, Images, ApplicationStyles} from '../../../Themes/index';
+import I18n from '../../../I18n/index';
+import {NavBar, ImageBackground, ActionSheet, ButtonAction, PrayItem, PlaceHolder,ConfirmModal} from '../../../Components/Common/index';
 import moment from "moment";
-import Pray from "../model/Pray";
-import commonUtils from "../Utils/CommonUtils";
+import Pray from "../../../model/Pray";
+import commonUtils from "../../../Utils/CommonUtils";
 
 import firebase from 'react-native-firebase';
 
