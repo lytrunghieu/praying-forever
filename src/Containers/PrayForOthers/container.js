@@ -5,7 +5,7 @@ import {viewMain} from "./View";
 import {prayerActions} from "../../Action"
 
 const mapStateToProps = (state) => ({
-    prayerReducer: state.prayerReducer,
+    prayForOthersReducer: state.prayForOthersReducer,
 });
 
 const mapDispatchToProps = (dispatch) => ({

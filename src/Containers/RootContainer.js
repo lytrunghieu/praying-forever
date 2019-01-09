@@ -10,7 +10,7 @@ import {Colors} from '../Themes';
 
 // Components
 import {StatusBar} from '../Components/Common';
-import {ModalScanQR, ModalQR, ActionPrayerModal, ConfirmModal} from "../Components/Modules";
+import {ModalScanQR, ModalQR, ActionPrayerModal, ConfirmModal,NetworkBar} from "../Components/Modules";
 
 //Reduxes
 import StartupActions from '../Redux/StartupRedux';
@@ -30,7 +30,7 @@ import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
 import I18n from "../I18n";
 import * as ReactNavigation from 'react-navigation';
 import AppNavigation from '../Navigation/AppNavigation';
-import {BackHandler} from 'react-native';
+import {BackHandler, NetInfo} from 'react-native';
 
 
 class RootContainer extends PureComponent {
@@ -39,7 +39,11 @@ class RootContainer extends PureComponent {
 
     constructor(props) {
         super(props);
+        this.state ={
+          isOffline: false
+        };
         this.onAcceptDeletePrayer = this.onAcceptDeletePrayer.bind(this);
+        this.handleFirstConnectivityChange = this.handleFirstConnectivityChange.bind(this);
     }
 
     componentDidMount() {
@@ -47,6 +51,24 @@ class RootContainer extends PureComponent {
         // if (!ReduxPersist.active) {
         //     this.props.startup();
         // }
+
+        NetInfo.getConnectionInfo().then((connectionInfo) => {
+            if(connectionInfo.type ==="none" || connectionInfo.type ==="unknown"){
+                this.setState({
+                   isOffline : true
+                });
+            } else{
+                this.setState({
+                    isOffline : false
+                });
+            }
+            console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+        });
+
+        NetInfo.addEventListener(
+            'connectionChange',
+            this.handleFirstConnectivityChange
+        );
 
         this.listener = EventRegister.addEventListener("listener", async (action) => {
             if (!action || !action.type) {
@@ -97,7 +119,11 @@ class RootContainer extends PureComponent {
     }
 
     componentWillUnmount() {
-        EventRegister.removeEventListener(this.listener)
+        EventRegister.removeEventListener(this.listener);
+        NetInfo.removeEventListener(
+            'connectionChange',
+            this.handleFirstConnectivityChange
+        );
     }
 
     componentWillReceiveProps(nextProps) {
@@ -106,6 +132,20 @@ class RootContainer extends PureComponent {
         }
         if(nextProps.errorMessageReducer !== this.props.errorMessageReducer && nextProps.errorMessageReducer.detail && nextProps.errorMessageReducer.detail.message){
             alert(nextProps.errorMessageReducer.detail.message);
+        }
+    }
+
+    handleFirstConnectivityChange(connectionInfo) {
+        console.log('First change, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+        if(connectionInfo.type ==="none" || connectionInfo.type ==="unknown"){
+            this.setState({
+                isOffline : true
+            });
+        }
+        else{
+            this.setState({
+                isOffline : false
+            });
         }
     }
 
@@ -133,6 +173,7 @@ class RootContainer extends PureComponent {
 
     render() {
         const {prayerActions, dispatch, navigationReducer} = this.props;
+        const {isOffline} = this.state;
         const navigation = ReactNavigation.addNavigationHelpers({
             dispatch,
             state: navigationReducer
@@ -143,6 +184,7 @@ class RootContainer extends PureComponent {
                 <StatusBar backgroundColor={Colors.primary} barStyle={'dark-content'}/>
                 <SafeAreaView style={styles.container}>
                     <AppNavigation navigation={navigation}/>
+                    <NetworkBar visible={isOffline}/>
                     <ModalQR
                         ref={"_modalQR"}/>
                     <ModalScanQR

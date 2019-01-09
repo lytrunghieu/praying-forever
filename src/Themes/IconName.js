@@ -25,6 +25,8 @@ const names = {
     next:"arrow-circle-right",
     previous :"arrow-circle-left",
     close :"close",
+    empty:"frown-o",
+    filter:"filter"
 
 }
 

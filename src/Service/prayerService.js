@@ -9,8 +9,11 @@ import {
     UPDATE_LIVE_STATUS
 } from "./nameCloudFunction"
 import moment from "moment";
-import {Pray} from "../model";
+import {Pray, response} from "../model";
 import {FOLLOWING, PUBLIC_PRAYER} from "./errorCode";
+import firebase from "react-native-firebase";
+import geolib from "geolib";
+
 
 class PrayerService extends baseService {
 
@@ -100,7 +103,53 @@ class PrayerService extends baseService {
         });
     }
 
+    getPrayersNearby({distance, location}) {
+        const collect = firebase.firestore().collection('location');
+        return collect.get().then(snapshot => {
+            let prayList = [];
+            snapshot.forEach(e => {
+                let data = e.data();
+                if (data && data.owner && data.owner.uid != firebase.auth().currentUser.uid) {
+                    prayList.push(new Pray(data));
+                }
+            });
+            const {long, lat} = location;
+            //filler Pray Live;
+            prayList = getNearby({
+                fromLong: long,
+                fromLat: lat,
+                distance: distance,
+                array: prayList
+            });
+
+            const result ={
+                data :{
+                    success : true,
+                    data :prayList
+                }
+            };
+
+            return result;
+        }).finally(res =>{
+            return new response(res);
+        })
+
+    }
 
 }
 
 export default PrayerService
+
+function getNearby({fromLong, fromLat, distance, array}) {
+    if (!Array.isArray(array)) {
+        return [];
+    }
+    return array.filter(p => {
+        const {long, lat} = p.isLive;
+        const result = geolib.isPointInCircle({latitude: fromLat, longitude: fromLong}, {
+            latitude: lat,
+            longitude: long
+        }, distance);
+        return result;
+    });
+}

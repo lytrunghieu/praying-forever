@@ -2,7 +2,7 @@ import actionTypes from "./actionTypes";
 import firebase from 'react-native-firebase';
 
 const uniqueId = require('react-native-unique-id');
-import {prayerService ,locationService} from "../Service";
+import {prayerService, locationService} from "../Service";
 
 export function getPrayer({userUID, prayerUID, search} = {}) {
     return function (dispatch) {
@@ -131,39 +131,43 @@ export function followingPrayer(params) {
     }
 }
 
-export function updateLiveStatusPrayer({live = false,prayerUID}) {
+export function updateLiveStatusPrayer({live = false, prayerUID}) {
     return function (dispatch) {
         dispatch({
             type: actionTypes.UPDATE_STATUS_PRAYER_PENDING,
         });
         //get location to public prayer
-        if(live){
-            return  new locationService().getLocationPermission().then(res => {
+        if (live) {
+            return new locationService().getLocationPermission().then(res => {
                 if (res.success) {
-                    return new locationService().getCurrentLocation().then(_res =>{
-                        if(_res.success) {
-                            return new prayerService().updateLiveStatusPrayer({live, prayerUID, location : _res.data}).then(__res => {
+                    return new locationService().getCurrentLocation().then(_res => {
+                        if (_res.success) {
+                            return new prayerService().updateLiveStatusPrayer({
+                                live,
+                                prayerUID,
+                                location: _res.data
+                            }).then(__res => {
                                 if (__res.success) {
                                     dispatch({
                                         type: actionTypes.UPDATE_LIVE_STATUS_SUCCESS,
                                     });
                                     dispatch(getPrayer());
                                 }
-                                else{
+                                else {
                                     dispatch({
                                         type: actionTypes.UPDATE_LIVE_STATUS_FAILED,
-                                        data :{
-                                            message : __res.message
+                                        data: {
+                                            message: __res.message
                                         }
                                     });
                                 }
                             })
                         }
-                        else{
+                        else {
                             dispatch({
                                 type: actionTypes.UPDATE_LIVE_STATUS_FAILED,
-                                data :{
-                                    message : _res.message
+                                data: {
+                                    message: _res.message
                                 }
                             });
                         }
@@ -172,14 +176,14 @@ export function updateLiveStatusPrayer({live = false,prayerUID}) {
                 else {
                     dispatch({
                         type: actionTypes.UPDATE_LIVE_STATUS_FAILED,
-                        data :{
-                            message : res.message
+                        data: {
+                            message: res.message
                         }
                     });
                 }
             })
         }
-        else{
+        else {
             //disabled live status
             return new prayerService().updateLiveStatusPrayer({live, prayerUID}).then(__res => {
                 if (__res.success) {
@@ -188,11 +192,11 @@ export function updateLiveStatusPrayer({live = false,prayerUID}) {
                     });
                     dispatch(getPrayer());
                 }
-                else{
+                else {
                     dispatch({
                         type: actionTypes.UPDATE_LIVE_STATUS_FAILED,
-                        data :{
-                            message : __res.message
+                        data: {
+                            message: __res.message
                         }
                     });
                 }
@@ -202,3 +206,55 @@ export function updateLiveStatusPrayer({live = false,prayerUID}) {
     }
 }
 
+export function getPrayersNearby({distance}) {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.GET_PRAYER_NEARBY_PENDING,
+        });
+        return new locationService().getLocationPermission().then(res => {
+            if (res.success) {
+                return new locationService().getCurrentLocation().then(_res => {
+                    if (_res.success) {
+                        return new prayerService().getPrayersNearby({distance, location: _res.data}).then(__res => {
+                            if (__res.success) {
+                                dispatch({
+                                    type: actionTypes.GET_PRAYER_NEARBY_SUCCESS,
+                                    data: {
+                                        payload: __res.data
+                                    }
+                                });
+
+                            }
+                            else {
+                                dispatch({
+                                    type: actionTypes.GET_PRAYER_NEARBY_FAILED,
+                                    data: {
+                                        message: __res.message
+                                    }
+                                });
+                            }
+                            return __res
+                        });
+                    }
+                    else {
+                        dispatch({
+                            type: actionTypes.GET_PRAYER_NEARBY_FAILED,
+                            data: {
+                                message: _res.message
+                            }
+                        });
+                    }
+                })
+            }
+            else {
+                dispatch({
+                    type: actionTypes.GET_PRAYER_NEARBY_FAILED,
+                    data: {
+                        message: res.message
+                    }
+                });
+            }
+            return res;
+        });
+    }
+}

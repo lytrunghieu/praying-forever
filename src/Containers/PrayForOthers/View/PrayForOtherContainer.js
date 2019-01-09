@@ -7,9 +7,9 @@ import {
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {ScreenKey} from '../Constants';
-import {Colors, Images, ApplicationStyles} from '../Themes';
-import I18n from '../I18n';
+import {ScreenKey} from '../../../Constants/index';
+import {Colors, Images, ApplicationStyles} from '../../../Themes/index';
+import I18n from '../../../I18n/index';
 import {
     NavBar,
     ImageBackground,
@@ -19,13 +19,13 @@ import {
     PlaceHolder,
     ConfirmModal,
     HeaderSearch
-} from '../Components/Common';
+} from '../../../Components/Common/index';
 import moment from "moment";
-import {prayerActions} from "../Action";
-import commonUtils from "../Utils/CommonUtils";
-import {AsyncStoreKeys, EventRegisterTypes, StatusOfPray} from "../Constants";
+import {prayerActions} from "../../../Action/index";
+import commonUtils from "../../../Utils/CommonUtils";
+import {AsyncStoreKeys, EventRegisterTypes, StatusOfPray} from "../../../Constants/index";
 import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
-import {Pray} from '../model';
+import {Pray} from '../../../model/index';
 import geolib from "geolib";
 import Permissions from 'react-native-permissions';
 import Geolocation from 'react-native-geolocation-service';

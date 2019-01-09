@@ -5,15 +5,15 @@ import PropTypes from 'prop-types';
 import globalStyle from '../../Themes/globalStyle';
 
 import {Colors} from '../../Themes';
-import {Button, Icon, Text} from "../Common";
+import {Button, Icon, TextBase} from "../Common";
 
-import {ListItem, Left, Body,Right,Card,CardItem, Badge} from 'native-base';
+import {ListItem, Left, Body, Right, Card, CardItem, Badge} from 'native-base';
 
 export default class OptionButtonComponent extends PureComponent {
 
 
     render() {
-        let {onPress, text, leftIcon, count} = this.props;
+        let {onPress, text, leftIcon, count, countRed} = this.props;
         return (
             <ListItem icon={true} button={true} onPress={onPress}>
                 <Left>
@@ -21,15 +21,16 @@ export default class OptionButtonComponent extends PureComponent {
 
                 </Left>
                 <Body>
-                    <Text>{text}</Text>
+                <TextBase>{text}</TextBase>
                 </Body>
 
                 <Right>
                     {
                         count ?
-                        <Badge>
-                            <Text>{count}</Text>
-                        </Badge> : null
+                            countRed ?
+                                <Badge>
+                                    <TextBase>{count}</TextBase>
+                                </Badge> : <TextBase>{count}</TextBase> : null
                     }
 
                 </Right>
@@ -41,35 +42,19 @@ export default class OptionButtonComponent extends PureComponent {
 }
 
 OptionButtonComponent.defaultProps = {
-    onPress: ()=>{},
-    // leftIcon : null,
-    text : "",
-    count : 0
+    onPress: () => {
+    },
+    text: "",
+    count: 0
 };
 
 OptionButtonComponent.propTypes = {
     count: PropTypes.number,
     onPress: PropTypes.func,
-    // leftIcon: PropTypes.node,
-    text :PropTypes.string.isRequired
+    text: PropTypes.string.isRequired,
+    countRed: PropTypes.bool
 };
 
 
 const styles = EStyleSheet.create({
-    // container: {
-    //     alignItems: "center",
-    //     justifyContent: "center",
-    //     flexDirection:"row",
-    // },
-    //
-    // leftIcon :{
-    //     marginRight:"$paddingSmall"
-    // },
-    //
-    // labelText: {
-    //     fontSize: Fonts.size.normal,
-    //     fontFamily: Fonts.type.robotoRegular
-    //
-    // },
-
 });

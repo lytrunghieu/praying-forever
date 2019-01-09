@@ -9,17 +9,17 @@ import {container as ForgotPasswordScreen } from '../Containers/ForgotPassword';
 import {container as Drawer} from '../Containers/Drawer';
 import ListCommonContainer from '../Containers/ListCommonContainer';
 import  {container as PrayingInProgressScreen} from '../Containers/PrayingInProgress';
-import {PrayFinishedContainer} from '../Containers/PrayerFinished/View/PrayFinishedContainer';
+import {container as PrayerFinishedScreen} from '../Containers/PrayerFinished';
 import {container as CreatePrayerScreen} from '../Containers/CreatePrayer';
 import {container as PrayerDetailScreen} from '../Containers/PrayerDetail';
-import {PrayForOtherContainer} from '../Containers/PrayForOtherContainer';
+import {container as  PrayForOtherScreen} from '../Containers/PrayForOthers';
 import {NotificationsContainer} from '../Containers/NotificationsContainer';
 import {NotificationDetailContainer} from '../Containers/NotificationDetailContainer';
 
 const DrawerNav = DrawerNavigator({
     [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressScreen},
-    [ScreenKey.PRAY_FINISHED]: {screen: PrayFinishedContainer},
-    [ScreenKey.PRAY_FOR_OTHER]: {screen: PrayForOtherContainer},
+    [ScreenKey.PRAY_FINISHED]: {screen: PrayerFinishedScreen},
+    [ScreenKey.PRAY_FOR_OTHER]: {screen: PrayForOtherScreen},
     [ScreenKey.NOTIFICATIONS]: {screen: NotificationsContainer},
 }, {
     contentComponent: Drawer // custom drawer

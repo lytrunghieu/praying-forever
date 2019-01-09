@@ -252,6 +252,7 @@ export default class DrawerContainer extends PureComponent {
                 <List>
                     <OptionButton text={I18n.t("inprogress")}
                                   leftIcon={IconName.prayer_inprogress}
+                                  count={prayerReducer.payload ? prayerReducer.payload.length : []}
                                   onPress={this.onPressOption.bind(this, ScreenKey.PRAYING_INPROGESS)}/>
                     <OptionButton text={I18n.t("finished")}
                                   leftIcon={IconName.prayer_complete}

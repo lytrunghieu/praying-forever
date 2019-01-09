@@ -9,10 +9,11 @@ import {loginReducer} from "./loginReducer";
 import {registerReducer} from "./registerReducer";
 import {forgotPasswordReducer} from "./forgotPasswordReducer";
 
-import {prayingInProgress, createPrayer,prayerDetail,Drawer} from "../Containers";
+import {prayingInProgress, createPrayer,prayerDetail,Drawer,PrayForOthers} from "../Containers";
 const {reducer : createPrayerReducer} =createPrayer;
 const {reducer : prayerDetailReducer} =prayerDetail;
 const {reducer : drawerReducer} =Drawer;
+const {reducer : prayForOthersReducer} =PrayForOthers;
 
 const appReducer = combineReducers({
     navigationReducer,
@@ -26,7 +27,8 @@ const appReducer = combineReducers({
     loginReducer,
     registerReducer,
     forgotPasswordReducer,
-    drawerReducer
+    drawerReducer,
+    prayForOthersReducer
 })
 
 export const  expAppReducer = appReducer;

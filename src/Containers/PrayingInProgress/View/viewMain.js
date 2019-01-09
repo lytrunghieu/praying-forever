@@ -17,7 +17,8 @@ import {
     LoadingBar,
     Container,
     Content,
-    PrayItem
+    PrayItem,
+    EmptyHolder,
 } from "../../../Components/Modules";
 
 export default class PrayingInProgress extends PureComponent {
@@ -55,12 +56,13 @@ export default class PrayingInProgress extends PureComponent {
         this.onPressBackSearch = this.onPressBackSearch.bind(this);
         this.onCloseActionPrayerModal = this.onCloseActionPrayerModal.bind(this);
         this.onCloseSearchBar = this.onCloseSearchBar.bind(this);
+        this.onRefresh = this.onRefresh.bind(this);
 
         this.state = {
-            prays: props.prayerReducer.payload && props.prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [],
+            prayers: props.prayerReducer.payload && props.prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [],
             isSearch: false,
             keySearch: "",
-            prayerSelected: null,
+            loading: true,
         };
     }
 
@@ -73,8 +75,16 @@ export default class PrayingInProgress extends PureComponent {
     componentWillReceiveProps(nextProps) {
         if (nextProps.prayerReducer !== this.props.prayerReducer && nextProps.prayerReducer.payload) {
             this.setState({
-                prays: nextProps.prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS)
+                prayers: nextProps.prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS)
             });
+        }
+
+        if (nextProps.prayerReducer.fetching !== this.props.prayerReducer.fetching && nextProps.prayerReducer.fetching) {
+            this.setState({loading: true})
+        }
+
+        if (nextProps.prayerReducer.fetching !== this.props.prayerReducer.fetching && !nextProps.prayerReducer.fetching) {
+            this.setState({loading: false})
         }
     }
 
@@ -88,7 +98,7 @@ export default class PrayingInProgress extends PureComponent {
                     return e.status == StatusOfPray.INPROGRESS && contentFormated.indexOf(nextState.keySearch.toUpperCase()) != -1 ? true : false;
                 });
                 this.setState({
-                    prays: newPrays
+                    prayers: newPrays
                 });
             }
             else {
@@ -96,7 +106,7 @@ export default class PrayingInProgress extends PureComponent {
                     return e.status == StatusOfPray.INPROGRESS;
                 });
                 this.setState({
-                    prays: newPrays
+                    prayers: newPrays
                 });
             }
         }
@@ -115,7 +125,7 @@ export default class PrayingInProgress extends PureComponent {
     //region handle event press
 
     onPressScanQR() {
-        commonUtils.sendEvent({type : EventRegisterTypes.SHOW_SCANNER});
+        commonUtils.sendEvent({type: EventRegisterTypes.SHOW_SCANNER});
     }
 
     //endregion
@@ -164,6 +174,11 @@ export default class PrayingInProgress extends PureComponent {
 
     //region other
 
+    onRefresh() {
+        const {prayerActions} = this.props;
+        prayerActions.getPrayer();
+    }
+
     onPressAdd() {
         this.props.navigation.navigate(ScreenKey.CREATE_PRAYING);
     }
@@ -200,7 +215,7 @@ export default class PrayingInProgress extends PureComponent {
     }
 
     onPressDeletePrayer() {
-        commonUtils.sendEvent({type : EventRegisterTypes.SHOW_CONFIRM_MODAL});
+        commonUtils.sendEvent({type: EventRegisterTypes.SHOW_CONFIRM_MODAL});
     }
 
     //endregion
@@ -227,8 +242,8 @@ export default class PrayingInProgress extends PureComponent {
     }
 
     render() {
-        const {prays, isSearch, prayerSelected, keySearch} = this.state;
-        const {prayerReducer, navigation, prayerActions} = this.props;
+        const {prayers, isSearch, keySearch, loading} = this.state;
+        const {prayerReducer} = this.props;
         const {fetching} = prayerReducer;
         return (
             [<Container key="container" pointerEvents={fetching ? "none" : "auto"}>
@@ -242,24 +257,31 @@ export default class PrayingInProgress extends PureComponent {
                     onChangeTextSearch={this.onChangeKeySearch}
                     onCloseSearchBar={this.onCloseSearchBar}
                 />
-                <Content>
-                    <FlatList
-                        data={prays}
-                        keyExtractor={this.keyExtractor}
-                        renderItem={this.renderPrayItem}
-                        ItemSeparatorComponent={this.renderSeparate}
-                        ListFooterComponent={this.renderListFooterComponent}
 
-                    />
-                </Content>
+                {
+                    !loading && prayers.length === 0 ? <EmptyHolder
+                        h1={I18n.t("noPrayer")}
+                        h2={I18n.t("noPrayerInprogress")}
+                        link={I18n.t("tryAgain")}
+                        onPressLink={this.onRefresh}
+                    /> : null
+                }
+
+                <FlatList
+                    onRefresh={this.onRefresh}
+                    data={prayers}
+                    keyExtractor={this.keyExtractor}
+                    renderItem={this.renderPrayItem}
+                    ItemSeparatorComponent={this.renderSeparate}
+                    ListFooterComponent={this.renderListFooterComponent}
+                    refreshing={fetching}
+                />
             </Container>,
                 <ActionSheet
                     key="ActionSheet"
                     options={this.optionActionSheet}
                     ref={"moreAction"}
-                />,
-
-                <LoadingBar visible={fetching}/>
+                />
             ]
         );
 

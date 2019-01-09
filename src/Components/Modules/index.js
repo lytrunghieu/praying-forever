@@ -12,6 +12,8 @@ import ActionPrayerModal from "./actionPrayerModal";
 import ModalQR from "./ModalQR";
 import ModalScanQR from "./ModalScanQR";
 import ConfirmModal from "./ConfirmModal";
+import EmptyHolder from "./EmptyHolder";
+import NetworkBar from "./NetworkBar";
 
 
 export {
@@ -28,5 +30,7 @@ export {
     ActionPrayerModal,
     ModalQR,
     ModalScanQR,
-    ConfirmModal
+    ConfirmModal,
+    EmptyHolder,
+    NetworkBar
 };

@@ -22,12 +22,16 @@ export default class Icon extends PureComponent {
         return this.renderIcon(this.props);
     }
 
-    renderIcon({name, iconType,large,medium, dark}) {
+    renderIcon({name, iconType,large,medium,largeX, dark, color}) {
         let size = 24;
-        let color = Colors.black;
+        let _color = Colors.black;
         if(large){
             size = 40;
         }
+        if(largeX){
+            size = 100;
+        }
+
         else {
             if(medium){
                 size = 32;
@@ -35,7 +39,7 @@ export default class Icon extends PureComponent {
         }
 
         if(!dark){
-            color = Colors.white;
+            _color = Colors.white;
         }
 
         let MaterialCommunityIconsView = null;
@@ -43,17 +47,17 @@ export default class Icon extends PureComponent {
         switch (iconType) {
             case 'MaterialCommunityIcons':
 
-                MaterialCommunityIconsView = (<MaterialCommunityIcons name={name} size={size} color={color}/>);
+                MaterialCommunityIconsView = (<MaterialCommunityIcons name={name} size={size} color={_color}/>);
                 return MaterialCommunityIconsView;
             case 'Ionicons':
-                const IoniconsView = (<Ionicons name={name} size={size} color={color}/>);
+                const IoniconsView = (<Ionicons name={name} size={size} color={_color}/>);
                 return IoniconsView;
             case 'Entypo':
-                const EntypoView = (<Entypo name={name} size={size} color={color}/>);
+                const EntypoView = (<Entypo name={name} size={size} color={_color}/>);
                 return EntypoView;
 
             default:
-                const FontAwesomeView = (<FontAwesome name={name} size={size} color={color}/>);
+                const FontAwesomeView = (<FontAwesome name={name} size={size} color={_color}/>);
                 return FontAwesomeView;
         }
 
@@ -77,7 +81,8 @@ Icon.propTypes = {
     name: PropTypes.string,
     large : PropTypes.bool,
     medium : PropTypes.bool,
-    dark : PropTypes.bool
+    dark : PropTypes.bool,
+    largeX: PropTypes.bool
 }
 
 const styles = EStyleSheet.create({
