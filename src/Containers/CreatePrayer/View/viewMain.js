@@ -82,14 +82,6 @@ export default class CreatePraying extends PureComponent {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.createPrayerReducer !== this.props.createPrayerReducer) {
-            if (nextProps.createPrayerReducer.success !== this.props.createPrayerReducer.success && nextProps.createPrayerReducer.success) {
-                this.onPressBack();
-            }
-        }
-    }
-
     //endregion
 
     onSubmitEditingTitle() {
@@ -103,7 +95,11 @@ export default class CreatePraying extends PureComponent {
         if (this.isEdit) {
             params.uid = this.uid;
             let dataSend = Pray.removeFieldEmpty(new Pray(params));
-            action.editPrayer(dataSend);
+            action.editPrayer(dataSend).then(res => {
+                if (res.success) {
+                    this.onPressBack();
+                }
+            });
 
         }
         else {
@@ -119,7 +115,11 @@ export default class CreatePraying extends PureComponent {
                 };
                 params.status = StatusOfPray.INPROGRESS;
                 let dataSend = new Pray(params);
-                action.createNewPrayer(dataSend);
+                action.createNewPrayer(dataSend).then(res => {
+                    if (res.success) {
+                        this.onPressBack();
+                    }
+                });
             }
         }
     }

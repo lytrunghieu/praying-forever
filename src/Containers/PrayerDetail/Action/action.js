@@ -7,7 +7,7 @@ export function getPrayerDetail({userUID,prayerUID}) {
             type: actionTypes.GET_PRAYER_DETAIL_PENDING,
         });
 
-        new prayerService().getPrayer({userUID,prayerUID}).then(res =>{
+        return new prayerService().getPrayer({userUID,prayerUID}).then(res =>{
             if(res.success){
                 dispatch({
                     type: actionTypes.GET_PRAYER_DETAIL_SUCCESS,
@@ -25,6 +25,7 @@ export function getPrayerDetail({userUID,prayerUID}) {
                     }
                 });
             }
+            return res;
         });
     }
 }

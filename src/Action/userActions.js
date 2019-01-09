@@ -36,7 +36,7 @@ export function login({email, password}) {
             type: actionTypes.LOGIN_PENDING,
         });
 
-        new userService().login({email, password}).then(res => {
+        return new userService().login({email, password}).then(res => {
             if (res.success) {
                 dispatch({
                     type: actionTypes.LOGIN_SUCCESS,
@@ -51,6 +51,7 @@ export function login({email, password}) {
                     }
                 });
             }
+            return  res;
         })
     }
 }
@@ -102,6 +103,32 @@ export function sendForgotPassword({email}) {
                     }
                 });
             }
+        })
+    }
+}
+
+export function resendVerifyEmail() {
+
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.RESEND_VERIFY_EMAIL_PENDING,
+        });
+
+        return new userService().resendVerifyEmail().then(res => {
+            if (res.success) {
+                dispatch({
+                    type: actionTypes.RESEND_VERIFY_EMAIL_SUCCESS,
+                });
+            }
+            else {
+                dispatch({
+                    type: actionTypes.RESEND_VERIFY_EMAIL_FAILED,
+                    data: {
+                        message: res.message,
+                    }
+                });
+            }
+            return res;
         })
     }
 }

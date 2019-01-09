@@ -7,7 +7,7 @@ export function createNewPrayer(params) {
         dispatch({
             type: actionTypes.CREATE_PRAYER_PENDING,
         });
-        new prayerService().createNewPrayer(params).then(res => {
+        return new prayerService().createNewPrayer(params).then(res => {
             if (res.success) {
                 dispatch({
                     type: actionTypes.CREATE_PRAYER_SUCCESS,
@@ -22,6 +22,7 @@ export function createNewPrayer(params) {
                     }
                 });
             }
+            return res;
         });
     }
 }
@@ -31,7 +32,7 @@ export function editPrayer(params) {
         dispatch({
             type: actionTypes.EDIT_PRAYER_PENDING,
         });
-        new prayerService().editPrayer(params).then(res => {
+        return new prayerService().editPrayer(params).then(res => {
             if (res.success) {
                 dispatch({
                     type: actionTypes.EDIT_PRAYER_SUCCESS,
@@ -46,6 +47,7 @@ export function editPrayer(params) {
                     }
                 });
             }
+            return res;
         });
     }
 }

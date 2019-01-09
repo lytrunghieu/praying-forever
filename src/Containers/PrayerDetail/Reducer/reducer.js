@@ -20,7 +20,7 @@ export function reducer(state = InitialState, action) {
             return state
         }
 
-        case actionTypes.GET_PRAYER_FAILED :{
+        case actionTypes.GET_PRAYER_DETAIL_FAILED :{
             state = state.set("fetching", false);
             state = state.set("success", false);
             state = state.set("message", data.message);

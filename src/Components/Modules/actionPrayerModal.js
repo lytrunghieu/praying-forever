@@ -50,8 +50,7 @@ export default class ActionPrayerModal extends PureComponent {
     }
 
     onPressEdit() {
-        const {data} = this.props;
-        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, data);
+        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, this.params );
     }
 
     onPressDelete = (params) => () => {
@@ -72,6 +71,7 @@ export default class ActionPrayerModal extends PureComponent {
     //region functions
     open(data) {
         this.refs["moreAction"].open();
+        this.params = data;
         this.setState({
             data : this.generateOption(data)
         });

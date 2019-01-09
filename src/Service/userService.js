@@ -135,8 +135,8 @@ class UserService extends baseService {
             })
     }
 
-    sendForgotPassword({email}){
-        return firebase.auth().sendPasswordResetEmail(email).then(res=>{
+    sendForgotPassword({email}) {
+        return firebase.auth().sendPasswordResetEmail(email).then(res => {
             const result = {
                 data: {
                     success: true,
@@ -146,7 +146,7 @@ class UserService extends baseService {
             }
 
             return result;
-        }) .catch(err => {
+        }).catch(err => {
             const result = {
                 data: {
                     statusCode: 400,
@@ -181,6 +181,23 @@ class UserService extends baseService {
             return new response(res)
         });
     }
+
+    resendVerifyEmail() {
+        return firebase.auth().currentUser.sendEmailVerification().then(res => {
+            const result = {
+                data: {
+                    success: true,
+                    message: null,
+                    statusCode: 200,
+                }
+            }
+            return result;
+        }).finally((res) => {
+            return new response(res)
+        });
+    }
+
+
 }
 
 export default UserService

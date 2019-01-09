@@ -13,7 +13,7 @@ import {
     ImageBackground,
 } from "../../../Components/Common";
 import {NavigationActions} from "react-navigation";
-import {Content, Container, FormValidate, ButtonFooter,LoadingIndicator} from "../../../Components/Modules";
+import {Content, Container, FormValidate, ButtonFooter, LoadingIndicator} from "../../../Components/Modules";
 import {Left, Body} from "native-base";
 import {style as styles} from "../Style";
 import {CommonUtils} from "../../../Utils";
@@ -66,8 +66,8 @@ export default class LoginScreen extends PureComponent {
                 }
             }
         }
-        if(nextProps.loginReducer.statusCode !== this.props.loginReducer.statusCode && nextProps.loginReducer.statusCode){
-            if(nextProps.loginReducer.statusCode === 402){
+        if (nextProps.loginReducer.statusCode !== this.props.loginReducer.statusCode && nextProps.loginReducer.statusCode) {
+            if (nextProps.loginReducer.statusCode === 402) {
                 Alert.alert(I18n.t("notVerifyEmailTitle"), nextProps.loginReducer.message,
                     [
                         {text: I18n.t("ok")},
@@ -76,13 +76,9 @@ export default class LoginScreen extends PureComponent {
                     {cancelable: true}
                 )
             }
-            else{
-               alert(nextProps.loginReducer.message);
+            else {
+                alert(nextProps.loginReducer.message);
             }
-        }
-
-        if(nextProps.loginReducer.success !== this.props.loginReducer.success && nextProps.loginReducer.success){
-            nextProps.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.DRAWER_NAV});
         }
     }
 
@@ -115,10 +111,11 @@ export default class LoginScreen extends PureComponent {
     //region handle action press
 
     onPressResendEmail() {
-        firebase.auth().currentUser.sendEmailVerification().then(res => {
-            alert(I18n.t("resendVerifyEmailSuccess"));
-        }).catch(error => {
-            alert(I18n.t("resendVerifyEmailFailed"))
+        const {userActions} = this.props;
+        userActions.resendVerifyEmail().then(res => {
+            if (res.success) {
+                alert(I18n.t("resendVerifyEmailSuccess"));
+            }
         });
     }
 
@@ -137,7 +134,11 @@ export default class LoginScreen extends PureComponent {
             valid.validPassword = false;
         }
         if (valid.validPassword && valid.validEmail) {
-            userActions.login({email, password});
+            userActions.login({email, password}).then(res =>{
+                if(res.success){
+                    this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.DRAWER_NAV});
+                }
+            });
         }
         this.setState(valid);
     }
@@ -167,7 +168,7 @@ export default class LoginScreen extends PureComponent {
             [
                 <ImageBackground/>,
                 <Container style={styles.container} pointerEvents={fetching ? "none" : "auto"}>
-                    <LoadingIndicator visible={fetching} />
+                    <LoadingIndicator visible={fetching}/>
                     <Content style={styles.content}>
                         <Body>
                         <PlaceHolder height={100}/>
