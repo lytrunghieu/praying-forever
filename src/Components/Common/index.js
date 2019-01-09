@@ -19,7 +19,6 @@ import  ButtonAction from "./ButtonAction";
 import  TextError from "./TextError";
 import  TextLink from "./TextLink";
 import  TextBase from "./TextBase";
-import  ModalLoading from "./ModalLoading";
 import  ModalScanQR from "../Modules/ModalScanQR";
 import  ModalQR from "../Modules/ModalQR";
 import  Title from "./Title";
@@ -51,7 +50,6 @@ export {
     TextError,
     TextLink,
     TextBase,
-    ModalLoading,
     ModalScanQR,
     ModalQR,
     Title,

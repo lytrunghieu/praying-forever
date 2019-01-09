@@ -22,7 +22,7 @@ import {CommonUtils} from "../Utils";
 
 class ForgotPassScreen extends PureComponent {
 
-    //region cycle life
+    //region CYCLE LIFE
 
     constructor(props) {
         super(props);
@@ -127,7 +127,7 @@ class ForgotPassScreen extends PureComponent {
 
     //endregion
 
-    //region Rendering
+    //region RENDERING
 
     render() {
         const {isFetching, validEmail} = this.state;

@@ -1,13 +1,9 @@
 import actionTypes from "./actionTypes";
-import firebase from 'react-native-firebase';
-import I18n from '../I18n';
 import {userService} from "../Service";
 
 export function getProfile() {
 
     return function (dispatch) {
-        const userUID = firebase.auth().currentUser.uid;
-        const profileCollect = firebase.firestore().collection('profile');
         dispatch({
             type: actionTypes.GET_PROFILE_PEDDING,
         });
@@ -30,34 +26,59 @@ export function getProfile() {
                 });
             }
         })
-
-
-        // return profileCollect.where("uid", "==", userUID).get().then(queryShot => {
-        //     if (queryShot.docs[0] && queryShot.docs[0].data()) {
-        //         queryShot.docs[0].data();
-        //         dispatch({
-        //             type: actionTypes.GET_PROFILE_SUCCESS,
-        //             data: {
-        //                 payload :queryShot.docs[0].data()
-        //             }
-        //         });
-        //         return true
-        //     }
-        //     else {
-        //         throw  {message: I18n.t("cannotGetProfile")};
-        //     }
-        //
-        // }).catch(err => {
-        //     console.log("LOG ERROR ", err);
-        //     dispatch({
-        //         type: actionTypes.GET_PROFILE_FAILED,
-        //         data: {
-        //             message : err.message || null
-        //         }
-        //     });
-        //     return err;
-        // });
-
     }
 }
+
+export function login({email, password}) {
+
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.LOGIN_PENDING,
+        });
+
+        new userService().login({email, password}).then(res => {
+            if (res.success) {
+                dispatch({
+                    type: actionTypes.LOGIN_SUCCESS,
+                });
+            }
+            else {
+                dispatch({
+                    type: actionTypes.LOGIN_FAILED,
+                    data: {
+                        message: res.message,
+                        statusCode : res.statusCode
+                    }
+                });
+            }
+        })
+    }
+}
+
+export function register({email, password, firstName, lastName, birthDay, gender}) {
+
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.REGISTER_PENDING,
+        });
+
+        return new userService().register({email, password, firstName, lastName, birthDay, gender}).then(res => {
+            if (res.success) {
+                dispatch({
+                    type: actionTypes.REGISTER_SUCCESS,
+                });
+            }
+            else {
+                dispatch({
+                    type: actionTypes.REGISTER_FAILED,
+                    data: {
+                        message: res.message,
+                        statusCode : res.statusCode
+                    }
+                });
+            }
+        })
+    }
+}
+
 

@@ -39,7 +39,7 @@ class PrayFinished extends PureComponent {
         };
     }
 
-    //region cycle life
+    //region CYCLE LIFE
 
     componentWillReceiveProps(nextProps){
         if(nextProps.prays !== this.props.prays){
@@ -101,7 +101,7 @@ class PrayFinished extends PureComponent {
 
     //endregion
 
-    //region rendering
+    //region RENDERING
 
     renderPrayItem({item}) {
         const lefttOptions =[

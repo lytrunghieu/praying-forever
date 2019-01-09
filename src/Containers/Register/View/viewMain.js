@@ -1,35 +1,22 @@
 import React, {PureComponent} from 'react';
 import {
     View,
-    Platform,
-    ScrollView,
-    KeyboardAvoidingView,
+    Alert,
 } from 'react-native';
-import {connect} from 'react-redux';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import {Colors, Images, IconName} from '../Themes';
-import {CommonUtils} from '../Utils';
-import I18n from '../I18n';
-import firebase from 'react-native-firebase';
+import {Colors, Images, IconName} from '../../../Themes/index';
+import {CommonUtils} from '../../../Utils/index';
+import I18n from '../../../I18n/index';
 import {
-    Input,
-    TextError,
     Button,
     Icon,
-    PlaceHolder,
-    NavBar,
-    ModalLoading,
     Checkbox,
     DatePicker,
-    Text
-} from "../Components/Common";
-import {Header, FormValidate, ButtonFooter} from "../Components/Modules";
-import {ErrorCodes, ScreenKey} from "../Constants";
-import moment from "moment";
+    TextBase
+} from "../../../Components/Common";
+import {Header, FormValidate, ButtonFooter} from "../../../Components/Modules/index";
+import {Container, Content, CardItem} from 'native-base';
 import {NavigationActions} from "react-navigation";
-
-import {Container, Content, Item, Body, Footer, Left, Right, Label, CardItem, Card} from 'native-base';
-
+import {ScreenKey} from "../../../Constants";
 
 const inputKey = {
     EMAIL: {name: "email", index: 2},
@@ -39,9 +26,11 @@ const inputKey = {
     LASTNAME: {name: "lastName", index: 1}
 }
 
-class CreateAccountContainer extends PureComponent {
+import {style as styles} from "../Style";
 
-    //region cycle life
+export default class CreateAccount extends PureComponent {
+
+    //region CYCLE LIFE
 
     constructor(props) {
         super(props);
@@ -71,7 +60,7 @@ class CreateAccountContainer extends PureComponent {
         this.onChangeBD = this.onChangeBD.bind(this);
         this.onPressGender = this.onPressGender.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-
+        this.onSignupSuccess = this.onSignupSuccess.bind(this);
         this.leftHeader = {
             icon: IconName.back,
             onPress: this.onPressBack
@@ -80,6 +69,19 @@ class CreateAccountContainer extends PureComponent {
     }
 
     componentDidMount() {
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.registerReducer.success !== this.props.registerReducer.success && nextProps.registerReducer.success) {
+            Alert.alert(I18n.t("checkEmailTitle"), I18n.t("checkEmailContent"), [
+                    {
+                        text: I18n.t("ok"), onPress: this.onSignupSuccess
+                    }
+                ],
+                {cancelable: true}
+            );
+        }
     }
 
     componentDidUpdate(preProps, preState) {
@@ -195,6 +197,10 @@ class CreateAccountContainer extends PureComponent {
 
     //region hanlde action press
 
+    onSignupSuccess() {
+        this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
+    }
+
     onPressGender() {
         this.setState({
             isMale: !this.state.isMale
@@ -231,6 +237,7 @@ class CreateAccountContainer extends PureComponent {
     onPressCreate() {
 
         const {email, password, retypePassword, firstName, lastName, gender, birthDay} = this.state;
+        const {userActions} = this.props;
 
         let valid = {
             validEmail: true,
@@ -256,62 +263,14 @@ class CreateAccountContainer extends PureComponent {
         }
 
         if (valid.validEmail && valid.validMatchPassword) {
-            this.refs["loading"].open();
-            this.setState({
-                isFetching: true
-            });
-            const httpsCallable = firebase.functions(firebase.app()).httpsCallable("createUser");
-            httpsCallable({email, password, firstName, lastName, birthDay, gender})
-                .then(res => {
-                    this.props.navigation.dispatch({
-                        type: NavigationActions.RESET,
-                        routeName: ScreenKey.LOGIN_SCREEN
-                    });
-                })
-                .catch(httpsError => {
-                    // console.log("===ERROR :", httpsError);
-                    console.log(httpsError.message);
-                    console.log(httpsError.details.errorDescription);
-                    const {details = {}} = httpsError;
-                    switch (details.code) {
-                        case ErrorCodes.AUTH_USER_NOT_FOUND : {
-                            alert(I18n.t("userNotFoundError"));
-                            break;
-                        }
-
-                        case ErrorCodes.AUTH_INVALID_EMAIL : {
-                            alert(I18n.t("emailInvalid"));
-                            break;
-                        }
-
-                        case ErrorCodes.AUTH_NETWORK_REQUEST_FAILED : {
-                            alert(I18n.t("networkError"));
-                            break;
-                        }
-
-                        case ErrorCodes.AUTH_EMAIL_ALREADY_IS_EXIST : {
-                            alert(I18n.t("emailAlreadyUse"));
-                            break;
-                        }
-
-                        default : {
-                            alert(I18n.t("unknowError"));
-                            break
-                        }
-                    }
-                }).finally(e => {
-                this.refs["loading"].close();
-                this.setState({
-                    isFetching: false
-                })
-            });
+            userActions.register({email, password, firstName, lastName, gender, birthDay});
         }
         this.setState(valid)
     }
 
     //endregion
 
-    //region Rendering
+    //region RENDERING
 
 
     renderStep() {
@@ -357,13 +316,15 @@ class CreateAccountContainer extends PureComponent {
 
 
                     <CardItem>
-                        <Button rounded small
-                                style={{alignSelf: "flex-end"}}
-                                onPress={this.onSubmit(inputKey.LASTNAME.index)}
+                        <Button
+                            rounded
+                            small
+                            style={styles.buttonNext}
+                            onPress={this.onSubmit(inputKey.LASTNAME.index)}
 
                         >
-                            <Text>NEXT</Text>
-                            <Icon color={Colors.white} name={IconName.next}/>
+                            <TextBase bold={true} highlight={true}>{I18n.t("next").toUpperCase()}</TextBase>
+                            <Icon dark={false} name={IconName.next}/>
                         </Button>
                     </CardItem>
 
@@ -421,10 +382,13 @@ class CreateAccountContainer extends PureComponent {
                             onFocus={this.onFocus.bind(this, inputKey.RETYPE_PASSWORD.index)}
                         />
                         <CardItem>
-                            <Button rounded small iconLeft onPress={this.onPressStep(0)}
+                            <Button
+
+                                style={styles.buttonBack}
+                                rounded small iconLeft onPress={this.onPressStep(0)}
                             >
-                                <Icon color={Colors.white} name={IconName.previous}/>
-                                <Text>BACK</Text>
+                                <Icon dark={false} name={IconName.previous}/>
+                                <TextBase bold={true} highlight={true}>{I18n.t("back").toUpperCase()}</TextBase>
                             </Button>
                         </CardItem>
 
@@ -435,14 +399,16 @@ class CreateAccountContainer extends PureComponent {
     }
 
     render() {
-        const {email, password, retypePassword, firstName, lastName, gender, validEmail, isFetching, isMale, validPassword, validFirstName, validLastName, validMatchPassword, validRetypePassword, indexStep} = this.state;
-
+        const {indexStep} = this.state;
+        const {registerReducer} = this.props;
+        const {fetching} = registerReducer;
 
         return (
-            [<Container style={styles.container}>
+            <Container style={styles.container} pointerEvents={fetching ? "none" : "auto"}>
                 <Header
                     title={I18n.t("createAccountTitle")}
                     left={this.leftHeader}
+                    isFetching={fetching}
                 />
                 <Content style={styles.content}>
                     {this.renderStep()}
@@ -452,17 +418,13 @@ class CreateAccountContainer extends PureComponent {
                     indexStep === 1 ?
                         <ButtonFooter
                             onPress={this.onPressCreate}
-                            disabled={isFetching} text={I18n.t("create")}
+                            disabled={fetching} text={I18n.t("create")}
                         />
                         : null
                 }
 
 
-            </Container>,
-                <ModalLoading
-                    ref="loading"
-                />
-            ]
+            </Container>
         );
     }
 
@@ -470,41 +432,3 @@ class CreateAccountContainer extends PureComponent {
 
 }
 
-const mapStateToProps = (state) => {
-    return {}
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountContainer);
-
-const styles = EStyleSheet.create({
-    container: {
-        backgroundColor: "transparent",
-    },
-
-    content: {
-        paddingRight: "$padding",
-        paddingLeft: "$padding",
-        paddingTop: "$padding",
-        // backgroundColor:"transparent",
-    },
-
-    scrollView: {
-        flex: 1,
-    },
-
-    body: {
-        paddingLeft: "$padding",
-        paddingRight: "$padding"
-    },
-
-    form: {
-        padding: "$padding",
-        backgroundColor: Colors.primary,
-        borderRadius: "$borderRadiusSmall"
-    }
-
-});

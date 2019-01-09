@@ -104,8 +104,8 @@ class RootContainer extends PureComponent {
         if (nextProps.navigationReducer !== this.props.navigationReducer) {
             Keyboard.dismiss();
         }
-        if(nextProps.errorMessageReducer !== this.props.errorMessageReducer && nextProps.errorMessageReducer){
-            alert(nextProps.errorMessageReducer);
+        if(nextProps.errorMessageReducer !== this.props.errorMessageReducer && nextProps.errorMessageReducer.detail && nextProps.errorMessageReducer.detail.message){
+            alert(nextProps.errorMessageReducer.detail.message);
         }
     }
 

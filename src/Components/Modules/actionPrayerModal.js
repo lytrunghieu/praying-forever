@@ -11,13 +11,10 @@ import {CommonUtils} from "../../Utils";
 
 export default class ActionPrayerModal extends PureComponent {
 
-    //region cycle life
+    //region CYCLE LIFE
 
     constructor(props) {
         super(props);
-        // super.constructor(props);
-        // this.optionActionSheet = [];
-        // this.generateOption(props.data);
         this.state = {
             data : []
         };
@@ -25,18 +22,10 @@ export default class ActionPrayerModal extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        // if (nextProps.data !== this.props.data) {
-        //     this.generateOption(nextProps.data);
-        // }
     }
 
     componentWillUpdate(nextProps, nextState){
-        // if(nextState.data !== this.state.data  && nextState.data){
-        //     this.generateOption(nextState.data);
-        // }
     }
-
-
 
     //endregion
 
@@ -144,7 +133,7 @@ export default class ActionPrayerModal extends PureComponent {
 
     //endregion
 
-    //region rendering
+    //region RENDERING
 
     render() {
         const {...rest} = this.props;

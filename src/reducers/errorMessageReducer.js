@@ -5,8 +5,10 @@ export function errorMessageReducer(state = InitialState.errorMessage, action) {
     const {type,data} = action;
     switch (type) {
         default :
-            if(type.indexOf("FAILED")){
-                state = state.set("message", data.message);
+            if(type.indexOf("FAILED") > -1){
+                if(type !== actionTypes.LOGIN_FAILED){
+                    state = state.set("detail", { message : data.message , statusCode : data.statusCode});
+                }
             }
 
             return state

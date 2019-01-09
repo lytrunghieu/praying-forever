@@ -38,7 +38,7 @@ export default class PrayerDetail extends PureComponent {
 
     }
 
-    //region cycle life
+    //region CYCLE LIFE
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.prayerReducer && nextProps.prayerReducer !== this.props.prayerReducer && nextProps.prayerReducer.payload) {
@@ -115,7 +115,7 @@ export default class PrayerDetail extends PureComponent {
 
     //endregion
 
-    //region rendering
+    //region RENDERING
 
     renderContainer() {
         const {item = {}} = this.state;

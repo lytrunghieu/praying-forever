@@ -7,7 +7,7 @@ import {style as styles} from "../Style";
 
 export default class CreatePraying extends PureComponent {
 
-    //region cycle life
+    //region CYCLE LIFE
 
     constructor(props) {
         super(props);

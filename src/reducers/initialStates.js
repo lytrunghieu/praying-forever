@@ -38,7 +38,21 @@ export default {
     }),
 
     errorMessage :Immutable({
-        message: null,
+        detail: null,
+    }),
+
+    login :Immutable({
+        fetching : false,
+        success : false,
+        message : null,
+        statusCode: null,
+    }),
+
+    register :Immutable({
+        fetching : false,
+        success : false,
+        message : null,
+        statusCode: null,
     }),
 
 };

@@ -7,7 +7,7 @@ import FormValidate from "./FormValidate";
 import LoadingBar from "./LoadingBar";
 import Container from "./Container";
 import Content from "./Content";
-import loadingIndicator from "./loadingIndicator";
+import LoadingIndicator from "./loadingIndicator";
 import ActionPrayerModal from "./actionPrayerModal";
 import ModalQR from "./ModalQR";
 import ModalScanQR from "./ModalScanQR";
@@ -23,7 +23,7 @@ export {
     LoadingBar,
     Container,
     Content,
-    loadingIndicator,
+    LoadingIndicator,
     PrayItem,
     ActionPrayerModal,
     ModalQR,

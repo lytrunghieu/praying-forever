@@ -42,7 +42,7 @@ class NotificationDetail extends PureComponent {
 
     }
 
-    //region cycle life
+    //region CYCLE LIFE
 
     componentDidMount(){
         commonUtils.sendEvent({type : EventRegisterTypes.UPDATE_NOTIFICATION , params: {uid : this.uid}})
@@ -86,7 +86,7 @@ class NotificationDetail extends PureComponent {
 
     //endregion
 
-    //region rendering
+    //region RENDERING
 
     render() {
         const {title, content} = this.state;

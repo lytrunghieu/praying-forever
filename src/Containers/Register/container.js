@@ -5,11 +5,11 @@ import {viewMain} from "./View";
 import {userActions} from "../../Action";
 
 const mapStateToProps = (state) => ({
-    loginReducer : state.loginReducer
+    registerReducer : state.registerReducer
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    userActions : bindActionCreators(userActions,dispatch)
+    userActions : bindActionCreators(userActions, dispatch)
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(viewMain);

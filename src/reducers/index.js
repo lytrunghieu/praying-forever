@@ -5,6 +5,8 @@ import {notificationReducer} from "./notificationReducer";
 import {userReducer} from "./userReducer";
 import {commonReducer} from "./commonReducer";
 import {errorMessageReducer} from "./errorMessageReducer";
+import {loginReducer} from "./loginReducer";
+import {registerReducer} from "./registerReducer";
 
 import {prayingInProgress, createPrayer,prayerDetail} from "../Containers";
 const {reducer : createPrayerReducer} =createPrayer;
@@ -18,7 +20,9 @@ const appReducer = combineReducers({
     createPrayerReducer,
     prayerDetailReducer,
     commonReducer,
-    errorMessageReducer
+    errorMessageReducer,
+    loginReducer,
+    registerReducer
 })
 
 export const  expAppReducer = appReducer;

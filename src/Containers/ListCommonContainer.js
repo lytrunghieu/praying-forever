@@ -25,7 +25,7 @@ import {
     RowItem,
     TextError,
     TextLink,
-    ModalLoading
+
 } from "../Components/Common";
 import {Images, Colors} from "../Themes"
 import * as _ from "lodash";
@@ -383,10 +383,6 @@ export default class ListCommon extends PureComponent {
                     ref={"checkboxList"}
                     options={checkboxList}
                     textDone={"DONE"}
-                />
-
-                <ModalLoading
-                    ref={"loading"}
                 />
 
             </View>

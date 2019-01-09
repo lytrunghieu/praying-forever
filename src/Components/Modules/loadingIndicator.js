@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import * as Progress from 'react-native-progress';
 import {Dimensions,View} from "react-native";
 import {Colors} from "../../Themes";
-
+import PropTypes from 'prop-types';
 
 export default class LoadingIndicator extends PureComponent {
 
@@ -26,5 +26,9 @@ export default class LoadingIndicator extends PureComponent {
                     borderRadius={0} height={3} animationType="timing" width={width}/> : <View style ={{height : 3}}/>
         );
     }
+}
+
+LoadingIndicator.propTypes  = {
+    visible : PropTypes.bool.isRequired
 }
 

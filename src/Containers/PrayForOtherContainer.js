@@ -57,7 +57,7 @@ class PrayForOther extends PureComponent {
         this.getPray(5000);
     }
 
-    //region cycle life
+    //region CYCLE LIFE
 
     componentDidMount() {
 
@@ -220,7 +220,7 @@ class PrayForOther extends PureComponent {
 
     //endregion
 
-    //region rendering
+    //region RENDERING
 
     renderPrayItem({item}) {
         const leftOptions = [

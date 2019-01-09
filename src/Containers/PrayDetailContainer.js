@@ -73,7 +73,7 @@ class PrayDetail extends PureComponent {
 
     }
 
-    //region cycle life
+    //region CYCLE LIFE
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.prays && nextProps.prays !== this.props.prays) {
@@ -194,7 +194,7 @@ class PrayDetail extends PureComponent {
 
     //endregion
 
-    //region rendering
+    //region RENDERING
 
 
     renderContainer() {

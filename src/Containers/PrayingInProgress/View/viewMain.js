@@ -78,7 +78,7 @@ export default class PrayingInProgress extends PureComponent {
         };
     }
 
-    //region cycle life
+    //region CYCLE LIFE
 
     componentDidMount() {
 

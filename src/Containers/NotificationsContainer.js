@@ -44,7 +44,7 @@ class Notifications extends PureComponent {
         firebase.notifications().removeAllDeliveredNotifications();
     }
 
-    //region cycle life
+    //region CYCLE LIFE
 
     componentWillReceiveProps(nextProps) {
 
@@ -111,7 +111,7 @@ class Notifications extends PureComponent {
 
     //endregion
 
-    //region rendering
+    //region RENDERING
 
     renderItem({item}) {
 
