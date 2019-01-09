@@ -7,30 +7,17 @@ import I18n from '../../../I18n';
 import {
     ActionSheet,
     PlaceHolder,
-    ConfirmModal,
-    ModalScanQR,
-    ModalQR
 } from '../../../Components/Common';
 import commonUtils from "../../../Utils/CommonUtils";
 import {StatusOfPray, EventRegisterTypes, ScreenKey} from "../../../Constants";
-import firebase from 'react-native-firebase';
-import {Pray, PrayLocation} from '../../../model';
-import * as _ from "lodash";
-import Permissions from 'react-native-permissions';
-import Geolocation from 'react-native-geolocation-service';
 import {style} from "../Style";
-
-const collect = firebase.firestore().collection('prayer');
-const locationCollect = firebase.firestore().collection('location');
-
 import {
     Header,
     ActionSheetPrayItem,
     LoadingBar,
     Container,
     Content,
-    PrayItem,
-    ActionPrayerModal
+    PrayItem
 } from "../../../Components/Modules";
 
 export default class PrayingInProgress extends PureComponent {
@@ -63,7 +50,6 @@ export default class PrayingInProgress extends PureComponent {
         this.renderSeparate = this.renderSeparate.bind(this);
         this.keyExtractor = this.keyExtractor.bind(this);
         this.renderListFooterComponent = this.renderListFooterComponent.bind(this);
-        this.renderListHeaderComponent = this.renderListHeaderComponent.bind(this);
         this.onAcceptDeletePrayer = this.onAcceptDeletePrayer.bind(this);
         this.onChangeKeySearch = this.onChangeKeySearch.bind(this);
         this.onPressBackSearch = this.onPressBackSearch.bind(this);
@@ -235,9 +221,6 @@ export default class PrayingInProgress extends PureComponent {
         )
     }
 
-    renderListHeaderComponent() {
-        return (<PlaceHolder/>);
-    }
 
     renderListFooterComponent() {
         return (<PlaceHolder/>);

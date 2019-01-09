@@ -1,12 +1,13 @@
 
+
 const ActionTypes ={
-    GET_DATA_PENDING: "GET_DATA_PENDING",
-    GET_DATA_SUCCESS: "GET_DATA_SUCCESS",
-    GET_DATA_FAILED: "GET_DATA_FAILED",
+    LOGOUT_PENDING :"LOGOUT_PENDING",
+    LOGOUT_SUCCESS :"LOGOUT_SUCCESS",
+    LOGOUT_FAILED :"LOGOUT_FAILED",
 }
 
 
-export const actionTypes = ActionTypes;
+export const actionTypes =  ActionTypes
 
 
 

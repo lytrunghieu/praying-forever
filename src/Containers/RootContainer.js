@@ -179,7 +179,7 @@ class RootContainer extends PureComponent {
 
 const mapStateToProps = (state) => ({
     navigationReducer: state.navigationReducer,
-    errorMessageReducer: state.errorMessageReducer
+    errorMessageReducer: state.errorMessageReducer,
 })
 
 // wraps dispatch to create nicer functions to call within our component

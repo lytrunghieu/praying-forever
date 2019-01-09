@@ -46,7 +46,6 @@ export default class ActionPrayerModal extends PureComponent {
     onPressUpdatePrayerStatus = (data) => () => {
         const {uid : prayerUID} = data;
         CommonUtils.sendEvent({type : EventRegisterTypes.UPDATE_PRAYER_STATUS , params :{prayerUID }})
-
     }
 
     onPressEdit() {

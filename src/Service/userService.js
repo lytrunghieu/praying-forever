@@ -197,6 +197,21 @@ class UserService extends baseService {
         });
     }
 
+    logout() {
+        return firebase.auth().signOut().then(res => {
+            const result = {
+                data: {
+                    success: true,
+                    message: null,
+                    statusCode: 200,
+                }
+            }
+            return result;
+        }).finally((res) => {
+            return new response(res)
+        });
+    }
+
 
 }
 

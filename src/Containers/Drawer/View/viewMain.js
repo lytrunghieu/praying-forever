@@ -8,7 +8,7 @@ import {NavigationActions} from "react-navigation";
 import {EventRegisterTypes, URL, StatusOfPray, ScreenKey} from "../../../Constants/index";
 import {EventRegister} from 'react-native-event-listeners';
 import moment from "moment";
-import {OptionButton} from "../../../Components/Modules/index";
+import {OptionButton, LoadingIndicator} from "../../../Components/Modules";
 import {List} from 'native-base';
 
 const prayCollect = firebase.firestore().collection('prayer');
@@ -59,7 +59,7 @@ export default class DrawerContainer extends PureComponent {
         });
 
         this.getPray();
-        const {userActions,prayerActions} = this.props;
+        const {userActions, prayerActions} = this.props;
         userActions.getProfile();
 
         //Listen event
@@ -72,15 +72,10 @@ export default class DrawerContainer extends PureComponent {
             const {type, params = {}, callback} = action;
             switch (type) {
 
-                case EventRegisterTypes.DELETE_PRAY : {
-                    this.deletePray(params);
-                    break;
-                }
-
                 case EventRegisterTypes.UPDATE_PRAYER_STATUS : {
 
                     const {prayerUID} = params;
-                    if(prayerUID){
+                    if (prayerUID) {
                         prayerActions.updateStatusPrayer(prayerUID);
                     }
                     break;
@@ -98,46 +93,6 @@ export default class DrawerContainer extends PureComponent {
                             console.log(httpsError.message);
                             console.log(httpsError.details.errorDescription);
                         });
-                    break;
-                }
-
-                case EventRegisterTypes.UPDATE_PRAY : {
-                    const {uid} = params;
-                    const docOfCurrentUserPrayRef = prayCollect.doc(firebase.auth().currentUser.uid).collection("data").doc(uid);
-                    docOfCurrentUserPrayRef.get().then(snap => {
-                        snap.ref.update(snap.data()).then(res => {
-                            this.getPray();
-                        });
-                    })
-                    break;
-                }
-
-                case EventRegisterTypes.UPDATE_FOLLOWING : {
-                    const {uid, owner} = params;
-                    const httpsCallable = firebase.functions(firebase.app()).httpsCallable("following");
-                    httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid, userOtherUID: owner.uid})
-                        .then(res => {
-                            const {success, statusCode} = res.data;
-                            if (success) {
-                                this.getPray();
-                            }
-                            else {
-                                if (statusCode === 401) {
-                                    this.deletePray({uid: uid});
-                                }
-                            }
-                        })
-                        .catch(httpsError => {
-                            console.log("ERROR :", httpsError);
-                            console.log(httpsError.code);
-                            console.log(httpsError.message);
-                            console.log(httpsError.details.errorDescription);
-                        });
-                    break;
-                }
-
-                case EventRegisterTypes.GET_PRAY : {
-                    this.getPray();
                     break;
                 }
 
@@ -163,18 +118,18 @@ export default class DrawerContainer extends PureComponent {
                     break;
                 }
 
-                case EventRegisterTypes.UPDATE_LIVE_STATUS:{
+                case EventRegisterTypes.UPDATE_LIVE_STATUS: {
                     const {prayerUID, live} = params;
                     if (prayerUID) {
-                        prayerActions.updateLiveStatusPrayer({prayerUID,live});
+                        prayerActions.updateLiveStatusPrayer({prayerUID, live});
                     }
                     break;
                 }
 
-                case EventRegisterTypes.FOLLOWING_PRAYER:{
-                    const {prayerUID, userOtherUID,follow} = params
+                case EventRegisterTypes.FOLLOWING_PRAYER: {
+                    const {prayerUID, userOtherUID, follow} = params
                     if (prayerUID && userOtherUID) {
-                        prayerActions.followingPrayer({prayerUID, userOtherUID,follow});
+                        prayerActions.followingPrayer({prayerUID, userOtherUID, follow});
                     }
                     break;
                 }
@@ -253,43 +208,16 @@ export default class DrawerContainer extends PureComponent {
     }
 
     onPressLogout() {
-        firebase.auth().signOut().then(res => {
-            this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
-        }).catch(err => {
-            alert(err);
+        const {userActions} = this.props;
+        userActions.logout().then(res => {
+            if (res.success) {
+                this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
+            }
         });
     }
 
     //endregion
 
-
-    requestLocationPermission() {
-        return Permissions.request('location').then(response => {
-            if (response === "authorized") {
-                return "success";
-            }
-            else {
-                alert("App need access location to get prayer list");
-                return "fail";
-            }
-        })
-
-    }
-
-    deletePray(params = {}) {
-        const {uid} = params;
-        const httpsCallable = firebase.functions(firebase.app()).httpsCallable("deletePray");
-        httpsCallable({userUID: firebase.auth().currentUser.uid, prayUID: uid})
-            .then(data => {
-                this.getPray();
-            })
-            .catch(httpsError => {
-                console.log("ERROR :", httpsError);
-                console.log(httpsError.code);
-                console.log(httpsError.message);
-                console.log(httpsError.details.errorDescription);
-            });
-    }
 
     getNotificationNotRead(notif) {
         if (!Array.isArray(notif)) {
@@ -313,13 +241,14 @@ export default class DrawerContainer extends PureComponent {
     }
 
     render() {
-        const {navigation: {navigate}, logout, activeItemKey, prayerReducer} = this.props;
+        const {prayerReducer, drawerReducer} = this.props;
         const {notificationNotRead} = this.state;
-
+        const {fetching} = drawerReducer;
         const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE) || [];
 
         return (
-            [<View key={"main"}>
+            <View key={"main"} pointerEvents={fetching ? "none" : "auto"}>
+                <LoadingIndicator visible={fetching}/>
                 <List>
                     <OptionButton text={I18n.t("inprogress")}
                                   leftIcon={IconName.prayer_inprogress}
@@ -339,10 +268,14 @@ export default class DrawerContainer extends PureComponent {
                     <OptionButton text={I18n.t("about")} leftIcon={IconName.about}/>
                     <OptionButton text={I18n.t("logout")} leftIcon={IconName.logout}
                                   onPress={this.onPressLogout}/>
-                    <OptionButton text={firebase.auth().currentUser.email}/>
+                    {
+                        firebase.auth().currentUser ? <OptionButton text={firebase.auth().currentUser.email}/> : null
+                    }
+
+
                 </List>
-            </View>,
-            ]
+            </View>
+
         )
     }
 }

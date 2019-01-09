@@ -133,6 +133,31 @@ export function resendVerifyEmail() {
     }
 }
 
+export function logout() {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.LOGOUT_PENDING,
+        });
+
+        return new userService().logout().then(res => {
+            if (res.success) {
+                dispatch({
+                    type: actionTypes.LOGOUT_SUCCESS,
+                });
+            }
+            else {
+                dispatch({
+                    type: actionTypes.LOGOUT_FAILED,
+                    data: {
+                        message: res.message,
+                    }
+                });
+            }
+            return res;
+        })
+    }
+}
+
 
 
 
