@@ -84,15 +84,9 @@ export default class CreatePraying extends PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.createPrayerReducer !== this.props.createPrayerReducer) {
-            if (nextProps.createPrayerReducer.message) {
-                alert(nextProps.createPrayerReducer.message);
+            if (nextProps.createPrayerReducer.success !== this.props.createPrayerReducer.success && nextProps.createPrayerReducer.success) {
+                this.onPressBack();
             }
-            else {
-                if (nextProps.createPrayerReducer.success !== this.props.createPrayerReducer.success && nextProps.createPrayerReducer.success) {
-                    this.onPressBack();
-                }
-            }
-
         }
     }
 
