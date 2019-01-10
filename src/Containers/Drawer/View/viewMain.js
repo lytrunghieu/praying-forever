@@ -9,9 +9,10 @@ import {EventRegisterTypes, URL, StatusOfPray, ScreenKey} from "../../../Constan
 import {EventRegister} from 'react-native-event-listeners';
 import moment from "moment";
 import {OptionButton, LoadingIndicator} from "../../../Components/Modules";
+import {Icon,Button,TextBase} from "../../../Components/Common";
 import {List} from 'native-base';
+import {style} from "../Style";
 
-const prayCollect = firebase.firestore().collection('prayer');
 const notificationCollect = firebase.firestore().collection('notification');
 const tokenCollect = firebase.firestore().collection('tokens');
 
@@ -241,14 +242,20 @@ export default class DrawerContainer extends PureComponent {
     }
 
     render() {
-        const {prayerReducer, drawerReducer} = this.props;
+        const {prayerReducer, drawerReducer,userReducer} = this.props;
         const {notificationNotRead} = this.state;
         const {fetching} = drawerReducer;
         const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE) || [];
-
+        const {payload ={}} = userReducer;
+        // const {displayName =""} = payload;
         return (
             <View key={"main"} pointerEvents={fetching ? "none" : "auto"}>
                 <LoadingIndicator visible={fetching}/>
+                <View style ={style.profileContainer}>
+                    <Icon large={true}/>
+                    <TextBase>lyhe</TextBase>
+                    <Button rounded={true} center={true} text={ I18n.t("edit")} ></Button>
+                </View>
                 <List>
                     <OptionButton text={I18n.t("inprogress")}
                                   leftIcon={IconName.prayer_inprogress}

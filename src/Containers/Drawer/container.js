@@ -10,6 +10,7 @@ const mapStateToProps = (state) => {
         prayerReducer : state.prayerReducer,
         commonReducer : state.commonReducer,
         drawerReducer : state.drawerReducer,
+        userReducer : state.userReducer,
     }
 }
 

@@ -318,13 +318,12 @@ export default class CreateAccount extends PureComponent {
                     <CardItem>
                         <Button
                             rounded
-                            small
-                            style={styles.buttonNext}
                             onPress={this.onSubmit(inputKey.LASTNAME.index)}
-
+                            iconRight={true}
+                            iconLeft={false}
+                            icon={IconName.next}
+                            text={I18n.t("next")}
                         >
-                            <TextBase bold={true} highlight={true}>{I18n.t("next").toUpperCase()}</TextBase>
-                            <Icon dark={false} name={IconName.next}/>
                         </Button>
                     </CardItem>
 
@@ -383,13 +382,12 @@ export default class CreateAccount extends PureComponent {
                         />
                         <CardItem>
                             <Button
-
-                                style={styles.buttonBack}
-                                rounded small iconLeft onPress={this.onPressStep(0)}
-                            >
-                                <Icon dark={false} name={IconName.previous}/>
-                                <TextBase bold={true} highlight={true}>{I18n.t("back").toUpperCase()}</TextBase>
-                            </Button>
+                                rounded
+                                onPress={this.onPressStep(0)}
+                                icon={IconName.previous}
+                                text={I18n.t("back")}
+                                iconLeft={true}
+                            />
                         </CardItem>
 
                     </View>

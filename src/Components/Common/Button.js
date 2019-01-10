@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import globalStyle from '../../Themes/globalStyle';
 import getTheme from './native-base-theme/components';
 import material from './native-base-theme/variables/material';
+import {TextBase,Icon} from '../Common';
 
 import {Colors, Fonts} from '../../Themes';
 
@@ -15,7 +16,27 @@ export default class ButtonComponent extends PureComponent {
 
 
     render() {
-        const {onPress, children, transparent, action, ...rest} = this.props;
+        const {onPress, children, transparent, action, rounded, iconLeft, icon, text,large, center, ...rest, } = this.props;
+
+        if (rounded) {
+            return (
+                <Button
+                    style={[styles.roundedStyle,center ? styles.center : null]}
+                    rounded small onPress={onPress}
+                >
+                    {
+                        iconLeft && icon && <Icon dark={false} name={icon}/>
+                    }
+
+
+                    <TextBase bold={true} highlight={true}>{text && text.toUpperCase()}</TextBase>
+                    {
+                        !iconLeft && icon && <Icon dark={false} name={icon}/>
+                    }
+                </Button>
+            )
+        }
+
 
         return (
 
@@ -47,34 +68,16 @@ export default class ButtonComponent extends PureComponent {
 
 ButtonComponent.defaultProps = {
     transparent: false
-    // onPress: () => {
-    // },
-    // text: "",
-    // fit: false,
-    // width: 184,
-    // textColor: Colors.white,
-    // borderWidth: globalStyle.$borderWidthNormal,
-    // borderColor: Colors.black,
-    // backgroundColor: Colors.black,
-    // borderRadius: globalStyle.$borderRadiusLarge,
-    // customeBorder: false,
-    // height: globalStyle.$heightRowSmall,
 
 };
 
 ButtonComponent.propTypes = {
-    transparent: PropTypes.bool
-    // onPress: PropTypes.func,
-    // text: PropTypes.string.isRequired,
-    // fit: PropTypes.bool,
-    // width: PropTypes.number,
-    // textColor: PropTypes.string,
-    // borderWidth: PropTypes.number,
-    // borderColor: PropTypes.string,
-    // customeBorder: PropTypes.bool,
-    // backgroundColor: PropTypes.string,
-    // height: PropTypes.number,
-    // borderRadius: PropTypes.number,
+    transparent: PropTypes.bool,
+    text : PropTypes.string,
+    icon : PropTypes.string,
+    iconLeft : PropTypes.bool,
+    rounded: PropTypes.bool
+
 }
 
 
@@ -93,6 +96,17 @@ const styles = EStyleSheet.create({
     //     width: "100%",
     //     flex: 0,
     // },
+
+    roundedStyle: {
+        backgroundColor: Colors.black,
+        flexDirection: "row",
+        justifyContent: "center",
+        minWidth: 100,
+    },
+
+    center:{
+        alignSelf:"center"
+    },
 
 
     labelText: {
