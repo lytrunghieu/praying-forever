@@ -8,8 +8,7 @@ exports.prayers ="prayer/{userUID}/data";
 exports.locationPrayer ="location/{prayerUID}";
 exports.locationPrayers ="location";
 
-exports.notification = "notification/{userUID}/data";
-exports.deleteNotification = "notification/{userUID}/data/{notifUID}"
-exports.deleteAllNotification = "notification/{userUID}/data"
+exports.notifications = "notification/{userUID}/data";
+exports.notification = "notification/{userUID}/data/{notifUID}"
 
 exports.profileUser ="profile/{userUID}";

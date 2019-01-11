@@ -2,10 +2,9 @@
 import React, {PureComponent} from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
-import globalStyle from '../../Themes/globalStyle';
 import {View} from "react-native";
-import {Colors} from '../../Themes';
-import {TextBase} from "../Common";
+import {Colors, IconName} from '../../Themes';
+import {TextBase, Icon} from "../Common";
 import I18n from "../../I18n";
 
 
@@ -13,12 +12,20 @@ export default class NetworkBar extends PureComponent {
 
 
     render() {
-        const {visible} = this.props;
+        const {online} = this.props;
         return (
-            visible ?
             <View style={[styles.container]}>
-                <TextBase small={true} italic={true} >{I18n.t("appOffline")}</TextBase>
-            </View> :  null
+                <TextBase
+                    highlight={true}
+                    small={true}
+                    success={online}
+                    error={!online}
+                > {online ? I18n.t("appOnline") : I18n.t("appOffline")}</TextBase>
+                <View style ={styles.space}/>
+
+                <Icon smallest={true} success={online} error={!online} name={IconName.onlineOfOffline}/>
+                <View style ={styles.space}/>
+            </View>
         )
     }
 }
@@ -26,19 +33,21 @@ export default class NetworkBar extends PureComponent {
 NetworkBar.defaultProps = {};
 
 NetworkBar.propTypes = {
-    visible: PropTypes.bool
+    online: PropTypes.bool
 };
 
 const styles = EStyleSheet.create({
     container: {
         height: 16,
-        top: 0,
-        left: 0,
         width: "100%",
-        position: "absolute",
         alignItems: "center",
-        justifyContent:"center",
-        backgroundColor: Colors.grayBg
+        flexDirection:"row",
+        justifyContent: "flex-end",
+        backgroundColor: Colors.black
+    },
+
+    space :{
+        marginLeft:"$paddingSmall",
     }
 
 });

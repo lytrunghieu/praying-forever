@@ -1,29 +1,46 @@
 import {actionTypes} from '../Action';
 import InitialState from "./initialStates";
+import Immutable from 'seamless-immutable';
 
 export function userReducer(state = InitialState.profile, action) {
-    let oldState;
     const {type,data} = action;
-    switch (action.type) {
+    switch (type) {
         case actionTypes.GET_PROFILE_PEDDING : {
-            state = state.set("fetching", true);
-            state = state.set("success", false);
-            state = state.set("message", null);
+            if(Immutable.isImmutable(state)){
+                state = state.set("fetching", true);
+                state = state.set("success", false);
+                state = state.set("message", null);
+            }
+            else{
+                state = Immutable(state);
+            }
             return state;
         }
 
         case actionTypes.GET_PROFILE_SUCCESS : {
-            state = state.set("fetching", false);
-            state = state.set("success", true);
-            state = state.set("message", null);
-            state = state.set("payload", data.payload);
+            if(Immutable.isImmutable(state)){
+                state = state.set("fetching", false);
+                state = state.set("success", true);
+                state = state.set("message", null);
+                state = state.set("payload", data.payload);
+            }
+            else{
+                state = Immutable(state);
+            }
+
             return state;
         }
 
         case actionTypes.GET_PROFILE_FAILED : {
-            state = state.set("fetching", false);
-            state = state.set("success", false);
-            state = state.set("message", data.message);
+            if(Immutable.isImmutable(state)){
+                state = state.set("fetching", false);
+                state = state.set("success", false);
+                state = state.set("message", data.message);
+            }
+            else{
+                state = Immutable(state);
+            }
+
             return state;
         }
 

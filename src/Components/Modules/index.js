@@ -14,6 +14,7 @@ import ModalScanQR from "./ModalScanQR";
 import ConfirmModal from "./ConfirmModal";
 import EmptyHolder from "./EmptyHolder";
 import NetworkBar from "./NetworkBar";
+import NotificationItem from "./NotificationItem";
 
 
 export {
@@ -32,5 +33,6 @@ export {
     ModalScanQR,
     ConfirmModal,
     EmptyHolder,
-    NetworkBar
+    NetworkBar,
+    NotificationItem
 };

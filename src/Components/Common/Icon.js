@@ -22,7 +22,7 @@ export default class Icon extends PureComponent {
         return this.renderIcon(this.props);
     }
 
-    renderIcon({name, iconType,large,medium,largeX, dark, color}) {
+    renderIcon({name, iconType,large,medium,largeX, dark, color, error, success, smallest}) {
         let size = 24;
         let _color = Colors.black;
         if(large){
@@ -36,10 +36,23 @@ export default class Icon extends PureComponent {
             if(medium){
                 size = 32;
             }
+            else{
+                if(smallest){
+                    size = 14
+                }
+            }
         }
 
         if(!dark){
             _color = Colors.white;
+        }
+
+        if(error){
+            _color = Colors.error
+        }
+
+        if(success){
+            _color = Colors.success
         }
 
         let MaterialCommunityIconsView = null;
@@ -72,6 +85,7 @@ Icon.defaultProps = {
     color: Colors.black,
     name: "bars",
     dark : true,
+
 };
 
 Icon.propTypes = {
@@ -81,7 +95,10 @@ Icon.propTypes = {
     name: PropTypes.string,
     large : PropTypes.bool,
     medium : PropTypes.bool,
+    smallest : PropTypes.bool,
     dark : PropTypes.bool,
+    success : PropTypes.bool,
+    error : PropTypes.bool,
     largeX: PropTypes.bool
 }
 

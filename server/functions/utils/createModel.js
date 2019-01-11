@@ -13,3 +13,21 @@ exports.createLocationModel = function (data) {
 
     return result;
 }
+
+exports.notificationModel = function (data) {
+    let result = {};
+    if(!data ){
+        return null;
+    }
+    result.contentCode = data.contentCode || null;
+    result.from = data.from || null;
+    result.uid = data.uid || null;
+    result.created  = data.created || null;
+    result.isRead  = data.isRead || false;
+    result.typeCode  = data.typeCode || "private"; // public or private
+    if(!result.contentCode || !result.from){
+        return null;
+    }
+
+    return result;
+}

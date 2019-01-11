@@ -27,7 +27,10 @@ export default {
     }),
 
     notification :Immutable({
-        notifications : []
+        payload: [],
+        fetching : false,
+        success : false,
+        message : null,
     }),
 
     profile : Immutable({

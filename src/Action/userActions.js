@@ -1,30 +1,57 @@
 import actionTypes from "./actionTypes";
 import {userService} from "../Service";
+import { PURGE } from 'redux-persist';
 
-export function getProfile() {
+export function getProfile({userUID , isUser = true} ={}) {
 
     return function (dispatch) {
-        dispatch({
-            type: actionTypes.GET_PROFILE_PEDDING,
-        });
 
-        new userService().getProfile().then(res => {
-            if (res.success) {
-                dispatch({
-                    type: actionTypes.GET_PROFILE_SUCCESS,
-                    data: {
-                        payload: res.data
-                    }
-                });
+        if(isUser){
+            dispatch({
+                type: actionTypes.GET_PROFILE_PEDDING,
+            });
+        }
+        else{
+            dispatch({
+                type: actionTypes.GET_PROFILE_OTHER_PENDING,
+            });
+        }
+        return new userService().getProfile({userUID}).then(res => {
+
+            if(isUser){
+                if (res.success) {
+                    dispatch({
+                        type: actionTypes.GET_PROFILE_SUCCESS,
+                        data: {
+                            payload: res.data
+                        }
+                    });
+                }
+                else {
+                    dispatch({
+                        type: actionTypes.GET_PROFILE_FAILED,
+                        data: {
+                            message: res.message
+                        }
+                    });
+                }
             }
-            else {
-                dispatch({
-                    type: actionTypes.GET_PROFILE_FAILED,
-                    data: {
-                        message: res.message
-                    }
-                });
+            else{
+                if (res.success) {
+                    dispatch({
+                        type: actionTypes.GET_PROFILE_OTHER_SUCCESS,
+                    });
+                }
+                else {
+                    dispatch({
+                        type: actionTypes.GET_PROFILE_OTHER_FAILED,
+                        data: {
+                            message: res.message
+                        }
+                    });
+                }
             }
+            return res;
         })
     }
 }
@@ -38,9 +65,14 @@ export function login({email, password}) {
 
         return new userService().login({email, password}).then(res => {
             if (res.success) {
-                dispatch({
-                    type: actionTypes.LOGIN_SUCCESS,
-                });
+                return dispatch(getProfile()).then(_res => {
+                    if (_res.success) {
+                        dispatch({
+                            type: actionTypes.LOGIN_SUCCESS,
+                        });
+                    }
+                    return _res;
+                })
             }
             else {
                 dispatch({
@@ -51,7 +83,7 @@ export function login({email, password}) {
                     }
                 });
             }
-            return  res;
+            return res;
         })
     }
 }
@@ -143,6 +175,11 @@ export function logout() {
             if (res.success) {
                 dispatch({
                     type: actionTypes.LOGOUT_SUCCESS,
+                });
+                dispatch({
+                    type: PURGE,
+                    key: "root",    // Whatever you chose for the "key" value when initialising redux-persist in the **persistCombineReducers** method - e.g. "root"
+                    result: () => null              // Func expected on the submitted action.
                 });
             }
             else {

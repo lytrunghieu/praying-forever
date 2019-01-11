@@ -7,20 +7,22 @@ import {container as LoginScreen} from '../Containers/Login';
 import {container as RegisterScreen} from '../Containers/Register';
 import {container as ForgotPasswordScreen } from '../Containers/ForgotPassword';
 import {container as Drawer} from '../Containers/Drawer';
+import {container as ProfileScreen} from '../Containers/Profile';
 import ListCommonContainer from '../Containers/ListCommonContainer';
 import  {container as PrayingInProgressScreen} from '../Containers/PrayingInProgress';
 import {container as PrayerFinishedScreen} from '../Containers/PrayerFinished';
 import {container as CreatePrayerScreen} from '../Containers/CreatePrayer';
 import {container as PrayerDetailScreen} from '../Containers/PrayerDetail';
 import {container as  PrayForOtherScreen} from '../Containers/PrayForOthers';
-import {NotificationsContainer} from '../Containers/NotificationsContainer';
+import {container as NotificationScreen} from '../Containers/Notification';
 import {NotificationDetailContainer} from '../Containers/NotificationDetailContainer';
 
 const DrawerNav = DrawerNavigator({
     [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressScreen},
     [ScreenKey.PRAY_FINISHED]: {screen: PrayerFinishedScreen},
     [ScreenKey.PRAY_FOR_OTHER]: {screen: PrayForOtherScreen},
-    [ScreenKey.NOTIFICATIONS]: {screen: NotificationsContainer},
+    [ScreenKey.PROFILE]: {screen: ProfileScreen},
+    [ScreenKey.NOTIFICATIONS]: {screen: NotificationScreen},
 }, {
     contentComponent: Drawer // custom drawer
 });

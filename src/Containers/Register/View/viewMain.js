@@ -13,8 +13,8 @@ import {
     DatePicker,
     TextBase
 } from "../../../Components/Common";
-import {Header, FormValidate, ButtonFooter} from "../../../Components/Modules/index";
-import {Container, Content, CardItem} from 'native-base';
+import {Header, FormValidate, ButtonFooter,Container,Content} from "../../../Components/Modules/index";
+import {CardItem} from 'native-base';
 import {NavigationActions} from "react-navigation";
 import {ScreenKey} from "../../../Constants";
 
@@ -49,7 +49,6 @@ export default class CreateAccount extends PureComponent {
             validMatchPassword: true,
             validFirstName: true,
             validLastName: true,
-            isMale: true,
             birthDay: new Date(),
             indexStep: 0
 
@@ -203,7 +202,7 @@ export default class CreateAccount extends PureComponent {
 
     onPressGender() {
         this.setState({
-            isMale: !this.state.isMale
+            gender: this.state.gender ? 1 : 0
         });
     }
 
@@ -274,7 +273,7 @@ export default class CreateAccount extends PureComponent {
 
 
     renderStep() {
-        const {email, password, retypePassword, firstName, lastName, gender, validEmail, isFetching, isMale, validPassword, validFirstName, validLastName, validMatchPassword, validRetypePassword, indexStep} = this.state;
+        const {email, password, retypePassword, firstName, lastName, gender, validEmail, isFetching, validPassword, validFirstName, validLastName, validMatchPassword, validRetypePassword, indexStep} = this.state;
 
         switch (indexStep) {
             case 0 : {
@@ -311,7 +310,7 @@ export default class CreateAccount extends PureComponent {
 
                     />
 
-                    <Checkbox text={I18n.t("male")} onPress={this.onPressGender} checked={isMale}/>
+                    <Checkbox text={I18n.t("male")} onPress={this.onPressGender} checked={gender}/>
                     <DatePicker label={I18n.t("birthDay")} setDate={this.onChangeBD}/>
 
 

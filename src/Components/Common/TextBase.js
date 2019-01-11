@@ -19,13 +19,16 @@ export default class TextBase extends PureComponent {
             error,
             normal,
             highlight,
-            upperCase
+            upperCase,
+            info,
+            success,
+            disable
         } = this.props;
         const stringText = children || "";
         const customeStyle = {
             fontFamily: italic && Fonts.type.robotoItalic || bold && Fonts.type.robotoBold || Fonts.type.robotoRegular,
             fontSize:  largeX && Fonts.size.largeX ||  large && Fonts.size.large || small && Fonts.size.small || Fonts.size.normal,
-            color : highlight && Colors.white || error && Colors.red || Colors.black ,
+            color : highlight && Colors.white || error && Colors.error || info && Colors.blue  || success && Colors.success || disable && Colors.gray || Colors.black ,
         }
         return (<Text {...this.props}   style={[styles.text , customeStyle, style]}>{stringText}</Text>);
     }
@@ -53,7 +56,9 @@ TextBase.propTypes = {
     bold: PropTypes.bool,
     italic: PropTypes.bool,
     error: PropTypes.bool,
-    highlight: PropTypes.bool
+    highlight: PropTypes.bool,
+    success: PropTypes.bool,
+    disable: PropTypes.bool,
 };
 
 const styles = EStyleSheet.create({

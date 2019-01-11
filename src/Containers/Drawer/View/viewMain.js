@@ -9,9 +9,10 @@ import {EventRegisterTypes, URL, StatusOfPray, ScreenKey} from "../../../Constan
 import {EventRegister} from 'react-native-event-listeners';
 import moment from "moment";
 import {OptionButton, LoadingIndicator} from "../../../Components/Modules";
-import {Icon,Button,TextBase} from "../../../Components/Common";
+import {Icon, Button, TextBase, PlaceHolder} from "../../../Components/Common";
 import {List} from 'native-base';
 import {style} from "../Style";
+import {notification} from "../../../model";
 
 const notificationCollect = firebase.firestore().collection('notification');
 const tokenCollect = firebase.firestore().collection('tokens');
@@ -40,9 +41,10 @@ export default class DrawerContainer extends PureComponent {
     constructor(props) {
         super();
         this.onPressLogout = this.onPressLogout.bind(this);
+        this.onPressProfile = this.onPressProfile.bind(this);
         this.getPray = this.getPray.bind(this);
         this.state = {
-            notificationNotRead: this.getNotificationNotRead(props.notifications)
+            notificationNotRead: this.getNotificationNotRead(props.notificationReducer.payload)
         };
     }
 
@@ -52,7 +54,7 @@ export default class DrawerContainer extends PureComponent {
             let notificationList = [];
             snapshot.forEach(e => {
                 let data = e.data();
-                notificationList.push(data);
+                notificationList.push( new notification(data));
             });
             if (notificationList) {
                 this.props.notificationActions.getNotifications(notificationList);
@@ -138,9 +140,7 @@ export default class DrawerContainer extends PureComponent {
                 default : {
                     break;
                 }
-
             }
-
         });
 
         this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
@@ -158,7 +158,6 @@ export default class DrawerContainer extends PureComponent {
             // console.log("refresh token ", fcmToken);
             this.updateToken(fcmToken);
         });
-
 
         firebase.messaging().getToken()
             .then(fcmToken => {
@@ -193,9 +192,9 @@ export default class DrawerContainer extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        if (nextProps.notifications !== this.props.notifications) {
+        if (nextProps.notificationReducer.payload !== this.props.notificationReducer.payload) {
             this.setState({
-                notificationNotRead: this.getNotificationNotRead(nextProps.notifications)
+                notificationNotRead: this.getNotificationNotRead(nextProps.notificationReducer.payload)
             });
         }
 
@@ -215,6 +214,16 @@ export default class DrawerContainer extends PureComponent {
                 this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
             }
         });
+    }
+
+    onPressProfile() {
+
+        const {userReducer} = this.props;
+        const {payload} = userReducer;
+        if (firebase.auth().currentUser &&  payload) {
+            this.props.navigation.navigate(ScreenKey.PROFILE, {userUID: firebase.auth().currentUser.uid , user : payload });
+        }
+
     }
 
     //endregion
@@ -242,19 +251,21 @@ export default class DrawerContainer extends PureComponent {
     }
 
     render() {
-        const {prayerReducer, drawerReducer,userReducer} = this.props;
+        const {prayerReducer, drawerReducer, userReducer} = this.props;
         const {notificationNotRead} = this.state;
         const {fetching} = drawerReducer;
         const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE) || [];
-        const {payload ={}} = userReducer;
-        // const {displayName =""} = payload;
+        const {payload = {}} = userReducer;
+        const {displayName = ""} = payload;
         return (
             <View key={"main"} pointerEvents={fetching ? "none" : "auto"}>
                 <LoadingIndicator visible={fetching}/>
-                <View style ={style.profileContainer}>
-                    <Icon large={true}/>
-                    <TextBase>lyhe</TextBase>
-                    <Button rounded={true} center={true} text={ I18n.t("edit")} ></Button>
+                <View style={style.profileContainer}>
+                    <Icon largeX={true} name={IconName.avatar} large={true}/>
+                    <PlaceHolder/>
+                    <TextBase large={true} bold={true}>{displayName}</TextBase>
+                    <PlaceHolder/>
+                    <Button rounded={true} center={true} text={I18n.t("edit")} onPress={this.onPressProfile}/>
                 </View>
                 <List>
                     <OptionButton text={I18n.t("inprogress")}
@@ -270,16 +281,12 @@ export default class DrawerContainer extends PureComponent {
                                   onPress={this.onPressOption.bind(this, ScreenKey.PRAY_FOR_OTHER)}/>
                     <OptionButton text={I18n.t("notifications")}
                                   leftIcon={IconName.notification}
-                                  onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)} isCircle={true}
+                                  onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)} countRed={true}
                                   count={notificationNotRead}/>
                     <OptionButton text={I18n.t("setting")} leftIcon={IconName.setting}/>
                     <OptionButton text={I18n.t("about")} leftIcon={IconName.about}/>
                     <OptionButton text={I18n.t("logout")} leftIcon={IconName.logout}
                                   onPress={this.onPressLogout}/>
-                    {
-                        firebase.auth().currentUser ? <OptionButton text={firebase.auth().currentUser.email}/> : null
-                    }
-
 
                 </List>
             </View>

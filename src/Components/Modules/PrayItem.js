@@ -5,13 +5,14 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
 
 // Utilities
-import {Colors, Fonts, IconName} from '../../Themes/index';
+import {Colors, Fonts, IconName} from '../../Themes';
 import {TextIcon} from "./index";
 import {TextBase, Button, Icon} from "../Common";
 import moment from "moment";
 import I18n from "../../I18n";
 import {CommonUtils} from "../../Utils";
 import {EventRegisterTypes} from "../../Constants";
+import firebase from "react-native-firebase";
 
 import {Card, CardItem, Left, Body, Right} from 'native-base';
 
@@ -87,15 +88,18 @@ export default class PrayItem extends PureComponent {
     render() {
         const {onPress, item = {}, allowScaleHeight, actionMore} = this.props;
         const {title, created, following, owner = {}, content} = item;
-        const {displayName, birthDay, gender} = owner;
-
+        const {displayName, birthDay, gender, uid} = owner;
+        let _displayName =  displayName;
+        if(firebase.auth().currentUser && uid == firebase.auth().currentUser.uid ){
+            _displayName = I18n.t("me");
+        }
         return (
             <Card>
                 <CardItem>
                     <Left>
                         <Icon name={IconName.avatar} large={true}/>
                         <Body>
-                        <TextBase bold={true}>{displayName}</TextBase>
+                        <TextBase bold={true}>{_displayName}</TextBase>
                         <TextBase italic={true}>{moment(created).fromNow()}</TextBase>
                         </Body>
                     </Left>

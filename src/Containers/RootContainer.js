@@ -62,7 +62,6 @@ class RootContainer extends PureComponent {
                     isOffline : false
                 });
             }
-            console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
         });
 
         NetInfo.addEventListener(
@@ -181,10 +180,10 @@ class RootContainer extends PureComponent {
 
         return (
             <View style={styles.container}>
-                <StatusBar backgroundColor={Colors.primary} barStyle={'dark-content'}/>
+                <StatusBar backgroundColor={Colors.black} barStyle={'light-content'}/>
                 <SafeAreaView style={styles.container}>
+                    <NetworkBar online={!isOffline} />
                     <AppNavigation navigation={navigation}/>
-                    <NetworkBar visible={isOffline}/>
                     <ModalQR
                         ref={"_modalQR"}/>
                     <ModalScanQR

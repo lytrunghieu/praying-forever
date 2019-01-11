@@ -27,8 +27,8 @@ function sendMessage({pushToken, payload}) {
 }
 
 function addNotification({userUID, payload}) {
-    const {created, title, content, owner} = payload;
-    const path = paths.notification.replace("{userUID}", userUID);
+    const {created, title, content, form} = payload;
+    const path = paths.notifications.replace("{userUID}", userUID);
     return firestore.collection(path).add(payload).then(res => {
         return res.update("uid", res.id, "created", admin.firestore.FieldValue.serverTimestamp()).then(res2 => {
             return res2;
@@ -43,9 +43,30 @@ function addNotification({userUID, payload}) {
     });
 }
 
-exports.updateStatusPrayer = functions.https.onCall(data => {
+function getUserProfile({userUID}={}) {
+    const path = paths.profileUser.replace("{userUID}", userUID);
+    return firestore.doc(path).get().then(docSnap => {
+        return {success: true, statusCode: 200, data : docSnap.data()}
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        throw new functions.https.HttpsError(
+            "unknown", // code
+            'request failed', // message
+            {success: false, statusCode: 400, body: data, errorDescription: error}
+        );
+    });
+}
+
+exports.updateStatusPrayer = functions.https.onCall(async data => {
     const {userUID, prayerUID} = data;
     const path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
+
+    const userProfile =  await getUserProfile({userUID});
+
+    if(!userProfile.success || !userProfile.data){
+        return {success: false, statusCode: 401, message: "not found user"};
+    }
+
     return firestore
         .doc(path)
         .get()
@@ -61,14 +82,17 @@ exports.updateStatusPrayer = functions.https.onCall(data => {
                 following.map(fol => {
                     const pathToken = "tokens/{userUID}".replace("{userUID}", fol);
                     const paramAddNotification = {
-                        payload: {
-                            title: titleNotif,
-                            content: title,
-                            owner: fol,
-                            isRead: false,
-                            created: "",
-                            uid: "",
-                        },
+                        payload: createModel.notificationModel({
+                            contentCode:"prayer/prayer-finished",
+                            from  :{
+                                displayName : userProfile.data.displayName,
+                                uid : userProfile.data.uid
+                            },
+                            created:"",
+                            isRead : false,
+                            uid:"",
+                            typeCode : "private"
+                        }),
                         userUID: fol
                     };
 
@@ -117,10 +141,9 @@ exports.updateStatusPrayer = functions.https.onCall(data => {
 
 exports.deleteNotification = functions.https.onCall((data) => {
     const {userUID, notifUID} = data;
-    admin.auth().createUser()
-    let path = paths.deleteAllNotification.replace("{userUID}", userUID);
+    let path = paths.notifications.replace("{userUID}", userUID);
     if (notifUID) {
-        path = paths.deleteNotification.replace("{userUID}", userUID).replace("{notifUID}", notifUID);
+        path = paths.notification.replace("{userUID}", userUID).replace("{notifUID}", notifUID);
         return firestore
             .doc(path)
             .delete()
@@ -206,6 +229,8 @@ exports.following = functions.https.onCall(async (data) => {
     const {userUID, prayerUID, userOtherUID, follow} = data;
     let path = paths.prayer.replace("{userUID}", userOtherUID).replace("{prayerUID}", prayerUID);
     let pathDelete = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
+
+
     if (!follow) {
         let prayerOfUser = await firestore.doc(pathDelete).get();
         if (prayerOfUser.ref) {

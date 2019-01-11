@@ -20,6 +20,7 @@ module.exports = {
     PRAY_FOR_OTHER :"PrayForOther",
     FORGOT_PASS: "ForgotPass",
     NOTIFICATIONS :"Notifications",
-    NOTIFICATION_DETAIL :"NotificationDetail"
+    NOTIFICATION_DETAIL :"NotificationDetail",
+    PROFILE:"Profile",
 
 };

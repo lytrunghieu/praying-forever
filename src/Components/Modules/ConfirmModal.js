@@ -30,7 +30,6 @@ export default class ConfirmModal extends ModalBase {
             <View style={styles.container}>
                 <TextBase error={true} largeX={true} bold={true}>{title}</TextBase>
                 <TextBase>{content}</TextBase>
-                {/*<Text style={styles.content}>{content}</Text>*/}
                 <View style={styles.buttonsContainer}>
                     <Button
                         onPress={this.onAccept}
@@ -40,7 +39,6 @@ export default class ConfirmModal extends ModalBase {
                     >
                         <TextBase error={true}  bold={true} large={true}>{acceptText}</TextBase>
                     </Button>
-                    {/*<View style={styles.space}/>*/}
                     <Button
                         onPress={this.close}
                         transparent={false}

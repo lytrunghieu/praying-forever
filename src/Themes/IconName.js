@@ -26,7 +26,8 @@ const names = {
     previous :"arrow-circle-left",
     close :"close",
     empty:"frown-o",
-    filter:"filter"
+    filter:"filter",
+    onlineOfOffline :"circle",
 
 }
 

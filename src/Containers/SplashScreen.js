@@ -20,7 +20,9 @@ class SplashScreen extends Component {
     componentDidMount() {
         setTimeout(() => {
             let unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-                if (user && user.emailVerified) {
+                const {userReducer} = this.props;
+                const {payload} = userReducer;
+                if (user && user.emailVerified && payload) {
                     // console.log(user.emailVerified);
                     this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.DRAWER_NAV});
                 }
@@ -46,7 +48,9 @@ class SplashScreen extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+    userReducer : state.userReducer
+})
 
 const mapDispatchToProps = (dispatch) => ({})
 

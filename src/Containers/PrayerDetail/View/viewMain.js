@@ -118,7 +118,7 @@ export default class PrayerDetail extends PureComponent {
         const {fetching: fetchingPrayers} = this.props.prayerReducer;
 
         return (
-            [<Container key="container" pointerEvents={fetching ? "none" : fetchingPrayers ? "none" : "auto"}>
+            <Container pointerEvents={fetching ? "none" : fetchingPrayers ? "none" : "auto"}>
                 <Header
                     title={I18n.t('prayDetail')}
                     left={this.leftHeader}
@@ -131,7 +131,6 @@ export default class PrayerDetail extends PureComponent {
                     }
                 </Content>
             </Container>
-            ]
         );
     }
 

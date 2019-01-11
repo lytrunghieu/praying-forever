@@ -7,10 +7,12 @@ const colors = {
     primary :"#FFFFFF",
     gray :"#AFAFBB",
     grayBg :"#E7E7E5",
-    red :"red",
+    red :"#e23122",
     blue :"#4A90E2",
     divider :"#AFAFBB",
-    disable :"#AFAFBB"
+    disable :"#AFAFBB",
+    success :"#01bb96",
+    error :"#e23122"
 }
 
 export default colors

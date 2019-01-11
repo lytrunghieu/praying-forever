@@ -14,9 +14,7 @@ import {style} from "../Style";
 import {
     Header,
     ActionSheetPrayItem,
-    LoadingBar,
     Container,
-    Content,
     PrayItem,
     EmptyHolder
 } from "../../../Components/Modules";

@@ -1,14 +1,13 @@
 import baseService from "./baseService";
 import {REGISTER} from "./nameCloudFunction"
-import moment from "moment";
-import {Pray, response, PrayUser} from "../model";
+import { response, PrayUser} from "../model";
 import firebase from 'react-native-firebase';
 import {collection, ErrorCodes} from "../Constants";
 import I18n from "../I18n";
 
 class UserService extends baseService {
 
-    getProfile({userUID} = {}) {
+    getProfile({userUID, isUser = true} ={}) {
         const _userUID = userUID || firebase.auth().currentUser.uid;
         const profileCollect = firebase.firestore().collection(collection.PROFILE);
         return profileCollect.where("uid", "==", _userUID).get().then(queryShot => {

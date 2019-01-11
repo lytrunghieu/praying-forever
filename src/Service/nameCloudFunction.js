@@ -7,3 +7,4 @@ export const DELETE_PRAYER ="deletePrayer";
 export const FOLLOWING_PRAYER ="following";
 export const UPDATE_LIVE_STATUS ="updateLiveStatus";
 export const REGISTER ="createUser";
+export const DELETE_NOTIFICATION ="deleteNotification";

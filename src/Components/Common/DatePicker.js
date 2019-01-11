@@ -12,7 +12,12 @@ import PropTypes from 'prop-types';
 export default class DatePickerComponent extends PureComponent {
     constructor(props) {
         super(props);
-        this.state = {chosenDate: new Date()};
+        if(props.chosenDate){
+            this.state = {chosenDate : props.chosenDate };
+        }
+        else{
+            this.state = {chosenDate: new Date()};
+        }
         this.setDate = this.setDate.bind(this);
     }
 

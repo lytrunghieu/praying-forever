@@ -291,7 +291,7 @@ class PrayForOther extends PureComponent {
                 <ConfirmModal
                     ref={"confirm"}
                     title={I18n.t("warning")}
-                    content={I18n.t("deleteConfirmAll")}
+                    content={I18n.t("deletePrayerConfirmAll")}
                     rejectText={I18n.t("cancel")}
                     acceptText={I18n.t("yes")}
                     onAccept={this.onAcceptDeleteAll}

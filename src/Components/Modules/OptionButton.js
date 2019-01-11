@@ -14,6 +14,11 @@ export default class OptionButtonComponent extends PureComponent {
 
     render() {
         let {onPress, text, leftIcon, count, countRed} = this.props;
+
+        let _count = count;
+        if(count && parseInt(count) > 99){
+            _count = "99+"
+        }
         return (
             <ListItem icon={true} button={true} onPress={onPress}>
                 <Left>
@@ -23,14 +28,14 @@ export default class OptionButtonComponent extends PureComponent {
                 <Body>
                 <TextBase>{text}</TextBase>
                 </Body>
-
                 <Right>
                     {
                         count ?
                             countRed ?
-                                <Badge>
-                                    <TextBase>{count}</TextBase>
-                                </Badge> : <TextBase>{count}</TextBase> : null
+                            <Badge style={styles.badgeWrapper}>
+                                <TextBase bold={true} highlight={true}>{_count}</TextBase>
+                            </Badge> :
+                                <TextBase bold={true}>{_count}</TextBase> : null
                     }
 
                 </Right>
@@ -57,4 +62,11 @@ OptionButtonComponent.propTypes = {
 
 
 const styles = EStyleSheet.create({
+    badgeWrapper:{
+        justifyContent:"center" ,
+        minWidth: 26,
+        height:26,
+        maxWidth : 100,
+        alignItems:"center"
+    }
 });
