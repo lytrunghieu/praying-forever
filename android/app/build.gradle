@@ -98,14 +98,15 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "23.0.1"
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.PF"
-        minSdkVersion 16
-        targetSdkVersion 25
-        versionCode 5
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
         versionName "1.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -158,6 +159,7 @@ android {
 }
 
 dependencies {
+
     compile(project(':react-native-geolocation-service')) {
         exclude group: 'com.google.android.gms', module: 'play-services-location'
     }
@@ -170,9 +172,8 @@ dependencies {
     }
     compile project(':react-native-i18n')
     compile project(':react-native-vector-icons')
-    compile fileTree(dir: "libs", include: ["*.jar"])
-//    compile "com.android.support:appcompat-v7:23.0.1"
-    compile "com.facebook.react:react-native:+"  // From node_modules
+
+
     compile project(':react-native-smart-splashscreen')
 
     compile 'com.google.android.gms:play-services-location:15.0.1'
@@ -187,6 +188,11 @@ dependencies {
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
     implementation "com.google.firebase:firebase-functions:16.0.1"
 
+
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.facebook.react:react-native:+"  // From node_modules
 
 }
 
