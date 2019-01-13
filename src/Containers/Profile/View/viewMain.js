@@ -1,6 +1,8 @@
 import React, {PureComponent} from 'react';
 import {
-    View
+    View,
+    KeyboardAvoidingView,
+    Platform
 } from 'react-native';
 
 import {style as styles} from "../Style";
@@ -8,7 +10,7 @@ import {FormValidate, Content, Container, Header, ButtonFooter, EmptyHolder} fro
 import {IconName} from "../../../Themes";
 import {Icon, TextBase, Checkbox, DatePicker, PlaceHolder} from "../../../Components/Common";
 import I18n from "../../../I18n";
-
+import moment from "moment";
 
 const inputKey = {
     DISPLAY_NAME: {name: "displayName", index: 0}
@@ -78,13 +80,13 @@ export default class Profile extends PureComponent {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextState.displayName != this.state.displayName || nextState.gender != this.state.gender || nextState.birthDay != this.state.birthDay) {
-            if(nextState.displayName != this.userOri.displayName || nextState.gender != this.state.gender || nextState.birthDay != this.state.birthDay){
+        if (nextState.displayName != this.state.displayName || nextState.gender != this.state.gender ||   nextState.birthDay != this.state.birthDay) {
+            if (nextState.displayName != this.userOri.displayName || nextState.gender != this.userOri.gender|| moment(nextState.birthDay).diff(this.userOri.birthDay)) {
                 this.setState({
                     isChanged: true
                 });
             }
-            else{
+            else {
                 this.setState({
                     isChanged: false
                 });
@@ -133,7 +135,7 @@ export default class Profile extends PureComponent {
     getProfile() {
         const {userActions} = this.props;
         userActions.getProfile({userUID: this.uid, isUser: this.isUser}).then(res => {
-            if (res.success &&  !this.isUser) {
+            if (res.success && !this.isUser) {
                 const {displayName, gender, birthDay} = res.data;
                 this.setState({
                     displayName,
@@ -145,6 +147,7 @@ export default class Profile extends PureComponent {
             }
         })
     }
+
     //endregion
 
     render() {
@@ -183,8 +186,15 @@ export default class Profile extends PureComponent {
                                           checked={gender ? false : true}/>
                                 <DatePicker label={I18n.t("birthDay")} chosenDate={birthDay} setDate={this.onChangeBD}/>
                             </View>
-                            <ButtonFooter text={I18n.t("save")} disabled={!isChanged} onPress={this.onPressSave}/>
+
+
                         </Content> : null
+                }
+                {
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? 'padding' : null}>
+                        <ButtonFooter text={I18n.t("save")} disabled={!isChanged || fetching} onPress={this.onPressSave}/>
+                    </KeyboardAvoidingView>
                 }
             </Container>
         );

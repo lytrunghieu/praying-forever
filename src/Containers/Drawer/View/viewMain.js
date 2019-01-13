@@ -255,6 +255,7 @@ export default class DrawerContainer extends PureComponent {
         const {notificationNotRead} = this.state;
         const {fetching} = drawerReducer;
         const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE) || [];
+        const praysInprogress = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [];
         const {payload = {}} = userReducer;
         const {displayName = ""} = payload;
         return (
@@ -270,7 +271,7 @@ export default class DrawerContainer extends PureComponent {
                 <List>
                     <OptionButton text={I18n.t("inprogress")}
                                   leftIcon={IconName.prayer_inprogress}
-                                  count={prayerReducer.payload ? prayerReducer.payload.length : []}
+                                  count={ praysInprogress.length}
                                   onPress={this.onPressOption.bind(this, ScreenKey.PRAYING_INPROGESS)}/>
                     <OptionButton text={I18n.t("finished")}
                                   leftIcon={IconName.prayer_complete}

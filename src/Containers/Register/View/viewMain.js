@@ -17,6 +17,7 @@ import {Header, FormValidate, ButtonFooter,Container,Content} from "../../../Com
 import {CardItem} from 'native-base';
 import {NavigationActions} from "react-navigation";
 import {ScreenKey} from "../../../Constants";
+import * as _ from "lodash";
 
 const inputKey = {
     EMAIL: {name: "email", index: 2},
@@ -202,7 +203,7 @@ export default class CreateAccount extends PureComponent {
 
     onPressGender() {
         this.setState({
-            gender: this.state.gender ? 1 : 0
+            gender: this.state.gender ? 0 : 1
         });
     }
 
@@ -310,7 +311,7 @@ export default class CreateAccount extends PureComponent {
 
                     />
 
-                    <Checkbox text={I18n.t("male")} onPress={this.onPressGender} checked={gender}/>
+                    <Checkbox text={I18n.t("male")} onPress={this.onPressGender} checked={gender ? false : true}/>
                     <DatePicker label={I18n.t("birthDay")} setDate={this.onChangeBD}/>
 
 

@@ -8,8 +8,8 @@ import {ListItem,Body,CheckBox}  from "native-base";
 const Checkbox = ({text, checked,onPress = ()=>{}}) =>{
 
     return (
-        <ListItem onPress ={onPress}>
-            <View pointerEvents={"none"}>
+        <ListItem button={true} onPress ={onPress}>
+            <View pointerEvents ="none">
             <CheckBox checked={checked} color ={Colors.black} />
             </View>
             <Body>
