@@ -17,7 +17,7 @@ export default class ImageBackground extends PureComponent {
             <Image
                 style={style.container}
                 source={Images.bg}
-                resizeMode={Image.resizeMode.cover}
+                resizeMode={"cover"}
             />
 
 

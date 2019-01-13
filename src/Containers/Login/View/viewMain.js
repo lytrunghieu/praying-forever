@@ -17,6 +17,7 @@ import {Content, Container, FormValidate, ButtonFooter, LoadingIndicator} from "
 import {Left, Body} from "native-base";
 import {style as styles} from "../Style";
 import {CommonUtils} from "../../../Utils";
+import * as _ from "lodash";
 
 export default class LoginScreen extends PureComponent {
 

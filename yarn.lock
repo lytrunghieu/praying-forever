@@ -959,14 +959,7 @@ babel-helpers@^6.24.1:
     babel-runtime "^6.22.0"
     babel-template "^6.24.1"
 
-babel-jest@22.0.3:
-  version "22.0.3"
-  resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-22.0.3.tgz#c9d7a786c57ee94cee15b5826468fd55f69d4b4c"
-  dependencies:
-    babel-plugin-istanbul "^4.1.5"
-    babel-preset-jest "^22.0.3"
-
-babel-jest@^22.4.4:
+babel-jest@^22.0.3, babel-jest@^22.4.4:
   version "22.4.4"
   resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-22.4.4.tgz#977259240420e227444ebe49e226a61e49ea659d"
   dependencies:
@@ -1252,7 +1245,7 @@ babel-preset-fbjs@^3.0.0, babel-preset-fbjs@^3.0.1:
     "@babel/plugin-transform-template-literals" "^7.0.0"
     babel-plugin-syntax-trailing-function-commas "^7.0.0-beta.0"
 
-babel-preset-jest@^22.0.3, babel-preset-jest@^22.4.4:
+babel-preset-jest@^22.4.4:
   version "22.4.4"
   resolved "https://registry.yarnpkg.com/babel-preset-jest/-/babel-preset-jest-22.4.4.tgz#ec9fbd8bcd7dfd24b8b5320e0e688013235b7c39"
   dependencies:
@@ -2646,9 +2639,9 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
-i18n-js@^3.0.2:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/i18n-js/-/i18n-js-3.1.0.tgz#4ec474b2b7ba8175284a0003804c7bf713991919"
+i18n-js@3.0.11:
+  version "3.0.11"
+  resolved "https://registry.yarnpkg.com/i18n-js/-/i18n-js-3.0.11.tgz#f9e96bdb641c5b9d6be12759d7c422089987ef02"
 
 iconv-lite@0.4.24, iconv-lite@^0.4.17, iconv-lite@^0.4.4, iconv-lite@~0.4.13:
   version "0.4.24"
@@ -4669,15 +4662,15 @@ react-native-firebase@^4.3.8:
     postinstall-build "^5.0.1"
     prop-types "^15.6.1"
 
-react-native-geolocation-service@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-geolocation-service/-/react-native-geolocation-service-1.1.0.tgz#21782c516bb28b92fcce0d6fbb20c3770d4df278"
+react-native-geolocation-service@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-geolocation-service/-/react-native-geolocation-service-2.0.0.tgz#9fbab4953726b3a3ca9a74388a92dc1e1997127a"
 
-react-native-i18n@2.0.10:
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/react-native-i18n/-/react-native-i18n-2.0.10.tgz#d22a6136abca1dee07c527f73cd805f9296bddc1"
+react-native-i18n@^2.0.15:
+  version "2.0.15"
+  resolved "https://registry.yarnpkg.com/react-native-i18n/-/react-native-i18n-2.0.15.tgz#09b5a9836116fa7dbd0054c46e2d1014c1ef3c65"
   dependencies:
-    i18n-js "^3.0.2"
+    i18n-js "3.0.11"
 
 react-native-iphone-x-helper@^1.0.3:
   version "1.2.0"

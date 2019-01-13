@@ -16,7 +16,7 @@ export default class ButtonComponent extends PureComponent {
 
 
     render() {
-        const {onPress, children, transparent, action, rounded, iconLeft, icon, text,large, center, ...rest, } = this.props;
+        const {onPress, children, transparent, action, rounded, iconLeft, icon, text,large, center, ...rest } = this.props;
 
         if (rounded) {
             return (
