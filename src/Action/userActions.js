@@ -195,6 +195,33 @@ export function logout() {
     }
 }
 
+export function updateProfile({gender,birthDay,displayName}) {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.UPDATE_PROFILE_PENDING,
+        });
+
+        return new userService().updateProfile({gender,birthDay,displayName}).then(res => {
+            if (res.success) {
+                dispatch({
+                    type: actionTypes.UPDATE_PROFILE_SUCCESS,
+                });
+
+                dispatch(getProfile({isUser:true}))
+            }
+            else {
+                dispatch({
+                    type: actionTypes.UPDATE_PROFILE_FAILED,
+                    data: {
+                        message: res.message,
+                    }
+                });
+            }
+            return res;
+        })
+    }
+}
+
 
 
 

@@ -1,13 +1,13 @@
 import baseService from "./baseService";
 import {REGISTER} from "./nameCloudFunction"
-import { response, PrayUser} from "../model";
+import {response, PrayUser} from "../model";
 import firebase from 'react-native-firebase';
-import {collection, ErrorCodes} from "../Constants";
+import {collection, ErrorCodes, firestorePaths} from "../Constants";
 import I18n from "../I18n";
 
 class UserService extends baseService {
 
-    getProfile({userUID, isUser = true} ={}) {
+    getProfile({userUID, isUser = true} = {}) {
         const _userUID = userUID || firebase.auth().currentUser.uid;
         const profileCollect = firebase.firestore().collection(collection.PROFILE);
         return profileCollect.where("uid", "==", _userUID).get().then(queryShot => {
@@ -211,7 +211,25 @@ class UserService extends baseService {
         });
     }
 
-
+    updateProfile({gender, birthDay, displayName}) {
+        const _userUID = firebase.auth().currentUser.uid;
+        const path = firestorePaths.PROFILES;
+        const profileCollect = firebase.firestore().collection(path);
+        return profileCollect.where("uid", "==", _userUID).get().then(colSnap => {
+            return colSnap.docs[0].ref.update("gender", gender, "birthDay", birthDay, "displayName", displayName).then(res => {
+                const result = {
+                    data: {
+                        success: true,
+                        message: null,
+                        statusCode: 200,
+                    }
+                }
+                return result;
+            });
+        }).finally(res => {
+            return new response(res)
+        });
+    }
 }
 
 export default UserService

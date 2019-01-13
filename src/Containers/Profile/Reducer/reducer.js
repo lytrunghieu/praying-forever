@@ -46,6 +46,28 @@ export function reducer(state = InitialState, action) {
             return state;
         }
 
+        case actionTypes.UPDATE_PROFILE_PENDING : {
+            state = state.set("fetching", true);
+            state = state.set("success", false);
+            state = state.set("message", null);
+            return state;
+        }
+
+        case actionTypes.UPDATE_PROFILE_SUCCESS : {
+            state = state.set("fetching", false);
+            state = state.set("success", true);
+            state = state.set("message", null);
+            return state;
+        }
+
+        case actionTypes.UPDATE_PROFILE_FAILED : {
+            state = state.set("fetching", false);
+            state = state.set("success", false);
+            state = state.set("message", data.message);
+            return state;
+        }
+
+
 
 
         default :

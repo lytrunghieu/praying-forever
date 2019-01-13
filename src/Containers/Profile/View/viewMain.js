@@ -14,7 +14,7 @@ const inputKey = {
     DISPLAY_NAME: {name: "displayName", index: 0}
 }
 
-export default class CreatePraying extends PureComponent {
+export default class Profile extends PureComponent {
 
     //region CYCLE LIFE
 
@@ -23,12 +23,12 @@ export default class CreatePraying extends PureComponent {
         const dataPassed = props.navigation.state.params;
         const {user, userUID} = dataPassed;
         this.uid = userUID;
+        this.userOri = user;
         this.isUser = user ? true : false;
         this.onPressBack = this.onPressBack.bind(this);
         this.state = {
-            user: user,
             loading: true,
-            displayName: "",
+            displayName: user && user.displayName,
             validDisplayName: true,
             gender: user && user.gender,
             birthDay: user && user.birthDay,
@@ -43,6 +43,7 @@ export default class CreatePraying extends PureComponent {
         this.getProfile = this.getProfile.bind(this);
         this.onPressGender = this.onPressGender.bind(this);
         this.onChangeBD = this.onChangeBD.bind(this);
+        this.onPressSave = this.onPressSave.bind(this);
     }
 
     componentDidMount() {
@@ -51,6 +52,18 @@ export default class CreatePraying extends PureComponent {
 
 
     componentWillReceiveProps(nextProps) {
+
+        if (nextProps.userReducer.payload !== this.props.userReducer.payload) {
+            const {displayName, gender, birthDay} = nextProps.userReducer.payload;
+            this.setState({
+                displayName,
+                gender,
+                birthDay,
+                isChanged: false
+            });
+        }
+
+
         if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && !nextProps.profileReducer.fetching) {
             this.setState({
                 loading: false
@@ -65,17 +78,26 @@ export default class CreatePraying extends PureComponent {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextState.user) {
-            if (nextState.displayName == nextState.user.displayName || nextState.gender != nextState.user.gender || nextState.birthDay != nextState.user.birthDay) {
+        if (nextState.displayName != this.state.displayName || nextState.gender != this.state.gender || nextState.birthDay != this.state.birthDay) {
+            if(nextState.displayName != this.userOri.displayName || nextState.gender != this.state.gender || nextState.birthDay != this.state.birthDay){
                 this.setState({
                     isChanged: true
                 });
             }
-            else {
+            else{
                 this.setState({
                     isChanged: false
                 });
             }
+
+        }
+    }
+
+    onPressSave() {
+        const {validDisplayName, displayName, gender, birthDay} = this.state;
+        const {userActions} = this.props;
+        if (validDisplayName) {
+            userActions.updateProfile({displayName, gender, birthDay});
         }
     }
 
@@ -110,21 +132,24 @@ export default class CreatePraying extends PureComponent {
 
     getProfile() {
         const {userActions} = this.props;
-        userActions.getProfile({userUID: this.uid, isUser: false}).then(res => {
-            if (res.success) {
+        userActions.getProfile({userUID: this.uid, isUser: this.isUser}).then(res => {
+            if (res.success &&  !this.isUser) {
+                const {displayName, gender, birthDay} = res.data;
                 this.setState({
-                    user: res.data
+                    displayName,
+                    gender,
+                    birthDay,
+                    isChanged: false
                 });
+                this.userOri = res.data;
             }
         })
     }
-
-
     //endregion
 
     render() {
 
-        const {loading, user, gender, birthDay, isChanged} = this.state;
+        const {loading, gender, birthDay, isChanged, displayName} = this.state;
         const {profileReducer} = this.props;
         const {fetching} = profileReducer;
 
@@ -136,7 +161,7 @@ export default class CreatePraying extends PureComponent {
                     isFetching={fetching}
                 />
                 {
-                    !loading && !user ? <EmptyHolder
+                    !loading && !this.userOri ? <EmptyHolder
                         h1={I18n.t("noProfileTile")}
                         h2={I18n.t("noProfileDescription")}
                         link={I18n.t("tryAgain")}
@@ -144,12 +169,12 @@ export default class CreatePraying extends PureComponent {
                     /> : null
                 }
                 {
-                    user ?
+                    this.userOri ?
                         <Content>
                             <View style={[styles.form]}>
                                 <TextBase info={true}>{I18n.t("displayName")}</TextBase>
                                 <FormValidate
-                                    defaultValue={user.displayName}
+                                    defaultValue={displayName}
                                     onChangeText={this.onChangeTextInput.bind(this, inputKey.DISPLAY_NAME.name)}
                                     editable={this.isUser || false}
                                 />
@@ -158,11 +183,9 @@ export default class CreatePraying extends PureComponent {
                                           checked={gender ? false : true}/>
                                 <DatePicker label={I18n.t("birthDay")} chosenDate={birthDay} setDate={this.onChangeBD}/>
                             </View>
-                            <ButtonFooter text={I18n.t("save")} disabled={!isChanged}/>
+                            <ButtonFooter text={I18n.t("save")} disabled={!isChanged} onPress={this.onPressSave}/>
                         </Content> : null
                 }
-
-
             </Container>
         );
     }

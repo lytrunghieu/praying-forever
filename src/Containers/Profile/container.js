@@ -5,7 +5,8 @@ import {viewMain} from "./View";
 import {userActions} from "../../Action";
 
 const mapStateToProps = (state) => ({
-    profileReducer : state.profileReducer
+    profileReducer : state.profileReducer,
+    userReducer : state.userReducer
 });
 
 const mapDispatchToProps = (dispatch) => ({
