@@ -61,14 +61,15 @@ export default class PrayingInProgress extends PureComponent {
             prayers: props.prayerReducer.payload && props.prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [],
             isSearch: false,
             keySearch: "",
-            loading: true,
+            loading: true
         };
     }
 
     //region CYCLE LIFE
 
     componentDidMount() {
-
+        const {prayerActions} = this.props;
+        prayerActions.getPrayer();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -117,6 +118,7 @@ export default class PrayingInProgress extends PureComponent {
     }
 
     componentWillUnmount() {
+        console.log("componentWillUnmount");
     }
 
     //endregion
@@ -209,7 +211,7 @@ export default class PrayingInProgress extends PureComponent {
     }
 
     onPressDeletePrayer() {
-        commonUtils.sendEvent({type: EventRegisterTypes.SHOW_CONFIRM_MODAL ,  params : {status: StatusOfPray.INPROGRESS}});
+        commonUtils.sendEvent({type: EventRegisterTypes.SHOW_CONFIRM_MODAL, params: {status: StatusOfPray.INPROGRESS}});
     }
 
     //endregion

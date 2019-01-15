@@ -59,6 +59,11 @@ export default class PrayerFinished extends PureComponent {
 
     //region CYCLE LIFE
 
+    componentDidMount() {
+        const {prayerActions} = this.props;
+        prayerActions.getPrayer();
+    }
+
     componentWillReceiveProps(nextProps){
         if (nextProps.prayerReducer !== this.props.prayerReducer && nextProps.prayerReducer.payload) {
             this.setState({

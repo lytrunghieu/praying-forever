@@ -25,6 +25,15 @@ export function reducer(state = InitialState, action) {
             state = state.set("message", data.message);
             return state;
         }
+
+        case actionTypes.LOGOUT_SUCCESS : {
+            state = state.set("fetching", false);
+            state = state.set("success", false);
+            state = state.set("message", null);
+            state = state.set("payload", null);
+            return state;
+        }
+
         default :
             return state
 

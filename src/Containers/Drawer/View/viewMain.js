@@ -42,7 +42,6 @@ export default class DrawerContainer extends PureComponent {
         super();
         this.onPressLogout = this.onPressLogout.bind(this);
         this.onPressProfile = this.onPressProfile.bind(this);
-        this.getPray = this.getPray.bind(this);
         this.state = {
             notificationNotRead: this.getNotificationNotRead(props.notificationReducer.payload)
         };
@@ -61,10 +60,6 @@ export default class DrawerContainer extends PureComponent {
                 notificationActions.getNotifications(notificationList);
             }
         });
-
-        this.getPray();
-
-        userActions.getProfile();
 
         //Listen event
         this.listener = EventRegister.addEventListener("listener", async (action) => {
@@ -211,9 +206,7 @@ export default class DrawerContainer extends PureComponent {
     onPressLogout() {
         const {userActions} = this.props;
         userActions.logout().then(res => {
-            if (res.success) {
-                this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
-            }
+            this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
         });
     }
 
@@ -235,11 +228,6 @@ export default class DrawerContainer extends PureComponent {
             return 0
         }
         return notif.filter(no => !no.isRead).length;
-    }
-
-    getPray() {
-        const {prayerActions} = this.props;
-        prayerActions.getPrayer();
     }
 
     updateToken(fcmToken) {
@@ -286,7 +274,7 @@ export default class DrawerContainer extends PureComponent {
                                   onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)} countRed={true}
                                   count={notificationNotRead}/>
                     {/*<OptionButton text={I18n.t("setting")} leftIcon={IconName.setting}/>*/}
-                    <OptionButton text={I18n.t("about")} leftIcon={IconName.about}  onPress={this.onPressOption.bind(this, ScreenKey.ABOUT)}/>
+                    <OptionButton text={I18n.t("about")} leftIcon={IconName.about}  onPress={this.onPressOption.bind(this, ScreenKey.AB)}/>
                     <OptionButton text={I18n.t("logout")} leftIcon={IconName.logout}
                                   onPress={this.onPressLogout}/>
 

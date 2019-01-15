@@ -5,11 +5,11 @@ import {ScreenKey} from '../Constants';
 import SplashScreen from '../Containers/SplashScreen';
 import {container as LoginScreen} from '../Containers/Login';
 import {container as RegisterScreen} from '../Containers/Register';
-import {container as ForgotPasswordScreen } from '../Containers/ForgotPassword';
+import {container as ForgotPasswordScreen} from '../Containers/ForgotPassword';
 import {container as Drawer} from '../Containers/Drawer';
 import {container as ProfileScreen} from '../Containers/Profile';
 import ListCommonContainer from '../Containers/ListCommonContainer';
-import  {container as PrayingInProgressScreen} from '../Containers/PrayingInProgress';
+import {container as PrayingInProgressScreen} from '../Containers/PrayingInProgress';
 import {container as PrayerFinishedScreen} from '../Containers/PrayerFinished';
 import {container as CreatePrayerScreen} from '../Containers/CreatePrayer';
 import {container as PrayerDetailScreen} from '../Containers/PrayerDetail';
@@ -22,7 +22,6 @@ const DrawerNav = DrawerNavigator({
     [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressScreen},
     [ScreenKey.PRAY_FINISHED]: {screen: PrayerFinishedScreen},
     [ScreenKey.PRAY_FOR_OTHER]: {screen: PrayForOtherScreen},
-    [ScreenKey.PROFILE]: {screen: ProfileScreen},
     [ScreenKey.NOTIFICATIONS]: {screen: NotificationScreen},
     [ScreenKey.ABOUT]: {screen: AboutScreen},
 }, {
@@ -39,6 +38,7 @@ const MainNav = StackNavigator({
         [ScreenKey.CREATE_PRAYING]: {screen: CreatePrayerScreen},
         [ScreenKey.PRAY_DETAIL]: {screen: PrayerDetailScreen},
         [ScreenKey.CREATE_ACCOUNT]: {screen: RegisterScreen},
+        [ScreenKey.PROFILE]: {screen: ProfileScreen},
         [ScreenKey.NOTIFICATION_DETAIL]: {screen: NotificationDetailContainer},
     }, {
         headerMode: 'none',

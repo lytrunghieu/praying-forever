@@ -172,24 +172,14 @@ export function logout() {
         });
 
         return new userService().logout().then(res => {
-            if (res.success) {
-                dispatch({
-                    type: actionTypes.LOGOUT_SUCCESS,
-                });
-                dispatch({
-                    type: PURGE,
-                    key: "root",    // Whatever you chose for the "key" value when initialising redux-persist in the **persistCombineReducers** method - e.g. "root"
-                    result: () => null              // Func expected on the submitted action.
-                });
-            }
-            else {
-                dispatch({
-                    type: actionTypes.LOGOUT_FAILED,
-                    data: {
-                        message: res.message,
-                    }
-                });
-            }
+            dispatch({
+                type: actionTypes.LOGOUT_SUCCESS,
+            });
+            dispatch({
+                type: PURGE,
+                key: "root",    // Whatever you chose for the "key" value when initialising redux-persist in the **persistCombineReducers** method - e.g. "root"
+                result: () => null              // Func expected on the submitted action.
+            });
             return res;
         })
     }
