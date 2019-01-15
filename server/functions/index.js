@@ -44,9 +44,10 @@ function addNotification({userUID, payload}) {
 }
 
 function getUserProfile({userUID}={}) {
-    const path = paths.profileUser.replace("{userUID}", userUID);
-    return firestore.doc(path).get().then(docSnap => {
-        return {success: true, statusCode: 200, data : docSnap.data()}
+    const path = paths.profileUsers;
+    return firestore.collection(path).where("uid","==",userUID).get().then(colSnap => {
+        return {success: true, statusCode: 200, data : colSnap.docs[0].data()}
+
     }).catch(error => {
         console.log("LOG ERROR", error);
         throw new functions.https.HttpsError(
@@ -60,9 +61,7 @@ function getUserProfile({userUID}={}) {
 exports.updateStatusPrayer = functions.https.onCall(async data => {
     const {userUID, prayerUID} = data;
     const path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
-
     const userProfile =  await getUserProfile({userUID});
-
     if(!userProfile.success || !userProfile.data){
         return {success: false, statusCode: 401, message: "not found user"};
     }
@@ -91,7 +90,8 @@ exports.updateStatusPrayer = functions.https.onCall(async data => {
                             created:"",
                             isRead : false,
                             uid:"",
-                            typeCode : "private"
+                            typeCode : "private",
+                            prayer : doc.data()
                         }),
                         userUID: fol
                     };
@@ -182,33 +182,45 @@ exports.deleteNotification = functions.https.onCall((data) => {
 
 exports.deletePrayer = functions.https.onCall((data) => {
 
-    const {userUID, prayerUID} = data;
-
-
+    const {userUID, prayerUID,status} = data;
     let path = paths.prayers.replace("{userUID}", userUID);
 
     if (prayerUID) {
-
-        path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
-        return firestore
-            .doc(path)
-            .delete()
-            .then(doc => {
-                return {success: true, statusCode: 200, message: "request success"};
-            }).catch(error => {
-                console.log("LOG ERROR", error);
-                throw new functions.https.HttpsError(
-                    "unknown", // code
-                    'request failed', // message
-                    {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
-                );
+        if(Array.isArray(prayerUID) && prayerUID.length > 0){
+            let batch = firestore.batch();
+            prayerUID.forEach(uid => {
+                let path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", uid);
+                 batch.delete(firestore.doc(path).ref);
             });
+            return batch.commit().then(write => {
+                return {success: true, statusCode: 200, message: "request success"};
+            });
+        }
+        else {
+            path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
+            return firestore
+                .doc(path)
+                .delete()
+                .then(doc => {
+
+                    return {success: true, statusCode: 200, message: "request success"};
+                }).catch(error => {
+                    console.log("LOG ERROR", error);
+                    throw new functions.https.HttpsError(
+                        "unknown", // code
+                        'request failed', // message
+                        {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+                    );
+                });
+        }
     }
     else {
         return firestore.collection(path).get().then(snap => {
             let batch = firestore.batch();
             snap.forEach(docSnap => {
-                batch.delete(docSnap.ref)
+                if(docSnap.data().status === status){
+                    batch.delete(docSnap.ref)
+                }
             });
             return batch.commit().then(write => {
                 return {success: true, statusCode: 200, message: "request success"};

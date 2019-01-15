@@ -17,7 +17,6 @@ export default class ActionSheet extends ModalBase {
         this.isCenter = false;
         this.backdropOpacity = 0;
         this.onPressOption = this.onPressOption.bind(this);
-        this.onPressOption = this.onPressOption.bind(this);
         this.cb = null;
     }
 
@@ -48,7 +47,8 @@ export default class ActionSheet extends ModalBase {
         return (
 
             <Button key={index} block style={styles.buttonOption}
-                    onPress={this.onPressOption.bind(this, option.onPress)}>
+                    onPress={this.onPressOption.bind(this, option.onPress)}
+            >
                 <TextBase>{option.text}</TextBase>
             </Button>
         )
@@ -59,14 +59,14 @@ export default class ActionSheet extends ModalBase {
         return (
             <View style={[styles.container]}>
                 <View style={styles.header}>
-                    <TextBase large={true}  highlight={true} bold={true} upperCase ={true}>{title}</TextBase>
+                    <TextBase large={true}  highlight={true} bold={true} upperCase ={true}>{title || I18n.t("selectAction")}</TextBase>
                 </View>
                 <View style={styles.content}>
                     {options.map((op, index) => {
                         return this.renderOptionRow(op, index);
                     })}
 
-                    <ButtonFooter onPress={this.close} text={submitText}
+                    <ButtonFooter onPress={this.close} text={submitText  || I18n.t("cancel")}
                     >
                     </ButtonFooter>
                 </View>
@@ -78,8 +78,6 @@ export default class ActionSheet extends ModalBase {
 
 ActionSheet.defaultProps = {
     closeWhenPress: true,
-    submitText: I18n.t("cancel"),
-    title: I18n.t("selectAction")
 }
 
 ActionSheet.propTypes = {

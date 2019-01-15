@@ -2,16 +2,9 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {Colors}from "../../../Themes";
 
 const style = EStyleSheet.create({
-    test: {
-        backgroundColor: "blue"
-    },
-
-    form: {
-        padding: "$padding",
-        backgroundColor: Colors.white,
-        borderRadius: "$borderRadiusSmall"
+    content :{
+        backgroundColor: Colors.white
     }
-
 
 });
 export {

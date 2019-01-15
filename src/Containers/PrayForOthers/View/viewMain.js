@@ -171,7 +171,7 @@ export default class PrayForOther extends PureComponent {
 
     //region handle Pray Iteam
     onPressPrayItem = (item) => () => {
-        this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, item);
+        this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, {item, uid: item.uid});
     }
 
     onPressFollowing(item) {

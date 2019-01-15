@@ -15,6 +15,7 @@ import {container as CreatePrayerScreen} from '../Containers/CreatePrayer';
 import {container as PrayerDetailScreen} from '../Containers/PrayerDetail';
 import {container as  PrayForOtherScreen} from '../Containers/PrayForOthers';
 import {container as NotificationScreen} from '../Containers/Notification';
+import {container as AboutScreen} from '../Containers/About';
 import {NotificationDetailContainer} from '../Containers/NotificationDetailContainer';
 
 const DrawerNav = DrawerNavigator({
@@ -23,6 +24,7 @@ const DrawerNav = DrawerNavigator({
     [ScreenKey.PRAY_FOR_OTHER]: {screen: PrayForOtherScreen},
     [ScreenKey.PROFILE]: {screen: ProfileScreen},
     [ScreenKey.NOTIFICATIONS]: {screen: NotificationScreen},
+    [ScreenKey.ABOUT]: {screen: AboutScreen},
 }, {
     contentComponent: Drawer // custom drawer
 });

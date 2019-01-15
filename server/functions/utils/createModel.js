@@ -14,6 +14,14 @@ exports.createLocationModel = function (data) {
     return result;
 }
 
+exports.prayer = function (data) {
+    let result = {};
+    if(!data ){
+        return null;
+    }
+    return result;
+}
+
 exports.notificationModel = function (data) {
     let result = {};
     if(!data ){
@@ -25,9 +33,11 @@ exports.notificationModel = function (data) {
     result.created  = data.created || null;
     result.isRead  = data.isRead || false;
     result.typeCode  = data.typeCode || "private"; // public or private
+    result.prayer = data.prayer || null;
     if(!result.contentCode || !result.from){
         return null;
     }
+
 
     return result;
 }

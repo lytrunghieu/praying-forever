@@ -5,7 +5,7 @@ import I18n from '../../../I18n/index';
 import {IconName} from '../../../Themes/index';
 import firebase from 'react-native-firebase';
 import {NavigationActions} from "react-navigation";
-import {EventRegisterTypes, URL, StatusOfPray, ScreenKey} from "../../../Constants/index";
+import {EventRegisterTypes, URL, StatusOfPray, ScreenKey,contentCodes} from "../../../Constants";
 import {EventRegister} from 'react-native-event-listeners';
 import moment from "moment";
 import {OptionButton, LoadingIndicator} from "../../../Components/Modules";
@@ -49,6 +49,7 @@ export default class DrawerContainer extends PureComponent {
     }
 
     componentDidMount() {
+        const {userActions, prayerActions,notificationActions} = this.props;
         const docOfCurrentUserNotification = notificationCollect.doc(firebase.auth().currentUser.uid);
         docOfCurrentUserNotification.collection("data").onSnapshot(snapshot => {
             let notificationList = [];
@@ -57,12 +58,12 @@ export default class DrawerContainer extends PureComponent {
                 notificationList.push( new notification(data));
             });
             if (notificationList) {
-                this.props.notificationActions.getNotifications(notificationList);
+                notificationActions.getNotifications(notificationList);
             }
         });
 
         this.getPray();
-        const {userActions, prayerActions} = this.props;
+
         userActions.getProfile();
 
         //Listen event
@@ -284,8 +285,8 @@ export default class DrawerContainer extends PureComponent {
                                   leftIcon={IconName.notification}
                                   onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)} countRed={true}
                                   count={notificationNotRead}/>
-                    <OptionButton text={I18n.t("setting")} leftIcon={IconName.setting}/>
-                    <OptionButton text={I18n.t("about")} leftIcon={IconName.about}/>
+                    {/*<OptionButton text={I18n.t("setting")} leftIcon={IconName.setting}/>*/}
+                    <OptionButton text={I18n.t("about")} leftIcon={IconName.about}  onPress={this.onPressOption.bind(this, ScreenKey.ABOUT)}/>
                     <OptionButton text={I18n.t("logout")} leftIcon={IconName.logout}
                                   onPress={this.onPressLogout}/>
 

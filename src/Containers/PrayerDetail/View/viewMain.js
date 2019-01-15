@@ -12,16 +12,14 @@ export default class PrayerDetail extends PureComponent {
     constructor(props) {
         super(props);
         const dataPassed = props.navigation.state.params;
-        const {status} = dataPassed;
-
-        this.prayer = dataPassed;
-        this.uid = dataPassed && dataPassed.uid || null;
-        this.userUID = dataPassed && dataPassed.owner && dataPassed.owner.uid || null;
+        const {item, uid} = dataPassed;
+        this.prayer = item;
+        this.uid =  dataPassed.uid ;
+        this.userUID = item && item.owner && item.owner.uid || null;
         this.onPressBack = this.onPressBack.bind(this)
         this.onPressRightHeader = this.onPressRightHeader.bind(this)
         this.state = {
-            item: dataPassed,
-            status: status,
+            item: item,
             available: true
         };
 
@@ -95,7 +93,6 @@ export default class PrayerDetail extends PureComponent {
     onPressRightHeader() {
         const {item: data} = this.state;
         CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_PRAYER_OPTION, params: {data}});
-
     }
 
     //endregion

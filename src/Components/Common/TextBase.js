@@ -59,6 +59,7 @@ TextBase.propTypes = {
     highlight: PropTypes.bool,
     success: PropTypes.bool,
     disable: PropTypes.bool,
+    info: PropTypes.bool,
 };
 
 const styles = EStyleSheet.create({

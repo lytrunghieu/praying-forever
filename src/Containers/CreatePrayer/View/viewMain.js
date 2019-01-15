@@ -288,6 +288,7 @@ export default class CreatePraying extends PureComponent {
                     key="CheckboxModal"
                     ref="checkBoxModal"
                     textDone={I18n.t("done")}
+                    title={I18n.t("selectTitle")}
                     options={this.state.options}
                     onPressSubmit={this.onSubmitOption}
                 />,

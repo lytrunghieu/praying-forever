@@ -35,27 +35,7 @@ export default class PrayItem extends PureComponent {
     }
 
     onPressMoreAction = (data) => () => {
-        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_PRAYER_OPTION, params : {data}});
-    }
-
-    renderBottomActions(options) {
-        return (
-            <View style={styles.bottomActionsContainer}>
-                {options.map((op, index) => {
-                    return ([
-                        <TouchableOpacity
-                            onPress={op.onPress}
-                            key={index}
-                            style={styles.bottomActionsOptionContainer}>
-                            <TextIcon text={op.text} leftIcon={op.img}/>
-                        </TouchableOpacity>,
-                        index < options.length - 1 ?
-                            <View key={"divider".concat(index)} style={styles.dividerSeparateBottomAction}/> : null
-
-                    ]);
-                })}
-            </View>
-        )
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_PRAYER_OPTION, params: {data}});
     }
 
 
@@ -64,22 +44,26 @@ export default class PrayItem extends PureComponent {
             return null
         }
 
-        return ( <TextBase>{moment().years() - moment(birthDay).years() + " old"}</TextBase>);
+        return ( <TextBase>{moment().years() - moment(birthDay).years() + " " + I18n.t("old")}</TextBase>);
     }
 
     renderGender(gender) {
         if (gender) {
-            return <TextBase>Male</TextBase>
+            return <Icon name={IconName.male}/>
         }
         else {
-            return <TextBase>Female</TextBase>
+            return <Icon name={IconName.female}/>
         }
     }
 
     renderFollowingCount(following) {
         if (Array.isArray(following) && following.length > 0) {
             return (
-                <TextBase>{following.length.toString().concat(" ").concat(I18n.t("follower"))}</TextBase>
+                <Button iconLeft transparent={true}>
+                    <Icon name={IconName.following}/>
+                    <View style={styles.space}/>
+                    <TextBase>{following.length.toString()}</TextBase>
+                </Button>
             )
         }
         return null
@@ -87,19 +71,29 @@ export default class PrayItem extends PureComponent {
 
     render() {
         const {onPress, item = {}, allowScaleHeight, actionMore} = this.props;
-        const {title, created, following, owner = {}, content} = item;
+        const {title, created, following, owner = {}, content, isLive} = item;
         const {displayName, birthDay, gender, uid} = owner;
-        let _displayName =  displayName;
-        if(firebase.auth().currentUser && uid == firebase.auth().currentUser.uid ){
+        let _displayName = displayName;
+        let _isPublic = "";
+        if (firebase.auth().currentUser && uid == firebase.auth().currentUser.uid) {
             _displayName = I18n.t("me");
+            if(isLive){
+                _isPublic = "(".concat(I18n.t("public")).concat(")")
+            }
         }
+
+
         return (
             <Card>
                 <CardItem>
                     <Left>
                         <Icon name={IconName.avatar} large={true}/>
                         <Body>
-                        <TextBase bold={true}>{_displayName}</TextBase>
+                        <View style={styles.userNameWrapper}>
+                            <TextBase bold={true}>{_displayName}</TextBase>
+                            <View style={styles.space}/>
+                            <TextBase success={true} style={styles.publicTextStyle} bold={true}>{_isPublic}</TextBase>
+                        </View>
                         <TextBase italic={true}>{moment(created).fromNow()}</TextBase>
                         </Body>
                     </Left>
@@ -125,7 +119,7 @@ export default class PrayItem extends PureComponent {
                     <Left>
                         {this.renderFollowingCount(following)}
                     </Left>
-                    <Body>
+                    <Body style={{justifyContent: "center"}}>
                     {this.renderGender(gender)}
                     </Body>
                     <Right>
@@ -157,8 +151,20 @@ PrayItem.propTypes = {
 const styles = EStyleSheet.create({
 
 
+    userNameWrapper:{
+        flexDirection:"row"
+    },
+
+    publicTextStyle:{
+      minWidth: 30
+    },
+
     card: {
         borderRadius: "$borderRadiusNormal",
+    },
+
+    space: {
+        width: "$padding"
     },
 
     cardHeaderContainer: {

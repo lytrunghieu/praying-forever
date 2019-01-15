@@ -4,7 +4,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {View, ScrollView} from "react-native";
 import {Colors, globalStyle} from "../../Themes";
 import PropTypes from 'prop-types';
-import { Checkbox} from "./";
+import {Checkbox, TextBase} from "./";
 import {ButtonFooter} from "../Modules";
 
 export default class CheckboxModal extends ModalBase {
@@ -12,6 +12,7 @@ export default class CheckboxModal extends ModalBase {
     constructor(props) {
         super();
         super.constructor();
+        this.backdropOpacity = 0;
         this.isCenter = false;
         this.onPressSubmit = this.onPressSubmit.bind(this);
     }
@@ -30,7 +31,7 @@ export default class CheckboxModal extends ModalBase {
     }
 
     renderContent() {
-        const {options, textDone, limitShow} = this.props;
+        const {options, textDone, limitShow, title} = this.props;
         let optionsComponent = (
             options.map((op, index) => {
                 return this.renderOption(op, index);
@@ -51,9 +52,15 @@ export default class CheckboxModal extends ModalBase {
 
         return (
             <View style={styles.container}>
-                <View style={styles.content}>
-                    {optionsComponent}
-                    <ButtonFooter text={textDone} onPress={this.onPressSubmit}/>
+                <View style={styles.wrapper}>
+                    <View style={styles.header}>
+                        <TextBase large={true} highlight={true} bold={true} upperCase={true}>{title}</TextBase>
+                    </View>
+
+                    <View style={styles.content}>
+                        {optionsComponent}
+                        <ButtonFooter text={textDone} onPress={this.onPressSubmit}/>
+                    </View>
                 </View>
             </View>
         );
@@ -72,19 +79,35 @@ CheckboxModal.propTypes = {
     textDone: PropTypes.string.isRequired,
     limitShow: PropTypes.number,
     onPressSubmit: PropTypes.func,
+    title: PropTypes.string,
 }
 
 
 const styles = EStyleSheet.create({
     container: {
         width: "100%",
+
+    },
+    wrapper: {
         paddingRight: "$padding",
         paddingLeft: "$padding",
-        alignSelf: "center",
+    },
+
+    header: {
+        backgroundColor: Colors.black,
+        height: "$heightRowSmall",
+        borderTopLeftRadius: "$borderRadiusSmall",
+        borderTopRightRadius: "$borderRadiusSmall",
+        alignItems: "center",
+        justifyContent: "center",
+
+
     },
 
     content: {
         backgroundColor: Colors.primary,
+        borderBottomLeftRadius: "$borderRadiusSmall",
+        borderBottomRightRadius: "$borderRadiusSmall",
     }
 
 

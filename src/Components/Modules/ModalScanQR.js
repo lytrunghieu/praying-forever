@@ -38,7 +38,7 @@ export default class ModalScanQR extends ModalBase {
             >
                 <QRCodeScanner
                     topContent={
-                        <TextBase bold={true} largeX={true}>{I18n.t("scanQRCode")}</TextBase>
+                        <TextBase  bold={true} largeX={true}>{I18n.t("scanQRCode")}</TextBase>
                     }
                     fadeIn={false}
                     topViewStyle={styles.topView}
@@ -50,6 +50,7 @@ export default class ModalScanQR extends ModalBase {
                     bottomContent={
                         <ButtonFooter  onPress={this.close} text={I18n.t("cancel")}/>
                     }
+                    cameraProps={{captureAudio: false}}
                 />
 
             </View>

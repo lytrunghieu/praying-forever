@@ -3,7 +3,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import SplashScreen from 'react-native-smart-splash-screen';
 import {Provider} from 'react-redux';
 import {globalStyle} from "../Themes"
-import {AppState, AsyncStorage} from "react-native"
+import {AppState, AsyncStorage,View} from "react-native"
 import {TextBase} from "../Components/Common";
 
 import '../Config'
@@ -17,6 +17,8 @@ import logger from "redux-logger"
 import {persistReducer, persistStore, getStoredState} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import I18n from "../I18n";
+import {Colors} from "../Themes";
 
 import {expAppReducer} from "../reducers"
 
@@ -90,9 +92,17 @@ class App extends PureComponent {
     componentWillUnmount() {
     }
 
+    renderLoadingView (){
+        return (
+            <View style ={{flex : 1 , alignItems:"center",justifyContent:"center" , backgroundColor:Colors.white}}>
+                <TextBase>{I18n.t("prayingForever")}</TextBase>
+            </View>
+        )
+    }
+
     render() {
         if (this.state.isStoreLoading) {
-            return <TextBase>Loading Store ...</TextBase>
+            return this.renderLoadingView()
         } else {
             return (
 

@@ -30,7 +30,7 @@ export default class NotificationItem extends PureComponent {
 
     _onPress() {
         const {item, onPress} = this.props;
-        onPress(item)
+        onPress(item);
     }
 
     render() {
@@ -57,7 +57,7 @@ export default class NotificationItem extends PureComponent {
 
         return (
             <List style={[styles.listWrapper, {backgroundColor: isRead ? Colors.transparent : Colors.white}]}>
-                <ListItem avatar button={true} onPress={this._onPress}>
+                <ListItem avatar noBorder iconLeft button={true} onPress ={this._onPress}>
                     <Left
                     >
                         <Icon name={IconName.avatar} large={true}/>
@@ -68,11 +68,10 @@ export default class NotificationItem extends PureComponent {
                     {componentContent}
                     <TextBase italic={true} disable={true}>{moment(created).fromNow()}</TextBase>
                     </Body>
-                    <Right style={styles.rightWrapper}>
-                        <Button transparent onPress={this._onPressMore}>
-                            <Icon name={IconName.more_h}/>
-                        </Button>
-                    </Right>
+                    <Button transparent style={styles.buttonMore} onPress ={this._onPressMore}>
+                        <Icon name={IconName.more_h}/>
+                    </Button>
+
                 </ListItem>
             </List>
         );
@@ -98,16 +97,24 @@ const styles = EStyleSheet.create({
 
     listWrapper: {
         borderBottomWidth: "$borderWidthSmall",
-        borderColor: Colors.divider,
+        borderColor: Colors.gray,
     },
 
 
     bodyWrapper: {
-        borderColor: "transparent"
+        // borderColor: "transparent"
     },
 
     rightWrapper: {
-        borderColor: "transparent"
+        // borderColor: "transparent",
+        backgroundColor:"red"
+    },
+
+    buttonMore :{
+      height : "100%",
+        paddingRight:"$padding",
+        paddingLeft:"$padding",
+        justifyContent:"center",
     },
 
     card: {

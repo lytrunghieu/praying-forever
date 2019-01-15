@@ -10,7 +10,7 @@ import {Colors} from '../Themes';
 
 // Components
 import {StatusBar} from '../Components/Common';
-import {ModalScanQR, ModalQR, ActionPrayerModal, ConfirmModal,NetworkBar} from "../Components/Modules";
+import {ModalScanQR, ModalQR, ActionPrayerModal, ConfirmModal, NetworkBar} from "../Components/Modules";
 
 //Reduxes
 import StartupActions from '../Redux/StartupRedux';
@@ -36,11 +36,10 @@ import {BackHandler, NetInfo} from 'react-native';
 class RootContainer extends PureComponent {
 
 
-
     constructor(props) {
         super(props);
-        this.state ={
-          isOffline: false
+        this.state = {
+            isOffline: false
         };
         this.onAcceptDeletePrayer = this.onAcceptDeletePrayer.bind(this);
         this.handleFirstConnectivityChange = this.handleFirstConnectivityChange.bind(this);
@@ -53,13 +52,13 @@ class RootContainer extends PureComponent {
         // }
 
         NetInfo.getConnectionInfo().then((connectionInfo) => {
-            if(connectionInfo.type ==="none" || connectionInfo.type ==="unknown"){
+            if (connectionInfo.type === "none" || connectionInfo.type === "unknown") {
                 this.setState({
-                   isOffline : true
+                    isOffline: true
                 });
-            } else{
+            } else {
                 this.setState({
-                    isOffline : false
+                    isOffline: false
                 });
             }
         });
@@ -79,7 +78,10 @@ class RootContainer extends PureComponent {
                 case EventRegisterTypes.SHOW_MODAL_QR_CODE : {
                     const {show = true, data} = params;
                     if (show && data) {
-                        this.refs["_modalQR"].open(data);
+                        const {uid, owner = {}} = data;
+                        const {uid: userOtherUID} = owner;
+                        const text = uid.toString().concat(",").concat(userOtherUID);
+                        this.refs["_modalQR"].open(text);
                     }
                     break;
                 }
@@ -99,12 +101,12 @@ class RootContainer extends PureComponent {
                 }
 
                 case EventRegisterTypes.SHOW_CONFIRM_MODAL : {
-                    const {data} = params;
+                    const {data, status} = params;
                     if (data) {
                         this.refs["_confirmDeleteOnePrayer"].open(data);
                     }
                     else {
-                        this.refs["_confirmDeleteAllPrayer"].open();
+                        this.refs["_confirmDeleteAllPrayer"].open({type: status});
 
                     }
                     break;
@@ -129,28 +131,28 @@ class RootContainer extends PureComponent {
         if (nextProps.navigationReducer !== this.props.navigationReducer) {
             Keyboard.dismiss();
         }
-        if(nextProps.errorMessageReducer !== this.props.errorMessageReducer && nextProps.errorMessageReducer.detail && nextProps.errorMessageReducer.detail.message){
+        if (nextProps.errorMessageReducer !== this.props.errorMessageReducer && nextProps.errorMessageReducer.detail && nextProps.errorMessageReducer.detail.message) {
             alert(nextProps.errorMessageReducer.detail.message);
         }
     }
 
     handleFirstConnectivityChange(connectionInfo) {
         console.log('First change, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-        if(connectionInfo.type ==="none" || connectionInfo.type ==="unknown"){
+        if (connectionInfo.type === "none" || connectionInfo.type === "unknown") {
             this.setState({
-                isOffline : true
+                isOffline: true
             });
         }
-        else{
+        else {
             this.setState({
-                isOffline : false
+                isOffline: false
             });
         }
     }
 
     handleHardwareBack = () => {
         // Back performs pop, unless we're to main screen [0,0]
-        const { navigationReducer, dispatch} = this.props;
+        const {navigationReducer, dispatch} = this.props;
         if (navigationReducer.index === 0 && navigationReducer.routes[0].index === 0) {
             BackHandler.exitApp()
         }
@@ -166,7 +168,8 @@ class RootContainer extends PureComponent {
 
     onAcceptDeletePrayer(data) {
         const {prayerActions} = this.props;
-        prayerActions.deletePrayer(data ? data.uid : null);
+        const {uid : prayerUID, type} = data || {};
+        prayerActions.deletePrayer({prayerUID, status: type});
     }
 
 
@@ -182,7 +185,7 @@ class RootContainer extends PureComponent {
             <View style={styles.container}>
                 <StatusBar backgroundColor={Colors.black} barStyle={'light-content'}/>
                 <SafeAreaView style={styles.container}>
-                    <NetworkBar online={!isOffline} />
+                    <NetworkBar online={!isOffline}/>
                     <AppNavigation navigation={navigation}/>
                     <ModalQR
                         ref={"_modalQR"}/>

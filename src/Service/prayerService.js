@@ -29,8 +29,8 @@ class PrayerService extends baseService {
         return super.executeHttp(UPDATE_STATUS_PRAYER, {prayerUID: params});
     }
 
-    deletePrayer(params) {
-        return super.executeHttp(DELETE_PRAYER, {prayerUID: params});
+    deletePrayer({prayerUID ,status = 0 }) {
+        return super.executeHttp(DELETE_PRAYER, {prayerUID: prayerUID, status});
     }
 
     getPrayer({userUID, prayerUID, search}) {

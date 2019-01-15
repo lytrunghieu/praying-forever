@@ -7,18 +7,21 @@ import {Content} from 'native-base';
 export default class ContentComponent extends PureComponent {
 
     render() {
-        const {children,...rest} = this.props;
+        const {children,removePadding,...rest} = this.props;
 
 
         return (
-            <Content style ={styles.container} {...rest}>{children}</Content>
+            <Content style ={!removePadding ? styles.container : null} {...rest}>{children}</Content>
         );
     }
 }
 
 ContentComponent.defaultProps = {};
 
-ContentComponent.propTypes = {}
+ContentComponent.propTypes = {
+    removePadding : PropTypes.string
+
+}
 
 const styles = EStyleSheet.create({
     container :{

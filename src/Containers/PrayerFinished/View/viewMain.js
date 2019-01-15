@@ -43,7 +43,6 @@ export default class PrayerFinished extends PureComponent {
         this.renderSeparate = this.renderSeparate.bind(this);
         this.keyExtractor = this.keyExtractor.bind(this);
         this.renderListFooterComponent = this.renderListFooterComponent.bind(this);
-        this.onAcceptDeletePrayer = this.onAcceptDeletePrayer.bind(this);
         this.onChangeKeySearch = this.onChangeKeySearch.bind(this);
         this.onPressBackSearch = this.onPressBackSearch.bind(this);
         this.onCloseActionPrayerModal = this.onCloseActionPrayerModal.bind(this);
@@ -149,10 +148,6 @@ export default class PrayerFinished extends PureComponent {
 
     //region handle modal confirm
 
-    onAcceptDeletePrayer(data) {
-        const {prayerActions} = this.props;
-        prayerActions.deletePrayer(data ? data.uid : null);
-    }
 
     //endregion
 
@@ -193,11 +188,11 @@ export default class PrayerFinished extends PureComponent {
     //region HANDLE PRAY ITEM
 
     onPressPrayItem = (item) => () => {
-        this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, item);
+        this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, {item, uid: item.uid});
     }
 
     onPressDeletePrayer() {
-        commonUtils.sendEvent({type : EventRegisterTypes.SHOW_CONFIRM_MODAL});
+        commonUtils.sendEvent({type : EventRegisterTypes.SHOW_CONFIRM_MODAL, params : {status: StatusOfPray.COMPLETE}});
     }
 
     //endregion

@@ -86,10 +86,10 @@ export default class Notifications extends PureComponent {
         this.renderItem = this.renderItem.bind(this);
         this.keyExtractor = this.keyExtractor.bind(this);
 
-        this.onRefresh = this.onRefresh.bind(this);
         this.onAccept = this.onAccept.bind(this);
 
         this.onPressUpdateReadStatus = this.onPressUpdateReadStatus.bind(this);
+        this.onPressItem = this.onPressItem.bind(this);
 
         firebase.notifications().removeAllDeliveredNotifications();
         this.state = {
@@ -180,8 +180,6 @@ export default class Notifications extends PureComponent {
     }
 
     onPressDelete(item) {
-        // const action = {type: EventRegisterTypes.DELETE_NOTIFICATION, params: item};
-        // commonUtils.sendEvent(action);
         if (item) {
             this.refs["_confirmModal2"].open(item);
         }
@@ -191,18 +189,13 @@ export default class Notifications extends PureComponent {
     }
 
     onPressUpdateReadStatus(item, read) {
-        // alert("onPressUpdateReadStatus");
         const {uid : notifUID} = item;
         const {notificationActions} = this.props;
         notificationActions.updateReadStatusNotification({notifUID , read});
-        // const action = {type: EventRegisterTypes.UPDATE_NOTIFICATION, params: item};
-        // commonUtils.sendEvent(action);
     }
 
     onPressItem(item) {
-        alert("onPressItem");
-        // this.refs["_actionSheet2"].open(item);
-        // this.props.navigation.navigate(ScreenKey.NOTIFICATION_DETAIL, item);
+        this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, {item : item.prayer , uid : item.prayer.uid});
     }
 
     //endregion
@@ -217,11 +210,6 @@ export default class Notifications extends PureComponent {
                 onPress={this.onPressItem}
             />
         )
-    }
-
-    onRefresh() {
-        // const {prayerActions} = this.props;
-        // prayerActions.getPrayer();
     }
 
     render() {

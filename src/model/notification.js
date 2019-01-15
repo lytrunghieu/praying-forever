@@ -1,4 +1,5 @@
 import PrayUser from "./PrayUser";
+import Pray from "./Pray";
 
 export default class Notification {
     constructor(data={}, initModel = true){
@@ -20,6 +21,8 @@ export default class Notification {
         else {
             this.created = data.created || undefined;
         }
+        this.prayer = data.prayer && new Pray(data.prayer) || undefined;
+
         this.typeCode = data.typeCode || "private"
     }
 

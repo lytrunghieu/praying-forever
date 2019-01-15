@@ -11,7 +11,7 @@ const names = {
     about :"information",
     setting :"settings-box",
     delete :"trash",
-    following :"thumbtack",
+    following :"eye",
     unfollowing :"thumbtack",
     share :"share-alt",
     password :"key",
@@ -19,7 +19,7 @@ const names = {
     avatar:"user-circle-o",
     more_h:"ellipsis-h",
     back :"arrow-left",
-    suggest :"lightbulb-o",
+    suggest :"question-circle-o",
     search :"search",
     clear :"times",
     next:"arrow-circle-right",
@@ -28,6 +28,9 @@ const names = {
     empty:"frown-o",
     filter:"filter",
     onlineOfOffline :"circle",
+    male :"male",
+    female :"female",
+    angleRight:"angle-right"
 
 }
 

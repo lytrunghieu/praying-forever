@@ -6,7 +6,7 @@ import {Colors, globalStyle, ApplicationStyles, Metrics} from "../../Themes/inde
 import PropTypes from 'prop-types';
 import Title from "../Common/Title";;
 import PlaceHolder from "../Common/PlaceHolder";
-import Text from "../Common/Text";
+import TextBase from "../Common/TextBase";
 import I18n from '../../I18n/index';
 import QRCode from 'react-native-qrcode';
 import {ButtonFooter} from "./index";
@@ -30,9 +30,9 @@ export default class ModalQR extends ModalBase {
             <View
                 style={styles.container}>
                 <View style={styles.topView}>
-                    <Title>{I18n.t("QRCode")}</Title>
+                    <TextBase largeX={true} bold={true}>{I18n.t("QRCode")}</TextBase>
                 </View>
-                <Text>{I18n.t("scanQRCodeIntro")}</Text>
+                <TextBase large={true} bold={true}>{I18n.t("scanQRCodeIntro")}</TextBase>
                 <View style={styles.QRCodeView}>
                     <QRCode
                         value={this.state.text}
@@ -57,20 +57,21 @@ const styles = EStyleSheet.create({
     container: {
         height: "100%",
         width: Metrics.screenWidth,
-        backgroundColor: Colors.white,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor:Colors.white
     },
 
     topView: {
         height: "$heightRowNormal",
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent:"center"
     },
 
     QRCodeView: {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
 
     bottomView: {

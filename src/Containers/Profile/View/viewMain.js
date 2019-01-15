@@ -186,8 +186,6 @@ export default class Profile extends PureComponent {
                                           checked={gender ? false : true}/>
                                 <DatePicker label={I18n.t("birthDay")} chosenDate={birthDay} setDate={this.onChangeBD}/>
                             </View>
-
-
                         </Content> : null
                 }
                 {

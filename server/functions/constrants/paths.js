@@ -11,4 +11,4 @@ exports.locationPrayers ="location";
 exports.notifications = "notification/{userUID}/data";
 exports.notification = "notification/{userUID}/data/{notifUID}"
 
-exports.profileUser ="profile/{userUID}";
+exports.profileUsers ="profile";

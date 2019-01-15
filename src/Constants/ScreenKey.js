@@ -22,5 +22,6 @@ module.exports = {
     NOTIFICATIONS :"Notifications",
     NOTIFICATION_DETAIL :"NotificationDetail",
     PROFILE:"Profile",
+    ABOUT :"About"
 
 };
