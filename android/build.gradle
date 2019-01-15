@@ -74,6 +74,12 @@ allprojects {
                     details.useVersion "15.0.1"
                 }
 
+                if (requested.group =="com.google.android.gms" && requested.name == 'play-services-gcm') {
+
+                    details.useVersion "15.0.1"
+                }
+
+
 
 
 //                if (details.requested.group == 'com.android.support'

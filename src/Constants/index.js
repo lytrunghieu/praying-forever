@@ -8,8 +8,9 @@ import * as collection from './collection';
 import contentCodes from './contentCode';
 import firestorePaths from './firestorePaths';
 import URL from './URL';
+import universalLink from './universalLink';
 
 
-export { ScreenKey, Device ,AsyncStoreKeys,ErrorCodes,StatusOfPray, EventRegisterTypes,URL,collection, contentCodes,firestorePaths};
+export { ScreenKey, Device ,AsyncStoreKeys,ErrorCodes,StatusOfPray, EventRegisterTypes,URL,collection, contentCodes,firestorePaths,universalLink};
 
 export default module.exports

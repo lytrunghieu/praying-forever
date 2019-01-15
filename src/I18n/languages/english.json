@@ -141,5 +141,10 @@
   "old":"Old",
   "QRCode": "QR Code",
   "male":"Male",
-  "notFoundPrayer":"Not found Prayer"
+  "notFoundPrayer":"Not found Prayer",
+  "version":"Version",
+  "sendFeedback":"Send FeedBack",
+  "yourInfo":"Your information",
+  "deviceModel":"Device Model",
+  "platform":"Platform"
 }
