@@ -23,7 +23,9 @@ import {Colors} from "../Themes";
 import {expAppReducer} from "../reducers"
 
 const whitelist = [
-    "userReducer"
+    "userReducer",
+    "prayerReducer",
+    "notificationReducer",
 ]
 
 // Load middleware
@@ -40,19 +42,6 @@ const persistConfig = {
     storage: storage,
     whitelist: whitelist,
     stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
-    // getStoredState:
-    //     (persistConfig,(err, initialState) => {
-    //         const initialImmutableState = {};
-    //         whitelist.forEach((key) => {
-    //             if (initialState[key]) initialImmutableState[key] = initialState[key];
-    //         });
-    //         const store = createStore(pReducer, initialImmutableState);
-    //         // const store = compose(
-    //         //     applyMiddleware(...middleware)
-    //         // )(createStore)(pReducer);
-    //         persistStore(store, persistConfig)
-    //
-    //     })
 };
 
 const pReducer = persistReducer(persistConfig, expAppReducer);
