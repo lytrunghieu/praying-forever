@@ -2,12 +2,13 @@
 import React, {Component} from 'react';
 import {
     View,
-    Image
+    Image,
+    AsyncStorage
 } from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {NavigationActions} from "react-navigation";
-import {ScreenKey} from '../Constants';
+import {ScreenKey, AsyncStoreKeys} from '../Constants';
 import {Colors, Metrics, Images} from '../Themes';
 import firebase from 'react-native-firebase';
 
@@ -27,9 +28,23 @@ class SplashScreen extends Component {
                     this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.DRAWER_NAV});
                 }
                 else {
-                    this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
+
+                    AsyncStorage.getItem(AsyncStoreKeys.IS_STARTED, (error, result) => {
+                        if (result == "true") {
+                            this.props.navigation.dispatch({
+                                type: NavigationActions.RESET,
+                                routeName: ScreenKey.LOGIN_SCREEN
+                            });
+                        }
+                        else {
+                            this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.INTRO});
+
+                        }
+                    });
                 }
                 unsubscribe();
+
+
             });
         }, 2000);
     }
@@ -49,7 +64,7 @@ class SplashScreen extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    userReducer : state.userReducer
+    userReducer: state.userReducer
 })
 
 const mapDispatchToProps = (dispatch) => ({})

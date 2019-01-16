@@ -245,8 +245,8 @@ export default class DrawerContainer extends PureComponent {
         const {fetching} = drawerReducer;
         const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE) || [];
         const praysInprogress = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [];
-        const {payload = {}} = userReducer;
-        const {displayName = ""} = payload;
+        const {payload} = userReducer;
+        const {displayName = ""} = payload ||  {};
         return (
             <View key={"main"} pointerEvents={fetching ? "none" : "auto"}>
                 <LoadingIndicator visible={fetching}/>
@@ -274,7 +274,7 @@ export default class DrawerContainer extends PureComponent {
                                   onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)} countRed={true}
                                   count={notificationNotRead}/>
                     {/*<OptionButton text={I18n.t("setting")} leftIcon={IconName.setting}/>*/}
-                    <OptionButton text={I18n.t("about")} leftIcon={IconName.about}  onPress={this.onPressOption.bind(this, ScreenKey.AB)}/>
+                    <OptionButton text={I18n.t("about")} leftIcon={IconName.about}  onPress={this.onPressOption.bind(this, ScreenKey.ABOUT)}/>
                     <OptionButton text={I18n.t("logout")} leftIcon={IconName.logout}
                                   onPress={this.onPressLogout}/>
 

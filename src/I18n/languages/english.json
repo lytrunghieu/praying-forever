@@ -146,5 +146,14 @@
   "sendFeedback":"Send FeedBack",
   "yourInfo":"Your information",
   "deviceModel":"Device Model",
-  "platform":"Platform"
+  "platform":"Platform",
+  "theApostlesCreed1Title":"The Apostles’ Creed(1)",
+  "theApostlesCreed2-1Title":"The Apostles’ Creed(2.1)",
+  "theApostlesCreed2-2Title":"The Apostles’ Creed(2.2)",
+  "theApostlesCreed3Title":"The Apostles’ Creed(3)",
+  "theApostlesCreed1Description":"I believe in God, the Father Almighty, creator of heaven and earth.",
+  "theApostlesCreed2-1Description":"I believe in Jesus Christ, his only Son, our Lord, who was conceived by the Holy Spirit, born of the virgin Mary, suffered under Pontius Pilate, was crucified, died, and was buried.",
+  "theApostlesCreed2-2Description":"He descended into hell. The third day he rose again from the dead. He ascended into heaven and is seated at the right hand of God the Father Almighty. From there he will come to judge the living and the dead.",
+  "theApostlesCreed3Description":"I believe in the Holy Spirit, the holy Christian Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and the life everlasting. Amen.",
+  "accept" :"Accept"
 }

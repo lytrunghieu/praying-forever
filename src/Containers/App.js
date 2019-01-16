@@ -5,6 +5,7 @@ import {Provider} from 'react-redux';
 import {globalStyle} from "../Themes"
 import {AppState, AsyncStorage,View} from "react-native"
 import {TextBase} from "../Components/Common";
+import Immutable from 'seamless-immutable';
 
 import '../Config'
 import DebugConfig from '../Config/DebugConfig'
@@ -14,12 +15,11 @@ import RootContainer from './RootContainer';
 import {applyMiddleware, compose, createStore} from 'redux';
 import thunk from 'redux-thunk';
 import logger from "redux-logger"
-import {persistReducer, persistStore, getStoredState} from 'redux-persist';
+import {persistReducer, persistStore, getStoredState, createTransform} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import I18n from "../I18n";
 import {Colors} from "../Themes";
-
 import {expAppReducer} from "../reducers"
 
 const whitelist = [
@@ -34,14 +34,38 @@ let middleware = [
     logger
 ];
 
-// Init redux store (using the given reducer & middleware)
+// custome state return
+const myTransform = createTransform(
+    // transform state on its way to being serialized and persisted.
+    (inboundState, key) => {
+        // convert mySet to an Array.
+        let _inboundState= inboundState;
+        if(!Immutable.isImmutable(inboundState)){
+            _inboundState = Immutable(inboundState);
+        }
+        return _inboundState;
+    },
+    // transform state being rehydrated
+    (outboundState, key) => {
+        // convert mySet back to a Set.
+        let _outboundState= outboundState;
+        if(!Immutable.isImmutable(_outboundState)){
+            _outboundState = Immutable(_outboundState);
+        }
+        return  _outboundState;
+    },
+    // define which reducers this transform gets called for.
+    { whitelist: whitelist }
+);
 
+// Init redux store (using the given reducer & middleware)
 
 const persistConfig = {
     key: 'root',
     storage: storage,
     whitelist: whitelist,
-    stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
+    // stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
+    transforms: [myTransform],
 };
 
 const pReducer = persistReducer(persistConfig, expAppReducer);

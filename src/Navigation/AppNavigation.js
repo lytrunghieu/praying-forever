@@ -16,6 +16,7 @@ import {container as PrayerDetailScreen} from '../Containers/PrayerDetail';
 import {container as  PrayForOtherScreen} from '../Containers/PrayForOthers';
 import {container as NotificationScreen} from '../Containers/Notification';
 import {container as AboutScreen} from '../Containers/About';
+import {container as IntroScreen} from '../Containers/Intro';
 import {NotificationDetailContainer} from '../Containers/NotificationDetailContainer';
 
 const DrawerNav = DrawerNavigator({
@@ -40,6 +41,7 @@ const MainNav = StackNavigator({
         [ScreenKey.CREATE_ACCOUNT]: {screen: RegisterScreen},
         [ScreenKey.PROFILE]: {screen: ProfileScreen},
         [ScreenKey.NOTIFICATION_DETAIL]: {screen: NotificationDetailContainer},
+        [ScreenKey.INTRO]: {screen: IntroScreen},
     }, {
         headerMode: 'none',
         initialRouteName: ScreenKey.SPLASH_SCREEN,
