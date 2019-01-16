@@ -225,6 +225,8 @@ class UserService extends baseService {
                     }
                 }
                 return result;
+            }).catch(err =>{
+                return err;
             });
         }).finally(res => {
             return new response(res)

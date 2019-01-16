@@ -77,6 +77,36 @@ export function prayerReducer(state = InitialState.prayer, action) {
             return state;
         }
 
+        case actionTypes.UPDATE_STATUS_PRAYER_PENDING : {
+            state = state.set("fetching", true);
+            return state;
+        }
+
+        case actionTypes.UPDATE_STATUS_PRAYER_SUCCESS : {
+            state = state.set("fetching", false);
+            return state;
+        }
+
+        case actionTypes.UPDATE_STATUS_PRAYER_FAILED : {
+            state = state.set("fetching", false);
+            return state;
+        }
+
+        case actionTypes.DELETE_PRAYER_PENDING : {
+            state = state.set("fetching", true);
+            return state;
+        }
+
+        case actionTypes.DELETE_PRAYER_SUCCESS : {
+            state = state.set("fetching", false);
+            return state;
+        }
+
+        case actionTypes.DELETE_PRAYER_FAILED : {
+            state = state.set("fetching", false);
+            return state;
+        }
+
 
         default :
             return state

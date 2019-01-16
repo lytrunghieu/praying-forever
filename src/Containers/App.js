@@ -20,8 +20,8 @@ import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import I18n from "../I18n";
 import {Colors} from "../Themes";
-import {expAppReducer} from "../reducers"
-
+import {expAppReducer} from "../reducers";
+import firebase  from "react-native-firebase";
 const whitelist = [
     "userReducer",
     "prayerReducer",
@@ -92,6 +92,17 @@ class App extends PureComponent {
         const persistor = persistStore(store, null, cb => {
             this.setState({isStoreLoading: false});
         });
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp({
+                apiKey: 'xxx',
+                authDomain: 'xxx',
+                databaseURL: 'xxx',
+                projectId: 'xxx',
+                storageBucket: 'xxx',
+                messagingSenderId: 'xxx'
+            });
+        }
     }
 
     componentDidMount() {
