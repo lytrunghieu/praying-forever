@@ -95,28 +95,6 @@ export default class DrawerContainer extends PureComponent {
                     break;
                 }
 
-                case EventRegisterTypes.UPDATE_NOTIFICATION : {
-                    const {uid} = params;
-                    if (uid) {
-                        docOfCurrentUserNotification.collection("data").doc(uid).update("isRead", true).catch(error => {
-                            console.warn("ERROR :", error);
-                        });
-                    }
-                    else {
-                        docOfCurrentUserNotification.collection("data").get().then(colSnap => {
-                            let batch = firebase.firestore().batch();
-                            colSnap.forEach(dataSnap => {
-                                batch.update(dataSnap.ref, "isRead", true);
-                            });
-                            batch.commit().catch(error => {
-                                console.warn("ERROR :", error);
-                            });
-
-                        });
-                    }
-                    break;
-                }
-
                 case EventRegisterTypes.UPDATE_LIVE_STATUS: {
                     const {prayerUID, live} = params;
                     if (prayerUID) {

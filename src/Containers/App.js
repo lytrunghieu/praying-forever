@@ -93,16 +93,6 @@ class App extends PureComponent {
             this.setState({isStoreLoading: false});
         });
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp({
-                apiKey: 'xxx',
-                authDomain: 'xxx',
-                databaseURL: 'xxx',
-                projectId: 'xxx',
-                storageBucket: 'xxx',
-                messagingSenderId: 'xxx'
-            });
-        }
     }
 
     componentDidMount() {

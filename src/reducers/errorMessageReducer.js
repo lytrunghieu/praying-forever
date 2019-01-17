@@ -8,7 +8,6 @@ export function errorMessageReducer(state = InitialState.errorMessage, action) {
         default :
             if(type.indexOf("FAILED") > -1){
                 if(type !== actionTypes.LOGIN_FAILED
-
                     && type !== actionTypes.GET_PROFILE_OTHER_FAILED
                     && type !== actionTypes.GET_PROFILE_FAILED
                     && type !== actionTypes.GET_PRAYER_FAILED

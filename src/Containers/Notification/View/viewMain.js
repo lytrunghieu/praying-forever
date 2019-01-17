@@ -188,14 +188,14 @@ export default class Notifications extends PureComponent {
         }
     }
 
-    onPressUpdateReadStatus(item, read) {
+    onPressUpdateReadStatus(item ={}, read) {
         const {uid : notifUID} = item;
         const {notificationActions} = this.props;
         notificationActions.updateReadStatusNotification({notifUID , read});
     }
 
     onPressItem(item) {
-        this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, {item : item.prayer , uid : item.prayer.uid});
+        this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, {item : item.prayer , uid : item.prayer.uid , cb : this.onPressUpdateReadStatus.bind(this,item,true)});
     }
 
     //endregion

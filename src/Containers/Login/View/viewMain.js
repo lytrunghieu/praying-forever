@@ -210,7 +210,7 @@ export default class LoginScreen extends PureComponent {
                     </Content>
                     <ButtonFooter
                         onPress={this.onPressLogin}
-                        disabled={fetching} text={I18n.t("logIn")}
+                        disabled={fetching} text={I18n.t("logIn").toUpperCase()}
                     />
                 </Container>
             ]

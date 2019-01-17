@@ -137,7 +137,6 @@ class RootContainer extends PureComponent {
     }
 
     handleFirstConnectivityChange(connectionInfo) {
-        console.log('First change, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
         if (connectionInfo.type === "none" || connectionInfo.type === "unknown") {
             this.setState({
                 isOffline: true

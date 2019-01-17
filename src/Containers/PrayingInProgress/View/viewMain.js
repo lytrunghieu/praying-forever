@@ -118,7 +118,6 @@ export default class PrayingInProgress extends PureComponent {
     }
 
     componentWillUnmount() {
-        console.log("componentWillUnmount");
     }
 
     //endregion

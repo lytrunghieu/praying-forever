@@ -105,7 +105,7 @@ class PrayerService extends baseService {
 
     getPrayersNearby({distance, location}) {
         const collect = firebase.firestore().collection('location');
-        return collect.get().then(snapshot => {
+        return collect.get("server").then(snapshot => {
             let prayList = [];
             snapshot.forEach(e => {
                 let data = e.data();

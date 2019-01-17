@@ -216,18 +216,15 @@ class UserService extends baseService {
         const path = firestorePaths.PROFILES;
         const profileCollect = firebase.firestore().collection(path);
         return profileCollect.where("uid", "==", _userUID).get().then(colSnap => {
-            return colSnap.docs[0].ref.update("gender", gender, "birthDay", birthDay, "displayName", displayName).then(res => {
-                const result = {
-                    data: {
-                        success: true,
-                        message: null,
-                        statusCode: 200,
-                    }
+            colSnap.docs[0].ref.update("gender", gender, "birthDay", birthDay, "displayName", displayName);
+            const result = {
+                data: {
+                    success: true,
+                    message: null,
+                    statusCode: 200,
                 }
-                return result;
-            }).catch(err =>{
-                return err;
-            });
+            }
+            return result;
         }).finally(res => {
             return new response(res)
         });

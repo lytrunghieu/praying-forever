@@ -15,6 +15,7 @@ export default class PrayerDetail extends PureComponent {
         const {item, uid} = dataPassed;
         this.prayer = item;
         this.uid =  dataPassed.uid ;
+        this.cb =  dataPassed.cb ;
         this.userUID = item && item.owner && item.owner.uid || null;
         this.onPressBack = this.onPressBack.bind(this)
         this.onPressRightHeader = this.onPressRightHeader.bind(this)
@@ -70,6 +71,9 @@ export default class PrayerDetail extends PureComponent {
                     ]);
                 }
             });
+        }
+        if(this.cb){
+            this.cb();
         }
     }
 

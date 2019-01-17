@@ -24,7 +24,7 @@ const DrawerNav = DrawerNavigator({
     [ScreenKey.PRAY_FINISHED]: {screen: PrayerFinishedScreen},
     [ScreenKey.PRAY_FOR_OTHER]: {screen: PrayForOtherScreen},
     [ScreenKey.NOTIFICATIONS]: {screen: NotificationScreen},
-    [ScreenKey.ABOUT]: {screen: AboutScreen},
+
 }, {
     contentComponent: Drawer // custom drawer
 });
@@ -42,6 +42,7 @@ const MainNav = StackNavigator({
         [ScreenKey.PROFILE]: {screen: ProfileScreen},
         [ScreenKey.NOTIFICATION_DETAIL]: {screen: NotificationDetailContainer},
         [ScreenKey.INTRO]: {screen: IntroScreen},
+        [ScreenKey.ABOUT]: {screen: AboutScreen},
     }, {
         headerMode: 'none',
         initialRouteName: ScreenKey.SPLASH_SCREEN,
