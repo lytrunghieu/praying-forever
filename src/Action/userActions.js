@@ -8,7 +8,7 @@ export function getProfile({userUID , isUser = true} ={}) {
 
         if(isUser){
             dispatch({
-                type: actionTypes.GET_PROFILE_PEDDING,
+                type: actionTypes.GET_PROFILE_PENDING,
             });
         }
         else{

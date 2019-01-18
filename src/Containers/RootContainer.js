@@ -39,7 +39,7 @@ class RootContainer extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            isOffline: false
+            isOffline: false,
         };
         this.onAcceptDeletePrayer = this.onAcceptDeletePrayer.bind(this);
         this.handleFirstConnectivityChange = this.handleFirstConnectivityChange.bind(this);
@@ -121,6 +121,7 @@ class RootContainer extends PureComponent {
 
     componentWillUnmount() {
         EventRegister.removeEventListener(this.listener);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBack);
         NetInfo.removeEventListener(
             'connectionChange',
             this.handleFirstConnectivityChange
@@ -151,7 +152,7 @@ class RootContainer extends PureComponent {
 
     handleHardwareBack = () => {
         // Back performs pop, unless we're to main screen [0,0]
-        const {navigationReducer, dispatch} = this.props;
+        const {dispatch, navigationReducer, pendingReducer} = this.props;
         if (navigationReducer.index === 0 && navigationReducer.routes[0].index === 0) {
             BackHandler.exitApp()
         }
@@ -173,15 +174,17 @@ class RootContainer extends PureComponent {
 
 
     render() {
-        const {prayerActions, dispatch, navigationReducer} = this.props;
+        const {prayerActions, dispatch, navigationReducer, pendingReducer} = this.props;
+        const {fetching} = pendingReducer;
         const {isOffline} = this.state;
         const navigation = ReactNavigation.addNavigationHelpers({
             dispatch,
             state: navigationReducer
-        })
+        });
+
 
         return (
-            <View style={styles.container}>
+            <View style={styles.container} pointerEvents = {fetching ? "none":"auto"}>
                 <StatusBar backgroundColor={Colors.black} barStyle={'light-content'}/>
                 <SafeAreaView style={styles.container}>
                     <NetworkBar online={!isOffline}/>
@@ -223,6 +226,7 @@ class RootContainer extends PureComponent {
 const mapStateToProps = (state) => ({
     navigationReducer: state.navigationReducer,
     errorMessageReducer: state.errorMessageReducer,
+    pendingReducer: state.pendingReducer,
 })
 
 // wraps dispatch to create nicer functions to call within our component

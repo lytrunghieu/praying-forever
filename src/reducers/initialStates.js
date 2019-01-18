@@ -45,6 +45,10 @@ export default {
         detail: null,
     }),
 
+    pending :Immutable({
+        fetching : true
+    }),
+
     login :Immutable({
         fetching : false,
         success : false,

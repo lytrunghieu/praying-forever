@@ -3,14 +3,9 @@ import React, {PureComponent} from 'react';
 import {TouchableOpacity, Text} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
-import globalStyle from '../../Themes/globalStyle';
-import getTheme from './native-base-theme/components';
-import material from './native-base-theme/variables/material';
 import {TextBase,Icon} from '../Common';
-
 import {Colors, Fonts} from '../../Themes';
-
-import {Button, StyleProvider} from 'native-base';
+import {Button} from 'native-base';
 
 export default class ButtonComponent extends PureComponent {
 
@@ -21,7 +16,7 @@ export default class ButtonComponent extends PureComponent {
         if (rounded) {
             return (
                 <Button
-                    style={[styles.roundedStyle,center ? styles.center : null , disabled && styles.buttonDisabled]}
+                    style={[styles.roundedStyle,center ? styles.center : null , disabled]}
                     rounded small onPress={onPress}
                     disabled={disabled}
                 >

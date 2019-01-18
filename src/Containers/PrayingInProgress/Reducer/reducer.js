@@ -6,7 +6,7 @@ export function reducer(state = InitialState, action) {
     let oldState;
     const {type,data} = action;
     switch (type) {
-        case actionTypes.GET_PROFILE_PEDDING : {
+        case actionTypes.GET_PROFILE_PENDING : {
             state = state.set("fetching", true);
             state = state.set("success", false);
             state = state.set("message", null);
