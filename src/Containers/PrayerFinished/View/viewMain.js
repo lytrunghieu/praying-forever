@@ -54,6 +54,7 @@ export default class PrayerFinished extends PureComponent {
             isSearch: false,
             keySearch: "",
             loading: true,
+            refreshing: false,
         };
     }
 
@@ -64,7 +65,7 @@ export default class PrayerFinished extends PureComponent {
         prayerActions.getPrayer();
     }
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
         if (nextProps.prayerReducer !== this.props.prayerReducer && nextProps.prayerReducer.payload) {
             this.setState({
                 prayers: nextProps.prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE)
@@ -77,6 +78,14 @@ export default class PrayerFinished extends PureComponent {
 
         if (nextProps.prayerReducer.fetching !== this.props.prayerReducer.fetching && !nextProps.prayerReducer.fetching) {
             this.setState({loading: false})
+        }
+
+        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && nextProps.profileReducer.fetching) {
+            this.setState({refreshing: true})
+        }
+
+        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && !nextProps.profileReducer.fetching) {
+            this.setState({refreshing: false})
         }
     }
 
@@ -164,7 +173,6 @@ export default class PrayerFinished extends PureComponent {
     }
 
 
-
     keyExtractor(item, index) {
         return index.toString();
     }
@@ -197,7 +205,7 @@ export default class PrayerFinished extends PureComponent {
     }
 
     onPressDeletePrayer() {
-        commonUtils.sendEvent({type : EventRegisterTypes.SHOW_CONFIRM_MODAL, params : {status: StatusOfPray.COMPLETE}});
+        commonUtils.sendEvent({type: EventRegisterTypes.SHOW_CONFIRM_MODAL, params: {status: StatusOfPray.COMPLETE}});
     }
 
     //endregion
@@ -224,7 +232,7 @@ export default class PrayerFinished extends PureComponent {
     }
 
     render() {
-        const {prayers, isSearch, loading, keySearch} = this.state;
+        const {prayers, isSearch, loading, keySearch,refreshing} = this.state;
         const {prayerReducer} = this.props;
         const {fetching} = prayerReducer;
         return (
@@ -247,8 +255,8 @@ export default class PrayerFinished extends PureComponent {
                         onPressLink={this.onRefresh}
                     /> : null
                 }
-
-                    <FlatList
+                {
+                    !refreshing && <FlatList
                         onRefresh={this.onRefresh}
                         refreshing={fetching}
                         data={prayers}
@@ -258,6 +266,8 @@ export default class PrayerFinished extends PureComponent {
                         ListFooterComponent={this.renderListFooterComponent}
 
                     />
+                }
+
 
             </Container>,
                 <ActionSheet

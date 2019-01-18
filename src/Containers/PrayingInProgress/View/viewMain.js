@@ -61,7 +61,8 @@ export default class PrayingInProgress extends PureComponent {
             prayers: props.prayerReducer.payload && props.prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [],
             isSearch: false,
             keySearch: "",
-            loading: true
+            loading: true,
+            refreshing: false,
         };
     }
 
@@ -86,6 +87,15 @@ export default class PrayingInProgress extends PureComponent {
         if (nextProps.prayerReducer.fetching !== this.props.prayerReducer.fetching && !nextProps.prayerReducer.fetching) {
             this.setState({loading: false})
         }
+
+        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && nextProps.profileReducer.fetching) {
+            this.setState({refreshing: true})
+        }
+
+        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && !nextProps.profileReducer.fetching) {
+            this.setState({refreshing: false})
+        }
+
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -237,7 +247,7 @@ export default class PrayingInProgress extends PureComponent {
     }
 
     render() {
-        const {prayers, isSearch, keySearch, loading} = this.state;
+        const {prayers, isSearch, keySearch, loading, refreshing} = this.state;
         const {prayerReducer} = this.props;
         const {fetching} = prayerReducer;
         return (
@@ -261,16 +271,19 @@ export default class PrayingInProgress extends PureComponent {
                         onPressLink={this.onRefresh}
                     /> : null
                 }
+                {
+                    !refreshing && <FlatList
+                        onRefresh={this.onRefresh}
+                        data={prayers}
+                        keyExtractor={this.keyExtractor}
+                        renderItem={this.renderPrayItem}
+                        ItemSeparatorComponent={this.renderSeparate}
+                        ListFooterComponent={this.renderListFooterComponent}
+                        refreshing={fetching}
+                    />
+                }
 
-                <FlatList
-                    onRefresh={this.onRefresh}
-                    data={prayers}
-                    keyExtractor={this.keyExtractor}
-                    renderItem={this.renderPrayItem}
-                    ItemSeparatorComponent={this.renderSeparate}
-                    ListFooterComponent={this.renderListFooterComponent}
-                    refreshing={fetching}
-                />
+
             </Container>,
                 <ActionSheet
                     key="ActionSheet"

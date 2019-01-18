@@ -6,6 +6,7 @@ import {prayerActions} from "../../Action";
 
 const mapStateToProps = (state) => ({
     prayerReducer: state.prayerReducer,
+    profileReducer: state.profileReducer,
 });
 
 const mapDispatchToProps = (dispatch) => ({
