@@ -13,6 +13,7 @@ import I18n from "../../I18n";
 import {CommonUtils} from "../../Utils";
 import {EventRegisterTypes} from "../../Constants";
 import firebase from "react-native-firebase";
+import Avatar from "./Avatar";
 
 import {Card, CardItem, Left, Body, Right} from 'native-base';
 
@@ -77,7 +78,7 @@ export default class PrayItem extends PureComponent {
         let _isPublic = "";
         if (firebase.auth().currentUser && uid == firebase.auth().currentUser.uid) {
             _displayName = I18n.t("me");
-            if(isLive){
+            if (isLive) {
                 _isPublic = "(".concat(I18n.t("public")).concat(")")
             }
         }
@@ -87,7 +88,10 @@ export default class PrayItem extends PureComponent {
             <Card>
                 <CardItem>
                     <Left>
-                        <Icon name={IconName.avatar} large={true}/>
+                        <Avatar
+                            uid={uid}
+                            large={true}
+                        />
                         <Body>
                         <View style={styles.userNameWrapper}>
                             <TextBase bold={true}>{_displayName}</TextBase>
@@ -151,12 +155,12 @@ PrayItem.propTypes = {
 const styles = EStyleSheet.create({
 
 
-    userNameWrapper:{
-        flexDirection:"row"
+    userNameWrapper: {
+        flexDirection: "row"
     },
 
-    publicTextStyle:{
-      minWidth: 30
+    publicTextStyle: {
+        minWidth: 30
     },
 
     card: {

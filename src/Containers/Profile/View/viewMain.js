@@ -2,16 +2,19 @@ import React, {PureComponent} from 'react';
 import {
     View,
     KeyboardAvoidingView,
-    Platform
+    Platform,
+    Image,
+    PixelRatio,
 } from 'react-native';
 
 import {style as styles} from "../Style";
-import {FormValidate, Content, Container, Header, ButtonFooter, EmptyHolder} from "../../../Components/Modules";
+import {FormValidate, Content, Container, Header, ButtonFooter, EmptyHolder, Avatar} from "../../../Components/Modules";
 import {IconName} from "../../../Themes";
-import {Icon, TextBase, Checkbox, DatePicker, PlaceHolder} from "../../../Components/Common";
+import {Icon, TextBase, Checkbox, DatePicker, PlaceHolder, Button} from "../../../Components/Common";
 import I18n from "../../../I18n";
 import moment from "moment";
 
+var ImagePicker = require('react-native-image-picker');
 const inputKey = {
     DISPLAY_NAME: {name: "displayName", index: 0}
 }
@@ -35,6 +38,7 @@ export default class Profile extends PureComponent {
             gender: user && user.gender,
             birthDay: user && user.birthDay,
             isChanged: false,
+            avatarURL:  user.avatarURL,
         };
 
         this.leftHeader = {
@@ -46,22 +50,24 @@ export default class Profile extends PureComponent {
         this.onPressGender = this.onPressGender.bind(this);
         this.onChangeBD = this.onChangeBD.bind(this);
         this.onPressSave = this.onPressSave.bind(this);
+
+        this.getImage = this.getImage.bind(this)
     }
 
     componentDidMount() {
         this.getProfile();
     }
 
-
     componentWillReceiveProps(nextProps) {
 
         if (nextProps.userReducer.payload !== this.props.userReducer.payload) {
-            const {displayName, gender, birthDay} = nextProps.userReducer.payload;
+            const {displayName, gender, birthDay, avatarURL} = nextProps.userReducer.payload;
             this.setState({
                 displayName,
                 gender,
                 birthDay,
-                isChanged: false
+                isChanged: false,
+                avatarURL
             });
         }
 
@@ -80,8 +86,8 @@ export default class Profile extends PureComponent {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextState.displayName != this.state.displayName || nextState.gender != this.state.gender ||   nextState.birthDay != this.state.birthDay) {
-            if (nextState.displayName != this.userOri.displayName || nextState.gender != this.userOri.gender|| moment(nextState.birthDay).diff(this.userOri.birthDay)) {
+        if (nextState.displayName != this.state.displayName || nextState.gender != this.state.gender || nextState.birthDay != this.state.birthDay) {
+            if (nextState.displayName != this.userOri.displayName || nextState.gender != this.userOri.gender || moment(nextState.birthDay).diff(this.userOri.birthDay)) {
                 this.setState({
                     isChanged: true
                 });
@@ -94,6 +100,40 @@ export default class Profile extends PureComponent {
 
         }
     }
+
+    getImage() {
+        const {userActions} = this.props;
+
+        // More info on all the options is below in the README...just some common use cases shown here
+        var options = {
+            title: I18n.t("selectAvatar"),
+            storageOptions: {
+                skipBackup: true,
+                path: 'images'
+            },
+            maxWidth: PixelRatio.getPixelSizeForLayoutSize(200),
+            maxHeight: PixelRatio.getPixelSizeForLayoutSize(200),
+        };
+
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            }
+            else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            }
+            else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            }
+            else {
+                userActions.updateAvatar({uri :response.uri});
+            }
+        });
+
+    }
+
 
     onPressSave() {
         const {validDisplayName, displayName, gender, birthDay} = this.state;
@@ -152,7 +192,7 @@ export default class Profile extends PureComponent {
 
     render() {
 
-        const {loading, gender, birthDay, isChanged, displayName} = this.state;
+        const {loading, gender, birthDay, isChanged, displayName ,avatarURL} = this.state;
         const {profileReducer} = this.props;
         const {fetching} = profileReducer;
 
@@ -174,6 +214,16 @@ export default class Profile extends PureComponent {
                 {
                     this.userOri ?
                         <Content>
+                            <View style={{alignSelf: "center", paddingBottom: 10, paddingTop: 10}}>
+                                <Avatar ref="_avatar" uri={avatarURL} largeX={true}/>
+                                <PlaceHolder/>
+                                {
+                                    this.isUser &&
+                                    <Button disabled={loading} rounded={true} center={true} text={I18n.t("update")}
+                                            onPress={this.getImage}/>
+                                }
+
+                            </View>
                             <View style={[styles.form]}>
                                 <TextBase info={true}>{I18n.t("displayName")}</TextBase>
                                 <FormValidate
@@ -188,11 +238,14 @@ export default class Profile extends PureComponent {
                             </View>
                         </Content> : null
                 }
-                {
-                    <KeyboardAvoidingView
-                        behavior={Platform.OS === 'ios' ? 'padding' : null}>
-                        <ButtonFooter text={I18n.t("save")} disabled={!isChanged || fetching} onPress={this.onPressSave}/>
-                    </KeyboardAvoidingView>
+
+
+                {this.isUser &&
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : null}>
+                    <ButtonFooter text={I18n.t("save")} disabled={!isChanged || fetching}
+                                  onPress={this.onPressSave}/>
+                </KeyboardAvoidingView>
                 }
             </Container>
         );

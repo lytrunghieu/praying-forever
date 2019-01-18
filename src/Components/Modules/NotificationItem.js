@@ -4,15 +4,14 @@ import {View, TouchableOpacity, TouchableHighlight} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
 import {Colors, Fonts, IconName} from '../../Themes';
-import {TextIcon} from "./index";
 import {TextBase, Button, Icon} from "../Common";
 import moment from "moment";
 import I18n from "../../I18n";
-import {CommonUtils} from "../../Utils";
-import {EventRegisterTypes, contentCodes} from "../../Constants";
-import firebase from "react-native-firebase";
+import { contentCodes} from "../../Constants";
+import Avatar from "./Avatar";
 
-import {Card, CardItem, Left, Body, Right, List, ListItem} from 'native-base';
+
+import {Left, Body, List, ListItem} from 'native-base';
 
 export default class NotificationItem extends PureComponent {
 
@@ -36,7 +35,7 @@ export default class NotificationItem extends PureComponent {
     render() {
         const {item = {}, onPress} = this.props;
         const {created, from = {}, contentCode, isRead} = item;
-        const {displayName = ""} = from;
+        const {displayName = "" , uid} = from;
         let content = "";
         let componentContent = null;
         let _displayName = displayName;
@@ -60,7 +59,7 @@ export default class NotificationItem extends PureComponent {
                 <ListItem avatar noBorder iconLeft button={true} onPress ={this._onPress}>
                     <Left
                     >
-                        <Icon name={IconName.avatar} large={true}/>
+                        <Avatar uid={uid} large={true}/>
                     </Left>
                     <Body
                         style={styles.bodyWrapper}

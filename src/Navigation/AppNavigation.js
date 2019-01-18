@@ -8,7 +8,7 @@ import {container as RegisterScreen} from '../Containers/Register';
 import {container as ForgotPasswordScreen} from '../Containers/ForgotPassword';
 import {container as Drawer} from '../Containers/Drawer';
 import {container as ProfileScreen} from '../Containers/Profile';
-import ListCommonContainer from '../Containers/ListCommonContainer';
+
 import {container as PrayingInProgressScreen} from '../Containers/PrayingInProgress';
 import {container as PrayerFinishedScreen} from '../Containers/PrayerFinished';
 import {container as CreatePrayerScreen} from '../Containers/CreatePrayer';
@@ -35,7 +35,6 @@ const MainNav = StackNavigator({
         [ScreenKey.DRAWER_NAV]: {screen: DrawerNav},
         [ScreenKey.LOGIN_SCREEN]: {screen: LoginScreen},
         [ScreenKey.FORGOT_PASS]: {screen: ForgotPasswordScreen},
-        [ScreenKey.LIST_COMMON]: {screen: ListCommonContainer},
         [ScreenKey.CREATE_PRAYING]: {screen: CreatePrayerScreen},
         [ScreenKey.PRAY_DETAIL]: {screen: PrayerDetailScreen},
         [ScreenKey.CREATE_ACCOUNT]: {screen: RegisterScreen},

@@ -1,6 +1,6 @@
 // Libraries
 import React, {PureComponent} from 'react'
-import {View} from 'react-native'
+import {View,Image} from 'react-native'
 import I18n from '../../../I18n/index';
 import {IconName} from '../../../Themes/index';
 import firebase from 'react-native-firebase';
@@ -8,7 +8,7 @@ import {NavigationActions} from "react-navigation";
 import {EventRegisterTypes, URL, StatusOfPray, ScreenKey,contentCodes} from "../../../Constants";
 import {EventRegister} from 'react-native-event-listeners';
 import moment from "moment";
-import {OptionButton, LoadingIndicator} from "../../../Components/Modules";
+import {OptionButton, LoadingIndicator,Avatar} from "../../../Components/Modules";
 import {Icon, Button, TextBase, PlaceHolder} from "../../../Components/Common";
 import {List} from 'native-base';
 import {style} from "../Style";
@@ -223,13 +223,13 @@ export default class DrawerContainer extends PureComponent {
         const {fetching} = drawerReducer;
         const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE) || [];
         const praysInprogress = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [];
-        const {payload} = userReducer;
-        const {displayName = ""} = payload ||  {};
+        const {payload } = userReducer;
+        const {displayName = "", avatarURL} = payload ||  {};
         return (
             <View key={"main"} pointerEvents={fetching ? "none" : "auto"}>
                 <LoadingIndicator visible={fetching}/>
                 <View style={style.profileContainer}>
-                    <Icon largeX={true} name={IconName.avatar} large={true}/>
+                    <Avatar uri={avatarURL} largeX={true} />
                     <PlaceHolder/>
                     <TextBase large={true} bold={true}>{displayName}</TextBase>
                     <PlaceHolder/>

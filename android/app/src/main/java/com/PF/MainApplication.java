@@ -3,6 +3,8 @@ package com.PF;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.imagepicker.ImagePickerPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 import org.reactnative.camera.RNCameraPackage;
@@ -27,6 +29,7 @@ import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.fabric.crashlytics.RNFirebaseCrashlyticsPackage;
 import io.invertase.firebase.functions.RNFirebaseFunctionsPackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 
 
 import java.util.Arrays;
@@ -44,6 +47,8 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new RNFetchBlobPackage(),
+            new ImagePickerPackage(),
             new RNDeviceInfo(),
             new RNFusedLocationPackage(),
             new RNCameraPackage(),
@@ -57,6 +62,7 @@ public class MainApplication extends Application implements ReactApplication {
                     new RNFirebaseNotificationsPackage(),
                     new RNFirebaseMessagingPackage(),
                     new RNFirebaseCrashlyticsPackage(),
+                    new RNFirebaseStoragePackage(),
                     new RNFirebaseFunctionsPackage()
             );
         }

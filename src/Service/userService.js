@@ -4,6 +4,17 @@ import {response, PrayUser} from "../model";
 import firebase from 'react-native-firebase';
 import {collection, ErrorCodes, firestorePaths} from "../Constants";
 import I18n from "../I18n";
+import {
+    Platform,
+} from 'react-native';
+import FirebaseClient from '../Containers/firebaseClient';
+import RNFetchBlob from 'react-native-fetch-blob'
+
+// Prepare Blob support
+const Blob = RNFetchBlob.polyfill.Blob
+const fs = RNFetchBlob.fs
+window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+window.Blob = Blob
 
 class UserService extends baseService {
 
@@ -228,6 +239,46 @@ class UserService extends baseService {
         }).finally(res => {
             return new response(res)
         });
+    }
+
+    updateAvatar({uri, mime = 'img/jpg'}) {
+        const _userUID = firebase.auth().currentUser.uid;
+        const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+        let uploadBlob = null
+        const imageRef = FirebaseClient.storage().ref('images/avatars').child(`${_userUID}.jpg`)
+
+        return fs.readFile(uploadUri, 'base64')
+            .then((data) => {
+                return Blob.build(data, {type: `${mime};BASE64`})
+            })
+            .then((blob) => {
+                uploadBlob = blob;
+                return imageRef.put(blob._ref, {contentType: mime})
+            })
+            .then((res) => {
+                uploadBlob.close();
+                const path = firestorePaths.PROFILES;
+                if (res.state == "success") {
+                    const profileCollect = firebase.firestore().collection(path);
+                    return profileCollect.where("uid", "==", _userUID).get().then(colSnap => {
+                        colSnap.docs[0].ref.set({avatarURL: res.downloadURL}, {merge: true});
+                        const result = {
+                            data: {
+                                success: true,
+                                message: null,
+                                statusCode: 200,
+                            }
+                        }
+                        return result;
+                    })
+                }
+                else {
+                    throw  "failed";
+                }
+            })
+            .finally(res => {
+                return new response(res)
+            });
     }
 }
 

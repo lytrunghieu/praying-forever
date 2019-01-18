@@ -212,6 +212,33 @@ export function updateProfile({gender,birthDay,displayName}) {
     }
 }
 
+export function updateAvatar({uri, mime = 'img/jpg'}) {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.UPDATE_AVATAR_PENDING,
+        });
+
+        return new userService().updateAvatar({uri, mime}).then(res => {
+            if (res.success) {
+                dispatch({
+                    type: actionTypes.UPDATE_AVATAR_SUCCESS,
+                });
+
+                dispatch(getProfile({isUser:true}))
+            }
+            else {
+                dispatch({
+                    type: actionTypes.UPDATE_AVATAR_FAILED,
+                    data: {
+                        message: res.message,
+                    }
+                });
+            }
+            return res;
+        })
+    }
+}
+
 
 
 

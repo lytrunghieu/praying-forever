@@ -16,13 +16,14 @@ export default class ButtonComponent extends PureComponent {
 
 
     render() {
-        const {onPress, children, transparent, action, rounded, iconLeft, icon, text,large, center, ...rest } = this.props;
+        const {onPress, children, transparent, action, rounded, iconLeft, icon, text,large, center,disabled, ...rest } = this.props;
 
         if (rounded) {
             return (
                 <Button
-                    style={[styles.roundedStyle,center ? styles.center : null]}
+                    style={[styles.roundedStyle,center ? styles.center : null , disabled && styles.buttonDisabled]}
                     rounded small onPress={onPress}
+                    disabled={disabled}
                 >
                     {
                         iconLeft && icon && <Icon dark={false} name={icon}/>
@@ -45,24 +46,6 @@ export default class ButtonComponent extends PureComponent {
             </Button>
 
         );
-
-        // let {onPress, text, fit, width, textColor, customeBorder, backgroundColor, borderWidth, borderColor, height, borderRadius} = this.props;
-        //
-        // const styleContainerOption = {
-        //     width: width, backgroundColor: backgroundColor, height: height,
-        //     borderRadius: borderRadius,
-        // };
-        //
-        // const styleCustomBorder = customeBorder && {
-        //     borderWidth: borderWidth, borderColor: borderColor
-        // };
-        //
-        // return (
-        //     <TouchableOpacity onPress={() => onPress()}
-        //                       style={[styles.container, styleContainerOption, styleCustomBorder, fit && styles.fit]}>
-        //         <Text style={[styles.labelText, {color: textColor}]}>{text}</Text>
-        //     </TouchableOpacity>
-        // )
     }
 }
 
@@ -83,6 +66,10 @@ ButtonComponent.propTypes = {
 
 const styles = EStyleSheet.create({
 
+
+    buttonDisabled: {
+        backgroundColor: Colors.disable,
+    },
     // backgroundColor :{
     //   backgroundColor:Colors.black
     // },

@@ -15,6 +15,7 @@ import ConfirmModal from "./ConfirmModal";
 import EmptyHolder from "./EmptyHolder";
 import NetworkBar from "./NetworkBar";
 import NotificationItem from "./NotificationItem";
+import Avatar from "./Avatar";
 
 
 export {
@@ -34,5 +35,6 @@ export {
     ConfirmModal,
     EmptyHolder,
     NetworkBar,
-    NotificationItem
+    NotificationItem,
+    Avatar
 };

@@ -159,6 +159,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fetch-blob')
+    compile project(':react-native-image-picker')
     compile project(':react-native-device-info')
 
     compile(project(':react-native-geolocation-service')) {
@@ -184,6 +186,7 @@ dependencies {
     implementation "com.google.firebase:firebase-core:16.0.3"
     implementation "com.google.firebase:firebase-auth:16.0.3"
     implementation "com.google.firebase:firebase-database:16.0.2"
+    implementation "com.google.firebase:firebase-storage:16.0.1"
     implementation "com.google.firebase:firebase-firestore:17.1.0"
     implementation "com.google.firebase:firebase-messaging:17.3.2"
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'

@@ -15,6 +15,7 @@ export default class PrayUser {
         this.isAnonymous = data.isAnonymous || false;
         this.birthDay = data.birthDay || new Date();
         this.gender = data.gender || 0; // 0 is male
+        this.avatarURL = data.avatarURL || undefined; // 0 is male
     }
 
 }
