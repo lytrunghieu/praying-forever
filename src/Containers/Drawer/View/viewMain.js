@@ -80,21 +80,6 @@ export default class DrawerContainer extends PureComponent {
                     break;
                 }
 
-                case EventRegisterTypes.DELETE_NOTIFICATION : {
-                    const {uid} = params;
-                    const httpsCallable = firebase.functions(firebase.app()).httpsCallable("deleteNotification");
-                    httpsCallable({userUID: firebase.auth().currentUser.uid, notifUID: uid})
-                        .then(data => {
-                        })
-                        .catch(httpsError => {
-                            console.log("ERROR :", httpsError);
-                            console.log(httpsError.code);
-                            console.log(httpsError.message);
-                            console.log(httpsError.details.errorDescription);
-                        });
-                    break;
-                }
-
                 case EventRegisterTypes.UPDATE_LIVE_STATUS: {
                     const {prayerUID, live} = params;
                     if (prayerUID) {
@@ -110,6 +95,16 @@ export default class DrawerContainer extends PureComponent {
                     }
                     break;
                 }
+
+                case EventRegisterTypes.NAVIGATE_SCREEN : {
+
+                    const {screen , params : _params} = params;
+                    if (screen) {
+                      this.props.navigation.navigate(screen,_params)
+                    }
+                    break;
+                }
+
 
                 default : {
                     break;
@@ -193,7 +188,7 @@ export default class DrawerContainer extends PureComponent {
         const {userReducer} = this.props;
         const {payload} = userReducer;
         if (firebase.auth().currentUser &&  payload) {
-            this.props.navigation.navigate(ScreenKey.PROFILE, {userUID: firebase.auth().currentUser.uid , user : payload });
+            this.props.navigation.navigate(ScreenKey.PROFILE, {userUID: firebase.auth().currentUser.uid});
         }
 
     }

@@ -174,10 +174,6 @@ export default class PrayForOther extends PureComponent {
         this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, {item, uid: item.uid});
     }
 
-    onPressFollowing(item) {
-        commonUtils.sendEvent({type: EventRegisterTypes.UPDATE_FOLLOWING, params: item})
-    }
-
     onPressReport(item) {
     }
 

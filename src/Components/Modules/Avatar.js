@@ -1,10 +1,10 @@
 // Libraries
 import React, {PureComponent} from 'react';
-import {Image, View} from 'react-native';
+import {Image, View, TouchableOpacity} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
 import {Colors, Fonts, IconName} from '../../Themes';
-import {Button, TextBase, Icon} from "../Common";
+import {Icon} from "../Common";
 import {URL} from "../../Constants"
 
 export default class Avatar extends PureComponent {
@@ -12,7 +12,6 @@ export default class Avatar extends PureComponent {
     constructor(props) {
         super(props);
         this.userUID = props.uid;
-
         this.state = {
             uri: props.uri || URL.avatar.replace("{userUID}", this.userUID).replace("{t}", new Date().getTime()),
         }
@@ -20,10 +19,10 @@ export default class Avatar extends PureComponent {
     }
 
 
-    componentWillReceiveProps(nextProps){
-        if(nextProps.uri !== this.props.uri){
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.uri !== this.props.uri) {
             this.setState({
-                uri : nextProps.uri
+                uri: nextProps.uri
             });
         }
     }
@@ -39,7 +38,7 @@ export default class Avatar extends PureComponent {
     }
 
     render() {
-        const {large, largeX, medium, smallest, ...rest} = this.props;
+        const {large, largeX, medium, smallest, onPress, ...rest} = this.props;
         let size = 24;
         let _color = Colors.black;
         if (large) {
@@ -61,8 +60,11 @@ export default class Avatar extends PureComponent {
         }
         const {uri} = this.state;
         return (
-            <View style={{width: size, height: size}}>
-                <Icon  name={IconName.avatar} large={large} largeX={largeX} />
+            <TouchableOpacity style={{width: size, height: size}}
+                              disabled={onPress ? false : true}
+                              onPress={onPress ? onPress : () =>{}}
+            >
+                <Icon name={IconName.avatar} large={large} largeX={largeX}/>
                 <Image
                     source={{
                         uri: uri,
@@ -70,7 +72,7 @@ export default class Avatar extends PureComponent {
                     style={[styles.container, {width: size, height: size}]}
                     resizeMode="cover"
                 />
-            </View>
+            </TouchableOpacity>
         );
     }
 }
@@ -78,7 +80,8 @@ export default class Avatar extends PureComponent {
 Avatar.defaultProps = {};
 
 Avatar.propTypes = {
-    uid: PropTypes.string
+    uid: PropTypes.string,
+    onPress: PropTypes.func
 }
 
 

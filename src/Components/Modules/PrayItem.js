@@ -6,12 +6,11 @@ import PropTypes from 'prop-types';
 
 // Utilities
 import {Colors, Fonts, IconName} from '../../Themes';
-import {TextIcon} from "./index";
 import {TextBase, Button, Icon} from "../Common";
 import moment from "moment";
 import I18n from "../../I18n";
 import {CommonUtils} from "../../Utils";
-import {EventRegisterTypes} from "../../Constants";
+import {EventRegisterTypes,ScreenKey} from "../../Constants";
 import firebase from "react-native-firebase";
 import Avatar from "./Avatar";
 
@@ -24,6 +23,7 @@ export default class PrayItem extends PureComponent {
         this.swipeable = null;
         this.recenter = this.recenter.bind(this);
         this.onPress = this.onPress.bind(this);
+        this.onPressAvatar = this.onPressAvatar.bind(this);
     }
 
     recenter() {
@@ -36,7 +36,16 @@ export default class PrayItem extends PureComponent {
     }
 
     onPressMoreAction = (data) => () => {
-        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_PRAYER_OPTION, params: {data}});
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_PRAYER_OPTION, params: data});
+    }
+
+    onPressAvatar() {
+        const {item = {}} = this.props;
+        const {owner = {}} = item;
+        const {uid} = owner;
+        CommonUtils.sendEvent({type: EventRegisterTypes.NAVIGATE_SCREEN, params: {
+            screen : ScreenKey.PROFILE,
+            params :{userUID: uid}}});
     }
 
 
@@ -89,6 +98,7 @@ export default class PrayItem extends PureComponent {
                 <CardItem>
                     <Left>
                         <Avatar
+                            onPress={this.onPressAvatar}
                             uid={uid}
                             large={true}
                         />

@@ -7,8 +7,9 @@ import {Colors, Fonts, IconName} from '../../Themes';
 import {TextBase, Button, Icon} from "../Common";
 import moment from "moment";
 import I18n from "../../I18n";
-import { contentCodes} from "../../Constants";
+import { contentCodes,EventRegisterTypes,ScreenKey} from "../../Constants";
 import Avatar from "./Avatar";
+import {CommonUtils} from "../../Utils";
 
 
 import {Left, Body, List, ListItem} from 'native-base';
@@ -20,6 +21,7 @@ export default class NotificationItem extends PureComponent {
         this.swipeable = null;
         this._onPress = this._onPress.bind(this);
         this._onPressMore = this._onPressMore.bind(this);
+        this.onPressAvatar = this.onPressAvatar.bind(this);
     }
 
     _onPressMore() {
@@ -30,6 +32,15 @@ export default class NotificationItem extends PureComponent {
     _onPress() {
         const {item, onPress} = this.props;
         onPress(item);
+    }
+
+    onPressAvatar() {
+        const {item = {}} = this.props;
+        const {from = {}} = item;
+        const {uid} = from;
+        CommonUtils.sendEvent({type: EventRegisterTypes.NAVIGATE_SCREEN, params: {
+            screen : ScreenKey.PROFILE,
+            params :{userUID: uid}}});
     }
 
     render() {
@@ -59,7 +70,9 @@ export default class NotificationItem extends PureComponent {
                 <ListItem avatar noBorder iconLeft button={true} onPress ={this._onPress}>
                     <Left
                     >
-                        <Avatar uid={uid} large={true}/>
+                        <Avatar
+                            onPress={this.onPressAvatar}
+                            uid={uid} large={true}/>
                     </Left>
                     <Body
                         style={styles.bodyWrapper}

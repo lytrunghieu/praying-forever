@@ -25,20 +25,23 @@ export default class Profile extends PureComponent {
 
     constructor(props) {
         super(props);
+        const {userReducer} = props;
+        const {payload = {}} = userReducer;
         const dataPassed = props.navigation.state.params;
-        const {user, userUID} = dataPassed;
+        const {userUID} = dataPassed;
         this.uid = userUID;
-        this.userOri = user;
-        this.isUser = user ? true : false;
+        this.isUser = userUID == payload.uid ? true : false;
+        this.userOri =  this.isUser ? payload : null;
+
         this.onPressBack = this.onPressBack.bind(this);
         this.state = {
             loading: true,
-            displayName: user && user.displayName,
+            displayName: this.userOri && this.userOri.displayName,
             validDisplayName: true,
-            gender: user && user.gender,
-            birthDay: user && user.birthDay,
+            gender: this.userOri && this.userOri.gender,
+            birthDay: this.userOri && this.userOri.birthDay,
             isChanged: false,
-            avatarURL:  user.avatarURL,
+            avatarURL:  this.userOri && this.userOri.avatarURL,
         };
 
         this.leftHeader = {
@@ -86,7 +89,7 @@ export default class Profile extends PureComponent {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextState.displayName != this.state.displayName || nextState.gender != this.state.gender || nextState.birthDay != this.state.birthDay) {
+        if ((nextState.displayName != this.state.displayName || nextState.gender != this.state.gender || nextState.birthDay != this.state.birthDay) && this.userOri) {
             if (nextState.displayName != this.userOri.displayName || nextState.gender != this.userOri.gender || moment(nextState.birthDay).diff(this.userOri.birthDay)) {
                 this.setState({
                     isChanged: true
@@ -176,14 +179,15 @@ export default class Profile extends PureComponent {
         const {userActions} = this.props;
         userActions.getProfile({userUID: this.uid, isUser: this.isUser}).then(res => {
             if (res.success && !this.isUser) {
-                const {displayName, gender, birthDay} = res.data;
+                const {displayName, gender, birthDay,avatarURL} = res.data;
+                this.userOri = res.data;
                 this.setState({
                     displayName,
                     gender,
                     birthDay,
-                    isChanged: false
+                    isChanged: false,
+                    avatarURL
                 });
-                this.userOri = res.data;
             }
         })
     }
@@ -215,7 +219,7 @@ export default class Profile extends PureComponent {
                     this.userOri ?
                         <Content>
                             <View style={{alignSelf: "center", paddingBottom: 10, paddingTop: 10}}>
-                                <Avatar ref="_avatar" uri={avatarURL} largeX={true}/>
+                                <Avatar uid={this.uid} ref="_avatar" uri={avatarURL} largeX={true}/>
                                 <PlaceHolder/>
                                 {
                                     this.isUser &&
@@ -224,12 +228,11 @@ export default class Profile extends PureComponent {
                                 }
 
                             </View>
-                            <View style={[styles.form]}>
+                            <View style={[styles.form]} pointerEvents={ !this.isUser ? "none" : "auto"} >
                                 <TextBase info={true}>{I18n.t("displayName")}</TextBase>
                                 <FormValidate
                                     defaultValue={displayName}
                                     onChangeText={this.onChangeTextInput.bind(this, inputKey.DISPLAY_NAME.name)}
-                                    editable={this.isUser || false}
                                 />
                                 <TextBase info={true}>{I18n.t("gender")}</TextBase>
                                 <Checkbox text={I18n.t("male")} onPress={this.onPressGender}
