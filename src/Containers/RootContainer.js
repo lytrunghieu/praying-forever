@@ -184,7 +184,7 @@ class RootContainer extends PureComponent {
 
 
         return (
-            <View style={styles.container} pointerEvents = {fetching ? "none":"auto"}>
+            <View style={styles.container}>
                 <StatusBar backgroundColor={Colors.black} barStyle={'light-content'}/>
                 <SafeAreaView style={styles.container}>
                     <NetworkBar online={!isOffline}/>

@@ -36,7 +36,7 @@ export default class PrayItem extends PureComponent {
     }
 
     onPressMoreAction = (data) => () => {
-        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_PRAYER_OPTION, params: data});
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_PRAYER_OPTION, params: {data}});
     }
 
     onPressAvatar() {
