@@ -43,10 +43,66 @@ function addNotification({userUID, payload}) {
     });
 }
 
-function getUserProfile({userUID}={}) {
+function deletePublicPrayer({prayerUID, userUID}) {
+    if (prayerUID) {
+        let path = paths.locationPrayer.replace("{prayerUID}", prayerUID);
+        return firestore.doc(path).delete().then(res => {
+            return {success: true, statusCode: 200, message: "request success"};
+        }).catch(error => {
+            console.log("LOG ERROR", error);
+            throw new functions.https.HttpsError(
+                "unknown", // code
+                'request failed', // message
+                {
+                    success: false,
+                    statusCode: 400,
+                    body: data,
+                    errorDescription: error.toString()
+                }
+            );
+        })
+    }
+    else {
+        let path = paths.locationPrayers;
+        return firestore.collection(path).get().then(colSnap => {
+            if (colSnap.docs) {
+                let batch = firestore.batch();
+                colSnap.docs.map(doc => {
+                    const {owner = {}} = doc.data();
+                    const {uid = ""} = owner;
+                    if (uid === userUID) {
+                        batch.delete(doc.ref)
+                    }
+
+                });
+                return batch.commit().then(write => {
+                    return {success: true, statusCode: 200, message: "request success"};
+                });
+            }
+            else {
+                return {success: false, statusCode: 401, message: "not any location"};
+            }
+        }).catch(error => {
+            console.log("LOG ERROR", error);
+            throw new functions.https.HttpsError(
+                "unknown", // code
+                'request failed', // message
+                {
+                    success: false,
+                    statusCode: 400,
+                    body: data,
+                    errorDescription: error.toString()
+                }
+            );
+        })
+    }
+}
+
+
+function getUserProfile({userUID} = {}) {
     const path = paths.profileUsers;
-    return firestore.collection(path).where("uid","==",userUID).get().then(colSnap => {
-        return {success: true, statusCode: 200, data : colSnap.docs[0].data()}
+    return firestore.collection(path).where("uid", "==", userUID).get().then(colSnap => {
+        return {success: true, statusCode: 200, data: colSnap.docs[0].data()}
 
     }).catch(error => {
         console.log("LOG ERROR", error);
@@ -61,10 +117,11 @@ function getUserProfile({userUID}={}) {
 exports.updateStatusPrayer = functions.https.onCall(async data => {
     const {userUID, prayerUID} = data;
     const path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
-    const userProfile =  await getUserProfile({userUID});
-    if(!userProfile.success || !userProfile.data){
+    const userProfile = await getUserProfile({userUID});
+    if (!userProfile.success || !userProfile.data) {
         return {success: false, statusCode: 401, message: "not found user"};
     }
+    deletePublicPrayer({userUID});
 
     return firestore
         .doc(path)
@@ -72,7 +129,7 @@ exports.updateStatusPrayer = functions.https.onCall(async data => {
         .then(doc => {
             const {following, title, complete, status} = doc.data();
             const docRef = doc.ref;
-            const promiseUpdateStatus = docRef.update("status", status === 1 ? 0 : 1);
+            const promiseUpdateStatus = docRef.update("status", status === 1 ? 0 : 1 ,"isLive", null);
             if (!complete && status === 0) {
                 const promiseUpdateComplete = docRef.update("complete", true);
                 const titleNotif = "Lời Cầu Nguyện Đã Ứng Nghiệm";
@@ -82,16 +139,16 @@ exports.updateStatusPrayer = functions.https.onCall(async data => {
                     const pathToken = "tokens/{userUID}".replace("{userUID}", fol);
                     const paramAddNotification = {
                         payload: createModel.notificationModel({
-                            contentCode:"prayer/prayer-finished",
-                            from  :{
-                                displayName : userProfile.data.displayName,
-                                uid : userProfile.data.uid
+                            contentCode: "prayer/prayer-finished",
+                            from: {
+                                displayName: userProfile.data.displayName,
+                                uid: userProfile.data.uid
                             },
-                            created:"",
-                            isRead : false,
-                            uid:"",
-                            typeCode : "private",
-                            prayer : doc.data()
+                            created: "",
+                            isRead: false,
+                            uid: "",
+                            typeCode: "private",
+                            prayer: doc.data()
                         }),
                         userUID: fol
                     };
@@ -182,15 +239,15 @@ exports.deleteNotification = functions.https.onCall((data) => {
 
 exports.deletePrayer = functions.https.onCall((data) => {
 
-    const {userUID, prayerUID,status} = data;
+    const {userUID, prayerUID, status} = data;
     let path = paths.prayers.replace("{userUID}", userUID);
 
     if (prayerUID) {
-        if(Array.isArray(prayerUID) && prayerUID.length > 0){
+        if (Array.isArray(prayerUID) && prayerUID.length > 0) {
             let batch = firestore.batch();
             prayerUID.forEach(uid => {
                 let path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", uid);
-                 batch.delete(firestore.doc(path).ref);
+                batch.delete(firestore.doc(path).ref);
             });
             return batch.commit().then(write => {
                 return {success: true, statusCode: 200, message: "request success"};
@@ -202,7 +259,7 @@ exports.deletePrayer = functions.https.onCall((data) => {
                 .doc(path)
                 .delete()
                 .then(doc => {
-
+                    deletePublicPrayer({prayerUID});
                     return {success: true, statusCode: 200, message: "request success"};
                 }).catch(error => {
                     console.log("LOG ERROR", error);
@@ -218,10 +275,12 @@ exports.deletePrayer = functions.https.onCall((data) => {
         return firestore.collection(path).get().then(snap => {
             let batch = firestore.batch();
             snap.forEach(docSnap => {
-                if(docSnap.data().status === status){
+                if (docSnap.data().status === status) {
                     batch.delete(docSnap.ref)
                 }
             });
+
+            deletePublicPrayer({userUID});
             return batch.commit().then(write => {
                 return {success: true, statusCode: 200, message: "request success"};
             });
@@ -442,7 +501,7 @@ exports.updateLiveStatus = functions.https.onCall(async (data = {}) => {
                     else {
                         return docSnap.ref.update("isLive", createModel.createLocationModel(location)).then(docRef => {
                             let path = paths.locationPrayer.replace("{prayerUID}", prayerUID);
-                            let prayer = Object.assign({}, docSnap.data(), {isLive : createModel.createLocationModel(location)});
+                            let prayer = Object.assign({}, docSnap.data(), {isLive: createModel.createLocationModel(location)});
                             return firestore.doc(path).get().then(_docSnap => {
                                 return _docSnap.ref.set(prayer).then(_docRef => {
                                     return {success: true, statusCode: 200, message: "request success"};
@@ -482,37 +541,7 @@ exports.updateLiveStatus = functions.https.onCall(async (data = {}) => {
                     if (!live) {
                         if (isLive) {
                             return docSnap.ref.update("isLive", null).then(docRef => {
-                                let path = paths.locationPrayer.replace("{prayerUID}", prayerUID);
-                                return firestore.doc(path).get().then(_docSnap => {
-                                    let prayer = Object.assign({}, docSnap.data(), {isLive : null});
-                                    return _docSnap.ref.delete().then(_docRef => {
-                                        return {success: true, statusCode: 200, message: "request success"};
-                                    }).catch(error => {
-                                        console.log("LOG ERROR", error);
-                                        throw new functions.https.HttpsError(
-                                            "unknown", // code
-                                            'request failed', // message
-                                            {
-                                                success: false,
-                                                statusCode: 400,
-                                                body: data,
-                                                errorDescription: error.toString()
-                                            }
-                                        );
-                                    })
-                                }).catch(error => {
-                                    console.log("LOG ERROR", error);
-                                    throw new functions.https.HttpsError(
-                                        "unknown", // code
-                                        'request failed', // message
-                                        {
-                                            success: false,
-                                            statusCode: 400,
-                                            body: data,
-                                            errorDescription: error.toString()
-                                        }
-                                    );
-                                })
+                                return deletePublicPrayer({prayerUID})
                             }).catch(error => {
                                 console.log("LOG ERROR", error);
                                 throw new functions.https.HttpsError(

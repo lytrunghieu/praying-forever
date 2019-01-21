@@ -51,3 +51,30 @@ export function editPrayer(params) {
         });
     }
 }
+
+export function getTemplatePrayer() {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.GET_TEMPLATE_PRAYER_PENDING,
+        });
+        return new prayerService().getTemplatePrayer().then(res => {
+            if (res.success) {
+                dispatch({
+                    type: actionTypes.GET_TEMPLATE_PRAYER_SUCCESS,
+                    data : {
+                        payload: res.data
+                    }
+                });
+            }
+            else {
+                dispatch({
+                    type: actionTypes.GET_TEMPLATE_PRAYER_FAILED,
+                    data: {
+                        message: res.message
+                    }
+                });
+            }
+            return res;
+        });
+    }
+}

@@ -16,7 +16,7 @@ import {
 import moment from "moment";
 import firebase, {NotificationOpen} from 'react-native-firebase';
 import {Pray} from "../../../model";
-import {StatusOfPray} from "../../../Constants";
+import {StatusOfPray, titlePrayerCode} from "../../../Constants";
 
 import {Header, ButtonFooter, Container, Content} from "../../../Components/Modules";
 
@@ -34,7 +34,8 @@ export default class CreatePraying extends PureComponent {
     constructor(props) {
         super(props);
         const dataPassed = props.navigation.state.params;
-
+        const {createPrayerReducer} = this.props;
+        const {payload} = createPrayerReducer;
         //Need pass to handle edit action
         this.isEdit = dataPassed ? true : false;
         this.uid = dataPassed && dataPassed.uid || null;
@@ -42,25 +43,7 @@ export default class CreatePraying extends PureComponent {
         this.owner = dataPassed && dataPassed.owner;
         this.status = dataPassed && dataPassed.status;
 
-        this.state = {
-            title: dataPassed && dataPassed.title || "",
-            content: dataPassed && dataPassed.content || "",
-            options: [
-                {
-                    text: I18n.t("health"),
-                    onPress: this.onSelectOption.bind(this, 0),
-                    isChecked: false,
-                },
-                {
-                    text: I18n.t("economic"),
-                    onPress: this.onSelectOption.bind(this, 1),
-                    isChecked: false,
-                },
-            ],
-            isReminder: dataPassed && dataPassed.isReminder || false,
-            timeReminder: dataPassed && dataPassed.timeReminder || moment().valueOf(),
-            showDateTimePickerIOS: false
-        };
+
         this.onPressBack = this.onPressBack.bind(this);
         this.onChangeText = this.onChangeText.bind(this);
         this.onChangeContent = this.onChangeContent.bind(this);
@@ -74,15 +57,95 @@ export default class CreatePraying extends PureComponent {
         this.openTimePickerAndroid = this.openTimePickerAndroid.bind(this);
         this.onDateChange = this.onDateChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.generateOption = this.generateOption.bind(this);
+        this.getTemplate = this.getTemplate.bind(this);
         this.userPray = collect.doc(firebase.auth().currentUser.uid);
-
         this.leftHeader = {
             icon: IconName.back,
             onPress: this.onPressBack
         };
+
+        this.state = {
+            title: dataPassed && dataPassed.title || "",
+            content: dataPassed && dataPassed.content || "",
+            options: this.generateOption(payload),
+            isReminder: dataPassed && dataPassed.isReminder || false,
+            timeReminder: dataPassed && dataPassed.timeReminder || moment().valueOf(),
+            showDateTimePickerIOS: false
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.createPrayerReducer.payload !== this.props.createPrayerReducer.payload) {
+            this.setState({
+                options: this.generateOption(nextProps.createPrayerReducer.payload)
+            })
+        }
+    }
+
+    componentDidMount() {
+        this.getTemplate();
     }
 
     //endregion
+
+
+    generateOption(data) {
+
+        const _data = [];
+        if (Array.isArray(data) && data.length) {
+            data.map(e =>{
+                _data.push(e);
+            })
+        }
+
+        if (Array.isArray(_data) && _data.length) {
+            return _data.map(e => {
+                let text = "";
+                switch (e.code) {
+                    case  titlePrayerCode.HEALTH : {
+                        text = I18n.t("health");
+                        break;
+                    }
+
+                    case  titlePrayerCode.ECONOMIC : {
+                        text = I18n.t("economic");
+                        break;
+                    }
+
+                    case  titlePrayerCode.CAREER : {
+                        text = I18n.t("career");
+                        break;
+                    }
+
+                    case  titlePrayerCode.LEARNING : {
+                        text = I18n.t("learning");
+                        break;
+                    }
+
+                    case  titlePrayerCode.MARRIAGE : {
+                        text = I18n.t("marriage");
+                        break;
+                    }
+                }
+
+                return {
+                    text: text,
+                    code: e.code,
+                    onPress: this.onSelectOption.bind(this, e.code),
+                    isChecked: false,
+                }
+            });
+        }
+        else {
+            return [];
+        }
+    }
+
+    getTemplate() {
+        const {action} = this.props;
+        action.getTemplatePrayer();
+    }
 
     onSubmitEditingTitle() {
         this.refs["_description"].focus();
@@ -145,17 +208,21 @@ export default class CreatePraying extends PureComponent {
         }
     }
 
-    onSelectOption(index) {
-        let options = [...this.state.options];
-        if (options[index]) {
-            options.map(op => {
+    onSelectOption(code) {
+        let options =  [...this.state.options];
+
+        options.map(op => {
+            if (op.code == code) {
+                op.isChecked = true;
+            }
+            else {
                 op.isChecked = false;
-            });
-            options[index].isChecked = true;
-            this.setState({
-                options: options
-            });
-        }
+            }
+            return op;
+        });
+        this.setState({
+            options: options
+        });
     }
 
     onPressRightIconInputTitle() {

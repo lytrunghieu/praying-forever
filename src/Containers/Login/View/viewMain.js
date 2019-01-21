@@ -161,7 +161,7 @@ export default class LoginScreen extends PureComponent {
     //region RENDERING
 
     render() {
-        const {validEmail, validPassword} = this.state;
+        const {validEmail, validPassword, email, password} = this.state;
         const {loginReducer} = this.props;
         const {fetching} = loginReducer;
 
@@ -210,7 +210,7 @@ export default class LoginScreen extends PureComponent {
                     </Content>
                     <ButtonFooter
                         onPress={this.onPressLogin}
-                        disabled={fetching} text={I18n.t("logIn").toUpperCase()}
+                        disabled={fetching || !email || !password} text={I18n.t("logIn").toUpperCase()}
                     />
                 </Container>
             ]

@@ -4,7 +4,7 @@
 import Immutable from 'seamless-immutable';
 
 export default initState = Immutable({
-    payload: null,
+    payload: [],
     fetching: false,
     success: false,
     message: null,

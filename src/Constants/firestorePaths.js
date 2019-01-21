@@ -3,4 +3,6 @@ export default  {
     NOTIFICATION :"notification/{userUID}/data/{notifUID}",
     PROFILE :"profile/{userUID}",
     PROFILES :"profile",
+    TEMPLATE_PRAYER :"template/prayer",
+
 }

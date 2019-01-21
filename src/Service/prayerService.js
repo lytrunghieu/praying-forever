@@ -13,6 +13,7 @@ import {Pray, response} from "../model";
 import {FOLLOWING, PUBLIC_PRAYER} from "./errorCode";
 import firebase from "react-native-firebase";
 import geolib from "geolib";
+import {firestorePaths} from "../Constants";
 
 
 class PrayerService extends baseService {
@@ -29,7 +30,7 @@ class PrayerService extends baseService {
         return super.executeHttp(UPDATE_STATUS_PRAYER, {prayerUID: params});
     }
 
-    deletePrayer({prayerUID ,status = 0 }) {
+    deletePrayer({prayerUID, status = 0}) {
         return super.executeHttp(DELETE_PRAYER, {prayerUID: prayerUID, status});
     }
 
@@ -105,7 +106,7 @@ class PrayerService extends baseService {
 
     getPrayersNearby({distance, location}) {
         const collect = firebase.firestore().collection('location');
-        return collect.get({source:"server"}).then(snapshot => {
+        return collect.get({source: "server"}).then(snapshot => {
             let prayList = [];
             snapshot.forEach(e => {
                 let data = e.data();
@@ -122,20 +123,38 @@ class PrayerService extends baseService {
                 array: prayList
             });
 
-            const result ={
-                data :{
-                    success : true,
-                    data :prayList
+            const result = {
+                data: {
+                    success: true,
+                    data: prayList
                 }
             };
 
             return result;
-        }).finally(res =>{
+        }).finally(res => {
             return new response(res);
         })
 
     }
 
+    getTemplatePrayer() {
+        const doc = firebase.firestore().doc(firestorePaths.TEMPLATE_PRAYER);
+        return doc.get().then(docSnap => {
+            const result = {
+                data: {
+                    success: true,
+                    data: null
+                }
+            };
+            const {title} = docSnap.data();
+            if (Array.isArray(title)) {
+                result.data.data = title;
+            }
+            return result;
+        }).finally(res => {
+            return new response(res);
+        })
+    }
 }
 
 export default PrayerService
