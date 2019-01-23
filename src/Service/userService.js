@@ -103,36 +103,26 @@ class UserService extends baseService {
     }
 
     register({email, password, firstName, lastName, birthDay, gender}) {
-        return super.executeHttp(REGISTER, {email, password, firstName, lastName, birthDay, gender})
-            .catch(err => {
-                const result = {
-                    data: {
-                        statusCode: 400,
-                        message: I18n.t("unknowError")
-                    }
-                }
-                switch (err.code) {
+        return super.executeHttp(REGISTER, {email, password, firstName, lastName, birthDay, gender}).then(res => {
+            if (!res.success) {
+                switch (res.code) {
                     case ErrorCodes.AUTH_USER_NOT_FOUND : {
-                        result.data.statusCode = 401;
-                        result.data.message = I18n.t("userNotFoundError");
+                        res.message = I18n.t("userNotFoundError");
                         break;
                     }
 
                     case ErrorCodes.AUTH_INVALID_EMAIL : {
-                        result.data.statusCode = 401;
-                        result.data.message = I18n.t("emailInvalid");
+                        res.message = I18n.t("emailInvalid");
                         break;
                     }
 
                     case ErrorCodes.AUTH_NETWORK_REQUEST_FAILED : {
-                        result.data.statusCode = 401;
-                        result.data.message = I18n.t("networkError");
+                        res.message = I18n.t("networkError");
                         break;
                     }
 
                     case ErrorCodes.AUTH_EMAIL_ALREADY_IS_EXIST : {
-                        result.data.statusCode = 401;
-                        result.data.message = I18n.t("emailAlreadyUse");
+                        res.message = I18n.t("emailAlreadyUse");
                         break;
                     }
 
@@ -141,8 +131,9 @@ class UserService extends baseService {
                     }
 
                 }
-                return result;
-            })
+            }
+            return res;
+        });
     }
 
     sendForgotPassword({email}) {

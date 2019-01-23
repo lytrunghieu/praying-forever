@@ -16,7 +16,7 @@ export default class ActionPrayerModal extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            data : []
+            data: []
         };
         this.onClosed = this.onClosed.bind(this);
     }
@@ -24,46 +24,46 @@ export default class ActionPrayerModal extends PureComponent {
     componentWillReceiveProps(nextProps) {
     }
 
-    componentWillUpdate(nextProps, nextState){
+    componentWillUpdate(nextProps, nextState) {
     }
 
     //endregion
 
-    onClosed(){
+    onClosed() {
         this.setState({
-            data : []
+            data: []
         })
     }
 
     //region handle Action Sheet
 
     onPressUpdateFollowingStatus = (data, follow) => () => {
-        const {uid : prayerUID, owner ={}} = data;
-        const {uid : userOtherUID } = owner;
-        CommonUtils.sendEvent({type : EventRegisterTypes.FOLLOWING_PRAYER , params :{prayerUID, userOtherUID,follow}})
+        const {uid: prayerUID, owner = {}} = data;
+        const {uid: userOtherUID} = owner;
+        CommonUtils.sendEvent({type: EventRegisterTypes.FOLLOWING_PRAYER, params: {prayerUID, userOtherUID, follow}})
     }
 
     onPressUpdatePrayerStatus = (data) => () => {
-        const {uid : prayerUID} = data;
-        CommonUtils.sendEvent({type : EventRegisterTypes.UPDATE_PRAYER_STATUS , params :{prayerUID }})
+        const {uid: prayerUID} = data;
+        CommonUtils.sendEvent({type: EventRegisterTypes.UPDATE_PRAYER_STATUS, params: {prayerUID}})
     }
 
     onPressEdit() {
-        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, this.params );
+        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, this.params);
     }
 
     onPressDelete = (params) => () => {
-        CommonUtils.sendEvent({type : EventRegisterTypes.SHOW_CONFIRM_MODAL , params : {data: params}});
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_CONFIRM_MODAL, params: {data: params}});
     }
 
     onPressShare = (data) => () => {
         console.log("  on Share");
-        CommonUtils.sendEvent({type : EventRegisterTypes.SHOW_MODAL_QR_CODE , params :{data : data}})
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_MODAL_QR_CODE, params: {data: data}})
     }
 
-    _onPressChangeLiveStatus = (data,live) =>() => {
-        const  {uid : prayerUID} = data;
-        CommonUtils.sendEvent({type : EventRegisterTypes.UPDATE_LIVE_STATUS , params :{prayerUID, live}})
+    _onPressChangeLiveStatus = (data, live) => () => {
+        const {uid: prayerUID} = data;
+        CommonUtils.sendEvent({type: EventRegisterTypes.UPDATE_LIVE_STATUS, params: {prayerUID, live}})
     }
 
     //endregion
@@ -73,7 +73,7 @@ export default class ActionPrayerModal extends PureComponent {
         this.refs["moreAction"].open();
         this.params = data;
         this.setState({
-            data : this.generateOption(data)
+            data: this.generateOption(data)
         });
     }
 
@@ -95,12 +95,12 @@ export default class ActionPrayerModal extends PureComponent {
 
                     if (isLive) {
                         options = options.concat(
-                            {text: I18n.t('disablePublic'), onPress: this._onPressChangeLiveStatus(data,false)},
+                            {text: I18n.t('disablePublic'), onPress: this._onPressChangeLiveStatus(data, false)},
                         );
                     }
                     else {
                         options = options.concat(
-                            {text: I18n.t('public'), onPress: this._onPressChangeLiveStatus(data,true)},
+                            {text: I18n.t('public'), onPress: this._onPressChangeLiveStatus(data, true)},
                         );
                     }
 
@@ -112,19 +112,25 @@ export default class ActionPrayerModal extends PureComponent {
                 }
             }
             else {
-                if(Array.isArray(following) && following.length > 0){
+                if (Array.isArray(following) && following.length > 0) {
                     let hadFollow = following.find(e => e && e === firebase.auth().currentUser.uid);
                     if (hadFollow) {
                         options = options.concat([
-                            {text: I18n.t('unFollowing'), onPress: this.onPressUpdateFollowingStatus(data,false)},
+                            {text: I18n.t('unFollowing'), onPress: this.onPressUpdateFollowingStatus(data, false)},
                         ]);
                     }
                     else {
                         options = options.concat([
-                            {text: I18n.t('following'), onPress: this.onPressUpdateFollowingStatus(data,true)},
+                            {text: I18n.t('following'), onPress: this.onPressUpdateFollowingStatus(data, true)},
                         ]);
-
                     }
+                }
+
+                else {
+                    options = options.concat([
+                        {text: I18n.t('following'), onPress: this.onPressUpdateFollowingStatus(data, true)},
+                    ]);
+
                 }
             }
         }
@@ -140,7 +146,7 @@ export default class ActionPrayerModal extends PureComponent {
         const {data} = this.state;
         return (
             <ActionSheet
-                onClosed ={this.onClosed}
+                onClosed={this.onClosed}
                 key="moreAction"
                 options={data}
                 ref={"moreAction"}
@@ -155,7 +161,7 @@ export default class ActionPrayerModal extends PureComponent {
 ActionPrayerModal.defaultProps = {
     onPressShare: () => {
     },
-    onPressPublic: () =>{
+    onPressPublic: () => {
     }
 };
 

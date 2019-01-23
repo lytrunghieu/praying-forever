@@ -12,7 +12,7 @@ export default class BaseApi {
         return httpsCallable(params)
             .catch(httpsError => {
                 console.log("ERROR :", httpsError);
-                console.log("Code :",httpsError.code);
+                console.log("Code :",httpsError.details.code || httpsError.code);
                 console.log("Message :",httpsError.message);
                 console.log("errorDescription :",httpsError.details && httpsError.details.errorDescription);
                 return httpsError;

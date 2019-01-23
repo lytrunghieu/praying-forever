@@ -405,13 +405,7 @@ exports.createUser = functions.https.onCall((data) => {
             throw new functions.https.HttpsError(
                 "unknown", // code
                 'request failed', // message
-                {
-                    success: false,
-                    statusCode: 400,
-                    code: error.code || null,
-                    body: data,
-                    errorDescription: error.toString()
-                }
+                {success: false, statusCode: 400, body: data,  code : error.code || null,errorDescription: error.toString()}
             );
         });
 

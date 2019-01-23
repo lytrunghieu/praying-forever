@@ -58,7 +58,7 @@ export default class PrayItem extends PureComponent {
     }
 
     renderGender(gender) {
-        if (gender) {
+        if (!gender) {
             return <Icon name={IconName.male}/>
         }
         else {
