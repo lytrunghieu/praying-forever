@@ -233,6 +233,7 @@ export default class Profile extends PureComponent {
                                 <FormValidate
                                     defaultValue={displayName}
                                     onChangeText={this.onChangeTextInput.bind(this, inputKey.DISPLAY_NAME.name)}
+                                    maxLength ={256}
                                 />
                                 <TextBase info={true}>{I18n.t("gender")}</TextBase>
                                 <Checkbox text={I18n.t("male")} onPress={this.onPressGender}

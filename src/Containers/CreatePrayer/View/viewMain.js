@@ -308,6 +308,7 @@ export default class CreatePraying extends PureComponent {
                                     placeholder={I18n.t("inputTitlePray")}
                                     returnKeyType={"next"}
                                     onSubmitEditing={this.onSubmitEditingTitle}
+                                    maxLength={500}
                                 />
                                 {
                                     title ? <Button transparent style={{marginRight: 16}}
@@ -332,6 +333,7 @@ export default class CreatePraying extends PureComponent {
                               placeholder={I18n.t("inputDescription")}
                               value={this.state.content}
                               onChangeText={this.onChangeContent}
+                              maxLength={5000}
                           />
 
 

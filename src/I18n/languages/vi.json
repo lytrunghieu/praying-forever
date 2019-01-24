@@ -4,6 +4,7 @@
   "about": "Thông tin",
   "appOffline":"offline",
   "appOnline":"online",
+  "appNeedUpdate":"Ứng dụng cần được nâng cấp phiên bản để hoạt động chính xác. Vui lòng lên của hàng ứng dụng để cập nhật phiên bản mới nhất.",
   //B
   "birthDay":"Ngày sinh",
   "back":"Trở lại",
@@ -62,9 +63,11 @@
   "inputLastName": "Nhập tên",
   "inprogress": "Còn cầu nguyện",
   "inputRetypePassword": "Nhập lại mật khẩu",
+  "inputKeyword":"Nhập từ khoá",
   //J
 
   //K
+
 
   //L
   "logIn": "ĐĂNG NHẬP",
@@ -143,6 +146,7 @@
   "selectDate":"Chọn ngày",
   "selectAvatar":"Chọn ảnh đại diện",
   "sendFeedback":"Gửi phản hồi",
+  "serverUpdating":"Máy chủ đang bảo trì. Xin lỗi vì sự bất tiện này, vui lòng thử lại lần sau",
   //T
   "tryAgain":"Thử lại",
   "theApostlesCreed1Title":"Tín điều các sứ đồ(1)",

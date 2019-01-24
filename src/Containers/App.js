@@ -3,7 +3,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import SplashScreen from 'react-native-smart-splash-screen';
 import {Provider} from 'react-redux';
 import {globalStyle} from "../Themes"
-import {AppState, AsyncStorage,View} from "react-native"
+import {AppState, AsyncStorage,View, Platform} from "react-native"
 import {TextBase} from "../Components/Common";
 import Immutable from 'seamless-immutable';
 
@@ -17,11 +17,11 @@ import thunk from 'redux-thunk';
 import logger from "redux-logger"
 import {persistReducer, persistStore, getStoredState, createTransform} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import I18n from "../I18n";
 import {Colors} from "../Themes";
 import {expAppReducer} from "../reducers";
 import firebase  from "react-native-firebase";
+import DeviceInfo from 'react-native-device-info';
 const whitelist = [
     "userReducer",
     "prayerReducer",
@@ -78,20 +78,61 @@ const store = compose(
     applyMiddleware(...middleware)
 )(createStore)(pReducer);
 
+
 class App extends PureComponent {
 
     constructor(props) {
         super(props);
         this.state = {
             isStoreLoading: true,
-            store: store
-        }
+            store: store,
+            pendingForUpdateServer : false,
+            forceUpdateApp : false,
+        };
     }
 
+
+
     componentWillMount() {
+        const pathVersion = "app/version";
+        firebase.firestore().doc(pathVersion).onSnapshot(snap =>{
+           const {android, ios} = snap.data();
+           if(Platform.OS ==="android"){
+               if(DeviceInfo.getBuildNumber() != android){
+                   this.setState({
+                       forceUpdateApp : true
+                   });
+               }
+               else{
+                   this.setState({
+                       forceUpdateApp : false
+                   });
+               }
+           }
+        });
+
+
+        const pathStatus = "app/status";
+        firebase.firestore().doc(pathStatus).onSnapshot(snap =>{
+            const {serverStatusPending} = snap.data();
+            if(serverStatusPending){
+                this.setState({
+                    pendingForUpdateServer : true
+                });
+            }
+            else{
+                this.setState({
+                    pendingForUpdateServer : false
+                });
+
+            }
+        });
+
+
         const persistor = persistStore(store, null, cb => {
             this.setState({isStoreLoading: false});
         });
+
 
     }
 
@@ -101,23 +142,35 @@ class App extends PureComponent {
             duration: 850,
             delay: 500
         });
+
     }
 
-    componentWillUnmount() {
+    componentWillUpdate(nextProps, nextState){
     }
 
-    renderLoadingView (){
+
+
+    renderLoadingView (text){
         return (
-            <View style ={{flex : 1 , alignItems:"center",justifyContent:"center" , backgroundColor:Colors.white}}>
-                <TextBase>{I18n.t("prayingForever")}</TextBase>
+            <View style ={styles.placeHolder}>
+                <TextBase bold={true} large={true} numberOfLines={5}> {text ?  text : I18n.t("prayingForever")}</TextBase>
             </View>
         )
     }
 
     render() {
-        if (this.state.isStoreLoading) {
+
+        const {isStoreLoading, forceUpdateApp, pendingForUpdateServer } = this.state;
+        if (isStoreLoading) {
             return this.renderLoadingView()
         } else {
+
+            if(forceUpdateApp){
+                return this.renderLoadingView(I18n.t("appNeedUpdate"))
+            }
+            if(pendingForUpdateServer){
+                return this.renderLoadingView(I18n.t("serverUpdating"))
+            }
             return (
 
                 <Provider store={this.state.store}>
@@ -132,3 +185,14 @@ class App extends PureComponent {
 export default DebugConfig.useReactotron
     ? console.tron.overlay(App)
     : App
+
+
+const styles = EStyleSheet.create({
+    placeHolder:{
+        flex : 1 ,
+        alignItems:"center",
+        justifyContent:"center" ,
+        backgroundColor:Colors.white ,
+        padding:"$padding",
+    }
+})

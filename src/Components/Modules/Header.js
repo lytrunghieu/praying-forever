@@ -1,6 +1,6 @@
 // Libraries
 import React, {PureComponent} from 'react';
-import {StatusBar,View} from "react-native";
+import {StatusBar, View} from "react-native";
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
 
@@ -10,11 +10,12 @@ import {Icon, Title, Button, TextBase, Input,} from "../Common";
 import LoadingIndicator from "./loadingIndicator";
 
 import {Header as HeaderBase, Left, Body, Right, Item} from 'native-base';
+import I18n from "../../I18n";
 
 export default class Header extends PureComponent {
 
     render() {
-        const {title, right, left, isFetching, searchBar,keySearch,onChangeTextSearch,onCloseSearchBar, ...rest} = this.props;
+        const {title, right, left, isFetching, searchBar, keySearch, onChangeTextSearch, onCloseSearchBar, ...rest} = this.props;
 
         let leftComp = null;
         let righComp = null;
@@ -76,13 +77,16 @@ export default class Header extends PureComponent {
                     :
                     <HeaderBase searchBar rounded style={styles.header}>
                         <Item>
-                            <View style ={styles.iconSearchWrapper}>
-                            <Icon name={IconName.search}/>
+                            <View style={styles.iconSearchWrapper}>
+                                <Icon name={IconName.search}/>
                             </View>
-                            <Input placeholder="Search" value={keySearch} onChangeText={onChangeTextSearch}/>
-                            <Button onPress ={onCloseSearchBar} transparent={true} style ={styles.buttonCloseWrapper}>
+                            <Input placeholder={I18n.t("inputKeyword")} value={keySearch}
+                                   onChangeText={onChangeTextSearch}>
+                            </Input>
+                            <Button onPress={onCloseSearchBar} transparent={true} style={styles.buttonCloseWrapper}>
                                 <Icon name={IconName.close}/>
                             </Button>
+
                         </Item>
 
                     </HeaderBase>
@@ -94,8 +98,10 @@ export default class Header extends PureComponent {
 }
 
 Header.defaultProps = {
-    onChangeTextSearch : () =>{},
-    onCloseSearchBar: () =>{}
+    onChangeTextSearch: () => {
+    },
+    onCloseSearchBar: () => {
+    }
 };
 
 Header.propTypes = {
@@ -103,10 +109,10 @@ Header.propTypes = {
     right: PropTypes.node,
     left: PropTypes.node,
     isFetching: PropTypes.bool,
-    keySearch : PropTypes.string,
-    searchBar : PropTypes.bool,
+    keySearch: PropTypes.string,
+    searchBar: PropTypes.bool,
     onChangeTextSearch: PropTypes.func,
-    onCloseSearchBar : PropTypes.func
+    onCloseSearchBar: PropTypes.func
 }
 
 const styles = EStyleSheet.create({
@@ -117,15 +123,15 @@ const styles = EStyleSheet.create({
         borderBottomColor: Colors.divider
     },
 
-    iconSearchWrapper:{
+    iconSearchWrapper: {
         paddingLeft: 5,
         paddingRight: 5,
     },
 
-    buttonCloseWrapper :{
+    buttonCloseWrapper: {
         paddingLeft: 5,
         paddingRight: 5,
-
+        paddingTop :0,
     }
 
 });

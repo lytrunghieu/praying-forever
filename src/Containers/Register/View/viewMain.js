@@ -291,7 +291,7 @@ export default class CreateAccount extends PureComponent {
                         customBorder={true}
                         returnKeyLabel={"next"}
                         onFocus={this.onFocus.bind(this, inputKey.FIRSTNAME.index)}
-
+                        maxLength ={100}
                         onSubmitEditing={this.onSubmit(inputKey.FIRSTNAME.index)}
                     />
 
@@ -302,12 +302,11 @@ export default class CreateAccount extends PureComponent {
                         ref={"textInput2"}
                         placeholder={I18n.t("inputLastName")}
                         onChangeText={this.onChangeTextInput.bind(this, inputKey.LASTNAME.name)}
-
                         customBorder={true}
                         returnKeyLabel={"next"}
                         onFocus={this.onFocus.bind(this, inputKey.LASTNAME.index)}
-
                         onSubmitEditing={this.onSubmit(inputKey.LASTNAME.index)}
+                        maxLength ={100}
 
                     />
 
@@ -364,6 +363,7 @@ export default class CreateAccount extends PureComponent {
                             returnKeyLabel={"next"}
                             onSubmitEditing={this.onSubmit(inputKey.PASSWORD.index)}
                             onFocus={this.onFocus.bind(this, inputKey.PASSWORD.index)}
+                            maxLength ={30}
                         />
 
 
@@ -379,6 +379,7 @@ export default class CreateAccount extends PureComponent {
                             // onSubmitEditing={this.onPressCreate}
                             onSubmitEditing={this.onSubmit(inputKey.RETYPE_PASSWORD.index)}
                             onFocus={this.onFocus.bind(this, inputKey.RETYPE_PASSWORD.index)}
+                            maxLength ={30}
                         />
                         <CardItem>
                             <Button
