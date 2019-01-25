@@ -14,8 +14,8 @@ export default class PrayerDetail extends PureComponent {
         const dataPassed = props.navigation.state.params;
         const {item, uid} = dataPassed;
         this.prayer = item;
-        this.uid =  dataPassed.uid ;
-        this.cb =  dataPassed.cb ;
+        this.uid = dataPassed.uid;
+        this.cb = dataPassed.cb;
         this.userUID = item && item.owner && item.owner.uid || null;
         this.onPressBack = this.onPressBack.bind(this)
         this.onPressRightHeader = this.onPressRightHeader.bind(this)
@@ -66,13 +66,16 @@ export default class PrayerDetail extends PureComponent {
                     });
                 }
                 else {
-                    Alert.alert(I18n.t("oops"), I18n.t("notFoundPrayer"), [
-                        {text: I18n.t("done"), onPress: this.onPressBack}
-                    ]);
+                    if (!res.data[0]) {
+                        Alert.alert(I18n.t("oops"), I18n.t("notFoundPrayer"), [
+                            {text: I18n.t("done"), onPress: this.onPressBack}
+                        ]);
+                    }
+
                 }
             });
         }
-        if(this.cb){
+        if (this.cb) {
             this.cb();
         }
     }

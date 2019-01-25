@@ -236,7 +236,7 @@ class UserService extends baseService {
         const _userUID = firebase.auth().currentUser.uid;
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
         let uploadBlob = null
-        const imageRef = FirebaseClient.storage().ref('images/avatars').child(`${_userUID}.jpg`)
+        const imageRef = FirebaseClient.storage().ref('images/avatars').child(`${_userUID}.jpg`);
 
         return fs.readFile(uploadUri, 'base64')
             .then((data) => {
@@ -244,15 +244,12 @@ class UserService extends baseService {
             })
             .then((blob) => {
                 uploadBlob = blob;
-                return imageRef.put(blob._ref, {contentType: mime})
-            })
-            .then((res) => {
-                uploadBlob.close();
                 const path = firestorePaths.PROFILES;
-                if (res.state == "success") {
-                    const profileCollect = firebase.firestore().collection(path);
-                    return profileCollect.where("uid", "==", _userUID).get().then(colSnap => {
-                        colSnap.docs[0].ref.set({avatarURL: res.downloadURL}, {merge: true});
+                const profileCollect = firebase.firestore().collection(path);
+                return profileCollect.where("uid", "==", _userUID).get({source: "server"}).then(async colSnap => {
+                    const storageTask = await imageRef.put(blob._ref, {contentType: mime});
+                    if (storageTask.state == "success") {
+                        colSnap.docs[0].ref.set({avatarURL: storageTask.downloadURL}, {merge: true});
                         const result = {
                             data: {
                                 success: true,
@@ -261,16 +258,45 @@ class UserService extends baseService {
                             }
                         }
                         return result;
-                    })
-                }
-                else {
-                    throw  "failed";
-                }
-            })
-            .finally(res => {
+                    }
+                    else {
+                        throw  "failed";
+                    }
+                })
+
+            }).finally(res => {
+                uploadBlob.close();
                 return new response(res)
-            });
+            })
     }
 }
 
 export default UserService
+
+// .then((res) => {
+//     uploadBlob.close();
+//     console.log(" uploadBlob.close()");
+//     const path = firestorePaths.PROFILES;
+//     if (res.state == "success") {
+//         const profileCollect = firebase.firestore().collection(path);
+//         return profileCollect.where("uid", "==", _userUID).get({source :"server"}).then(colSnap => {
+//             colSnap.docs[0].ref.set({avatarURL: res.downloadURL}, {merge: true});
+//             const result = {
+//                 data: {
+//                     success: true,
+//                     message: null,
+//                     statusCode: 200,
+//                 }
+//             }
+//             return result;
+//         }).catch(err=>{
+//             console.log("error" , err);
+//         })
+//     }
+//     else {
+//         throw  "failed";
+//     }
+// }).catch(err =>{
+//     console.log("error" , err);
+//
+// })

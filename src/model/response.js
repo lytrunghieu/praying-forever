@@ -26,11 +26,11 @@ export default class Response {
             }
         }
         else {
-            const {details} = result || {};
-            this.code =  result.code;
-            this.success = details.success;
-            this.statusCode = details.statusCode;
-            this.message = result.message;
+            const {details = {}} = result || {};
+            this.code =  result.code || undefined;
+            this.success = details.success || false;
+            this.statusCode = details.statusCode || 400;
+            this.message = result.message || undefined;
             if(details.code){
                 this.code =  details.code;
             }
