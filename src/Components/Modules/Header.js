@@ -9,13 +9,13 @@ import {Colors, IconName} from '../../Themes';
 import {Icon, Title, Button, TextBase, Input,} from "../Common";
 import LoadingIndicator from "./loadingIndicator";
 
-import {Header as HeaderBase, Left, Body, Right, Item} from 'native-base';
+import {Header as HeaderBase, Left, Body, Right, Item, Badge} from 'native-base';
 import I18n from "../../I18n";
 
 export default class Header extends PureComponent {
 
     render() {
-        const {title, right, left, isFetching, searchBar, keySearch, onChangeTextSearch, onCloseSearchBar, ...rest} = this.props;
+        const {title, right, left, isFetching, searchBar, keySearch, onChangeTextSearch, onCloseSearchBar, badge, ...rest} = this.props;
 
         let leftComp = null;
         let righComp = null;
@@ -23,30 +23,34 @@ export default class Header extends PureComponent {
         if (left) {
             const {icon, onPress} = left;
             leftComp = (
-                <Left>
-                    <Button transparent onPress={onPress}>
-                        <Icon name={icon} dark={false}/>
-                    </Button>
-                </Left>
+
+                <Button transparent onPress={onPress}>
+
+                    <Icon name={icon} dark={false}/>
+                    {
+                        badge && <Badge style={styles.badgeWrapper}/>
+                    }
+
+                </Button>
+
+
             );
 
         }
 
         if (right) {
             if (Array.isArray(right) && right.length > 0) {
-                righComp = (
-                    <Right>
-                        {
-                            right.map((e, index) => {
-                                const {icon, onPress} = e;
-                                return (
-                                    <Button key={index} transparent onPress={onPress}>
-                                        <Icon name={icon} dark={false}/>
-                                    </Button>
-                                );
-                            })
-                        }
-                    </Right>)
+                righComp =
+
+                    right.map((e, index) => {
+                        const {icon, onPress} = e;
+                        return (
+                            <Button key={index} transparent onPress={onPress}>
+                                <Icon name={icon} dark={false}/>
+                            </Button>
+                        );
+                    })
+
             }
             else {
                 const {icon, onPress} = right;
@@ -67,11 +71,15 @@ export default class Header extends PureComponent {
                             backgroundColor={Colors.black}
                             barStyle="light-content"
                         />
-                        {leftComp}
+                        <Left>
+                            {leftComp}
+                        </Left>
                         <Body>
-                        <TextBase largeX={true} highlight={true} bold={true}>{title}</TextBase>
+                        <TextBase largeX={true} numberOfLines={2} highlight={true} bold={true}>{title}</TextBase>
                         </Body>
-                        {righComp}
+                        <Right>
+                            {righComp}
+                        </Right>
                     </HeaderBase>
 
                     :
@@ -112,7 +120,8 @@ Header.propTypes = {
     keySearch: PropTypes.string,
     searchBar: PropTypes.bool,
     onChangeTextSearch: PropTypes.func,
-    onCloseSearchBar: PropTypes.func
+    onCloseSearchBar: PropTypes.func,
+    badge: PropTypes.number,
 }
 
 const styles = EStyleSheet.create({
@@ -123,6 +132,12 @@ const styles = EStyleSheet.create({
         borderBottomColor: Colors.divider
     },
 
+    badgeWrapper: {
+        height: 14,
+        width: 14,
+        right: 7,
+    },
+
     iconSearchWrapper: {
         paddingLeft: 5,
         paddingRight: 5,
@@ -131,7 +146,7 @@ const styles = EStyleSheet.create({
     buttonCloseWrapper: {
         paddingLeft: 5,
         paddingRight: 5,
-        paddingTop :0,
+        paddingTop: 0,
     }
 
 });

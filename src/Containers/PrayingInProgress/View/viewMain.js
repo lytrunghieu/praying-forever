@@ -248,10 +248,12 @@ export default class PrayingInProgress extends PureComponent {
 
     render() {
         const {prayers, isSearch, keySearch, loading, refreshing} = this.state;
-        const {prayerReducer} = this.props;
+        const {prayerReducer,notificationReducer} = this.props;
         const {fetching} = prayerReducer;
+        const {payload} = notificationReducer;
+        const unreadNoti = payload.filter(e => !e.isRead).length;
         return (
-            [<Container key="container" pointerEvents={fetching ? "none" : "auto"}>
+            [<Container key="container" >
 
                 <Header
                     title={I18n.t('praying')}
@@ -259,6 +261,7 @@ export default class PrayingInProgress extends PureComponent {
                     right={this.rightHeader}
                     searchBar={isSearch}
                     keySearch={keySearch}
+                    badge={unreadNoti ? true : false}
                     onChangeTextSearch={this.onChangeKeySearch}
                     onCloseSearchBar={this.onCloseSearchBar}
                 />

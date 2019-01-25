@@ -2,7 +2,6 @@
  * Created by hieult on 7/2/18.
  */
 import Immutable from 'seamless-immutable';
-// import {Map as Immutable} from 'immutable';
 import ScreenKey from "../Constants/ScreenKey";
 
 export default {
@@ -46,7 +45,8 @@ export default {
     }),
 
     pending :Immutable({
-        fetching : true
+        fetching : true,
+        payload: []
     }),
 
     login :Immutable({

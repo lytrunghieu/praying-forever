@@ -403,7 +403,7 @@ export default class CreateAccount extends PureComponent {
         const {fetching} = registerReducer;
 
         return (
-            <Container style={styles.container} pointerEvents={fetching ? "none" : "auto"}>
+            <Container style={styles.container}>
                 <Header
                     title={I18n.t("createAccountTitle")}
                     left={this.leftHeader}

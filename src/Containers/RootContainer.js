@@ -1,6 +1,6 @@
 // Libraries
 import React, {PureComponent} from 'react';
-import {View, Keyboard} from 'react-native';
+import {View, Keyboard, ToastAndroid} from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SafeAreaView} from 'react-navigation';
@@ -11,15 +11,7 @@ import {Colors} from '../Themes';
 // Components
 import {StatusBar} from '../Components/Common';
 import {ModalScanQR, ModalQR, ActionPrayerModal, ConfirmModal, NetworkBar} from "../Components/Modules";
-
-//Reduxes
-import StartupActions from '../Redux/StartupRedux';
-
 import {prayerActions} from '../Action';
-
-// Persist
-import ReduxPersist from '../Config/ReduxPersist';
-
 // Navigation
 
 
@@ -40,9 +32,11 @@ class RootContainer extends PureComponent {
         super(props);
         this.state = {
             isOffline: false,
+            warningExit: false
         };
         this.onAcceptDeletePrayer = this.onAcceptDeletePrayer.bind(this);
         this.handleFirstConnectivityChange = this.handleFirstConnectivityChange.bind(this);
+        this.timeoutWarningExit = null;
     }
 
     componentDidMount() {
@@ -126,6 +120,9 @@ class RootContainer extends PureComponent {
             'connectionChange',
             this.handleFirstConnectivityChange
         );
+        if (this.timeoutWarningExit) {
+            this.timeoutWarningExit.clearTimeout();
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -153,8 +150,34 @@ class RootContainer extends PureComponent {
     handleHardwareBack = () => {
         // Back performs pop, unless we're to main screen [0,0]
         const {dispatch, navigationReducer, pendingReducer} = this.props;
+        const {warningExit} = this.state;
+        const {payload} = pendingReducer;
+        if (payload.length > 0) {
+            return true;
+        }
+
         if (navigationReducer.index === 0 && navigationReducer.routes[0].index === 0) {
-            BackHandler.exitApp()
+            if (warningExit) {
+                BackHandler.exitApp()
+            }
+            else {
+                this.setState({
+                    warningExit: true
+                });
+                if (this.timeoutWarningExit) {
+                    this.timeoutWarningExit.clearTimeout();
+                    this.timeoutWarningExit = null
+                }
+                this.timeoutWarningExit = setTimeout(() => {
+                    this.setState({
+                        warningExit: false
+                    });
+                    this.timeoutWarningExit = null
+                }, 3000)
+                ToastAndroid.show(I18n.t("tryAgainToExit"), ToastAndroid.SHORT);
+                return true
+            }
+
         }
 
         const navigation = ReactNavigation.addNavigationHelpers({
@@ -168,23 +191,22 @@ class RootContainer extends PureComponent {
 
     onAcceptDeletePrayer(data) {
         const {prayerActions} = this.props;
-        const {uid : prayerUID, type} = data || {};
+        const {uid: prayerUID, type} = data || {};
         prayerActions.deletePrayer({prayerUID, status: type});
     }
 
 
     render() {
         const {prayerActions, dispatch, navigationReducer, pendingReducer} = this.props;
-        const {fetching} = pendingReducer;
+        const {fetching, payload} = pendingReducer;
         const {isOffline} = this.state;
         const navigation = ReactNavigation.addNavigationHelpers({
             dispatch,
             state: navigationReducer
         });
 
-
         return (
-            <View style={styles.container}>
+            <View style={styles.container} pointerEvents={payload.length > 0 ? "none" : "auto"}>
                 <StatusBar backgroundColor={Colors.black} barStyle={'light-content'}/>
                 <SafeAreaView style={styles.container}>
                     <NetworkBar online={!isOffline}/>

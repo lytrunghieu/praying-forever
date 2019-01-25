@@ -207,16 +207,19 @@ export default class PrayForOther extends PureComponent {
 
     render() {
         const {prayers, distance, loading} = this.state;
-        const {prayForOthersReducer} = this.props;
+        const {prayForOthersReducer,notificationReducer} = this.props;
         const {fetching} = prayForOthersReducer;
+        const {payload} = notificationReducer;
+        const unreadNoti = payload.filter(e => !e.isRead).length;
 
         return (
-            [<Container key="container" pointerEvents={fetching ? "none" : "auto"}>
+            [<Container key="container">
 
                 <Header
                     title={I18n.t('prayForOther')}
                     left={this.leftHeader}
                     right={this.rightHeader}
+                    badge={unreadNoti ? true : false}
                     onChangeTextSearch={this.onChangeKeySearch}
                     onCloseSearchBar={this.onCloseSearchBar}
                 />

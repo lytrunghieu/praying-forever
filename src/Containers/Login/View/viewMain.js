@@ -168,7 +168,7 @@ export default class LoginScreen extends PureComponent {
         return (
             [
                 <ImageBackground/>,
-                <Container style={styles.container} pointerEvents={fetching ? "none" : "auto"}>
+                <Container style={styles.container}>
                     <LoadingIndicator visible={fetching}/>
                     <Content style={styles.content}>
                         <Body>

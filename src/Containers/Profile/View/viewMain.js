@@ -201,7 +201,7 @@ export default class Profile extends PureComponent {
         const {fetching} = profileReducer;
 
         return (
-            <Container pointerEvents={fetching ? "none" : "auto"}>
+            <Container>
                 <Header
                     title={I18n.t('profile')}
                     left={this.leftHeader}

@@ -98,7 +98,6 @@ moment.updateLocale('en', {
 // });
 
 moment.locale('vi', {
-
     relativeTime: {
         future: "mới %s",
         past: "đã %s",
@@ -116,7 +115,6 @@ moment.locale('vi', {
         yy: "%d năm"
     },
 });
-
 
 export default class DrawerContainer extends PureComponent {
 
@@ -303,7 +301,7 @@ export default class DrawerContainer extends PureComponent {
         const {payload } = userReducer;
         const {displayName = "", avatarURL} = payload ||  {};
         return (
-            <View key={"main"} pointerEvents={fetching ? "none" : "auto"}>
+            <View key={"main"}>
                 <LoadingIndicator visible={fetching}/>
                 <View style={style.profileContainer}>
                     <Avatar uri={avatarURL} largeX={true} />

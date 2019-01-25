@@ -289,7 +289,7 @@ export default class CreatePraying extends PureComponent {
         const {fetching} = createPrayerReducer;
 
         return (
-            [<Container key="Container" pointerEvents={fetching ? "none" : "auto"}>
+            [<Container key="Container">
                 <Header
                     title={this.isEdit ? I18n.t("editPray") : I18n.t("createNewPrayer")}
                     left={this.leftHeader}

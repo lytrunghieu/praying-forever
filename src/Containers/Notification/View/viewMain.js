@@ -215,16 +215,17 @@ export default class Notifications extends PureComponent {
     render() {
         const {notificationReducer, navigation} = this.props;
         const {payload, loading} = this.state;
-        const {fetching} = notificationReducer;
+        const {fetching} = notificationReducer
+        const unreadNoti = payload.filter(e => !e.isRead).length;
 
         return (
-            [<Container key="container" pointerEvents={fetching ? "none" : "auto"}>
-
+            [<Container key="container">
                 <Header
                     title={I18n.t('notifications')}
                     left={this.leftHeader}
                     right={ payload.length !== 0 ? this.rightHeader : null}
                     isFetching={fetching}
+                    badge={unreadNoti ? true : false}
                 />
                 {
                     payload.length === 0 ? <EmptyHolder
