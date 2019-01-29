@@ -49,7 +49,10 @@ export default class ActionPrayerModal extends PureComponent {
     }
 
     onPressEdit() {
-        this.props.navigation.navigate(ScreenKey.CREATE_PRAYING, this.params);
+        CommonUtils.sendEvent({type: EventRegisterTypes.NAVIGATE_SCREEN, params: {
+            screen: ScreenKey.PRAY_DETAIL,
+            params: {prayerUID, userOtherUID, follow}
+        }});
     }
 
     onPressDelete = (params) => () => {
@@ -166,7 +169,7 @@ ActionPrayerModal.defaultProps = {
 };
 
 ActionPrayerModal.propTypes = {
-    navigation: Proptypes.any.isRequired,
+    // navigation: Proptypes.any.isRequired,
     // data: Proptypes.any.isRequired,
     onPressShareOption: Proptypes.func,
 };

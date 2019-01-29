@@ -14,9 +14,7 @@ import {style} from "../Style";
 import {
     Header,
     ActionSheetPrayItem,
-    LoadingBar,
     Container,
-    Content,
     PrayItem,
     EmptyHolder,
 } from "../../../Components/Modules";
@@ -204,7 +202,7 @@ export default class PrayingInProgress extends PureComponent {
     }
 
     onPressLeft() {
-        this.props.navigation.navigate(ScreenKey.DRAWER_TOGGLE);
+        this.props.navigation.toggleDrawer();
     }
 
     onPressMoreOption() {

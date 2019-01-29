@@ -189,7 +189,7 @@ export default class PrayerFinished extends PureComponent {
     }
 
     onPressLeft() {
-        this.props.navigation.navigate(ScreenKey.DRAWER_TOGGLE);
+        this.props.navigation.toggleDrawer();
     }
 
     onPressMoreOption() {

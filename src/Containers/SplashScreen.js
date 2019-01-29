@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {NavigationActions} from "react-navigation";
+import {StackActions} from "react-navigation";
 import {ScreenKey, AsyncStoreKeys} from '../Constants';
 import {Colors, Metrics, Images} from '../Themes';
 import firebase from 'react-native-firebase';
@@ -24,21 +24,28 @@ class SplashScreen extends Component {
                 const {userReducer} = this.props;
                 const {payload} = userReducer;
                 if (user && user.emailVerified && payload) {
-                    // console.log(user.emailVerified);
-                    this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.DRAWER_NAV});
+                    const resetAction = StackActions.replace({
+                        index: 0,
+                        routeName: ScreenKey.DRAWER_NAV,
+                    });
+                    this.props.navigation.dispatch(resetAction);
                 }
                 else {
 
                     AsyncStorage.getItem(AsyncStoreKeys.IS_STARTED, (error, result) => {
                         if (result == "true") {
-                            this.props.navigation.dispatch({
-                                type: NavigationActions.RESET,
-                                routeName: ScreenKey.LOGIN_SCREEN
+                            const resetAction = StackActions.replace({
+                                index: 0,
+                                routeName: ScreenKey.LOGIN_SCREEN,
                             });
+                            this.props.navigation.dispatch(resetAction);
                         }
                         else {
-                            this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.INTRO});
-
+                            const resetAction = StackActions.replace({
+                                index: 0,
+                                routeName: ScreenKey.INTRO,
+                            });
+                            this.props.navigation.dispatch(resetAction);
                         }
                     });
                 }

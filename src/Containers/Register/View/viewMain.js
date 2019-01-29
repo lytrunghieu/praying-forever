@@ -13,9 +13,9 @@ import {
     DatePicker,
     TextBase
 } from "../../../Components/Common";
-import {Header, FormValidate, ButtonFooter,Container,Content} from "../../../Components/Modules/index";
+import {Header, FormValidate, ButtonFooter,Container,Content} from "../../../Components/Modules";
 import {CardItem} from 'native-base';
-import {NavigationActions} from "react-navigation";
+import {NavigationActions,StackActions} from "react-navigation";
 import {ScreenKey} from "../../../Constants";
 import * as _ from "lodash";
 
@@ -198,7 +198,11 @@ export default class CreateAccount extends PureComponent {
     //region hanlde action press
 
     onSignupSuccess() {
-        this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
+        const resetAction = StackActions.replace({
+            index: 0,
+            routeName: ScreenKey.LOGIN_SCREEN,
+        });
+        this.props.navigation.dispatch(resetAction);
     }
 
     onPressGender() {
@@ -403,13 +407,13 @@ export default class CreateAccount extends PureComponent {
         const {fetching} = registerReducer;
 
         return (
-            <Container style={styles.container}>
+            <Container>
                 <Header
                     title={I18n.t("createAccountTitle")}
                     left={this.leftHeader}
                     isFetching={fetching}
                 />
-                <Content style={styles.content}>
+                <Content>
                     {this.renderStep()}
                 </Content>
 

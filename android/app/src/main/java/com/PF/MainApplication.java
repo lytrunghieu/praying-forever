@@ -32,6 +32,8 @@ import io.invertase.firebase.functions.RNFirebaseFunctionsPackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 import io.invertase.firebase.config.RNFirebaseRemoteConfigPackage;
 
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +67,7 @@ public class MainApplication extends Application implements ReactApplication {
                     new RNFirebaseCrashlyticsPackage(),
                     new RNFirebaseStoragePackage(),
                     new RNFirebaseRemoteConfigPackage(),
+                    new RNGestureHandlerPackage(),
                     new RNFirebaseFunctionsPackage()
             );
         }

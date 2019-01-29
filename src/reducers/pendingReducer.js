@@ -1,10 +1,16 @@
 import InitialState from "./initialStates";
+import {actionTypes} from "../Action";
 
 export function pendingReducer(state = InitialState.pending, action) {
     const {type, data} = action;
     switch (type) {
         default :
-            if (type.indexOf("_PENDING") > -1) {
+            if(type === actionTypes.GET_PROFILE_PENDING){
+                return state
+            }
+
+            if (type.indexOf("_PENDING") > -1)
+            {
                 const indexOf = type.indexOf("_PENDING");
                 const sub = type.substr(0,indexOf);
                 const _payload = [...state.payload];

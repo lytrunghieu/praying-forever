@@ -4,5 +4,6 @@ export default  {
     PROFILE :"profile/{userUID}",
     PROFILES :"profile",
     TEMPLATE_PRAYER :"template/prayer",
+    SIGN_IN :"signIn/{userUID}",
 
 }

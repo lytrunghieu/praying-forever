@@ -9,6 +9,9 @@ exports.locationPrayer ="location/{prayerUID}";
 exports.locationPrayers ="location";
 
 exports.notifications = "notification/{userUID}/data";
-exports.notification = "notification/{userUID}/data/{notifUID}"
+exports.notification = "notification/{userUID}/data/{notifUID}";
 
 exports.profileUsers ="profile";
+exports.profileUsers ="profile";
+
+exports.signIn ="signIn/{userUID}";

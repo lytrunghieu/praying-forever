@@ -69,6 +69,7 @@ export function login({email, password}) {
                     if (_res.success) {
                         dispatch({
                             type: actionTypes.LOGIN_SUCCESS,
+                            data: { payload :res.data}
                         });
                     }
                     return _res;

@@ -572,6 +572,22 @@ exports.updateLiveStatus = functions.https.onCall(async (data = {}) => {
     });
 })
 
+exports.updateLastSignIn = functions.https.onCall(async (data) =>{
+    const {userUID , lastSignInTime} = data;
+    const path = paths.signIn.replace("{userUID}", userUID);
+    return firestore.doc(path).set({lastSignInTime, uid : userUID} ,{merge : true}).then(res =>{
+        return {success: true, statusCode: 200, message: "request success"};
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        throw new functions.https.HttpsError(
+            "unknown", // code
+            'request failed', // message
+            {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+        );
+    });
+
+})
+
 //region API INTERNAL
 
 exports.testAPI = functions.https.onRequest((req, res) => {

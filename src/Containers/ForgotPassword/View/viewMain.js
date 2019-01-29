@@ -3,12 +3,7 @@ import {Alert} from 'react-native';
 import {IconName} from '../../../Themes/index';
 import I18n from '../../../I18n/index';
 import {ScreenKey} from "../../../Constants";
-import {NavigationActions} from "react-navigation";
-
-import {FormValidate, ButtonFooter, Header} from "../../../Components/Modules/index";
-
-import {Container, Content} from 'native-base';
-
+import {FormValidate, ButtonFooter, Header,Container,Content} from "../../../Components/Modules";
 import {CommonUtils} from "../../../Utils/index";
 
 import {style as styles} from "../Style";
@@ -89,7 +84,11 @@ export default class ForgotPassScreen extends PureComponent {
     //region hanlde action press
 
     onSendForgotEmailSuccess() {
-        this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
+        const resetAction = StackActions.replace({
+            index: 0,
+            routeName: ScreenKey.LOGIN_SCREEN,
+        });
+        this.props.navigation.dispatch(resetAction);
     }
 
     onPressSend() {
@@ -119,13 +118,13 @@ export default class ForgotPassScreen extends PureComponent {
         return (
             [
 
-                <Container style={styles.container}>
+                <Container>
                     <Header
                         title={I18n.t('resetPassword')}
                         left={this.leftHeader}
                         isFetching={fetching}
                     />
-                    <Content style={styles.content}>
+                    <Content>
                         <FormValidate
                             error={!validEmail}
                             errorText={I18n.t("emailInvalid")}

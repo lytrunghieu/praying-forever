@@ -151,7 +151,7 @@ export default class Notifications extends PureComponent {
     //region handle Header
 
     onPressLeft() {
-        this.props.navigation.navigate(ScreenKey.DRAWER_TOGGLE);
+        this.props.navigation.toggleDrawer();
     }
 
     onPressMoreOption(item) {

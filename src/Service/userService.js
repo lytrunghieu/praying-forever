@@ -1,5 +1,5 @@
 import baseService from "./baseService";
-import {REGISTER} from "./nameCloudFunction"
+import {REGISTER, UPDATE_LAST_SIGN_IN} from "./nameCloudFunction"
 import {response, PrayUser} from "../model";
 import firebase from 'react-native-firebase';
 import {collection, ErrorCodes, firestorePaths} from "../Constants";
@@ -38,18 +38,32 @@ class UserService extends baseService {
     }
 
     login({email, password}) {
-        return firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password).then(res => {
+        return firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password).then(async res => {
             const result = {
                 data: {
                     success: true,
                     message: null,
                     statusCode: 200,
+                    data: null,
                 }
             }
             if (!res.user.emailVerified) {
                 result.data.success = false;
                 result.data.message = I18n.t("notVerifyEmailContent");
                 result.data.statusCode = 402;
+            }
+            else {
+                result.data.data = {
+                    lastSignInTime: res.user.metadata.lastSignInTime
+                }
+                const updateLastSignIn = await super.executeHttp(UPDATE_LAST_SIGN_IN, {
+                    userUID: res.user.uid,
+                    lastSignInTime: res.user.metadata.lastSignInTime
+                })
+                if(!updateLastSignIn.success){
+                    result.data.success = false;
+                    result.data.statusCode = 400;
+                }
             }
 
             return result;
@@ -272,31 +286,3 @@ class UserService extends baseService {
 }
 
 export default UserService
-
-// .then((res) => {
-//     uploadBlob.close();
-//     console.log(" uploadBlob.close()");
-//     const path = firestorePaths.PROFILES;
-//     if (res.state == "success") {
-//         const profileCollect = firebase.firestore().collection(path);
-//         return profileCollect.where("uid", "==", _userUID).get({source :"server"}).then(colSnap => {
-//             colSnap.docs[0].ref.set({avatarURL: res.downloadURL}, {merge: true});
-//             const result = {
-//                 data: {
-//                     success: true,
-//                     message: null,
-//                     statusCode: 200,
-//                 }
-//             }
-//             return result;
-//         }).catch(err=>{
-//             console.log("error" , err);
-//         })
-//     }
-//     else {
-//         throw  "failed";
-//     }
-// }).catch(err =>{
-//     console.log("error" , err);
-//
-// })

@@ -4,8 +4,8 @@ import {View,Image} from 'react-native'
 import I18n from '../../../I18n/index';
 import {IconName} from '../../../Themes/index';
 import firebase from 'react-native-firebase';
-import {NavigationActions} from "react-navigation";
-import {EventRegisterTypes, URL, StatusOfPray, ScreenKey,contentCodes} from "../../../Constants";
+import {NavigationActions,StackActions} from "react-navigation";
+import {EventRegisterTypes, URL, StatusOfPray, ScreenKey,contentCodes,firestorePaths} from "../../../Constants";
 import {EventRegister} from 'react-native-event-listeners';
 import moment from "moment";
 import {OptionButton, LoadingIndicator,Avatar} from "../../../Components/Modules";
@@ -128,8 +128,19 @@ export default class DrawerContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const {userActions, prayerActions,notificationActions} = this.props;
+        const {userActions, prayerActions,notificationActions,navigation, loginReducer} = this.props;
         const docOfCurrentUserNotification = notificationCollect.doc(firebase.auth().currentUser.uid);
+        firebase.firestore().doc(firestorePaths.SIGN_IN.replace("{userUID}",firebase.auth().currentUser.uid)).onSnapshot(snapShot =>{
+            if(snapShot.data()){
+                const {lastSignInTime} = snapShot.data();
+                if(loginReducer.payload){
+                    const {lastSignInTime : _lastSignInTime} = loginReducer.payload;
+                    if(moment(lastSignInTime).diff(moment(_lastSignInTime))> 0){
+                        this.onPressLogout();
+                    }
+                }
+            }
+        });
         docOfCurrentUserNotification.collection("data").onSnapshot(snapshot => {
             let notificationList = [];
             snapshot.forEach(e => {
@@ -140,6 +151,11 @@ export default class DrawerContainer extends PureComponent {
                 notificationActions.getNotifications(notificationList);
             }
         });
+        const {params} = navigation.state;
+        const {fromLogin }= params || {};
+        if(!fromLogin){
+            userActions.getProfile();
+        }
 
         //Listen event
         this.listener = EventRegister.addEventListener("listener", async (action) => {
@@ -259,7 +275,11 @@ export default class DrawerContainer extends PureComponent {
     onPressLogout() {
         const {userActions} = this.props;
         userActions.logout().then(res => {
-            this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
+            const resetAction = StackActions.replace({
+                index: 0,
+                routeName: ScreenKey.LOGIN_SCREEN,
+            });
+            this.props.navigation.dispatch(resetAction);
         });
     }
 
@@ -293,16 +313,16 @@ export default class DrawerContainer extends PureComponent {
     }
 
     render() {
-        const {prayerReducer, drawerReducer, userReducer} = this.props;
+        const {prayerReducer, drawerReducer, userReducer,loginReducer,navigation} = this.props;
         const {notificationNotRead} = this.state;
-        const {fetching} = drawerReducer;
         const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE) || [];
         const praysInprogress = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [];
-        const {payload } = userReducer;
+        const {payload, fetching } = userReducer;
         const {displayName = "", avatarURL} = payload ||  {};
+        const isDrawerOpen = navigation && navigation.state && navigation.state.isDrawerOpen;
         return (
-            <View key={"main"}>
-                <LoadingIndicator visible={fetching}/>
+            <View key={"main"} pointerEvents={fetching ?"none":"auto"}>
+                <LoadingIndicator visible={fetching && isDrawerOpen}/>
                 <View style={style.profileContainer}>
                     <Avatar uri={avatarURL} largeX={true} />
                     <PlaceHolder/>

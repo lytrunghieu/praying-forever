@@ -4,7 +4,6 @@ import {View, Keyboard, ToastAndroid} from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SafeAreaView} from 'react-navigation';
-
 // Utilities
 import {Colors} from '../Themes';
 
@@ -13,21 +12,26 @@ import {StatusBar} from '../Components/Common';
 import {ModalScanQR, ModalQR, ActionPrayerModal, ConfirmModal, NetworkBar} from "../Components/Modules";
 import {prayerActions} from '../Action';
 // Navigation
-
-
 import {EventRegisterTypes} from "../Constants";
 import {EventRegister} from 'react-native-event-listeners';
 import {bindActionCreators} from 'redux';
 import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
 import I18n from "../I18n";
-import * as ReactNavigation from 'react-navigation';
 import AppNavigation from '../Navigation/AppNavigation';
 import {BackHandler, NetInfo} from 'react-native';
+import {
+    reduxifyNavigator,
+    createReactNavigationReduxMiddleware,
+} from 'react-navigation-redux-helpers'
 
+const middlewareRoot = createReactNavigationReduxMiddleware(
+    "root",
+    state => state.nav,
+);
+
+const App = reduxifyNavigator(AppNavigation, "root");
 
 class RootContainer extends PureComponent {
-
-
     constructor(props) {
         super(props);
         this.state = {
@@ -156,36 +160,26 @@ class RootContainer extends PureComponent {
             return true;
         }
 
-        if (navigationReducer.index === 0 && navigationReducer.routes[0].index === 0) {
-            if (warningExit) {
-                BackHandler.exitApp()
-            }
-            else {
-                this.setState({
-                    warningExit: true
-                });
-                if (this.timeoutWarningExit) {
-                    this.timeoutWarningExit.clearTimeout();
-                    this.timeoutWarningExit = null
-                }
-                this.timeoutWarningExit = setTimeout(() => {
-                    this.setState({
-                        warningExit: false
-                    });
-                    this.timeoutWarningExit = null
-                }, 3000)
-                ToastAndroid.show(I18n.t("tryAgainToExit"), ToastAndroid.SHORT);
-                return true
-            }
-
+        if (warningExit) {
+            BackHandler.exitApp()
         }
-
-        const navigation = ReactNavigation.addNavigationHelpers({
-            dispatch,
-            state: navigationReducer
-        })
-
-        return navigation.goBack(null)
+        else {
+            this.setState({
+                warningExit: true
+            });
+            if (this.timeoutWarningExit) {
+                this.timeoutWarningExit.clearTimeout();
+                this.timeoutWarningExit = null
+            }
+            this.timeoutWarningExit = setTimeout(() => {
+                this.setState({
+                    warningExit: false
+                });
+                this.timeoutWarningExit = null
+            }, 3000)
+            ToastAndroid.show(I18n.t("tryAgainToExit"), ToastAndroid.SHORT);
+            return true
+        }
     }
 
 
@@ -198,26 +192,21 @@ class RootContainer extends PureComponent {
 
     render() {
         const {prayerActions, dispatch, navigationReducer, pendingReducer} = this.props;
-        const {fetching, payload} = pendingReducer;
+        const { payload} = pendingReducer;
         const {isOffline} = this.state;
-        const navigation = ReactNavigation.addNavigationHelpers({
-            dispatch,
-            state: navigationReducer
-        });
-
         return (
             <View style={styles.container} pointerEvents={payload.length > 0 ? "none" : "auto"}>
                 <StatusBar backgroundColor={Colors.black} barStyle={'light-content'}/>
                 <SafeAreaView style={styles.container}>
                     <NetworkBar online={!isOffline}/>
-                    <AppNavigation navigation={navigation}/>
+                    <App dispatch={dispatch} state={navigationReducer} />
                     <ModalQR
                         ref={"_modalQR"}/>
                     <ModalScanQR
                         ref={"_modalScanQR"} followingPrayer={prayerActions.followingPrayer}/>
                     <ActionPrayerModal
                         ref={"_moreActionPray"}
-                        navigation={navigation}
+                        // navigation={navigation}
                     />
 
                     <ConfirmModal

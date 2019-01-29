@@ -3,7 +3,7 @@ import {StyleSheet, AsyncStorage} from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import I18n from '../../../I18n';
 import {Images, Colors} from "../../../Themes";
-import {NavigationActions} from "react-navigation";
+import {StackActions} from "react-navigation";
 import {ScreenKey,AsyncStoreKeys} from '../../../Constants';
 
 const styles = StyleSheet.create({
@@ -40,7 +40,11 @@ export default class Intro extends Component {
     onPressDone() {
         AsyncStorage.setItem(AsyncStoreKeys.IS_STARTED, "true", (error =>{
             if(!error){
-                this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.LOGIN_SCREEN});
+                const resetAction = StackActions.replace({
+                    index: 0,
+                    routeName: ScreenKey.LOGIN_SCREEN,
+                });
+                this.props.navigation.dispatch(resetAction);
             }
         }))
     }

@@ -4,6 +4,7 @@ import prayerDetail  from "./PrayerDetail";
 import Drawer  from "./Drawer";
 import PrayForOthers  from "./PrayForOthers";
 import Profile  from "./Profile";
+import Login  from "./Login";
 
 
 export {
@@ -12,7 +13,8 @@ export {
     createPrayer,
     prayerDetail,
     PrayForOthers,
-    Profile
+    Profile,
+    Login
 }
 
 export default module.exports

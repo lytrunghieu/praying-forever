@@ -116,7 +116,7 @@ export function followingPrayer(params) {
 export function updateLiveStatusPrayer({live = false, prayerUID}) {
     return function (dispatch) {
         dispatch({
-            type: actionTypes.UPDATE_STATUS_PRAYER_PENDING,
+            type: actionTypes.UPDATE_LIVE_STATUS_PENDING,
         });
         //get location to public prayer
         if (live) {

@@ -11,6 +11,7 @@ const mapStateToProps = (state) => {
         commonReducer : state.commonReducer,
         drawerReducer : state.drawerReducer,
         userReducer : state.userReducer,
+        loginReducer : state.loginReducer,
     }
 }
 

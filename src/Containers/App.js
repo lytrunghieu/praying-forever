@@ -26,6 +26,7 @@ const whitelist = [
     "userReducer",
     "prayerReducer",
     "notificationReducer",
+    "loginReducer",
 ]
 
 // Load middleware

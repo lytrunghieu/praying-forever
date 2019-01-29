@@ -17,6 +17,7 @@ export function loginReducer(state = InitialState.login, action) {
             state = state.set("success", true);
             state = state.set("message", null);
             state = state.set("statusCode", null);
+            state = state.set("payload", data.payload);
             return state;
         }
 

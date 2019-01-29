@@ -4,15 +4,14 @@ import {
     Alert,
 } from 'react-native';
 import {ScreenKey} from '../../../Constants';
-import {Colors, Images} from '../../../Themes/index';
+import { Images} from '../../../Themes/index';
 import I18n from '../../../I18n/index';
-import firebase from 'react-native-firebase';
 import {
     TextLink,
     PlaceHolder,
     ImageBackground,
 } from "../../../Components/Common";
-import {NavigationActions} from "react-navigation";
+import {StackActions} from "react-navigation";
 import {Content, Container, FormValidate, ButtonFooter, LoadingIndicator} from "../../../Components/Modules";
 import {Left, Body} from "native-base";
 import {style as styles} from "../Style";
@@ -137,7 +136,12 @@ export default class LoginScreen extends PureComponent {
         if (valid.validPassword && valid.validEmail) {
             userActions.login({email, password}).then(res =>{
                 if(res.success){
-                    this.props.navigation.dispatch({type: NavigationActions.RESET, routeName: ScreenKey.DRAWER_NAV});
+                    const resetAction = StackActions.replace({
+                        index: 0,
+                        routeName: ScreenKey.DRAWER_NAV,
+                        params:{fromLogin : true}
+                    });
+                    this.props.navigation.dispatch(resetAction);
                 }
             });
         }

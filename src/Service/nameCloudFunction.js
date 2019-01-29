@@ -8,3 +8,4 @@ export const FOLLOWING_PRAYER ="following";
 export const UPDATE_LIVE_STATUS ="updateLiveStatus";
 export const REGISTER ="createUser";
 export const DELETE_NOTIFICATION ="deleteNotification";
+export const UPDATE_LAST_SIGN_IN ="updateLastSignIn";

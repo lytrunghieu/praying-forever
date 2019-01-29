@@ -1,4 +1,4 @@
-import {StackNavigator, DrawerNavigator} from 'react-navigation';
+import {createStackNavigator, createDrawerNavigator} from 'react-navigation';
 
 import {ScreenKey} from '../Constants';
 
@@ -18,7 +18,7 @@ import {container as NotificationScreen} from '../Containers/Notification';
 import {container as AboutScreen} from '../Containers/About';
 import {container as IntroScreen} from '../Containers/Intro';
 
-const DrawerNav = DrawerNavigator({
+const DrawerNav = createDrawerNavigator({
     [ScreenKey.PRAYING_INPROGESS]: {screen: PrayingInProgressScreen},
     [ScreenKey.PRAY_FINISHED]: {screen: PrayerFinishedScreen},
     [ScreenKey.PRAY_FOR_OTHER]: {screen: PrayForOtherScreen},
@@ -28,7 +28,7 @@ const DrawerNav = DrawerNavigator({
     contentComponent: Drawer // custom drawer
 });
 
-const MainNav = StackNavigator({
+const MainNav = createStackNavigator({
         // [ScreenKey.LOGIN_STACK] : { screen: LoginStack },
         [ScreenKey.SPLASH_SCREEN]: {screen: SplashScreen},
         [ScreenKey.DRAWER_NAV]: {screen: DrawerNav},

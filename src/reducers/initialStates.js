@@ -54,6 +54,7 @@ export default {
         success : false,
         message : null,
         statusCode: null,
+        payload : null,
     }),
 
     register :Immutable({
