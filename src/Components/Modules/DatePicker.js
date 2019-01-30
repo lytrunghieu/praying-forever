@@ -1,11 +1,11 @@
 import React, {PureComponent} from 'react';
 import {View} from 'react-native';
 import {DatePicker} from 'native-base';
-import {Text} from "./";
+import {Text} from "../Common/index";
 import {ListItem,Body}  from "native-base";
-import I18n from '../../I18n';
+import I18n from '../../I18n/index';
 import moment from "moment";
-import {Colors} from "../../Themes";
+import {Colors} from "../../Themes/index";
 import PropTypes from 'prop-types';
 
 

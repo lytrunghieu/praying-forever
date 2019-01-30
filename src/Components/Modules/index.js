@@ -1,10 +1,9 @@
-import TextIcon from "./TextIcon";
+
 import Header from "./Header";
 import OptionButton from "./OptionButton";
 import PrayItem from "./PrayItem";
 import ButtonFooter from "./ButtonFooter";
 import FormValidate from "./FormValidate";
-import LoadingBar from "./LoadingBar";
 import Container from "./Container";
 import Content from "./Content";
 import LoadingIndicator from "./loadingIndicator";
@@ -16,15 +15,14 @@ import EmptyHolder from "./EmptyHolder";
 import NetworkBar from "./NetworkBar";
 import NotificationItem from "./NotificationItem";
 import Avatar from "./Avatar";
-
+import DatePicker from "./DatePicker";
+import CheckboxModal from "./CheckboxModal";
 
 export {
-    TextIcon,
     Header,
     OptionButton,
     ButtonFooter,
     FormValidate,
-    LoadingBar,
     Container,
     Content,
     LoadingIndicator,
@@ -36,5 +34,7 @@ export {
     EmptyHolder,
     NetworkBar,
     NotificationItem,
-    Avatar
+    Avatar,
+    DatePicker,
+    CheckboxModal
 };

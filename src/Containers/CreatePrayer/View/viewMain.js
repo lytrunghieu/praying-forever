@@ -9,7 +9,6 @@ import {IconName, Colors} from '../../../Themes';
 import I18n from '../../../I18n';
 import {
     PlaceHolder,
-    CheckboxModal,
     TextArea,
     Button, Icon, Input, Text
 } from '../../../Components/Common';
@@ -18,7 +17,7 @@ import firebase, {NotificationOpen} from 'react-native-firebase';
 import {Pray} from "../../../model";
 import {StatusOfPray, titlePrayerCode} from "../../../Constants";
 
-import {Header, ButtonFooter, Container, Content} from "../../../Components/Modules";
+import {Header, ButtonFooter, Container, Content,CheckboxModal} from "../../../Components/Modules";
 
 import {Item, Form} from 'native-base';
 

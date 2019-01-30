@@ -206,7 +206,6 @@ class RootContainer extends PureComponent {
                         ref={"_modalScanQR"} followingPrayer={prayerActions.followingPrayer}/>
                     <ActionPrayerModal
                         ref={"_moreActionPray"}
-                        // navigation={navigation}
                     />
 
                     <ConfirmModal

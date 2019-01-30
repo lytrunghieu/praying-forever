@@ -3,12 +3,9 @@ import React, {PureComponent} from 'react';
 import {StatusBar, View} from "react-native";
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
-
 import {Colors, IconName} from '../../Themes';
-
-import {Icon, Title, Button, TextBase, Input,} from "../Common";
+import {Icon, Button, TextBase, Input,} from "../Common";
 import LoadingIndicator from "./loadingIndicator";
-
 import {Header as HeaderBase, Left, Body, Right, Item, Badge} from 'native-base';
 import I18n from "../../I18n";
 

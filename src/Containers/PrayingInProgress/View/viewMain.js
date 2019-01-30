@@ -251,8 +251,7 @@ export default class PrayingInProgress extends PureComponent {
         const {payload} = notificationReducer;
         const unreadNoti = payload.filter(e => !e.isRead).length;
         return (
-            [<Container key="container" >
-
+            <Container key="container" >
                 <Header
                     title={I18n.t('praying')}
                     left={this.leftHeader}
@@ -283,15 +282,12 @@ export default class PrayingInProgress extends PureComponent {
                         refreshing={fetching}
                     />
                 }
-
-
-            </Container>,
                 <ActionSheet
                     key="ActionSheet"
                     options={this.optionActionSheet}
                     ref={"moreAction"}
                 />
-            ]
+            </Container>
         );
 
     }

@@ -214,12 +214,11 @@ export default class Notifications extends PureComponent {
 
     render() {
         const {notificationReducer, navigation} = this.props;
-        const {payload, loading} = this.state;
+        const {payload} = this.state;
         const {fetching} = notificationReducer
         const unreadNoti = payload.filter(e => !e.isRead).length;
-
         return (
-            [<Container key="container">
+            <Container key="container">
                 <Header
                     title={I18n.t('notifications')}
                     left={this.leftHeader}
@@ -240,19 +239,17 @@ export default class Notifications extends PureComponent {
                     keyExtractor={this.keyExtractor}
                     renderItem={this.renderItem}
                 />
-
-            </Container>,
                 <ActionSheet
                     key="_actionSheet1"
                     options={this.optionActionSheet}
                     ref={"_actionSheet1"}
-                />,
+                />
                 <ActionNotificationModal
                     key="_actionSheet2"
                     ref={"_actionSheet2"}
                     onPressUpdateReadStatus={this.onPressUpdateReadStatus}
                     onPressDelete={this.onPressDelete}
-                />,
+                />
                 <ConfirmModal
                     key="_confirmModal1"
                     ref={"_confirmModal1"}
@@ -261,7 +258,7 @@ export default class Notifications extends PureComponent {
                     rejectText={I18n.t("cancel")}
                     acceptText={I18n.t("yes")}
                     onAccept={this.onAccept}
-                />,
+                />
 
                 <ConfirmModal
                     key={"_confirmModal2"}
@@ -273,7 +270,8 @@ export default class Notifications extends PureComponent {
                     onAccept={this.onAccept}
                 />
 
-            ]
+            </Container>
+
         );
     }
 

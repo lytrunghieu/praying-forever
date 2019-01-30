@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 
 import {style as styles} from "../Style";
-import {FormValidate, Content, Container, Header, ButtonFooter, EmptyHolder, Avatar} from "../../../Components/Modules";
+import {FormValidate, Content, Container, Header, ButtonFooter, EmptyHolder, Avatar,DatePicker} from "../../../Components/Modules";
 import {IconName} from "../../../Themes";
-import {Icon, TextBase, Checkbox, DatePicker, PlaceHolder, Button} from "../../../Components/Common";
+import {TextBase, Checkbox, PlaceHolder, Button} from "../../../Components/Common";
 import I18n from "../../../I18n";
 import moment from "moment";
 

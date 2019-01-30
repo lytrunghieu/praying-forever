@@ -238,8 +238,7 @@ export default class PrayerFinished extends PureComponent {
         const {payload} = notificationReducer;
         const unreadNoti = payload.filter(e => !e.isRead).length;
         return (
-            [<Container key="container">
-
+            <Container key="container">
                 <Header
                     title={I18n.t('finished')}
                     left={this.leftHeader}
@@ -270,15 +269,12 @@ export default class PrayerFinished extends PureComponent {
 
                     />
                 }
-
-
-            </Container>,
                 <ActionSheet
                     key="ActionSheet"
                     options={this.optionActionSheet}
                     ref={"moreAction"}
                 />
-            ]
+            </Container>
         );
 
     }

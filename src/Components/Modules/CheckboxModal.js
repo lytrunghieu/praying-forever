@@ -1,11 +1,11 @@
 import React from "react";
-import ModalBase from "./ModalBase";
+import ModalBase from "../Common/ModalBase";
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {View, ScrollView} from "react-native";
-import {Colors, globalStyle} from "../../Themes";
+import {Colors, globalStyle} from "../../Themes/index";
 import PropTypes from 'prop-types';
-import {Checkbox, TextBase} from "./";
-import {ButtonFooter} from "../Modules";
+import {Checkbox, TextBase} from "../Common/index";
+import {ButtonFooter} from "./index";
 
 export default class CheckboxModal extends ModalBase {
 

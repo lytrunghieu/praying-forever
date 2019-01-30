@@ -2,12 +2,11 @@ import React from "react";
 import ModalBase from "./ModalBase";
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {View} from "react-native";
-import {Colors, ApplicationStyles} from "../../Themes";
+import {Colors} from "../../Themes";
 import PropTypes from 'prop-types';
-import {Button, TextBase, Title} from "./";
+import {Button, TextBase} from "./";
 import {ButtonFooter} from "../Modules"
 import I18n from '../../I18n';
-import {Body, Content, Container, Row, Grid} from "native-base";
 
 export default class ActionSheet extends ModalBase {
 
@@ -20,9 +19,9 @@ export default class ActionSheet extends ModalBase {
         this.cb = null;
     }
 
-    componentDidUpdate(preProps,preState){
-        if(preState.visible !== this.state.visible && preState.visible){
-            if(this.cb){
+    componentDidUpdate(preProps, preState) {
+        if (preState.visible !== this.state.visible && preState.visible) {
+            if (this.cb) {
                 this.cb();
                 this.cb = null;
             }
@@ -45,7 +44,6 @@ export default class ActionSheet extends ModalBase {
         }
     }, index) {
         return (
-
             <Button key={index} block style={styles.buttonOption}
                     onPress={this.onPressOption.bind(this, option.onPress)}
             >
@@ -59,14 +57,15 @@ export default class ActionSheet extends ModalBase {
         return (
             <View style={[styles.container]}>
                 <View style={styles.header}>
-                    <TextBase large={true}  highlight={true} bold={true} upperCase ={true}>{title || I18n.t("selectAction")}</TextBase>
+                    <TextBase large={true} highlight={true} bold={true}
+                              upperCase={true}>{title || I18n.t("selectAction")}</TextBase>
                 </View>
                 <View style={styles.content}>
                     {options.map((op, index) => {
                         return this.renderOptionRow(op, index);
                     })}
 
-                    <ButtonFooter onPress={this.close} text={submitText  || I18n.t("cancel")}
+                    <ButtonFooter onPress={this.close} text={submitText || I18n.t("cancel")}
                     >
                     </ButtonFooter>
                 </View>
@@ -119,7 +118,7 @@ const styles = EStyleSheet.create({
         borderBottomWidth: "$borderWidthSmall",
         borderColor: Colors.divider,
         backgroundColor: Colors.primary,
-        borderRadius:0,
+        borderRadius: 0,
     },
 
     textButtonOption: {}

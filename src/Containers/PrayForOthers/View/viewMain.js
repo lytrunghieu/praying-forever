@@ -11,10 +11,8 @@ import {
     PlaceHolder,
 } from '../../../Components/Common';
 
-import {LoadingBar, Header, Container, Content, EmptyHolder,PrayItem} from "../../../Components/Modules";
-
-import commonUtils from "../../../Utils/CommonUtils";
-import {EventRegisterTypes, ScreenKey} from "../../../Constants";
+import {Header, Container, EmptyHolder, PrayItem} from "../../../Components/Modules";
+import {ScreenKey} from "../../../Constants";
 import firebase, {NotificationOpen} from 'react-native-firebase';
 
 export default class PrayForOther extends PureComponent {
@@ -207,13 +205,13 @@ export default class PrayForOther extends PureComponent {
 
     render() {
         const {prayers, distance, loading} = this.state;
-        const {prayForOthersReducer,notificationReducer} = this.props;
+        const {prayForOthersReducer, notificationReducer} = this.props;
         const {fetching} = prayForOthersReducer;
         const {payload} = notificationReducer;
         const unreadNoti = payload.filter(e => !e.isRead).length;
 
         return (
-            [<Container key="container">
+            <Container key="container">
 
                 <Header
                     title={I18n.t('prayForOther')}
@@ -224,34 +222,32 @@ export default class PrayForOther extends PureComponent {
                     onCloseSearchBar={this.onCloseSearchBar}
                 />
 
-                    {
-                        !loading && prayers.length === 0 ? <EmptyHolder
-                            h1={I18n.t("noResult")}
-                            h2={I18n.t("noPrayerNearby")}
-                            link={I18n.t("tryAgain")}
-                            onPressLink={this.onRefresh}
-                        /> : null
-                    }
+                {
+                    !loading && prayers.length === 0 ? <EmptyHolder
+                        h1={I18n.t("noResult")}
+                        h2={I18n.t("noPrayerNearby")}
+                        link={I18n.t("tryAgain")}
+                        onPressLink={this.onRefresh}
+                    /> : null
+                }
 
-                    <FlatList
-                        data={prayers}
-                        keyExtractor={this.keyExtractor}
-                        renderItem={this.renderPrayItem}
-                        ItemSeparatorComponent={this.renderSeparate}
-                        ListFooterComponent={this.renderListFooterComponent}
-                        refreshing ={fetching}
-                        onRefresh={this.onRefresh}
-                    />
-
-            </Container>,
+                <FlatList
+                    data={prayers}
+                    keyExtractor={this.keyExtractor}
+                    renderItem={this.renderPrayItem}
+                    ItemSeparatorComponent={this.renderSeparate}
+                    ListFooterComponent={this.renderListFooterComponent}
+                    refreshing={fetching}
+                    onRefresh={this.onRefresh}
+                />
                 <ActionSheet
                     title={I18n.t("selectDistance")}
                     key="ActionSheet"
                     options={this.optionActionSheet}
                     ref={"moreAction"}
-                />,
+                />
 
-            ]
+            </Container>
         );
     }
 

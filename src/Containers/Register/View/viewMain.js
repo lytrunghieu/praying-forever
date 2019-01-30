@@ -3,19 +3,16 @@ import {
     View,
     Alert,
 } from 'react-native';
-import {Colors, Images, IconName} from '../../../Themes/index';
+import {IconName} from '../../../Themes/index';
 import {CommonUtils} from '../../../Utils/index';
 import I18n from '../../../I18n/index';
 import {
     Button,
-    Icon,
     Checkbox,
-    DatePicker,
-    TextBase
 } from "../../../Components/Common";
-import {Header, FormValidate, ButtonFooter,Container,Content} from "../../../Components/Modules";
+import {Header, FormValidate, ButtonFooter,Container,Content,DatePicker} from "../../../Components/Modules";
 import {CardItem} from 'native-base';
-import {NavigationActions,StackActions} from "react-navigation";
+import {StackActions} from "react-navigation";
 import {ScreenKey} from "../../../Constants";
 import * as _ from "lodash";
 

@@ -25,7 +25,6 @@ export default class ModalBase extends PureComponent {
         this.close = this.close.bind(this);
         this.onClosed = this.onClosed.bind(this);
         this.onOpened = this.onOpened.bind(this);
-
     }
 
     onOpened() {
@@ -59,9 +58,6 @@ export default class ModalBase extends PureComponent {
 
     close() {
         this.refs["modal"].close();
-        // this.setState({
-        //     visible :false
-        // });
     }
 
     renderContent() {
@@ -69,7 +65,7 @@ export default class ModalBase extends PureComponent {
     }
 
     render() {
-
+        const {visible} = this.state;
         return (
             <Modal
                 style={[styles.modal]}
@@ -81,7 +77,6 @@ export default class ModalBase extends PureComponent {
                 swipeToClose={false}
                 backdropOpacity={this.backdropOpacity}
                 backButtonClose={this.backButtonClose}
-
             >
                 <TouchableOpacity style={[styles.container, this.isCenter && styles.containerCenter]}
                                   activeOpacity={1}
