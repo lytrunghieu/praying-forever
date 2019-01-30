@@ -3,7 +3,6 @@ import {navigationReducer} from "./navigationReducer";
 import {prayerReducer} from "./prayerReducer";
 import {notificationReducer} from "./notificationReducer";
 import {userReducer} from "./userReducer";
-import {commonReducer} from "./commonReducer";
 import {errorMessageReducer} from "./errorMessageReducer";
 import {loginReducer} from "./loginReducer";
 import {registerReducer} from "./registerReducer";
@@ -24,7 +23,6 @@ const appReducer = combineReducers({
     userReducer,
     createPrayerReducer,
     prayerDetailReducer,
-    commonReducer,
     errorMessageReducer,
     loginReducer,
     registerReducer,

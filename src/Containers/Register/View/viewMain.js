@@ -86,6 +86,7 @@ export default class CreateAccount extends PureComponent {
 
     componentDidUpdate(preProps, preState) {
         if (preState.indexStep !== this.state.indexStep) {
+            console.log("componentDidUpdate");
             if (preState.indexStep === 0) {
                 let ref = "textInput".concat(inputKey.EMAIL.index + 1);
                 this.refs[ref].focus();

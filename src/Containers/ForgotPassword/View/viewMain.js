@@ -111,13 +111,12 @@ export default class ForgotPassScreen extends PureComponent {
     //region RENDERING
 
     render() {
-        const {validEmail} = this.state;
+        const {validEmail,email} = this.state;
         const {forgotPasswordReducer} = this.props;
         const {fetching} = forgotPasswordReducer;
 
         return (
             [
-
                 <Container>
                     <Header
                         title={I18n.t('resetPassword')}
@@ -137,24 +136,16 @@ export default class ForgotPassScreen extends PureComponent {
                             onFocus={this.onFocus(true)}
                             onBlur={this.onFocus(false)}
                         />
-
-
                     </Content>
-
                     <ButtonFooter
                         onPress={this.onPressSend}
-                        disabled={fetching}
+                        disabled={fetching || !email}
                         text={I18n.t("send")}
                     />
-
-
                 </Container>,
             ]
-
-
         );
     }
-
     //endregion
 
 }

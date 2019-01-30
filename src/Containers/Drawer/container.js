@@ -8,7 +8,6 @@ const mapStateToProps = (state) => {
     return {
         notificationReducer: state.notificationReducer,
         prayerReducer : state.prayerReducer,
-        commonReducer : state.commonReducer,
         drawerReducer : state.drawerReducer,
         userReducer : state.userReducer,
         loginReducer : state.loginReducer,

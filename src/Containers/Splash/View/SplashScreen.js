@@ -8,8 +8,8 @@ import {
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {StackActions} from "react-navigation";
-import {ScreenKey, AsyncStoreKeys} from '../Constants';
-import {Colors, Metrics, Images} from '../Themes';
+import {ScreenKey, AsyncStoreKeys} from '../../../Constants/index';
+import {Colors, Metrics, Images} from '../../../Themes/index';
 import firebase from 'react-native-firebase';
 
 class SplashScreen extends Component {
@@ -69,25 +69,3 @@ class SplashScreen extends Component {
 
     }
 }
-
-const mapStateToProps = (state) => ({
-    userReducer: state.userReducer
-})
-
-const mapDispatchToProps = (dispatch) => ({})
-
-export default connect(mapStateToProps, mapDispatchToProps)(SplashScreen);
-
-const styles = EStyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.blueSky,
-    },
-    backgroundImage: {
-        // flex: 1,
-        top: 0,
-        left: 0,
-        width: Metrics.screenWidth,
-        height: Metrics.screenHeight,
-    }
-});

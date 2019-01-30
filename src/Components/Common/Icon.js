@@ -22,36 +22,36 @@ export default class Icon extends PureComponent {
         return this.renderIcon(this.props);
     }
 
-    renderIcon({name, iconType,large,medium,largeX, dark, color, error, success, smallest}) {
-        let size = 24;
+    renderIcon({name, iconType, large, medium, largeX, dark, color, error, success, smallest}) {
+        let size = Metrics.icons.small;
         let _color = Colors.black;
-        if(large){
-            size = 40;
+        if (large) {
+            size = Metrics.icons.large;
         }
-        if(largeX){
-            size = 100;
+        if (largeX) {
+            size = Metrics.icons.xl;
         }
 
         else {
-            if(medium){
-                size = 32;
+            if (medium) {
+                size = Metrics.icons.medium;
             }
-            else{
-                if(smallest){
-                    size = 14
+            else {
+                if (smallest) {
+                    size = Metrics.icons.tiny;
                 }
             }
         }
 
-        if(!dark){
+        if (!dark) {
             _color = Colors.white;
         }
 
-        if(error){
+        if (error) {
             _color = Colors.error
         }
 
-        if(success){
+        if (success) {
             _color = Colors.success
         }
 
@@ -59,7 +59,6 @@ export default class Icon extends PureComponent {
 
         switch (iconType) {
             case 'MaterialCommunityIcons':
-
                 MaterialCommunityIconsView = (<MaterialCommunityIcons name={name} size={size} color={_color}/>);
                 return MaterialCommunityIconsView;
             case 'Ionicons':
@@ -73,8 +72,6 @@ export default class Icon extends PureComponent {
                 const FontAwesomeView = (<FontAwesome name={name} size={size} color={_color}/>);
                 return FontAwesomeView;
         }
-
-        // return <MaterialCommunityIcons name={name} size={size} color={color}/>;
     }
 
 }
@@ -84,7 +81,7 @@ Icon.defaultProps = {
     iconType: null,
     color: Colors.black,
     name: "bars",
-    dark : true,
+    dark: true,
 
 };
 
@@ -93,12 +90,12 @@ Icon.propTypes = {
     iconType: PropTypes.string,
     color: PropTypes.string,
     name: PropTypes.string,
-    large : PropTypes.bool,
-    medium : PropTypes.bool,
-    smallest : PropTypes.bool,
-    dark : PropTypes.bool,
-    success : PropTypes.bool,
-    error : PropTypes.bool,
+    large: PropTypes.bool,
+    medium: PropTypes.bool,
+    smallest: PropTypes.bool,
+    dark: PropTypes.bool,
+    success: PropTypes.bool,
+    error: PropTypes.bool,
     largeX: PropTypes.bool
 }
 

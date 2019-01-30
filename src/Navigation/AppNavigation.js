@@ -2,7 +2,7 @@ import {createStackNavigator, createDrawerNavigator} from 'react-navigation';
 
 import {ScreenKey} from '../Constants';
 
-import SplashScreen from '../Containers/SplashScreen';
+import {container as SplashScreen} from '../Containers/Splash';
 import {container as LoginScreen} from '../Containers/Login';
 import {container as RegisterScreen} from '../Containers/Register';
 import {container as ForgotPasswordScreen} from '../Containers/ForgotPassword';
@@ -29,7 +29,6 @@ const DrawerNav = createDrawerNavigator({
 });
 
 const MainNav = createStackNavigator({
-        // [ScreenKey.LOGIN_STACK] : { screen: LoginStack },
         [ScreenKey.SPLASH_SCREEN]: {screen: SplashScreen},
         [ScreenKey.DRAWER_NAV]: {screen: DrawerNav},
         [ScreenKey.LOGIN_SCREEN]: {screen: LoginScreen},
@@ -43,9 +42,6 @@ const MainNav = createStackNavigator({
     }, {
         headerMode: 'none',
         initialRouteName: ScreenKey.SPLASH_SCREEN,
-        //   cardStyle: styles.card,
-        // transitionConfig: getSlideFromRightTransition, // custom transition animation
-        // mode: 'modal'
         navigationOptions: {
             gesturesEnabled: false,
         },

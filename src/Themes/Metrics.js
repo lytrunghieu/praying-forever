@@ -31,11 +31,11 @@ const metrics = {
   statusBarHeight: (Platform.OS === 'ios') ? 20 : 25,
   buttonRadius: 4,
   icons: {
-    tiny: 15,
-    small: 20,
-    medium: 30,
-    large: 45,
-    xl: 50
+    tiny: 14,
+    small: 24,
+    medium: 32,
+    large: 40,
+    xl: 100
   },
   images: {
     small: 20,
