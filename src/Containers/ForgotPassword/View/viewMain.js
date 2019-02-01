@@ -1,10 +1,11 @@
 import React, {PureComponent} from 'react';
-import {Alert} from 'react-native';
+import {Alert, Keyboard} from 'react-native';
 import {IconName} from '../../../Themes/index';
 import I18n from '../../../I18n/index';
 import {ScreenKey} from "../../../Constants";
 import {FormValidate, ButtonFooter, Header,Container,Content} from "../../../Components/Modules";
 import {CommonUtils} from "../../../Utils/index";
+import {StackActions} from "react-navigation";
 
 import {style as styles} from "../Style";
 
@@ -102,6 +103,7 @@ export default class ForgotPassScreen extends PureComponent {
                 validEmail: true
             });
             const {userActions} = this.props;
+            Keyboard.dismiss();
             userActions.sendForgotPassword({email : this.state.email});
         }
     }

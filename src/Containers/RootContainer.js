@@ -1,6 +1,6 @@
 // Libraries
 import React, {PureComponent} from 'react';
-import {View, Keyboard, ToastAndroid} from 'react-native';
+import {View, Keyboard, ToastAndroid,BackHandler, NetInfo, } from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SafeAreaView} from 'react-navigation';
@@ -15,10 +15,8 @@ import {prayerActions} from '../Action';
 import {EventRegisterTypes} from "../Constants";
 import {EventRegister} from 'react-native-event-listeners';
 import {bindActionCreators} from 'redux';
-import firebase, {Notification, NotificationOpen} from 'react-native-firebase';
 import I18n from "../I18n";
 import AppNavigation from '../Navigation/AppNavigation';
-import {BackHandler, NetInfo} from 'react-native';
 import {
     reduxifyNavigator,
     createReactNavigationReduxMiddleware,
@@ -44,11 +42,6 @@ class RootContainer extends PureComponent {
     }
 
     componentDidMount() {
-        // if redux persist is not active fire startup action
-        // if (!ReduxPersist.active) {
-        //     this.props.startup();
-        // }
-
         NetInfo.getConnectionInfo().then((connectionInfo) => {
             if (connectionInfo.type === "none" || connectionInfo.type === "unknown") {
                 this.setState({
@@ -227,7 +220,6 @@ class RootContainer extends PureComponent {
                         onAccept={this.onAcceptDeletePrayer}
                     />
                 </SafeAreaView>
-
             </View>
         )
     }

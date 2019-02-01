@@ -5,6 +5,7 @@ import {
     Platform,
     Image,
     PixelRatio,
+    Keyboard
 } from 'react-native';
 
 import {style as styles} from "../Style";
@@ -75,13 +76,13 @@ export default class Profile extends PureComponent {
         }
 
 
-        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && !nextProps.profileReducer.fetching) {
+        if (nextProps.userReducer.fetching !== this.props.userReducer.fetching && !nextProps.userReducer.fetching) {
             this.setState({
                 loading: false
             });
         }
 
-        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && nextProps.profileReducer.fetching) {
+        if (nextProps.userReducer.fetching !== this.props.userReducer.fetching && nextProps.userReducer.fetching) {
             this.setState({
                 loading: true
             });
@@ -142,6 +143,7 @@ export default class Profile extends PureComponent {
         const {validDisplayName, displayName, gender, birthDay} = this.state;
         const {userActions} = this.props;
         if (validDisplayName) {
+            Keyboard.dismiss();
             userActions.updateProfile({displayName, gender, birthDay});
         }
     }
@@ -197,15 +199,16 @@ export default class Profile extends PureComponent {
     render() {
 
         const {loading, gender, birthDay, isChanged, displayName ,avatarURL} = this.state;
-        const {profileReducer} = this.props;
+        const {profileReducer,userReducer} = this.props;
         const {fetching} = profileReducer;
+        const {fetching : fetchingUserReducer} = userReducer;
 
         return (
             <Container>
                 <Header
                     title={I18n.t('profile')}
                     left={this.leftHeader}
-                    isFetching={fetching}
+                    isFetching={fetching || fetchingUserReducer}
                 />
                 {
                     !loading && !this.userOri ? <EmptyHolder

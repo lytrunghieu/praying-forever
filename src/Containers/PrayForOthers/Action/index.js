@@ -1,9 +1,9 @@
 import {actionTypes} from "./actionTypes";
-import {prayerActions} from "../../../Action";
+import * as action from "./action";
 
 export  {
     actionTypes,
-    prayerActions
+    action
 }
 
 export default module.exports

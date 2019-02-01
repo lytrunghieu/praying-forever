@@ -3,7 +3,8 @@ import {
     Platform,
     KeyboardAvoidingView,
     TimePickerAndroid,
-    View
+    View,
+    Keyboard
 } from 'react-native';
 import {IconName, Colors} from '../../../Themes';
 import I18n from '../../../I18n';
@@ -17,7 +18,7 @@ import firebase, {NotificationOpen} from 'react-native-firebase';
 import {Pray} from "../../../model";
 import {StatusOfPray, titlePrayerCode} from "../../../Constants";
 
-import {Header, ButtonFooter, Container, Content,CheckboxModal} from "../../../Components/Modules";
+import {Header, ButtonFooter, Container, Content, CheckboxModal} from "../../../Components/Modules";
 
 import {Item, Form} from 'native-base';
 
@@ -67,6 +68,7 @@ export default class CreatePraying extends PureComponent {
         this.state = {
             title: dataPassed && dataPassed.title || "",
             content: dataPassed && dataPassed.content || "",
+            isLive: dataPassed && dataPassed.isLive || "",
             options: this.generateOption(payload),
             isReminder: dataPassed && dataPassed.isReminder || false,
             timeReminder: dataPassed && dataPassed.timeReminder || moment().valueOf(),
@@ -93,7 +95,7 @@ export default class CreatePraying extends PureComponent {
 
         const _data = [];
         if (Array.isArray(data) && data.length) {
-            data.map(e =>{
+            data.map(e => {
                 _data.push(e);
             })
         }
@@ -151,18 +153,18 @@ export default class CreatePraying extends PureComponent {
     }
 
     onSubmit() {
-        const {title, content, isReminder, timeReminder} = this.state;
+        const {title, content, isLive} = this.state;
         const {action} = this.props;
-        let params = {title, content};
+        let params = {title, content, isLive};
         if (this.isEdit) {
             params.uid = this.uid;
             let dataSend = Pray.removeFieldEmpty(new Pray(params));
+            Keyboard.dismiss();
             action.editPrayer(dataSend).then(res => {
                 if (res.success) {
                     this.onPressBack();
                 }
             });
-
         }
         else {
 
@@ -177,6 +179,7 @@ export default class CreatePraying extends PureComponent {
                 };
                 params.status = StatusOfPray.INPROGRESS;
                 let dataSend = new Pray(params);
+                Keyboard.dismiss();
                 action.createNewPrayer(dataSend).then(res => {
                     if (res.success) {
                         this.onPressBack();
@@ -208,7 +211,7 @@ export default class CreatePraying extends PureComponent {
     }
 
     onSelectOption(code) {
-        let options =  [...this.state.options];
+        let options = [...this.state.options];
 
         options.map(op => {
             if (op.code == code) {
@@ -300,7 +303,6 @@ export default class CreatePraying extends PureComponent {
                             <Item fixedLabel>
 
                                 <Input
-                                    autoFocus={true}
                                     underlineColorAndroid={'rgba(0,0,0,0)'}
                                     value={this.state.title}
                                     onChangeText={this.onChangeText}

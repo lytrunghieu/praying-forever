@@ -19,14 +19,7 @@ export default class PrayForOther extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.optionActionSheet = [
-            {text: "5Km", onPress: this.onPressOption(0)},
-            {text: "10Km", onPress: this.onPressOption(1)},
-            {text: "15Km", onPress: this.onPressOption(2)}
-        ];
         this.onPressLeft = this.onPressLeft.bind(this);
-        this.onPressRight = this.onPressRight.bind(this);
-
         this.renderPrayItem = this.renderPrayItem.bind(this);
         this.renderSeparate = this.renderSeparate.bind(this);
         this.keyExtractor = this.keyExtractor.bind(this);
@@ -35,8 +28,10 @@ export default class PrayForOther extends PureComponent {
         this.onRefresh = this.onRefresh.bind(this);
         this.state = {
             prayers: [],
-            distance: 5000,
             loading: true,
+            options : [],
+            indexOption : -1,
+            fetchingActionSheet : true
         };
 
         this.leftHeader = {
@@ -50,13 +45,25 @@ export default class PrayForOther extends PureComponent {
             }
         ];
 
-        this.getPray(5000);
+        // this.getPray(5000);
     }
 
     //region CYCLE LIFE
 
     componentDidMount() {
-
+        const {action} = this.props;
+        action.getTemplateDistancePrayer().then(res => {
+            if (res.success) {
+                const {data} = res;
+                this.setState({
+                    options: data
+                })
+            }
+        }).finally(e => {
+            this.setState({
+                fetchingActionSheet: false
+            })
+        })
     }
 
     componentWillReceiveProps(nextProps) {
@@ -88,25 +95,56 @@ export default class PrayForOther extends PureComponent {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextState.distance != this.state.distance) {
-            this.getPray(nextState.distance);
+        if (nextState.indexOption !== this.state.indexOption && nextState.indexOption > -1 && nextState.options) {
+            const option = nextState.options[nextState.indexOption];
+            let text = option.unitValue / 1000;
+            text = text.toString().concat(" ").concat(I18n.t(option.unitCode));
+            this.rightHeader = [
+                {
+                    text: text,
+                },
+                {
+                    icon: IconName.filter,
+                    onPress: this.onPressMoreOption.bind(this)
+                },
+
+            ];
+            this.getPray(option.unitValue);
+        }
+        if(nextState.options !== this.state.options && nextState.options){
+            const {options,indexOption} = nextState;
+            const _optionActionSheet = [];
+            options.map((op,index) =>{
+                let text = op.unitValue / 1000;
+                text = text.toString().concat(" ").concat(I18n.t(op.unitCode));
+                _optionActionSheet.push({
+                    text : text,
+                    onPress : this.onPressOption(index)
+                });
+            });
+
+            const newState ={
+                optionActionSheet : _optionActionSheet
+            }
+
+            if(indexOption  === -1){
+                newState.indexOption = 0;
+            }
+
+            this.setState(newState);
         }
 
     }
 
-    componentWillUnmount() {
-    }
-
     //endregion
-
 
     onPressMoreOption() {
         this.refs["moreAction"].open();
     }
 
     onRefresh() {
-        const {distance} = this.state;
-        this.getPray(distance);
+        const {indexOption, options} = this.state;
+        this.getPray(options[indexOption] && options[indexOption].unitValue);
     }
 
     getPray(distance) {
@@ -117,28 +155,9 @@ export default class PrayForOther extends PureComponent {
     //region handle action modal
 
     onPressOption = (index) => () => {
-        let distance = 5000;
-        switch (index) {
-            case 1: {
-                distance = 10000;
-                break;
-            }
-
-            case 2: {
-                distance = 15000;
-                break;
-            }
-        }
-
         this.setState({
-            distance
+            indexOption: index
         });
-    }
-
-
-    onPressDeleteAll() {
-        this.refs["moreAction"].close();
-        this.refs["confirm"].open();
     }
 
     //endregion
@@ -159,10 +178,6 @@ export default class PrayForOther extends PureComponent {
 
     onPressLeft() {
         this.props.navigation.toggleDrawer();
-    }
-
-    onPressRight() {
-        this.refs["moreAction"].open();
     }
 
     //endregion
@@ -204,7 +219,7 @@ export default class PrayForOther extends PureComponent {
     }
 
     render() {
-        const {prayers, distance, loading} = this.state;
+        const {prayers, loading,optionActionSheet,fetchingActionSheet} = this.state;
         const {prayForOthersReducer, notificationReducer} = this.props;
         const {fetching} = prayForOthersReducer;
         const {payload} = notificationReducer;
@@ -241,9 +256,10 @@ export default class PrayForOther extends PureComponent {
                     onRefresh={this.onRefresh}
                 />
                 <ActionSheet
+                    fetching={fetchingActionSheet}
                     title={I18n.t("selectDistance")}
                     key="ActionSheet"
-                    options={this.optionActionSheet}
+                    options={optionActionSheet}
                     ref={"moreAction"}
                 />
 

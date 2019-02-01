@@ -1,10 +1,9 @@
 import actionTypes from "./actionTypes";
-import firebase from 'react-native-firebase';
+import {prayerService, locationService, userService} from "../Service";
+import UserService from "../Service/userService";
+import {FOLLOWING} from "../Service/errorCode";
 
-const uniqueId = require('react-native-unique-id');
-import {prayerService, locationService} from "../Service";
-
-export function getPrayer({userUID, prayerUID, search} = {}) {
+export function getPrayer({userUID, prayerUID, search,} = {}) {
     return function (dispatch) {
         dispatch({
             type: actionTypes.GET_PRAYER_PENDING,
@@ -89,12 +88,12 @@ export function deletePray(params) {
     }
 }
 
-export function followingPrayer(params) {
+export function followingPrayer({userOtherUID, prayerUID, follow}) {
     return function (dispatch) {
         dispatch({
             type: actionTypes.FOLLOWING_PRAYER_PENDING,
         });
-        new prayerService().followingPrayer(params).then(res => {
+        new prayerService().followingPrayer({userOtherUID, prayerUID, follow}).then(res => {
             if (res.success) {
                 dispatch({
                     type: actionTypes.FOLLOWING_PRAYER_SUCCESS,
@@ -102,6 +101,9 @@ export function followingPrayer(params) {
                 dispatch(getPrayer());
             }
             else {
+                if (res.status === FOLLOWING.NOT_FOUND_PRAYER.ERROR_CODE) {
+                    dispatch(deletePrayer({prayerUID: prayerUID}));
+                }
                 dispatch({
                     type: actionTypes.FOLLOWING_PRAYER_FAILED,
                     data: {
@@ -238,5 +240,78 @@ export function getPrayersNearby({distance}) {
             }
             return res;
         });
+    }
+}
+
+export function syncPrayer({userUID, prayerUID}) {
+    return function (dispatch) {
+        dispatch({
+            type: actionTypes.SYNC_PRAYER_PENDING,
+        });
+        return new prayerService().getPrayer({prayerUID, userUID}).then(res => {
+            if (res.success) {
+                if (res.data && res.data.length === 0) {
+                    return new prayerService().deletePrayer({prayerUID}).then(_res => {
+                        if (_res.success) {
+                            dispatch({
+                                type: actionTypes.SYNC_PRAYER_SUCCESS,
+                                data: {
+                                    payload: [
+                                        {
+                                            uid: prayerUID,
+                                            prayer: null
+                                        }
+                                    ]
+                                }
+                            });
+                        }
+                        else {
+                            dispatch({
+                                type: actionTypes.SYNC_PRAYER_FAILED,
+                                data: {
+                                    message: res.message
+                                }
+                            });
+                        }
+                        return _res;
+                    })
+                }
+                else {
+                    return new prayerService().syncPrayer({prayer: res.data[0]}).then(_res => {
+                        if (_res.success) {
+                            dispatch({
+                                type: actionTypes.SYNC_PRAYER_SUCCESS,
+                                data: {
+                                    payload: [
+                                        {
+                                            uid: prayerUID,
+                                            prayer: res.data[0]
+                                        }
+                                    ]
+                                }
+                            });
+                        }
+                        else {
+                            dispatch({
+                                type: actionTypes.SYNC_PRAYER_FAILED,
+                                data: {
+                                    message: _res.message
+                                }
+                            });
+                        }
+                        return _res;
+                    });
+                }
+            }
+            else {
+                dispatch({
+                    type: actionTypes.SYNC_PRAYER_FAILED,
+                    data: {
+                        message: res.message
+                    }
+                });
+            }
+            return res;
+        })
     }
 }

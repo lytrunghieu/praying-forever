@@ -3,7 +3,7 @@ import React, {PureComponent} from 'react';
 import {Image, View, TouchableOpacity} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
-import {Colors, Fonts, IconName} from '../../Themes';
+import {Colors, Fonts, IconName,Metrics} from '../../Themes';
 import {Icon} from "../Common";
 import {URL} from "../../Constants"
 
@@ -15,7 +15,6 @@ export default class Avatar extends PureComponent {
         this.state = {
             uri: props.uri || URL.avatar.replace("{userUID}", this.userUID).replace("{t}", new Date().getTime()),
         }
-        this.refresh = this.refresh.bind(this);
     }
 
 
@@ -25,36 +24,35 @@ export default class Avatar extends PureComponent {
                 uri: nextProps.uri
             });
         }
+        if(nextProps.uid !==  this.props.uid){
+            this.setState({
+                uri:  URL.avatar.replace("{userUID}", nextProps.uid).replace("{t}", new Date().getTime())
+            });
+        }
     }
 
     componentDidMount() {
 
     }
 
-    refresh() {
-        this.setState({
-            uri: URL.avatar.replace("{userUID}", this.userUID).replace("{t}", new Date().getTime()),
-        });
-    }
-
     render() {
         const {large, largeX, medium, smallest, onPress, ...rest} = this.props;
-        let size = 24;
+        let size = Metrics.icons.small;
         let _color = Colors.black;
         if (large) {
-            size = 40;
+            size = Metrics.icons.large;
         }
         if (largeX) {
-            size = 100;
+            size = Metrics.icons.xl;
         }
 
         else {
             if (medium) {
-                size = 32;
+                size = Metrics.icons.medium;
             }
             else {
                 if (smallest) {
-                    size = 14
+                    size = Metrics.icons.tiny
                 }
             }
         }

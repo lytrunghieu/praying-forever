@@ -1,6 +1,7 @@
 import {actionTypes} from '../Action';
 import {actionTypes as prayerDetailActionTypes} from '../Containers/PrayerDetail';
 import {actionTypes as createPrayerActionTypes} from '../Containers/CreatePrayer';
+import {actionTypes as prayForOthersActionTypes} from '../Containers/PrayForOthers';
 import InitialState from "./initialStates";
 
 export function errorMessageReducer(state = InitialState.errorMessage, action) {
@@ -16,6 +17,8 @@ export function errorMessageReducer(state = InitialState.errorMessage, action) {
                     && type !== actionTypes.GET_NOTIFICATION_FAILED
                     && type !== prayerDetailActionTypes.GET_PRAYER_DETAIL_FAILED
                     && type !== createPrayerActionTypes.GET_TEMPLATE_PRAYER_FAILED
+                    && type !== prayForOthersActionTypes.GET_TEMPLATE_DISTANCE_PRAYER_FAILED
+                    && type !== actionTypes.SYNC_PRAYER_FAILED
                 ){
                     state = state.set("detail", { message : data.message , statusCode : data.statusCode});
                 }

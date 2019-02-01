@@ -4,7 +4,7 @@ import {View,Image} from 'react-native'
 import I18n from '../../../I18n/index';
 import {IconName} from '../../../Themes/index';
 import firebase from 'react-native-firebase';
-import {NavigationActions,StackActions} from "react-navigation";
+import {StackActions} from "react-navigation";
 import {EventRegisterTypes, URL, StatusOfPray, ScreenKey,contentCodes,firestorePaths} from "../../../Constants";
 import {EventRegister} from 'react-native-event-listeners';
 import moment from "moment";

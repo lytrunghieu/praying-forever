@@ -3,14 +3,12 @@ import {
     View,
     FlatList, TouchableHighlight
 } from 'react-native';
-import {StatusOfPray, EventRegisterTypes, ScreenKey} from "../../../Constants";
-import {Colors, Images, ApplicationStyles, IconName} from '../../../Themes';
+import {ScreenKey} from "../../../Constants";
+import {Colors, IconName} from '../../../Themes';
 import I18n from '../../../I18n/index';
 import {
     ActionSheet,
-    PlaceHolder,
 } from '../../../Components/Common';
-import commonUtils from "../../../Utils/CommonUtils";
 import firebase from 'react-native-firebase';
 
 import {
@@ -22,72 +20,15 @@ import {
 } from "../../../Components/Modules";
 import ActionNotificationModal from "./ActionNotificationModal";
 
-
-const mockData = [
-    {
-        contentCode: "prayer/prayer-finished",
-        from: {
-            displayName: "Hieu",
-            uid: "12333",
-        },
-        created: new Date(),
-        isRead: false,
-        uid: "12313dada"
-    },
-    {
-        contentCode: "prayer/prayer-finished",
-        from: {
-            displayName: "Hieu",
-            uid: "12333",
-        },
-        created: new Date(),
-        isRead: false,
-        uid: "12313dada"
-    },
-    {
-        contentCode: "prayer/prayer-finished",
-        from: {
-            displayName: "Hieu",
-            uid: "12333",
-        },
-        created: new Date(),
-        isRead: true,
-        uid: "12313dada"
-    },
-    {
-        contentCode: "prayer/prayer-finished",
-        from: {
-            displayName: "Hieu",
-            uid: "12333",
-        },
-        created: new Date(),
-        isRead: false,
-        uid: "12313dada"
-    },
-    {
-        contentCode: "prayer/prayer-finished",
-        from: {
-            displayName: "Hieu",
-            uid: "12333",
-        },
-        created: new Date(),
-        isRead: true,
-        uid: "12313dada"
-    }
-]
-
 export default class Notifications extends PureComponent {
     constructor(props) {
         super(props);
         this.onPressLeft = this.onPressLeft.bind(this);
         this.onPressMoreOption = this.onPressMoreOption.bind(this);
         this.onPressDelete = this.onPressDelete.bind(this);
-
         this.renderItem = this.renderItem.bind(this);
         this.keyExtractor = this.keyExtractor.bind(this);
-
         this.onAccept = this.onAccept.bind(this);
-
         this.onPressUpdateReadStatus = this.onPressUpdateReadStatus.bind(this);
         this.onPressItem = this.onPressItem.bind(this);
 
@@ -169,11 +110,11 @@ export default class Notifications extends PureComponent {
 
     onAccept(item) {
         const {notificationActions} = this.props;
-        if(item){
-            const {uid :notifUID} = item;
+        if (item) {
+            const {uid: notifUID} = item;
             notificationActions.deleteNotification({notifUID});
         }
-        else{
+        else {
             notificationActions.deleteNotification();
         }
 
@@ -188,14 +129,18 @@ export default class Notifications extends PureComponent {
         }
     }
 
-    onPressUpdateReadStatus(item ={}, read) {
-        const {uid : notifUID} = item;
+    onPressUpdateReadStatus(item = {}, read) {
+        const {uid: notifUID} = item;
         const {notificationActions} = this.props;
-        notificationActions.updateReadStatusNotification({notifUID , read});
+        notificationActions.updateReadStatusNotification({notifUID, read});
     }
 
     onPressItem(item) {
-        this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, {item : item.prayer , uid : item.prayer.uid , cb : this.onPressUpdateReadStatus.bind(this,item,true)});
+        this.props.navigation.navigate(ScreenKey.PRAY_DETAIL, {
+            item: item.prayer,
+            uid: item.prayer.uid,
+            cb: this.onPressUpdateReadStatus.bind(this, item, true)
+        });
     }
 
     //endregion
@@ -222,7 +167,7 @@ export default class Notifications extends PureComponent {
                 <Header
                     title={I18n.t('notifications')}
                     left={this.leftHeader}
-                    right={ payload.length !== 0 ? this.rightHeader : null}
+                    right={payload.length !== 0 ? this.rightHeader : null}
                     isFetching={fetching}
                     badge={unreadNoti ? true : false}
                 />

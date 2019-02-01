@@ -1,7 +1,7 @@
 
 import Header from "./Header";
 import OptionButton from "./OptionButton";
-import PrayItem from "./PrayItem";
+import PrayItem from "../HightComponent/PrayItem";
 import ButtonFooter from "./ButtonFooter";
 import FormValidate from "./FormValidate";
 import Container from "./Container";

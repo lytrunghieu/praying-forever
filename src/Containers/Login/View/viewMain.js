@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react';
 import {
     Image,
     Alert,
+    Keyboard
 } from 'react-native';
 import {ScreenKey} from '../../../Constants';
 import { Images} from '../../../Themes/index';
@@ -134,6 +135,7 @@ export default class LoginScreen extends PureComponent {
             valid.validPassword = false;
         }
         if (valid.validPassword && valid.validEmail) {
+            Keyboard.dismiss();
             userActions.login({email, password}).then(res =>{
                 if(res.success){
                     const resetAction = StackActions.replace({

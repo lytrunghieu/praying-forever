@@ -6,7 +6,8 @@ import {
     UPDATE_STATUS_PRAYER,
     DELETE_PRAYER,
     FOLLOWING_PRAYER,
-    UPDATE_LIVE_STATUS
+    UPDATE_LIVE_STATUS,
+    SYNC_PRAYER
 } from "./nameCloudFunction"
 import moment from "moment";
 import {Pray, response} from "../model";
@@ -34,8 +35,8 @@ class PrayerService extends baseService {
         return super.executeHttp(DELETE_PRAYER, {prayerUID: prayerUID, status});
     }
 
-    getPrayer({userUID, prayerUID, search}) {
-        return super.executeHttp(GET_PRAYER, {userUID, prayerUID, search}).then(res => {
+    getPrayer({userUID, prayerUID, status = 0, search}) {
+        return super.executeHttp(GET_PRAYER, {userUID, prayerUID, status ,search}).then(res => {
             if (res.success && Array.isArray(res.data)) {
                 let dataConvert = res.data.map(e => {
                     return new Pray(e);
@@ -154,6 +155,30 @@ class PrayerService extends baseService {
         }).finally(res => {
             return new response(res);
         })
+    }
+
+    getTemplateDistancePrayer() {
+        const doc = firebase.firestore().doc(firestorePaths.TEMPLATE_DISTANCE_PRAYER);
+        return doc.get().then(docSnap => {
+            const result = {
+                data: {
+                    success: true,
+                    data: null
+                }
+            };
+            const {value} = docSnap.data();
+            if (Array.isArray(value)) {
+                result.data.data = value;
+            }
+            return result;
+        }).finally(res => {
+            return new response(res);
+        })
+    }
+
+    syncPrayer({userUID, prayer  }){
+        const _userUID  = userUID || firebase.auth().currentUser.uid;
+        return super.executeHttp(SYNC_PRAYER,{userUID : _userUID , prayer});
     }
 }
 

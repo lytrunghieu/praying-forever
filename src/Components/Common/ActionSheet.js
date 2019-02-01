@@ -1,7 +1,7 @@
 import React from "react";
 import ModalBase from "./ModalBase";
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {View} from "react-native";
+import {View ,ActivityIndicator} from "react-native";
 import {Colors} from "../../Themes";
 import PropTypes from 'prop-types';
 import {Button, TextBase} from "./";
@@ -53,7 +53,7 @@ export default class ActionSheet extends ModalBase {
     }
 
     renderContent() {
-        const {options, submitText, title} = this.props;
+        const {options, submitText, title ,fetching} = this.props;
         return (
             <View style={[styles.container]}>
                 <View style={styles.header}>
@@ -61,9 +61,15 @@ export default class ActionSheet extends ModalBase {
                               upperCase={true}>{title || I18n.t("selectAction")}</TextBase>
                 </View>
                 <View style={styles.content}>
-                    {options.map((op, index) => {
-                        return this.renderOptionRow(op, index);
-                    })}
+                    {
+                        fetching  ? <View style ={styles.fetchingWrapper}>
+                            <ActivityIndicator size="large" color={Colors.blue}/>
+
+                        </View> : options && options.length && options.map((op, index) => {
+                            return this.renderOptionRow(op, index);
+                        })
+                    }
+
 
                     <ButtonFooter onPress={this.close} text={submitText || I18n.t("cancel")}
                     >
@@ -77,19 +83,19 @@ export default class ActionSheet extends ModalBase {
 
 ActionSheet.defaultProps = {
     closeWhenPress: true,
+    options: [],
 }
 
 ActionSheet.propTypes = {
     options: PropTypes.array,
     submitText: PropTypes.string,
-    title: PropTypes.string
+    title: PropTypes.string,
+    fetching : PropTypes.bool
 }
 
 const styles = EStyleSheet.create({
     container: {
         width: "100%",
-        // backgroundColor: Colors.primary,
-        // alignItems: "center",
         paddingLeft: "$padding",
         paddingRight: "$padding",
     },
@@ -110,10 +116,6 @@ const styles = EStyleSheet.create({
         borderRadius: "$borderRadiusSmall"
     },
 
-    buttonSubmit: {
-        margin: "$padding",
-    },
-
     buttonOption: {
         borderBottomWidth: "$borderWidthSmall",
         borderColor: Colors.divider,
@@ -121,6 +123,12 @@ const styles = EStyleSheet.create({
         borderRadius: 0,
     },
 
-    textButtonOption: {}
+    fetchingWrapper :{
+        height :"$heightRowNormal",
+        width:"100%",
+        alignItems:"center",
+        justifyContent:"center"
+
+    }
 
 });

@@ -48,11 +48,13 @@ export default class ActionPrayerModal extends PureComponent {
         CommonUtils.sendEvent({type: EventRegisterTypes.UPDATE_PRAYER_STATUS, params: {prayerUID}})
     }
 
-    onPressEdit() {
-        CommonUtils.sendEvent({type: EventRegisterTypes.NAVIGATE_SCREEN, params: {
-            screen: ScreenKey.PRAY_DETAIL,
-            params: {prayerUID, userOtherUID, follow}
-        }});
+    onPressEdit = (data) => () => {
+        CommonUtils.sendEvent({
+            type: EventRegisterTypes.NAVIGATE_SCREEN, params: {
+                screen: ScreenKey.CREATE_PRAYING,
+                params: data
+            }
+        });
     }
 
     onPressDelete = (params) => () => {
@@ -87,7 +89,7 @@ export default class ActionPrayerModal extends PureComponent {
             const {uid = {}} = owner;
             if (uid === firebase.auth().currentUser.uid) {
                 options = options.concat([
-                    {text: I18n.t('edit'), onPress: this.onPressEdit.bind(this)},
+                    {text: I18n.t('edit'), onPress: this.onPressEdit(data)},
                     {text: I18n.t('delete'), color: Colors.red, onPress: this.onPressDelete(data)}
                 ]);
                 if (status !== StatusOfPray.COMPLETE) {

@@ -40,12 +40,13 @@ export default class Header extends PureComponent {
                 righComp =
 
                     right.map((e, index) => {
-                        const {icon, onPress} = e;
-                        return (
+                        const {icon, onPress, text} = e;
+                        return text ?  <Button key={index} transparent><TextBase highlight={true}>{text}</TextBase></Button> :
+
                             <Button key={index} transparent onPress={onPress}>
                                 <Icon name={icon} dark={false}/>
                             </Button>
-                        );
+                        ;
                     })
 
             }

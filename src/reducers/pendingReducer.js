@@ -1,11 +1,15 @@
 import InitialState from "./initialStates";
 import {actionTypes} from "../Action";
+import {actionTypes as prayForOthersActionTypes} from '../Containers/PrayForOthers';
 
 export function pendingReducer(state = InitialState.pending, action) {
     const {type, data} = action;
     switch (type) {
         default :
-            if(type === actionTypes.GET_PROFILE_PENDING){
+            if(type === actionTypes.GET_PROFILE_PENDING
+                || type === actionTypes.SYNC_PRAYER_PENDING
+                || type === prayForOthersActionTypes.GET_TEMPLATE_DISTANCE_PRAYER_PENDING
+            ){
                 return state
             }
 

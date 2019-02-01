@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react';
 import {
     View,
     Alert,
+    Keyboard
 } from 'react-native';
 import {IconName} from '../../../Themes/index';
 import {CommonUtils} from '../../../Utils/index';
@@ -83,7 +84,6 @@ export default class CreateAccount extends PureComponent {
 
     componentDidUpdate(preProps, preState) {
         if (preState.indexStep !== this.state.indexStep) {
-            console.log("componentDidUpdate");
             if (preState.indexStep === 0) {
                 let ref = "textInput".concat(inputKey.EMAIL.index + 1);
                 this.refs[ref].focus();
@@ -265,6 +265,7 @@ export default class CreateAccount extends PureComponent {
         }
 
         if (valid.validEmail && valid.validMatchPassword) {
+            Keyboard.dismiss();
             userActions.register({email, password, firstName, lastName, gender, birthDay});
         }
         this.setState(valid)

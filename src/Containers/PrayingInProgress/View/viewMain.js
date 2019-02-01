@@ -246,12 +246,12 @@ export default class PrayingInProgress extends PureComponent {
 
     render() {
         const {prayers, isSearch, keySearch, loading, refreshing} = this.state;
-        const {prayerReducer,notificationReducer} = this.props;
+        const {prayerReducer, notificationReducer} = this.props;
         const {fetching} = prayerReducer;
         const {payload} = notificationReducer;
         const unreadNoti = payload.filter(e => !e.isRead).length;
         return (
-            <Container key="container" >
+            <Container key="container">
                 <Header
                     title={I18n.t('praying')}
                     left={this.leftHeader}
@@ -264,7 +264,7 @@ export default class PrayingInProgress extends PureComponent {
                 />
 
                 {
-                    !loading && prayers.length === 0 ? <EmptyHolder
+                   !loading && prayers.length === 0 ? <EmptyHolder
                         h1={I18n.t("noPrayer")}
                         h2={I18n.t("noPrayerInprogress")}
                         link={I18n.t("tryAgain")}
