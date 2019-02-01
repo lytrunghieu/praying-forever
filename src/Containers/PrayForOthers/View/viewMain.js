@@ -11,7 +11,8 @@ import {
     PlaceHolder,
 } from '../../../Components/Common';
 
-import {Header, Container, EmptyHolder, PrayItem} from "../../../Components/Modules";
+import {Header, Container, EmptyHolder} from "../../../Components/Modules";
+import {PrayItem} from "../../../Components/HightComponent";
 import {ScreenKey} from "../../../Constants";
 import firebase, {NotificationOpen} from 'react-native-firebase';
 

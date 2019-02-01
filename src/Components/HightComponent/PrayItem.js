@@ -156,14 +156,7 @@ class PrayItem extends PureComponent {
                             <TextBase italic={true}>{moment(created).fromNow()}</TextBase>
                             </Body>
                         </Left>
-                        {
-                            !isUser ?
-                                <Right>
-                                    <Button rounded={true} text={I18n.t("update")}
-                                            onPress={this.checkSyncPrayer.bind(this, item)}
-                                    />
-                                </Right> : null
-                        }
+
                         {
                             actionMore ?
                                 <Right>
@@ -191,6 +184,14 @@ class PrayItem extends PureComponent {
                         <Body style={{justifyContent: "center"}}>
                         {this.renderGender(gender)}
                         </Body>
+                        {
+                            !isUser ?
+                                <Right>
+                                    <Button rounded={true} text={I18n.t("update")}
+                                            onPress={this.checkSyncPrayer.bind(this, item)}
+                                    />
+                                </Right> : null
+                        }
                         <Right>
                             {this.renderOld(birthDay)}
                         </Right>

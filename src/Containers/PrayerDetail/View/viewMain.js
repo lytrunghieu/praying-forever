@@ -6,7 +6,8 @@ import {EventRegisterTypes} from '../../../Constants';
 import {IconName} from '../../../Themes';
 import I18n from '../../../I18n';
 import {CommonUtils} from "../../../Utils";
-import {Header, Container, Content, PrayItem} from "../../../Components/Modules";
+import {Header, Container, Content} from "../../../Components/Modules";
+import {PrayItem} from "../../../Components/HightComponent";
 
 export default class PrayerDetail extends PureComponent {
     constructor(props) {

@@ -15,9 +15,9 @@ import {
     Header,
     ActionSheetPrayItem,
     Container,
-    PrayItem,
     EmptyHolder
 } from "../../../Components/Modules";
+import {PrayItem} from "../../../Components/HightComponent";
 
 export default class PrayerFinished extends PureComponent {
 
