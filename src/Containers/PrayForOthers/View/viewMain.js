@@ -92,6 +92,9 @@ export default class PrayForOther extends PureComponent {
 
         if (nextProps.prayForOthersReducer.fetching !== this.props.prayForOthersReducer.fetching && !nextProps.prayForOthersReducer.fetching) {
             this.setState({loading: false})
+            if(nextProps.prayForOthersReducer.lastAction !== this.props.prayForOthersReducer.lastAction){
+                this.onRefresh();
+            }
         }
     }
 

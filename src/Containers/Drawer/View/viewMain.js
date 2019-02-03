@@ -313,7 +313,7 @@ export default class DrawerContainer extends PureComponent {
     }
 
     render() {
-        const {prayerReducer, drawerReducer, userReducer,loginReducer,navigation} = this.props;
+        const {prayerReducer, drawerReducer, userReducer,navigation} = this.props;
         const {notificationNotRead} = this.state;
         const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE) || [];
         const praysInprogress = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [];
@@ -322,7 +322,7 @@ export default class DrawerContainer extends PureComponent {
         const isDrawerOpen = navigation && navigation.state && navigation.state.isDrawerOpen;
         return (
             <View key={"main"} pointerEvents={fetching ?"none":"auto"}>
-                <LoadingIndicator visible={fetching && isDrawerOpen}/>
+                <LoadingIndicator visible={fetching  && isDrawerOpen}/>
                 <View style={style.profileContainer}>
                     <Avatar uri={avatarURL} largeX={true} />
                     <PlaceHolder/>

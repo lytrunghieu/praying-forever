@@ -19,22 +19,59 @@ window.Blob = Blob
 class UserService extends baseService {
 
     getProfile({userUID, isUser = true} = {}) {
-        const _userUID = userUID || firebase.auth().currentUser.uid;
         const profileCollect = firebase.firestore().collection(collection.PROFILE);
-        return profileCollect.where("uid", "==", _userUID).get().then(queryShot => {
-            if (queryShot.docs[0] && queryShot.docs[0].data()) {
-                return {data: {success: true, data: new PrayUser(queryShot.docs[0].data())}}
-            }
-            else {
-                throw  {data: {success: false, message: I18n.t("cannotGetProfile")}};
-            }
+       if(!isUser){
+           if(!userUID){
+               return profileCollect.get().then(queryShot => {
+                   const users = [];
+                   if(queryShot.docs[0]){
+                       queryShot.docs.forEach(doc =>{
+                           users.push(new PrayUser(doc.data()));
+                       })
+                   }
+                   return {data: {success: true, data: users}}
 
-        }).catch(err => {
-            console.log("LOG ERROR ", err);
-            return err;
-        }).finally(res => {
-            return new response(res)
-        });
+               }).catch(err => {
+                   console.log("LOG ERROR ", err);
+                   return err;
+               }).finally(res => {
+                   return new response(res)
+               });
+           }
+           else{
+               return profileCollect.where("uid", "==", userUID).get().then(queryShot => {
+                   if (queryShot.docs[0] && queryShot.docs[0].data()) {
+                       return {data: {success: true, data: [new PrayUser(queryShot.docs[0].data())]}}
+                   }
+                   else {
+                       throw  {data: {success: false, message: I18n.t("cannotGetProfile")}};
+                   }
+
+               }).catch(err => {
+                   console.log("LOG ERROR ", err);
+                   return err;
+               }).finally(res => {
+                   return new response(res)
+               });
+           }
+       }
+       else{
+           const _userUID = firebase.auth().currentUser.uid;
+           return profileCollect.where("uid", "==", _userUID).get().then(queryShot => {
+               if (queryShot.docs[0] && queryShot.docs[0].data()) {
+                   return {data: {success: true, data: [new PrayUser(queryShot.docs[0].data())]}}
+               }
+               else {
+                   throw  {data: {success: false, message: I18n.t("cannotGetProfile")}};
+               }
+
+           }).catch(err => {
+               console.log("LOG ERROR ", err);
+               return err;
+           }).finally(res => {
+               return new response(res)
+           });
+       }
     }
 
     login({email, password}) {
@@ -65,7 +102,6 @@ class UserService extends baseService {
                     result.data.statusCode = 400;
                 }
             }
-
             return result;
 
         }).catch(err => {
@@ -282,6 +318,25 @@ class UserService extends baseService {
                 uploadBlob.close();
                 return new response(res)
             })
+    }
+
+    getUsers(){
+        const path = firestorePaths.PROFILES;
+        const profileCollect = firebase.firestore().collection(path);
+        return profileCollect.get().then(colSnap => {
+            colSnap.docs[0].ref.update("gender", gender, "birthDay", birthDay, "displayName", displayName);
+            const result = {
+                data: {
+                    success: true,
+                    message: null,
+                    statusCode: 200,
+                }
+            }
+            return result;
+        }).finally(res => {
+            return new response(res)
+        });
+
     }
 }
 

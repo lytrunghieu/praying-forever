@@ -14,10 +14,10 @@ import firebase from 'react-native-firebase';
 import {
     Header,
     Container,
-    NotificationItem,
     EmptyHolder,
     ConfirmModal
 } from "../../../Components/Modules";
+import {NotificationItem} from "../../../Components/HightComponent";
 import ActionNotificationModal from "./ActionNotificationModal";
 
 export default class Notifications extends PureComponent {
@@ -158,7 +158,7 @@ export default class Notifications extends PureComponent {
     }
 
     render() {
-        const {notificationReducer, navigation} = this.props;
+        const {notificationReducer} = this.props;
         const {payload} = this.state;
         const {fetching} = notificationReducer
         const unreadNoti = payload.filter(e => !e.isRead).length;

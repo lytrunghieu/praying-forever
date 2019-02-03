@@ -79,7 +79,8 @@ Avatar.defaultProps = {};
 
 Avatar.propTypes = {
     uid: PropTypes.string,
-    onPress: PropTypes.func
+    onPress: PropTypes.func,
+    uri : PropTypes.string
 }
 
 

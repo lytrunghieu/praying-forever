@@ -86,11 +86,11 @@ export default class PrayingInProgress extends PureComponent {
             this.setState({loading: false})
         }
 
-        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && nextProps.profileReducer.fetching) {
+        if (nextProps.profileReducer.inprogress !== this.props.profileReducer.inprogress && nextProps.profileReducer.inprogress) {
             this.setState({refreshing: true})
         }
 
-        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && !nextProps.profileReducer.fetching) {
+        if (nextProps.profileReducer.inprogress !== this.props.profileReducer.inprogress && !nextProps.profileReducer.inprogress) {
             this.setState({refreshing: false})
         }
 
@@ -250,6 +250,9 @@ export default class PrayingInProgress extends PureComponent {
         const {fetching} = prayerReducer;
         const {payload} = notificationReducer;
         const unreadNoti = payload.filter(e => !e.isRead).length;
+        if(!refreshing){
+            console.log("TEST 2");
+        }
         return (
             <Container key="container">
                 <Header
@@ -264,7 +267,7 @@ export default class PrayingInProgress extends PureComponent {
                 />
 
                 {
-                   !loading && prayers.length === 0 ? <EmptyHolder
+                    !loading && prayers.length === 0 ? <EmptyHolder
                         h1={I18n.t("noPrayer")}
                         h2={I18n.t("noPrayerInprogress")}
                         link={I18n.t("tryAgain")}

@@ -12,7 +12,6 @@ import ModalScanQR from "./ModalScanQR";
 import ConfirmModal from "./ConfirmModal";
 import EmptyHolder from "./EmptyHolder";
 import NetworkBar from "./NetworkBar";
-import NotificationItem from "./NotificationItem";
 import Avatar from "./Avatar";
 import DatePicker from "./DatePicker";
 import CheckboxModal from "./CheckboxModal";
@@ -31,7 +30,6 @@ export {
     ConfirmModal,
     EmptyHolder,
     NetworkBar,
-    NotificationItem,
     Avatar,
     DatePicker,
     CheckboxModal

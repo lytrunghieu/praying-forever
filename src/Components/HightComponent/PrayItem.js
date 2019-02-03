@@ -28,11 +28,31 @@ class PrayItem extends PureComponent {
         this.checkSyncPrayer = this.checkSyncPrayer.bind(this);
         this.state = {
             fetchingSync: false,
+            owner: this.retriveData(props)
         }
     }
 
     componentDidMount() {
-        const {item = {}} = this.props;
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.profilesReducer.payload !== this.props.profilesReducer.payload){
+            this.setState({
+                owner: this.retriveData(nextProps)
+            })
+        }
+    }
+
+    retriveData(props){
+        const {payload} = props.profilesReducer;
+        const {item} = props;
+        const {owner } = item;
+
+        if(!Array.isArray(payload) || payload.length ===0 ){
+            return null;
+        }
+        const findUser = payload.find(e => e.uid === owner.uid);
+        return findUser;
     }
 
     checkSyncPrayer(item) {
@@ -45,7 +65,7 @@ class PrayItem extends PureComponent {
             }, () => {
                 prayerActions.syncPrayer({prayerUID, userUID}).then(res => {
 
-                }).finally(e =>{
+                }).finally(e => {
                     this.setState({
                         fetchingSync: false
                     })
@@ -95,6 +115,9 @@ class PrayItem extends PureComponent {
     }
 
     renderGender(gender) {
+        if(gender === -1){
+            return null;
+        }
         if (!gender) {
             return <Icon name={IconName.male}/>
         }
@@ -118,19 +141,34 @@ class PrayItem extends PureComponent {
 
     render() {
         const {onPress, item = {}, allowScaleHeight, actionMore} = this.props;
-        const {fetchingSync} = this.state;
-        const {title, created, following, owner = {}, content, isLive} = item;
-        const {displayName, birthDay, gender, uid} = owner;
-        let _displayName = displayName;
+        const {fetchingSync ,owner} = this.state;
+        const {title, created, following, owner : _owner ={}, content, isLive} = item;
+        const {uid} = _owner;
+        let _birthDay = "";
+        let _gender = -1;
+        let _displayName = "";
+        let _avatarURL = "";
         let _isPublic = "";
-        let isUser = false;
+        let showUpdateBtn = false;
+
+        if(owner){
+            _avatarURL = owner.avatarURL;
+            _displayName = owner.displayName;
+            _birthDay = owner.birthDay
+            _gender = owner.gender;
+        }
         if (firebase.auth().currentUser && uid == firebase.auth().currentUser.uid) {
             _displayName = I18n.t("me");
             if (isLive) {
                 _isPublic = "(".concat(I18n.t("public")).concat(")")
             }
-            isUser = true;
         }
+        if(following) {
+            if (firebase.auth().currentUser && following.find(f => f === firebase.auth().currentUser.uid)){
+                showUpdateBtn = true;
+            }
+        }
+
 
         return (
             fetchingSync ?
@@ -143,7 +181,7 @@ class PrayItem extends PureComponent {
                         <Left>
                             <Avatar
                                 onPress={this.onPressAvatar}
-                                uid={uid}
+                                uri={_avatarURL}
                                 large={true}
                             />
                             <Body>
@@ -182,10 +220,10 @@ class PrayItem extends PureComponent {
                             {this.renderFollowingCount(following)}
                         </Left>
                         <Body style={{justifyContent: "center"}}>
-                        {this.renderGender(gender)}
+                        {this.renderGender(_gender)}
                         </Body>
                         {
-                            !isUser ?
+                            showUpdateBtn ?
                                 <Right>
                                     <Button rounded={true} text={I18n.t("update")}
                                             onPress={this.checkSyncPrayer.bind(this, item)}
@@ -193,7 +231,7 @@ class PrayItem extends PureComponent {
                                 </Right> : null
                         }
                         <Right>
-                            {this.renderOld(birthDay)}
+                            {this.renderOld(_birthDay)}
                         </Right>
                     </CardItem>
                 </Card>
@@ -242,7 +280,9 @@ const styles = EStyleSheet.create({
 
 });
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+    profilesReducer: state.profilesReducer
+});
 
 const mapDispatchToProps = (dispatch) => ({
     prayerActions: bindActionCreators(prayerActions, dispatch)

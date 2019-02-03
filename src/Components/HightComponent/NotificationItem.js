@@ -1,4 +1,3 @@
-// Libraries
 import React, {PureComponent} from 'react';
 import {View, TouchableOpacity, TouchableHighlight} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -6,22 +5,44 @@ import PropTypes from 'prop-types';
 import {Colors, Fonts, IconName} from '../../Themes';
 import {TextBase, Button, Icon} from "../Common";
 import moment from "moment";
-import I18n from "../../I18n";
+import I18n from "../../I18n/index";
 import { contentCodes,EventRegisterTypes,ScreenKey} from "../../Constants";
-import Avatar from "./Avatar";
+import Avatar from "../Modules/Avatar";
 import {CommonUtils} from "../../Utils";
-
-
 import {Left, Body, List, ListItem} from 'native-base';
+import {connect} from 'react-redux';
 
-export default class NotificationItem extends PureComponent {
+class NotificationItem extends PureComponent {
 
     constructor(props) {
         super();
-        this.swipeable = null;
         this._onPress = this._onPress.bind(this);
         this._onPressMore = this._onPressMore.bind(this);
         this.onPressAvatar = this.onPressAvatar.bind(this);
+        this.state = {
+            from: this.retriveData(props)
+        }
+
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.profilesReducer.payload !== this.props.profilesReducer.payload){
+            this.setState({
+                from: this.retriveData(nextProps)
+            })
+        }
+    }
+
+    retriveData(props){
+        const {payload} = props.profilesReducer;
+        const {item} = props;
+        const {from } = item;
+
+        if(!Array.isArray(payload) || payload.length ===0 ){
+            return null;
+        }
+        const findUser = payload.find(e => e.uid === from.uid);
+        return findUser;
     }
 
     _onPressMore() {
@@ -44,12 +65,18 @@ export default class NotificationItem extends PureComponent {
     }
 
     render() {
-        const {item = {}, onPress} = this.props;
-        const {created, from = {}, contentCode, isRead} = item;
-        const {displayName = "" , uid} = from;
+        const {item = {}} = this.props;
+        const {from = {}} = this.state;
+        const {created, contentCode, isRead} = item;
+        const {displayName = "" , avatarURL} = from;
         let content = "";
         let componentContent = null;
-        let _displayName = displayName;
+        let _displayName = "";
+        let _avatarURL = "";
+        if(from){
+            _displayName = displayName;
+            _avatarURL = avatarURL;
+        }
         if (contentCode === contentCodes.PRAYER_IS_FINISHED) {
             content = I18n.t("prayerHadFinish");
             let arrString = content.split(",");
@@ -72,7 +99,7 @@ export default class NotificationItem extends PureComponent {
                     >
                         <Avatar
                             onPress={this.onPressAvatar}
-                            uid={uid} large={true}/>
+                            uri={_avatarURL} large={true}/>
                     </Left>
                     <Body
                         style={styles.bodyWrapper}
@@ -112,16 +139,6 @@ const styles = EStyleSheet.create({
         borderColor: Colors.gray,
     },
 
-
-    bodyWrapper: {
-        // borderColor: "transparent"
-    },
-
-    rightWrapper: {
-        // borderColor: "transparent",
-        backgroundColor:"red"
-    },
-
     buttonMore :{
       height : "100%",
         paddingRight:"$padding",
@@ -129,104 +146,14 @@ const styles = EStyleSheet.create({
         justifyContent:"center",
     },
 
-    card: {
-        borderRadius: "$borderRadiusNormal",
-    },
-
-    cardHeaderContainer: {
-        borderTopLeftRadius: "$borderRadiusNormal"
-    },
-
-    container: {
-        backgroundColor: Colors.primary,
-        borderRadius: "$borderRadiusSmall",
-    },
-
-    containerButton: {
-        flexDirection: 'row',
-        width: "100%",
-        minHeight: "$heightRowNormal",
-        padding: "$paddingSmall"
-        // alignItems: "center",
-    },
-
-    leftContainer: {
-        flex: 1,
-        // justifyContent: "center",
-    },
-
-    rightContainer: {
-        // justifyContent: "center",
-        width: 77,
-        flex: -1,
-        alignItems: "flex-end"
-    },
-
-    title: {
-        fontFamily: Fonts.type.robotoRegular,
-        fontSize: Fonts.size.normal,
-        color: Colors.black
-    },
-
-
-    content: {
-        fontFamily: Fonts.type.robotoRegular,
-        fontSize: Fonts.size.small,
-        color: Colors.gray
-    },
-
-    date: {
-        fontFamily: Fonts.type.robotoRegular,
-        fontSize: Fonts.size.small,
-        color: Colors.black,
-        textAlign: "right"
-    },
-
-    optionTextContainer: {
-        alignSelf: "flex-end",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: Colors.black,
-        width: 75,
-        height: "$heightRowNormal",
-    },
-
-    optionText: {
-        fontFamily: Fonts.type.robotoRegular,
-        fontSize: Fonts.size.normal,
-        color: Colors.primary,
-    },
-
-    separator: {
-        borderRightWidth: "$borderWidthSmall",
-        borderColor: Colors.white,
-    },
-
-    borderRadius: {
-        borderTopLeftRadius: "$borderRadiusSmall",
-        borderBottomLeftRadius: "$borderRadiusSmall",
-    },
-
-    bottomActionsContainer: {
-        flexDirection: "row",
-        height: "$heightRowSmall",
-        justifyContent: "center",
-        borderTopWidth: "$borderWidthSmall",
-    },
-
-    bottomActionsOptionContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "row",
-
-    },
-
-    dividerSeparateBottomAction: {
-        height: "100%",
-        width: 1,
-        backgroundColor: Colors.gray
-    }
-
-
 });
+
+
+const mapStateToProps = (state) => ({
+    profilesReducer: state.profilesReducer
+});
+
+const mapDispatchToProps = (dispatch) => ({
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationItem);

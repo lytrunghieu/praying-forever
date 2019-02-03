@@ -8,4 +8,6 @@ export default initState = Immutable({
     fetching: false,
     success: false,
     message: null,
+    lastAction : []
+
 })

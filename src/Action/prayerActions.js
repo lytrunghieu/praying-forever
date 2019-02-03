@@ -1,7 +1,7 @@
 import actionTypes from "./actionTypes";
 import {prayerService, locationService, userService} from "../Service";
-import UserService from "../Service/userService";
 import {FOLLOWING} from "../Service/errorCode";
+import {getProfile} from "./userActions";
 
 export function getPrayer({userUID, prayerUID, search,} = {}) {
     return function (dispatch) {
@@ -11,13 +11,15 @@ export function getPrayer({userUID, prayerUID, search,} = {}) {
 
         new prayerService().getPrayer({userUID, prayerUID, search}).then(res => {
             if (res.success) {
+
+                dispatch(getProfile({isUser: false}));
+
                 dispatch({
                     type: actionTypes.GET_PRAYER_SUCCESS,
                     data: {
                         payload: res.data
                     }
                 });
-
             }
             else {
                 dispatch({
@@ -201,6 +203,7 @@ export function getPrayersNearby({distance}) {
                     if (_res.success) {
                         return new prayerService().getPrayersNearby({distance, location: _res.data}).then(__res => {
                             if (__res.success) {
+                                dispatch(getProfile({isUser: false}));
                                 dispatch({
                                     type: actionTypes.GET_PRAYER_NEARBY_SUCCESS,
                                     data: {

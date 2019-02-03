@@ -40,6 +40,13 @@ export default {
         message : null,
     }),
 
+    profiles : Immutable({
+        payload: null,
+        fetching : false,
+        success : false,
+        message : null,
+    }),
+
     errorMessage :Immutable({
         detail: null,
     }),

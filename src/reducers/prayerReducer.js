@@ -69,14 +69,6 @@ export function prayerReducer(state = InitialState.prayer, action) {
             return state;
         }
 
-        case actionTypes.LOGOUT_SUCCESS : {
-            state = state.set("fetching", false);
-            state = state.set("success", false);
-            state = state.set("message", null);
-            state = state.set("payload", []);
-            return state;
-        }
-
         case actionTypes.UPDATE_STATUS_PRAYER_PENDING : {
             state = state.set("fetching", true);
             return state;

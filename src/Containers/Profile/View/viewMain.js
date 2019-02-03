@@ -76,13 +76,13 @@ export default class Profile extends PureComponent {
         }
 
 
-        if (nextProps.userReducer.fetching !== this.props.userReducer.fetching && !nextProps.userReducer.fetching) {
+        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && !nextProps.profileReducer.fetching) {
             this.setState({
                 loading: false
             });
         }
 
-        if (nextProps.userReducer.fetching !== this.props.userReducer.fetching && nextProps.userReducer.fetching) {
+        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && nextProps.profileReducer.fetching) {
             this.setState({
                 loading: true
             });
@@ -181,7 +181,7 @@ export default class Profile extends PureComponent {
         const {userActions} = this.props;
         userActions.getProfile({userUID: this.uid, isUser: this.isUser}).then(res => {
             if (res.success && !this.isUser) {
-                const {displayName, gender, birthDay,avatarURL} = res.data;
+                const {displayName, gender, birthDay,avatarURL} = res.data[0];
                 this.userOri = res.data;
                 this.setState({
                     displayName,
@@ -201,14 +201,13 @@ export default class Profile extends PureComponent {
         const {loading, gender, birthDay, isChanged, displayName ,avatarURL} = this.state;
         const {profileReducer,userReducer} = this.props;
         const {fetching} = profileReducer;
-        const {fetching : fetchingUserReducer} = userReducer;
 
         return (
             <Container>
                 <Header
                     title={I18n.t('profile')}
                     left={this.leftHeader}
-                    isFetching={fetching || fetchingUserReducer}
+                    isFetching={fetching}
                 />
                 {
                     !loading && !this.userOri ? <EmptyHolder

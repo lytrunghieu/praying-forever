@@ -26,6 +26,30 @@ export function reducer(state = InitialState, action) {
             return state;
         }
 
+        //dependencies
+        case actionTypes.FOLLOWING_PRAYER_PENDING : {
+            state = state.set("fetching", true);
+            state = state.set("success", false);
+            state = state.set("message", null);
+            state = state.set("lastAction", [actionTypes.FOLLOWING_PRAYER_PENDING]);
+            return state;
+        }
+
+        case actionTypes.FOLLOWING_PRAYER_SUCCESS : {
+            state = state.set("fetching", false);
+            state = state.set("success", true);
+            state = state.set("message", null);
+            state = state.set("lastAction", []);
+            return state;
+        }
+
+        case actionTypes.FOLLOWING_PRAYER_FAILED : {
+            state = state.set("fetching", false);
+            state = state.set("success", false);
+            state = state.set("message", data.message);
+            state = state.set("lastAction", []);
+            return state;
+        }
 
         default :
             return state

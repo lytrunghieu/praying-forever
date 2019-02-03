@@ -16,14 +16,14 @@ export function getProfile({userUID , isUser = true} ={}) {
                 type: actionTypes.GET_PROFILE_OTHER_PENDING,
             });
         }
-        return new userService().getProfile({userUID}).then(res => {
+        return new userService().getProfile({userUID,isUser}).then(res => {
 
             if(isUser){
                 if (res.success) {
                     dispatch({
                         type: actionTypes.GET_PROFILE_SUCCESS,
                         data: {
-                            payload: res.data
+                            payload: res.data[0]
                         }
                     });
                 }
@@ -40,6 +40,9 @@ export function getProfile({userUID , isUser = true} ={}) {
                 if (res.success) {
                     dispatch({
                         type: actionTypes.GET_PROFILE_OTHER_SUCCESS,
+                        data :{
+                            payload: res.data
+                        }
                     });
                 }
                 else {
@@ -62,7 +65,6 @@ export function login({email, password}) {
         dispatch({
             type: actionTypes.LOGIN_PENDING,
         });
-
         return new userService().login({email, password}).then(res => {
             if (res.success) {
                 return dispatch(getProfile()).then(_res => {
@@ -70,6 +72,14 @@ export function login({email, password}) {
                         dispatch({
                             type: actionTypes.LOGIN_SUCCESS,
                             data: { payload :res.data}
+                        });
+                    }
+                    else {
+                        dispatch({
+                            type: actionTypes.LOGIN_FAILED,
+                            data: {
+                                message: _res.message,
+                            }
                         });
                     }
                     return _res;
@@ -239,7 +249,5 @@ export function updateAvatar({uri, mime = 'img/jpg'}) {
         })
     }
 }
-
-
 
 

@@ -401,7 +401,7 @@ export default class CreateAccount extends PureComponent {
     }
 
     render() {
-        const {indexStep} = this.state;
+        const {indexStep, email,password,retypePassword} = this.state;
         const {registerReducer} = this.props;
         const {fetching} = registerReducer;
 
@@ -420,7 +420,7 @@ export default class CreateAccount extends PureComponent {
                     indexStep === 1 ?
                         <ButtonFooter
                             onPress={this.onPressCreate}
-                            disabled={fetching} text={I18n.t("create")}
+                            disabled={fetching || !email || !password || !retypePassword } text={I18n.t("create")}
                         />
                         : null
                 }

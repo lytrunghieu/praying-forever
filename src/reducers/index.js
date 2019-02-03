@@ -8,6 +8,7 @@ import {loginReducer} from "./loginReducer";
 import {registerReducer} from "./registerReducer";
 import {forgotPasswordReducer} from "./forgotPasswordReducer";
 import {pendingReducer} from "./pendingReducer";
+import {profilesReducer} from "./profilesReducer";
 
 import {prayingInProgress, createPrayer,prayerDetail,Drawer,PrayForOthers, Profile} from "../Containers";
 const {reducer : createPrayerReducer} =createPrayer;
@@ -30,7 +31,8 @@ const appReducer = combineReducers({
     drawerReducer,
     prayForOthersReducer,
     profileReducer,
-    pendingReducer
+    pendingReducer,
+    profilesReducer
 })
 
 export const  expAppReducer = appReducer;

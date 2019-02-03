@@ -28,36 +28,8 @@ export function userReducer(state = InitialState.profile, action) {
             return state;
         }
 
-        case actionTypes.LOGOUT_SUCCESS : {
-            state = state.set("fetching", false);
-            state = state.set("success", false);
-            state = state.set("message", null);
-            state = state.set("payload", null);
-            return state;
-        }
-
         //dependencies
 
-        case actionTypes.GET_PROFILE_OTHER_PENDING :{
-            state = state.set("fetching", true);
-            state = state.set("success", false);
-            state = state.set("message", null);
-            return state;
-        }
-
-        case actionTypes.GET_PROFILE_OTHER_SUCCESS :{
-            state = state.set("fetching", false);
-            state = state.set("success", true);
-            state = state.set("message", null);
-            return state
-        }
-
-        case actionTypes.GET_PROFILE_OTHER_FAILED :{
-            state = state.set("fetching", false);
-            state = state.set("success", false);
-            state = state.set("message", data.message);
-            return state;
-        }
 
 
         default :
