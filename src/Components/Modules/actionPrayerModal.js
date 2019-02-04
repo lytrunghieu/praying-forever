@@ -62,7 +62,6 @@ export default class ActionPrayerModal extends PureComponent {
     }
 
     onPressShare = (data) => () => {
-        console.log("  on Share");
         CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_MODAL_QR_CODE, params: {data: data}})
     }
 

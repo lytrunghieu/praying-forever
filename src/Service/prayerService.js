@@ -35,7 +35,7 @@ class PrayerService extends baseService {
         return super.executeHttp(DELETE_PRAYER, {prayerUID: prayerUID, status});
     }
 
-    getPrayer({userUID, prayerUID, status = 0, search}) {
+    getPrayer({userUID, prayerUID, status = null, search}) {
         return super.executeHttp(GET_PRAYER, {userUID, prayerUID, status ,search}).then(res => {
             if (res.success && Array.isArray(res.data)) {
                 let dataConvert = res.data.map(e => {

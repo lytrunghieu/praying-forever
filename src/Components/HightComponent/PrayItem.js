@@ -127,7 +127,7 @@ class PrayItem extends PureComponent {
     }
 
     renderFollowingCount(following) {
-        if (Array.isArray(following) && following.length > 0) {
+        if (Array.isArray(following)) {
             return (
                 <Button iconLeft transparent={true}>
                     <Icon name={IconName.following}/>
@@ -136,7 +136,7 @@ class PrayItem extends PureComponent {
                 </Button>
             )
         }
-        return null
+        return null;
     }
 
     render() {
@@ -219,20 +219,21 @@ class PrayItem extends PureComponent {
                         <Left>
                             {this.renderFollowingCount(following)}
                         </Left>
-                        <Body style={{justifyContent: "center"}}>
+                        <Body style={styles.bodyFooterCardItem}>
                         {this.renderGender(_gender)}
                         </Body>
+                        <Left>
+                            {this.renderOld(_birthDay)}
+                        </Left>
                         {
                             showUpdateBtn ?
                                 <Right>
                                     <Button rounded={true} text={I18n.t("update")}
                                             onPress={this.checkSyncPrayer.bind(this, item)}
                                     />
-                                </Right> : null
+                                </Right> : <Right/>
                         }
-                        <Right>
-                            {this.renderOld(_birthDay)}
-                        </Right>
+
                     </CardItem>
                 </Card>
         );
@@ -275,6 +276,10 @@ const styles = EStyleSheet.create({
         height: 200,
         width: "100%",
         alignItems: "center",
+        justifyContent: "center"
+    },
+
+    bodyFooterCardItem :{
         justifyContent: "center"
     }
 

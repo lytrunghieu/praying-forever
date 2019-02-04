@@ -101,7 +101,7 @@ moment.locale('vi', {
     relativeTime: {
         future: "mới %s",
         past: "đã %s",
-        s: 'một vài giây trước',
+        s: 'một vài giây',
         ss: '%d giây',
         m: "một phút",
         mm: "%d phút",

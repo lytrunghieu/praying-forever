@@ -250,9 +250,6 @@ export default class PrayingInProgress extends PureComponent {
         const {fetching} = prayerReducer;
         const {payload} = notificationReducer;
         const unreadNoti = payload.filter(e => !e.isRead).length;
-        if(!refreshing){
-            console.log("TEST 2");
-        }
         return (
             <Container key="container">
                 <Header
@@ -267,12 +264,14 @@ export default class PrayingInProgress extends PureComponent {
                 />
 
                 {
-                    !loading && prayers.length === 0 ? <EmptyHolder
+                    !loading && prayers.length === 0 && keySearch.length <= 3 ? <EmptyHolder
                         h1={I18n.t("noPrayer")}
                         h2={I18n.t("noPrayerInprogress")}
                         link={I18n.t("tryAgain")}
                         onPressLink={this.onRefresh}
-                    /> : null
+                    /> : !loading && prayers.length === 0 && keySearch.length > 3 ?
+                        <EmptyHolder
+                            h1={I18n.t("noPrayer")} h2={I18n.t("noPrayerInprogress")}/> : null
                 }
                 {
                     !refreshing && <FlatList

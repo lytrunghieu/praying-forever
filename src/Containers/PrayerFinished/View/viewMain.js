@@ -80,11 +80,11 @@ export default class PrayerFinished extends PureComponent {
             this.setState({loading: false})
         }
 
-        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && nextProps.profileReducer.fetching) {
+        if (nextProps.profileReducer.inprogress !== this.props.profileReducer.inprogress && nextProps.profileReducer.inprogress) {
             this.setState({refreshing: true})
         }
 
-        if (nextProps.profileReducer.fetching !== this.props.profileReducer.fetching && !nextProps.profileReducer.fetching) {
+        if (nextProps.profileReducer.inprogress !== this.props.profileReducer.inprogress && !nextProps.profileReducer.inprogress) {
             this.setState({refreshing: false})
         }
     }
@@ -232,8 +232,8 @@ export default class PrayerFinished extends PureComponent {
     }
 
     render() {
-        const {prayers, isSearch, loading, keySearch,refreshing} = this.state;
-        const {prayerReducer,notificationReducer} = this.props;
+        const {prayers, isSearch, loading, keySearch, refreshing} = this.state;
+        const {prayerReducer, notificationReducer} = this.props;
         const {fetching} = prayerReducer;
         const {payload} = notificationReducer;
         const unreadNoti = payload.filter(e => !e.isRead).length;
@@ -250,13 +250,16 @@ export default class PrayerFinished extends PureComponent {
                     onCloseSearchBar={this.onCloseSearchBar}
                 />
                 {
-                    !loading && prayers.length === 0 ? <EmptyHolder
+                    !loading && prayers.length === 0 && keySearch.length <= 3 ? <EmptyHolder
                         h1={I18n.t("noPrayer")}
                         h2={I18n.t("noPrayerInprogress")}
                         link={I18n.t("tryAgain")}
                         onPressLink={this.onRefresh}
-                    /> : null
+                    /> : !loading && prayers.length === 0 && keySearch.length > 3 ?
+                        <EmptyHolder
+                            h1={I18n.t("noPrayer")} h2={I18n.t("noPrayerInprogress")}/> : null
                 }
+
                 {
                     !refreshing && <FlatList
                         onRefresh={this.onRefresh}
