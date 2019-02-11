@@ -18,7 +18,6 @@ import {CardItem} from 'native-base';
 import {StackActions} from "react-navigation";
 import {ScreenKey} from "../../../Constants";
 import * as _ from "lodash";
-import MailModule from '../../../modules/mail-module';
 
 const inputKey = {
     EMAIL: {name: "email", index: 2},
@@ -62,7 +61,6 @@ export default class CreateAccount extends PureComponent {
         this.onPressGender = this.onPressGender.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onSignupSuccess = this.onSignupSuccess.bind(this);
-        this.onPressGoInboxMail = this.onPressGoInboxMail.bind(this);
         this.leftHeader = {
             icon: IconName.back,
             onPress: this.onPressBack
@@ -76,12 +74,9 @@ export default class CreateAccount extends PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.registerReducer.success !== this.props.registerReducer.success && nextProps.registerReducer.success) {
-            Alert.alert(I18n.t("checkEmailTitle"), I18n.t("checkEmailContent"), [
+            Alert.alert(I18n.t("alert"), I18n.t("checkEmailContent"), [
                     {
                         text: I18n.t("ok"), onPress: this.onSignupSuccess
-                    },
-                    {
-                      text:I18n.t("goInbox") , onPress : this.onPressGoInboxMail
                     }
                 ],
                 {cancelable: true}
@@ -202,21 +197,6 @@ export default class CreateAccount extends PureComponent {
 
     //region hanlde action press
 
-    onPressGoInboxMail(){
-        if (Platform.OS === "ios") {
-            Linking.canOpenURL("message://").then(supported => {
-                if (!supported) {
-                    console.log('Can\'t handle url: message://');
-                } else {
-                    return  Linking.openURL('message://').catch(err => console.error('An error occurred', err));
-                }
-            }).catch(err => console.error('An error occurred', err));
-
-        } else {
-            MailModule.showMailBox();
-        }
-    }
-
     onSignupSuccess() {
         const resetAction = StackActions.replace({
             index: 0,
@@ -286,7 +266,7 @@ export default class CreateAccount extends PureComponent {
             valid.validMatchPassword = false;
         }
 
-        if (valid.validEmail && valid.validMatchPassword) {
+        if (valid.validEmail  && valid.validPassword && valid.validRetypePassword && valid.validMatchPassword) {
             Keyboard.dismiss();
             userActions.register({email, password, firstName, lastName, gender, birthDay});
         }

@@ -38,7 +38,7 @@ export default class ForgotPassScreen extends PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.forgotPasswordReducer.success !== this.props.forgotPasswordReducer.success && nextProps.forgotPasswordReducer.success) {
-            Alert.alert(I18n.t("checkForgotEmailTitle"), I18n.t("checkForgotEmailContent"), [
+            Alert.alert(I18n.t("alert"), I18n.t("checkForgotEmailContent"), [
                     {
                         text: I18n.t("ok"), onPress: this.onSendForgotEmailSuccess
                     }

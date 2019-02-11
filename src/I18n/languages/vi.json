@@ -18,10 +18,8 @@
   "cannotGetProfile":"Không tìm thấy hồ sơ",
   "cancel": "THOÁT",
   "create": "TẠO",
-  "checkEmailTitle":"Kiểm tra hộp thư",
-  "checkEmailContent":"Email kích hoạt tài khoản đã được gửi ",
-  "checkForgotEmailTitle":"Kiểm tra hộp thư",
-  "checkForgotEmailContent":"Email khôi phục mật khẩu đã gửi đến hộp thư của bạn",
+  "checkEmailContent":"Hãy mở email đã gửi cho bạn để hoàn thành bước xác thực tài khoản",
+  "checkForgotEmailContent":"Email khôi phục mật khẩu đã gửi đến hộp thư của bạn.",
   "career":"Sự nghiệp",
 
   //D
@@ -87,8 +85,7 @@
   //N
   "networkError": "lỗi đường truyền (quá thời gian hoặc bị ngắt kết nối đến máy chủ) đã xảy ra.",
   "notifications": "Thông báo",
-  "notVerifyEmailTitle": "Địa chỉ email chưa được xác thực",
-  "notVerifyEmailContent":"Mở hộp thư của bạn để xác thực tài khoản để tiếp tục",
+  "notVerifyEmailContent":"Tài khoản chưa được xác thực. Để xác thực, hãy vào email chúng tôi đã gửi cho bạn khi đăng ký.",
   "next":"Tiếp",
   "noResult":"Không kết quả",
   "noPrayerNearby":"Không có lời cầu nguyện xung quanh đây",
@@ -126,13 +123,12 @@
   //Q
   "QRCode": "Mã QR",
   //R
-  "retypePasswordNotMatch": "Mật khẩu và mật khẩu đối chiếu không khớp nhau",
+  "retypePasswordNotMatch": "Hai mật khẩu không khớp nhau",
   "resetPassword": "Khôi phục mật khẩu",
   "read": "Đã đọc",
   "readAll": "Đánh dấu đã đọc tất cả",
   "report": "Báo cáo",
   "resendVerifyEmail":"Gửi lại email xác thực tài khoản",
-  "resendVerifyEmailFailed":"Gửi lại email xác thực tài khoản bị thất bại",
   "resendVerifyEmailSuccess":"Gửi lại email xác thực tài khoản đã thành công",
   //S
   "scanQRCode": "Quét mã QR",

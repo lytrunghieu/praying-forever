@@ -1,6 +1,6 @@
 // Libraries
 import React, {PureComponent} from 'react';
-import {View, Keyboard, ToastAndroid,BackHandler, NetInfo, } from 'react-native';
+import {View, Keyboard, ToastAndroid,BackHandler, NetInfo,Alert } from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SafeAreaView} from 'react-navigation';
@@ -125,7 +125,11 @@ class RootContainer extends PureComponent {
             Keyboard.dismiss();
         }
         if (nextProps.errorMessageReducer !== this.props.errorMessageReducer && nextProps.errorMessageReducer.detail && nextProps.errorMessageReducer.detail.message) {
-            alert(nextProps.errorMessageReducer.detail.message);
+            Alert.alert(I18n.t("alert"), nextProps.errorMessageReducer.detail.message,[
+                {
+                    text : I18n.t("ok")
+                }
+            ]);
         }
     }
 

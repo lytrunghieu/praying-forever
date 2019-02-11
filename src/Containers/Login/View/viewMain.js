@@ -73,7 +73,7 @@ export default class LoginScreen extends PureComponent {
         }
         if (nextProps.loginReducer.statusCode !== this.props.loginReducer.statusCode && nextProps.loginReducer.statusCode) {
             if (nextProps.loginReducer.statusCode === 402) {
-                Alert.alert(I18n.t("notVerifyEmailTitle"), nextProps.loginReducer.message,
+                Alert.alert(I18n.t("alert"), nextProps.loginReducer.message,
                     [
                         {text: I18n.t("ok")},
                         {text: I18n.t("resendVerifyEmail"), onPress: this.onPressResendEmail}
@@ -82,7 +82,12 @@ export default class LoginScreen extends PureComponent {
                 )
             }
             else {
-                alert(nextProps.loginReducer.message);
+                Alert.alert(I18n.t("alert"), nextProps.loginReducer.message,
+                    [
+                        {text: I18n.t("ok")},
+                    ],
+                    {cancelable: true}
+                )
             }
         }
     }
