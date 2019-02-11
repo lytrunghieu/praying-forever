@@ -2,10 +2,12 @@ import React, {PureComponent} from 'react';
 import {
     View,
     Alert,
-    Keyboard
+    Keyboard,
+    Linking,
+    Platform
 } from 'react-native';
 import {IconName} from '../../../Themes/index';
-import {CommonUtils} from '../../../Utils/index';
+import {CommonUtils,firebaseAnalytics} from '../../../Utils/index';
 import I18n from '../../../I18n/index';
 import {
     Button,
@@ -16,6 +18,7 @@ import {CardItem} from 'native-base';
 import {StackActions} from "react-navigation";
 import {ScreenKey} from "../../../Constants";
 import * as _ from "lodash";
+import MailModule from '../../../modules/mail-module';
 
 const inputKey = {
     EMAIL: {name: "email", index: 2},
@@ -59,6 +62,7 @@ export default class CreateAccount extends PureComponent {
         this.onPressGender = this.onPressGender.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onSignupSuccess = this.onSignupSuccess.bind(this);
+        this.onPressGoInboxMail = this.onPressGoInboxMail.bind(this);
         this.leftHeader = {
             icon: IconName.back,
             onPress: this.onPressBack
@@ -67,7 +71,7 @@ export default class CreateAccount extends PureComponent {
     }
 
     componentDidMount() {
-
+        firebaseAnalytics("Register screen");
     }
 
     componentWillReceiveProps(nextProps) {
@@ -75,6 +79,9 @@ export default class CreateAccount extends PureComponent {
             Alert.alert(I18n.t("checkEmailTitle"), I18n.t("checkEmailContent"), [
                     {
                         text: I18n.t("ok"), onPress: this.onSignupSuccess
+                    },
+                    {
+                      text:I18n.t("goInbox") , onPress : this.onPressGoInboxMail
                     }
                 ],
                 {cancelable: true}
@@ -194,6 +201,21 @@ export default class CreateAccount extends PureComponent {
     //endregion
 
     //region hanlde action press
+
+    onPressGoInboxMail(){
+        if (Platform.OS === "ios") {
+            Linking.canOpenURL("message://").then(supported => {
+                if (!supported) {
+                    console.log('Can\'t handle url: message://');
+                } else {
+                    return  Linking.openURL('message://').catch(err => console.error('An error occurred', err));
+                }
+            }).catch(err => console.error('An error occurred', err));
+
+        } else {
+            MailModule.showMailBox();
+        }
+    }
 
     onSignupSuccess() {
         const resetAction = StackActions.replace({

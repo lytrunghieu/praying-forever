@@ -5,7 +5,7 @@ import {
 import {EventRegisterTypes} from '../../../Constants';
 import {IconName} from '../../../Themes';
 import I18n from '../../../I18n';
-import {CommonUtils} from "../../../Utils";
+import {CommonUtils,firebaseAnalytics} from "../../../Utils";
 import {Header, Container, Content} from "../../../Components/Modules";
 import {PrayItem} from "../../../Components/HightComponent";
 
@@ -58,6 +58,7 @@ export default class PrayerDetail extends PureComponent {
     }
 
     componentDidMount() {
+        firebaseAnalytics("PrayerDetail screen");
         if (this.uid && this.userUID) {
             const {action} = this.props;
             action.getPrayerDetail({userUID: this.userUID, prayerUID: this.uid}).then(res => {

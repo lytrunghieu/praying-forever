@@ -4,6 +4,7 @@
   "about": "Thông tin",
   "appOffline":"offline",
   "appOnline":"online",
+  "alert":"Thông báo",
   "appNeedUpdate":"Ứng dụng cần được nâng cấp phiên để hoạt động chính xác. Vui lòng lên cửa hàng ứng dụng để cập nhật phiên bản mới nhất.",
   //B
   "birthDay":"Ngày sinh",
@@ -51,6 +52,7 @@
   "google": "Google",
   "gender":"Giới tính",
   "genericErrorMessage":"Yêu cầu của bạn đã không được hoàn thành. Hãy thử lại lần nữa.",
+  "goInbox":"Vào Hộp thư",
   //H
   "health": "Sức khoẻ",
   //I
@@ -81,6 +83,7 @@
   "markUnread":"Chưa đọc",
   "markRead":"Đã đọc",
   "male":"Nam",
+
   //N
   "networkError": "lỗi đường truyền (quá thời gian hoặc bị ngắt kết nối đến máy chủ) đã xảy ra.",
   "notifications": "Thông báo",

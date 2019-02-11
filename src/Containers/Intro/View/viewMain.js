@@ -4,12 +4,13 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 import I18n from '../../../I18n';
 import {Images, Colors} from "../../../Themes";
 import {StackActions} from "react-navigation";
-import {ScreenKey,AsyncStoreKeys} from '../../../Constants';
+import {ScreenKey, AsyncStoreKeys} from '../../../Constants';
+import {firebaseAnalytics} from "../../../Utils";
 
 const styles = StyleSheet.create({
     image: {
-        width: 320,
-        height: 320,
+        width: 170,
+        height: 170,
         tintColor: Colors.black
     },
 
@@ -37,9 +38,13 @@ export default class Intro extends Component {
         this.onPressDone = this.onPressDone.bind(this);
     }
 
+    componentDidMount() {
+        firebaseAnalytics("Intro screen");
+    }
+
     onPressDone() {
-        AsyncStorage.setItem(AsyncStoreKeys.IS_STARTED, "true", (error =>{
-            if(!error){
+        AsyncStorage.setItem(AsyncStoreKeys.IS_STARTED, "true", (error => {
+            if (!error) {
                 const resetAction = StackActions.replace({
                     index: 0,
                     routeName: ScreenKey.LOGIN_SCREEN,

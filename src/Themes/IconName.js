@@ -16,7 +16,7 @@ const names = {
     share :"share-alt",
     password :"key",
     user:"user",
-    avatar:"user-circle-o",
+    avatar:"user-circle",
     more_h:"ellipsis-h",
     back :"arrow-left",
     suggest :"question-circle-o",

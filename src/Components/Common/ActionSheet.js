@@ -1,7 +1,7 @@
 import React from "react";
 import ModalBase from "./ModalBase";
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {View ,ActivityIndicator} from "react-native";
+import {View, ActivityIndicator} from "react-native";
 import {Colors} from "../../Themes";
 import PropTypes from 'prop-types';
 import {Button, TextBase} from "./";
@@ -53,7 +53,7 @@ export default class ActionSheet extends ModalBase {
     }
 
     renderContent() {
-        const {options, submitText, title ,fetching} = this.props;
+        const {options, submitText, title, fetching} = this.props;
         return (
             <View style={[styles.container]}>
                 <View style={styles.header}>
@@ -62,20 +62,15 @@ export default class ActionSheet extends ModalBase {
                 </View>
                 <View style={styles.content}>
                     {
-                        fetching  ? <View style ={styles.fetchingWrapper}>
+                        fetching ? <View style={styles.fetchingWrapper}>
                             <ActivityIndicator size="large" color={Colors.blue}/>
 
-                        </View> : options && options.length && options.map((op, index) => {
+                        </View> : Array.isArray(options) &&  options.length > 0 && options.map((op, index) => {
                             return this.renderOptionRow(op, index);
                         })
                     }
-
-
-                    <ButtonFooter onPress={this.close} text={submitText || I18n.t("cancel")}
-                    >
-                    </ButtonFooter>
+                    <ButtonFooter onPress={this.close} text={submitText || I18n.t("cancel")}/>
                 </View>
-
             </View>
         );
     }
@@ -90,7 +85,7 @@ ActionSheet.propTypes = {
     options: PropTypes.array,
     submitText: PropTypes.string,
     title: PropTypes.string,
-    fetching : PropTypes.bool
+    fetching: PropTypes.bool
 }
 
 const styles = EStyleSheet.create({
@@ -123,11 +118,11 @@ const styles = EStyleSheet.create({
         borderRadius: 0,
     },
 
-    fetchingWrapper :{
-        height :"$heightRowNormal",
-        width:"100%",
-        alignItems:"center",
-        justifyContent:"center"
+    fetchingWrapper: {
+        height: "$heightRowNormal",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center"
 
     }
 

@@ -8,7 +8,7 @@ import {
     ActionSheet,
     PlaceHolder,
 } from '../../../Components/Common';
-import commonUtils from "../../../Utils/CommonUtils";
+import {CommonUtils,firebaseAnalytics} from "../../../Utils";
 import {StatusOfPray, EventRegisterTypes, ScreenKey} from "../../../Constants";
 import {style} from "../Style";
 import {
@@ -63,6 +63,7 @@ export default class PrayerFinished extends PureComponent {
     componentDidMount() {
         const {prayerActions} = this.props;
         prayerActions.getPrayer();
+        firebaseAnalytics("PrayerFinished screen");
     }
 
     componentWillReceiveProps(nextProps) {
@@ -95,7 +96,7 @@ export default class PrayerFinished extends PureComponent {
             const {payload} = prayerReducer;
             if (nextState.keySearch.length > 3) {
                 const newPrays = payload.filter(e => {
-                    let contentFormated = commonUtils.trim(e.content).toUpperCase();
+                    let contentFormated = CommonUtils.trim(e.content).toUpperCase();
                     return e.status == StatusOfPray.COMPLETE && contentFormated.indexOf(nextState.keySearch.toUpperCase()) != -1 ? true : false;
                 });
                 this.setState({
@@ -205,7 +206,7 @@ export default class PrayerFinished extends PureComponent {
     }
 
     onPressDeletePrayer() {
-        commonUtils.sendEvent({type: EventRegisterTypes.SHOW_CONFIRM_MODAL, params: {status: StatusOfPray.COMPLETE}});
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_CONFIRM_MODAL, params: {status: StatusOfPray.COMPLETE}});
     }
 
     //endregion

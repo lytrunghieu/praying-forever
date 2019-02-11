@@ -10,7 +10,7 @@ import {IconName} from "../../../Themes";
 import I18n from "../../../I18n";
 import DeviceInfo from 'react-native-device-info';
 import {universalLink} from "../../../Constants"
-
+import {firebaseAnalytics} from "../../../Utils";
 
 export default class About extends PureComponent {
 
@@ -24,6 +24,10 @@ export default class About extends PureComponent {
             icon: IconName.back,
             onPress: this.onPressBack
         };
+    }
+
+    componentDidMount() {
+        firebaseAnalytics("About screen");
     }
 
     //endregion

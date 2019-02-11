@@ -6,7 +6,7 @@ import {
     View,
     Keyboard
 } from 'react-native';
-import {IconName, Colors} from '../../../Themes';
+import {IconName} from '../../../Themes';
 import I18n from '../../../I18n';
 import {
     PlaceHolder,
@@ -21,6 +21,8 @@ import {StatusOfPray, titlePrayerCode} from "../../../Constants";
 import {Header, ButtonFooter, Container, Content, CheckboxModal} from "../../../Components/Modules";
 
 import {Item, Form} from 'native-base';
+import {firebaseAnalytics} from "../../../Utils";
+
 
 let collect = firebase.firestore().collection("prayer");
 
@@ -86,6 +88,7 @@ export default class CreatePraying extends PureComponent {
 
     componentDidMount() {
         this.getTemplate();
+        firebaseAnalytics("Create Prayer screen");
     }
 
     //endregion

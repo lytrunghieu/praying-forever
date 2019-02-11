@@ -2,7 +2,9 @@ import React, {PureComponent} from 'react';
 import {
     Image,
     Alert,
-    Keyboard
+    Keyboard,
+    Linking,
+    Platform
 } from 'react-native';
 import {ScreenKey} from '../../../Constants';
 import { Images} from '../../../Themes/index';
@@ -16,8 +18,9 @@ import {StackActions} from "react-navigation";
 import {Content, Container, FormValidate, ButtonFooter, LoadingIndicator} from "../../../Components/Modules";
 import {Left, Body} from "native-base";
 import {style as styles} from "../Style";
-import {CommonUtils} from "../../../Utils";
+import {CommonUtils, firebaseAnalytics} from "../../../Utils";
 import * as _ from "lodash";
+import MailModule from '../../../modules/mail-module';
 
 export default class LoginScreen extends PureComponent {
 
@@ -40,13 +43,14 @@ export default class LoginScreen extends PureComponent {
         this.onPressCreateAccount = this.onPressCreateAccount.bind(this);
         this.onPressListComponent = this.onPressListComponent.bind(this);
         this.onPressResendEmail = this.onPressResendEmail.bind(this);
+        this.onPressGoInboxMail = this.onPressGoInboxMail.bind(this);
 
         this.onChangeEmailText = this.onChangeEmailText.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
     }
 
     componentDidMount() {
-
+        firebaseAnalytics("Login Screen");
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -115,9 +119,30 @@ export default class LoginScreen extends PureComponent {
         const {userActions} = this.props;
         userActions.resendVerifyEmail().then(res => {
             if (res.success) {
-                alert(I18n.t("resendVerifyEmailSuccess"));
+                Alert.alert(I18n.t("alert"), I18n.t("resendVerifyEmailSuccess"),
+                    [
+                        {text: I18n.t("ok")},
+                        {text: I18n.t("goInbox"), onPress: this.onPressGoInboxMail}
+                    ],
+                    {cancelable: true}
+                )
             }
         });
+    }
+
+    onPressGoInboxMail(){
+        if (Platform.OS === "ios") {
+            Linking.canOpenURL("message://").then(supported => {
+                if (!supported) {
+                    console.log('Can\'t handle url: message://');
+                } else {
+                    return  Linking.openURL('message://').catch(err => console.error('An error occurred', err));
+                }
+            }).catch(err => console.error('An error occurred', err));
+
+        } else {
+            MailModule.showMailBox();
+        }
     }
 
     onPressCreateAccount() {

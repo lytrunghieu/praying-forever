@@ -15,6 +15,7 @@ import {Header, Container, EmptyHolder} from "../../../Components/Modules";
 import {PrayItem} from "../../../Components/HightComponent";
 import {ScreenKey} from "../../../Constants";
 import firebase, {NotificationOpen} from 'react-native-firebase';
+import {firebaseAnalytics} from "../../../Utils";
 
 export default class PrayForOther extends PureComponent {
 
@@ -64,7 +65,8 @@ export default class PrayForOther extends PureComponent {
             this.setState({
                 fetchingActionSheet: false
             })
-        })
+        });
+        firebaseAnalytics("PrayForOthers screen");
     }
 
     componentWillReceiveProps(nextProps) {
@@ -237,8 +239,6 @@ export default class PrayForOther extends PureComponent {
                     left={this.leftHeader}
                     right={this.rightHeader}
                     badge={unreadNoti ? true : false}
-                    onChangeTextSearch={this.onChangeKeySearch}
-                    onCloseSearchBar={this.onCloseSearchBar}
                 />
 
                 {

@@ -61,6 +61,7 @@ export default class Avatar extends PureComponent {
             <TouchableOpacity style={{width: size, height: size}}
                               disabled={onPress ? false : true}
                               onPress={onPress ? onPress : () =>{}}
+                              activeOpacity={1}
             >
                 <Icon name={IconName.avatar} large={large} largeX={largeX}/>
                 <Image

@@ -28,7 +28,7 @@ export default class DatePickerComponent extends PureComponent {
     }
 
     render() {
-        const {label} = this.props;
+        const {label,defaultDate} = this.props;
         const {chosenDate} = this.state;
         return (
             <ListItem>
@@ -37,7 +37,7 @@ export default class DatePickerComponent extends PureComponent {
                 </Text>
                 <Body>
                 <DatePicker
-                    defaultDate={new Date()}
+                    defaultDate={defaultDate || new Date()}
                     minimumDate={new Date(new Date().setFullYear(new Date().getFullYear() - 100))}
                     maximumDate={new Date()}
                     locale={"en"}
@@ -62,5 +62,6 @@ DatePickerComponent.defaultProps = {
 };
 
 DatePickerComponent.propTypes = {
-    setDate : PropTypes.func
+    setDate : PropTypes.func,
+    defaultDate : PropTypes.any
 };

@@ -19,6 +19,7 @@ import {
 } from "../../../Components/Modules";
 import {NotificationItem} from "../../../Components/HightComponent";
 import ActionNotificationModal from "./ActionNotificationModal";
+import {firebaseAnalytics} from "../../../Utils";
 
 export default class Notifications extends PureComponent {
     constructor(props) {
@@ -57,6 +58,10 @@ export default class Notifications extends PureComponent {
     }
 
     //region CYCLE LIFE
+
+    componentDidMount() {
+        firebaseAnalytics("Notification screen");
+    }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.notificationReducer.payload !== this.props.notificationReducer.payload) {

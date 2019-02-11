@@ -10,6 +10,7 @@ import {ScreenKey, AsyncStoreKeys} from '../../../Constants';
 import {Images} from '../../../Themes';
 import firebase from 'react-native-firebase';
 import {style as styles} from "../Style";
+import { firebaseAnalytics} from "../../../Utils";
 
 export default class SplashScreen extends Component {
 
@@ -18,6 +19,7 @@ export default class SplashScreen extends Component {
     }
 
     componentDidMount() {
+        firebaseAnalytics("Splash screen");
         setTimeout(() => {
             let unsubscribe = firebase.auth().onAuthStateChanged((user) => {
                 const {userReducer} = this.props;

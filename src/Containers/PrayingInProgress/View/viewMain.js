@@ -8,7 +8,7 @@ import {
     ActionSheet,
     PlaceHolder,
 } from '../../../Components/Common';
-import commonUtils from "../../../Utils/CommonUtils";
+import {CommonUtils, firebaseAnalytics} from "../../../Utils";
 import {StatusOfPray, EventRegisterTypes, ScreenKey} from "../../../Constants";
 import {style} from "../Style";
 import {
@@ -69,6 +69,7 @@ export default class PrayingInProgress extends PureComponent {
     componentDidMount() {
         const {prayerActions} = this.props;
         prayerActions.getPrayer();
+        firebaseAnalytics("PrayingInProgress screen");
     }
 
     componentWillReceiveProps(nextProps) {
@@ -102,7 +103,7 @@ export default class PrayingInProgress extends PureComponent {
             const {payload} = prayerReducer;
             if (nextState.keySearch.length > 3) {
                 const newPrays = payload.filter(e => {
-                    let contentFormated = commonUtils.trim(e.content).toUpperCase();
+                    let contentFormated = CommonUtils.trim(e.content).toUpperCase();
                     return e.status == StatusOfPray.INPROGRESS && contentFormated.indexOf(nextState.keySearch.toUpperCase()) != -1 ? true : false;
                 });
                 this.setState({
@@ -133,7 +134,7 @@ export default class PrayingInProgress extends PureComponent {
     //region handle event press
 
     onPressScanQR() {
-        commonUtils.sendEvent({type: EventRegisterTypes.SHOW_SCANNER});
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_SCANNER});
     }
 
     //endregion
@@ -218,7 +219,7 @@ export default class PrayingInProgress extends PureComponent {
     }
 
     onPressDeletePrayer() {
-        commonUtils.sendEvent({type: EventRegisterTypes.SHOW_CONFIRM_MODAL, params: {status: StatusOfPray.INPROGRESS}});
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_CONFIRM_MODAL, params: {status: StatusOfPray.INPROGRESS}});
     }
 
     //endregion

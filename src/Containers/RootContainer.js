@@ -82,7 +82,6 @@ class RootContainer extends PureComponent {
                     break;
                 }
 
-
                 case EventRegisterTypes.SHOW_PRAYER_OPTION : {
                     const {data} = params;
                     if (data) {
@@ -102,8 +101,6 @@ class RootContainer extends PureComponent {
                     }
                     break;
                 }
-
-
             }
         });
 
@@ -118,7 +115,8 @@ class RootContainer extends PureComponent {
             this.handleFirstConnectivityChange
         );
         if (this.timeoutWarningExit) {
-            this.timeoutWarningExit.clearTimeout();
+            clearTimeout(this.timeoutWarningExit);
+            this.timeoutWarningExit = null
         }
     }
 
@@ -154,14 +152,14 @@ class RootContainer extends PureComponent {
         }
 
         if (warningExit) {
-            BackHandler.exitApp()
+            BackHandler.exitApp();
         }
         else {
             this.setState({
                 warningExit: true
             });
             if (this.timeoutWarningExit) {
-                this.timeoutWarningExit.clearTimeout();
+                clearTimeout(this.timeoutWarningExit);
                 this.timeoutWarningExit = null
             }
             this.timeoutWarningExit = setTimeout(() => {

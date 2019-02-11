@@ -14,6 +14,8 @@ import {IconName} from "../../../Themes";
 import {TextBase, Checkbox, PlaceHolder, Button} from "../../../Components/Common";
 import I18n from "../../../I18n";
 import moment from "moment";
+import {firebaseAnalytics} from "../../../Utils";
+
 
 var ImagePicker = require('react-native-image-picker');
 const inputKey = {
@@ -60,6 +62,7 @@ export default class Profile extends PureComponent {
 
     componentDidMount() {
         this.getProfile();
+        firebaseAnalytics("Profile screen");
     }
 
     componentWillReceiveProps(nextProps) {
@@ -115,8 +118,8 @@ export default class Profile extends PureComponent {
                 skipBackup: true,
                 path: 'images'
             },
-            maxWidth: PixelRatio.getPixelSizeForLayoutSize(200),
-            maxHeight: PixelRatio.getPixelSizeForLayoutSize(200),
+            maxWidth: PixelRatio.getPixelSizeForLayoutSize(128),
+            maxHeight: PixelRatio.getPixelSizeForLayoutSize(128),
         };
 
         ImagePicker.showImagePicker(options, (response) => {
@@ -240,7 +243,7 @@ export default class Profile extends PureComponent {
                                 <TextBase info={true}>{I18n.t("gender")}</TextBase>
                                 <Checkbox text={I18n.t("male")} onPress={this.onPressGender}
                                           checked={gender ? false : true}/>
-                                <DatePicker label={I18n.t("birthDay")} chosenDate={birthDay} setDate={this.onChangeBD}/>
+                                <DatePicker defaultDate ={new Date(birthDay)} label={I18n.t("birthDay")} chosenDate={birthDay} setDate={this.onChangeBD}/>
                             </View>
                         </Content> : null
                 }

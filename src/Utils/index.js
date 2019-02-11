@@ -1,3 +1,4 @@
 import CommonUtils from './CommonUtils';
+import firebaseAnalytics from './firebaseAnalytics';
 
-export { CommonUtils };
+export { CommonUtils, firebaseAnalytics };

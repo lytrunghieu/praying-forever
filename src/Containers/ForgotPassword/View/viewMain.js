@@ -4,7 +4,7 @@ import {IconName} from '../../../Themes/index';
 import I18n from '../../../I18n/index';
 import {ScreenKey} from "../../../Constants";
 import {FormValidate, ButtonFooter, Header,Container,Content} from "../../../Components/Modules";
-import {CommonUtils} from "../../../Utils/index";
+import {CommonUtils,firebaseAnalytics} from "../../../Utils";
 import {StackActions} from "react-navigation";
 
 import {style as styles} from "../Style";
@@ -33,7 +33,7 @@ export default class ForgotPassScreen extends PureComponent {
 
 
     componentDidMount() {
-
+        firebaseAnalytics("Forgot screen");
     }
 
     componentWillReceiveProps(nextProps) {

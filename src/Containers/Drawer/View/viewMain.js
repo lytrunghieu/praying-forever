@@ -13,6 +13,7 @@ import {Icon, Button, TextBase, PlaceHolder} from "../../../Components/Common";
 import {List} from 'native-base';
 import {style} from "../Style";
 import {notification} from "../../../model";
+import {firebaseAnalytics} from "../../../Utils";
 
 const notificationCollect = firebase.firestore().collection('notification');
 const tokenCollect = firebase.firestore().collection('tokens');
@@ -128,6 +129,7 @@ export default class DrawerContainer extends PureComponent {
     }
 
     componentDidMount() {
+        firebaseAnalytics("Drawer screen");
         const {userActions, prayerActions,notificationActions,navigation, loginReducer} = this.props;
         const docOfCurrentUserNotification = notificationCollect.doc(firebase.auth().currentUser.uid);
         firebase.firestore().doc(firestorePaths.SIGN_IN.replace("{userUID}",firebase.auth().currentUser.uid)).onSnapshot(snapShot =>{
