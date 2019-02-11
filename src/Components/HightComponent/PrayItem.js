@@ -228,8 +228,12 @@ class PrayItem extends PureComponent {
                         {
                             showUpdateBtn ?
                                 <Right>
-                                    <Button rounded={true} text={I18n.t("update")}
-                                            onPress={this.checkSyncPrayer.bind(this, item)}
+                                    <Button
+                                        rounded
+                                        onPress={this.checkSyncPrayer.bind(this, item)}
+                                        icon={IconName.refresh}
+                                        iconLeft={true}
+                                        center ={true}
                                     />
                                 </Right> : <Right/>
                         }

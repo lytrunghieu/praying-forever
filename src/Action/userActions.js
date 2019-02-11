@@ -38,12 +38,20 @@ export function getProfile({userUID , isUser = true} ={}) {
             }
             else{
                 if (res.success) {
-                    dispatch({
-                        type: actionTypes.GET_PROFILE_OTHER_SUCCESS,
-                        data :{
-                            payload: res.data
-                        }
-                    });
+                    if(userUID){
+                        dispatch({
+                            type: actionTypes.GET_PROFILE_OTHER_SUCCESS,
+                        });
+                    }
+                    else{
+                        dispatch({
+                            type: actionTypes.GET_PROFILE_OTHER_SUCCESS,
+                            data :{
+                                payload: res.data
+                            }
+                        });
+                    }
+
                 }
                 else {
                     dispatch({

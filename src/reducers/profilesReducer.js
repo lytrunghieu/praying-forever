@@ -17,7 +17,9 @@ export function profilesReducer(state = InitialState.profiles, action) {
             state = state.set("fetching", false);
             state = state.set("success", true);
             state = state.set("message", null);
-            state = state.set("payload", data.payload);
+            if(data && data.payload){
+                state = state.set("payload", data.payload);
+            }
             return state
         }
 
@@ -40,11 +42,11 @@ export function profilesReducer(state = InitialState.profiles, action) {
                         oldPayload[index] = payload;
                     }
                 }
+
                 state = state.set("payload", oldPayload);
             }
             return state;
         }
-
 
         default :
             return state

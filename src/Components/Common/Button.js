@@ -16,7 +16,7 @@ export default class ButtonComponent extends PureComponent {
         if (rounded) {
             return (
                 <Button
-                    style={[styles.roundedStyle, center ? styles.center : null, disabled]}
+                    style={[styles.roundedStyle, center ? styles.center : null, disabled , icon && {minWidth : Metrics.icons.medium}]}
                     rounded small onPress={onPress}
                     disabled={disabled}
                 >
@@ -24,9 +24,12 @@ export default class ButtonComponent extends PureComponent {
                         iconLeft && icon && <Icon dark={false} name={icon}/>
                     }
 
+                    {
+                        text && <TextBase style={styles.labelText} bold={true}
+                                          highlight={true}>{text && text.toUpperCase()}</TextBase>
+                    }
 
-                    <TextBase style={styles.labelText} bold={true}
-                              highlight={true}>{text && text.toUpperCase()}</TextBase>
+
                     {
                         !iconLeft && icon && <Icon dark={false} name={icon}/>
                     }

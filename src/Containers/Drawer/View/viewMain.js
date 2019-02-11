@@ -189,7 +189,7 @@ export default class DrawerContainer extends PureComponent {
                 case EventRegisterTypes.FOLLOWING_PRAYER: {
                     const {prayerUID, userOtherUID, follow} = params
                     if (prayerUID && userOtherUID) {
-                        prayerActions.followingPrayer({prayerUID, userOtherUID, follow});
+                        prayerActions.followingPrayer({prayerUID, userOtherUID, follow , isPublic : true});
                     }
                     break;
                 }

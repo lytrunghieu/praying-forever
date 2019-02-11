@@ -302,7 +302,7 @@ exports.deletePrayer = functions.https.onCall((data) => {
 });
 
 exports.following = functions.https.onCall(async (data) => {
-    const {userUID, prayerUID, userOtherUID, follow} = data;
+    const {userUID, prayerUID, userOtherUID, follow, isPublic} = data;
     let path = paths.prayer.replace("{userUID}", userOtherUID).replace("{prayerUID}", prayerUID);
     let pathDelete = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
 
@@ -329,19 +329,23 @@ exports.following = functions.https.onCall(async (data) => {
             }
             if (follow) {
                 if (!hasFollowing) {
-                    following.push(userUID);
-                    docSnap.ref.update("following", following);
-                    let path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
-                    let newData = docSnap.data();
-                    newData.following = following;
-                    return firestore.doc(path).set(newData).then(async res => {
-                        if (isLive && createModel.createLocationModel(isLive)) {
-                            let path = paths.locationPrayer.replace("{prayerUID}", prayerUID);
-                            await firestore.doc(path).update("following", following);
-                        }
-
-                        return {success: true, statusCode: 200, message: "request success"};
-                    });
+                    if (isPublic && (!isLive || !createModel.createLocationModel(isLive))) {
+                        return {success: false, statusCode: 404, message: "the prayer had unpublic"};
+                    }
+                    else {
+                        following.push(userUID);
+                        docSnap.ref.update("following", following);
+                        let path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
+                        let newData = docSnap.data();
+                        newData.following = following;
+                        return firestore.doc(path).set(newData).then(async res => {
+                            if (isLive && createModel.createLocationModel(isLive)) {
+                                let path = paths.locationPrayer.replace("{prayerUID}", prayerUID);
+                                await firestore.doc(path).update("following", following);
+                            }
+                            return {success: true, statusCode: 200, message: "request success"};
+                        });
+                    }
                 }
                 else {
                     return {success: false, statusCode: 402, message: "the prayer had following before"};

@@ -12,6 +12,10 @@ export const FOLLOWING = {
     PRAYER_HAD_UN_FOLLOWING:{
         ERROR_CODE : 403,
         MESSAGE : I18n.t("prayerHadUnFollowing"),
+    },
+    PRAYER_HAD_UN_PUBLIC:{
+        ERROR_CODE : 404,
+        MESSAGE : I18n.t("prayerHadUnpublic"),
     }
 };
 

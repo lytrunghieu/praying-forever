@@ -90,12 +90,12 @@ export function deletePray(params) {
     }
 }
 
-export function followingPrayer({userOtherUID, prayerUID, follow}) {
+export function followingPrayer({userOtherUID, prayerUID, follow,isPublic}) {
     return function (dispatch) {
         dispatch({
             type: actionTypes.FOLLOWING_PRAYER_PENDING,
         });
-        new prayerService().followingPrayer({userOtherUID, prayerUID, follow}).then(res => {
+        new prayerService().followingPrayer({userOtherUID, prayerUID, follow,isPublic}).then(res => {
             if (res.success) {
                 dispatch({
                     type: actionTypes.FOLLOWING_PRAYER_SUCCESS,

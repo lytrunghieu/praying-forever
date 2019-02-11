@@ -57,8 +57,8 @@ class PrayerService extends baseService {
         });
     }
 
-    followingPrayer({userOtherUID, prayerUID, follow}) {
-        return super.executeHttp(FOLLOWING_PRAYER, {userOtherUID, prayerUID, follow}).then(res => {
+    followingPrayer({userOtherUID, prayerUID, follow,prayForOther}) {
+        return super.executeHttp(FOLLOWING_PRAYER, {userOtherUID, prayerUID, follow,prayForOther}).then(res => {
             if (!res.success) {
                 switch (res.statusCode) {
                     case FOLLOWING.PRAYER_HAD_UN_FOLLOWING.ERROR_CODE : {
@@ -73,6 +73,11 @@ class PrayerService extends baseService {
 
                     case FOLLOWING.NOT_FOUND_PRAYER.ERROR_CODE : {
                         res.message = FOLLOWING.NOT_FOUND_PRAYER.MESSAGE;
+                        break;
+                    }
+
+                    case FOLLOWING.PRAYER_HAD_UN_PUBLIC.ERROR_CODE : {
+                        res.message = FOLLOWING.PRAYER_HAD_UN_PUBLIC.MESSAGE;
                         break;
                     }
                 }

@@ -115,7 +115,7 @@
   "passWord": "Mật khẩu",
   "prayerIsUserOwner":"Lời cầu nguyện không được sỡ hữu bởi người dùng",
   "prayerHadPublic":"Lời cầu nguyện đã được công khai trước đó",
-  "prayerHadUnpublic":"Lời cầu nguyện đã được bỏ cônng khai trước đó",
+  "prayerHadUnpublic":"Lời cầu nguyện đã được bỏ công khai trước đó",
   "prayerHadFinish":"Lời cầu nguyện của ,{displayName}, đã được ứng nghiệm",
   "prayingForever":"PRAYING FOREVER",
   "profile":"Hồ sơ",

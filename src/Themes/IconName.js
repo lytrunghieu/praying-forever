@@ -30,7 +30,8 @@ const names = {
     onlineOfOffline :"circle",
     male :"male",
     female :"female",
-    angleRight:"angle-right"
+    angleRight:"angle-right",
+    refresh:"refresh"
 
 }
 
