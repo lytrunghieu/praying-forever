@@ -162,7 +162,7 @@ class RootContainer extends PureComponent {
         if (nextProps.errorMessageReducer !== this.props.errorMessageReducer && nextProps.errorMessageReducer.detail && nextProps.errorMessageReducer.detail.message) {
             Alert.alert(I18n.t("alert"), nextProps.errorMessageReducer.detail.message, [
                 {
-                    text: I18n.t("ok")
+                    text: I18n.t("done")
                 }
             ]);
         }
