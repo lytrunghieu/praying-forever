@@ -1,6 +1,6 @@
 import actionTypes from "./actionTypes";
 import {userService} from "../Service";
-import { PURGE } from 'redux-persist';
+import { PURGE} from 'redux-persist';
 
 export function getProfile({userUID , isUser = true} ={}) {
 

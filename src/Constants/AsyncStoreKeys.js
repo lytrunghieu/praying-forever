@@ -1,4 +1,5 @@
 module.exports = {
     PRAY_LIST: "PrayList",
-    IS_STARTED :"IsStarted"
+    IS_STARTED :"IsStarted",
+    PREVIOUS_VERSION :"PreviousVersion",
 };

@@ -7,7 +7,7 @@ import {
     DELETE_PRAYER,
     FOLLOWING_PRAYER,
     UPDATE_LIVE_STATUS,
-    SYNC_PRAYER
+    SYNC_PRAYER,
 } from "./nameCloudFunction"
 import moment from "moment";
 import {Pray, response} from "../model";
@@ -15,7 +15,6 @@ import {FOLLOWING, PUBLIC_PRAYER} from "./errorCode";
 import firebase from "react-native-firebase";
 import geolib from "geolib";
 import {firestorePaths} from "../Constants";
-
 
 class PrayerService extends baseService {
 
@@ -36,7 +35,7 @@ class PrayerService extends baseService {
     }
 
     getPrayer({userUID, prayerUID, status = null, search}) {
-        return super.executeHttp(GET_PRAYER, {userUID, prayerUID, status ,search}).then(res => {
+        return super.executeHttp(GET_PRAYER, {userUID, prayerUID, status, search}).then(res => {
             if (res.success && Array.isArray(res.data)) {
                 let dataConvert = res.data.map(e => {
                     return new Pray(e);
@@ -57,8 +56,8 @@ class PrayerService extends baseService {
         });
     }
 
-    followingPrayer({userOtherUID, prayerUID, follow,prayForOther}) {
-        return super.executeHttp(FOLLOWING_PRAYER, {userOtherUID, prayerUID, follow,prayForOther}).then(res => {
+    followingPrayer({userOtherUID, prayerUID, follow, prayForOther}) {
+        return super.executeHttp(FOLLOWING_PRAYER, {userOtherUID, prayerUID, follow, prayForOther}).then(res => {
             if (!res.success) {
                 switch (res.statusCode) {
                     case FOLLOWING.PRAYER_HAD_UN_FOLLOWING.ERROR_CODE : {
@@ -181,9 +180,9 @@ class PrayerService extends baseService {
         })
     }
 
-    syncPrayer({userUID, prayer  }){
-        const _userUID  = userUID || firebase.auth().currentUser.uid;
-        return super.executeHttp(SYNC_PRAYER,{userUID : _userUID , prayer});
+    syncPrayer({userUID, prayer}) {
+        const _userUID = userUID || firebase.auth().currentUser.uid;
+        return super.executeHttp(SYNC_PRAYER, {userUID: _userUID, prayer});
     }
 }
 

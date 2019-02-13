@@ -20,6 +20,7 @@ export default class ModalBase extends PureComponent {
         this.backdropOpacity = 0.5;
         this.backdropPressToClose = true;
         this.backButtonClose = true;
+        this.containerStyle = null;
 
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
@@ -78,7 +79,7 @@ export default class ModalBase extends PureComponent {
                 backdropOpacity={this.backdropOpacity}
                 backButtonClose={this.backButtonClose}
             >
-                <TouchableOpacity style={[styles.container, this.isCenter && styles.containerCenter]}
+                <TouchableOpacity style={[styles.container, this.isCenter && styles.containerCenter , this.containerStyle && this.containerStyle]}
                                   activeOpacity={1}
                                   onPress={this.close}
                                   disabled={!this.backdropPressToClose}

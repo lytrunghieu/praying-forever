@@ -1,6 +1,6 @@
 // Libraries
 import React, {PureComponent} from 'react';
-import {View, Keyboard, ToastAndroid,BackHandler, NetInfo,Alert } from 'react-native';
+import {View, Keyboard, ToastAndroid, BackHandler, NetInfo, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SafeAreaView} from 'react-navigation';
@@ -9,8 +9,16 @@ import {Colors} from '../Themes';
 
 // Components
 import {StatusBar} from '../Components/Common';
-import {ModalScanQR, ModalQR, ActionPrayerModal, ConfirmModal, NetworkBar} from "../Components/Modules";
-import {prayerActions} from '../Action';
+import {
+    ModalScanQR,
+    ModalQR,
+    ActionPrayerModal,
+    ConfirmModal,
+    NetworkBar,
+    ReportModal,
+    ReportInputModal
+} from "../Components/Modules";
+import {prayerActions, commonActions} from '../Action';
 // Navigation
 import {EventRegisterTypes} from "../Constants";
 import {EventRegister} from 'react-native-event-listeners';
@@ -101,6 +109,33 @@ class RootContainer extends PureComponent {
                     }
                     break;
                 }
+
+                case EventRegisterTypes.SHOW_REPORT_MODAL : {
+                    const {data} = params;
+                    if (data) {
+                        this.refs["_reportModal"].open(data);
+                    }
+                    break;
+                }
+
+                case EventRegisterTypes.ADD_REPORT : {
+                    const {data} = params;
+                    const {commonActions} = this.props;
+                    if (data) {
+                        commonActions.addReport(data)
+                    }
+                    break;
+                }
+
+                case EventRegisterTypes.SHOW_REPORT_INPUT_MODAL : {
+                    const {data} = params;
+                    if (data) {
+                        console.log("this.refs[\"_reportInputModal\"]", this.refs["_reportInputModal"]);
+                        this.refs["_reportInputModal"].open(data);
+                    }
+                    break;
+                }
+
             }
         });
 
@@ -125,9 +160,9 @@ class RootContainer extends PureComponent {
             Keyboard.dismiss();
         }
         if (nextProps.errorMessageReducer !== this.props.errorMessageReducer && nextProps.errorMessageReducer.detail && nextProps.errorMessageReducer.detail.message) {
-            Alert.alert(I18n.t("alert"), nextProps.errorMessageReducer.detail.message,[
+            Alert.alert(I18n.t("alert"), nextProps.errorMessageReducer.detail.message, [
                 {
-                    text : I18n.t("ok")
+                    text: I18n.t("ok")
                 }
             ]);
         }
@@ -187,14 +222,14 @@ class RootContainer extends PureComponent {
 
     render() {
         const {prayerActions, dispatch, navigationReducer, pendingReducer} = this.props;
-        const { payload} = pendingReducer;
+        const {payload} = pendingReducer;
         const {isOffline} = this.state;
         return (
             <View style={styles.container} pointerEvents={payload.length > 0 ? "none" : "auto"}>
                 <StatusBar backgroundColor={Colors.black} barStyle={'light-content'}/>
                 <SafeAreaView style={styles.container}>
                     <NetworkBar online={!isOffline}/>
-                    <App dispatch={dispatch} state={navigationReducer} />
+                    <App dispatch={dispatch} state={navigationReducer}/>
                     <ModalQR
                         ref={"_modalQR"}/>
                     <ModalScanQR
@@ -221,6 +256,12 @@ class RootContainer extends PureComponent {
                         acceptText={I18n.t("yes")}
                         onAccept={this.onAcceptDeletePrayer}
                     />
+                    <ReportModal
+                        ref={"_reportModal"}
+                    />
+                    <ReportInputModal
+                        ref={"_reportInputModal"}
+                    />
                 </SafeAreaView>
             </View>
         )
@@ -236,7 +277,8 @@ const mapStateToProps = (state) => ({
 // wraps dispatch to create nicer functions to call within our component
 const mapDispatchToProps = (dispatch) => {
     return Object.assign({dispatch: dispatch}, {
-            prayerActions: bindActionCreators(prayerActions, dispatch)
+            prayerActions: bindActionCreators(prayerActions, dispatch),
+            commonActions: bindActionCreators(commonActions, dispatch),
         }
     );
 }

@@ -41,7 +41,7 @@ export default class Header extends PureComponent {
 
                     right.map((e, index) => {
                         const {icon, onPress, text} = e;
-                        return text ?  <Button key={index} transparent><TextBase highlight={true}>{text}</TextBase></Button> :
+                        return text ?  <Button key={index} transparent onPress ={onPress}><TextBase highlight={true}>{text}</TextBase></Button> :
 
                             <Button key={index} transparent onPress={onPress}>
                                 <Icon name={icon} dark={false}/>

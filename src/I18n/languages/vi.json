@@ -130,6 +130,13 @@
   "report": "Báo cáo",
   "resendVerifyEmail":"Gửi lại email xác thực tài khoản",
   "resendVerifyEmailSuccess":"Gửi lại email xác thực tài khoản đã thành công",
+  "reportModalTitle":"Chọn vấn đề vi phạm",
+  "report/image":"Hình ảnh",
+  "report/text":"Từ ngữ",
+  "report/doctrine":"Tín lí",
+  "reportOtherReason":"Lí do khác",
+  "report/displayName":"Tên hiển thị",
+  "reportViolation":"Báo cáo vi phạm",
   //S
   "scanQRCode": "Quét mã QR",
   "search": "Tìm kiếm",

@@ -1,15 +1,15 @@
 // Libraries
 import React, {PureComponent} from 'react'
-import {View,Image} from 'react-native'
-import I18n from '../../../I18n/index';
-import {IconName} from '../../../Themes/index';
+import {View, Image} from 'react-native'
+import I18n from '../../../I18n';
+import {IconName} from '../../../Themes';
 import firebase from 'react-native-firebase';
 import {StackActions} from "react-navigation";
-import {EventRegisterTypes, URL, StatusOfPray, ScreenKey,contentCodes,firestorePaths} from "../../../Constants";
+import {EventRegisterTypes, StatusOfPray, ScreenKey, firestorePaths} from "../../../Constants";
 import {EventRegister} from 'react-native-event-listeners';
 import moment from "moment";
-import {OptionButton, LoadingIndicator,Avatar} from "../../../Components/Modules";
-import {Icon, Button, TextBase, PlaceHolder} from "../../../Components/Common";
+import {OptionButton, LoadingIndicator, Avatar} from "../../../Components/Modules";
+import { Button, TextBase, PlaceHolder} from "../../../Components/Common";
 import {List} from 'native-base';
 import {style} from "../Style";
 import {notification} from "../../../model";
@@ -130,14 +130,14 @@ export default class DrawerContainer extends PureComponent {
 
     componentDidMount() {
         firebaseAnalytics("Drawer screen");
-        const {userActions, prayerActions,notificationActions,navigation, loginReducer} = this.props;
+        const {userActions, prayerActions, notificationActions, navigation, loginReducer} = this.props;
         const docOfCurrentUserNotification = notificationCollect.doc(firebase.auth().currentUser.uid);
-        firebase.firestore().doc(firestorePaths.SIGN_IN.replace("{userUID}",firebase.auth().currentUser.uid)).onSnapshot(snapShot =>{
-            if(snapShot.data()){
+        firebase.firestore().doc(firestorePaths.SIGN_IN.replace("{userUID}", firebase.auth().currentUser.uid)).onSnapshot(snapShot => {
+            if (snapShot.data()) {
                 const {lastSignInTime} = snapShot.data();
-                if(loginReducer.payload){
-                    const {lastSignInTime : _lastSignInTime} = loginReducer.payload;
-                    if(moment(lastSignInTime).diff(moment(_lastSignInTime))> 0){
+                if (loginReducer.payload) {
+                    const {lastSignInTime: _lastSignInTime} = loginReducer.payload;
+                    if (moment(lastSignInTime).diff(moment(_lastSignInTime)) > 0) {
                         this.onPressLogout();
                     }
                 }
@@ -147,15 +147,15 @@ export default class DrawerContainer extends PureComponent {
             let notificationList = [];
             snapshot.forEach(e => {
                 let data = e.data();
-                notificationList.push( new notification(data));
+                notificationList.push(new notification(data));
             });
             if (notificationList) {
                 notificationActions.getNotifications(notificationList);
             }
         });
         const {params} = navigation.state;
-        const {fromLogin }= params || {};
-        if(!fromLogin){
+        const {fromLogin} = params || {};
+        if (!fromLogin) {
             userActions.getProfile();
         }
 
@@ -189,16 +189,16 @@ export default class DrawerContainer extends PureComponent {
                 case EventRegisterTypes.FOLLOWING_PRAYER: {
                     const {prayerUID, userOtherUID, follow} = params
                     if (prayerUID && userOtherUID) {
-                        prayerActions.followingPrayer({prayerUID, userOtherUID, follow , isPublic : true});
+                        prayerActions.followingPrayer({prayerUID, userOtherUID, follow, isPublic: true});
                     }
                     break;
                 }
 
                 case EventRegisterTypes.NAVIGATE_SCREEN : {
 
-                    const {screen , params : _params} = params;
+                    const {screen, params: _params} = params;
                     if (screen) {
-                      this.props.navigation.navigate(screen,_params)
+                        this.props.navigation.navigate(screen, _params)
                     }
                     break;
                 }
@@ -271,6 +271,12 @@ export default class DrawerContainer extends PureComponent {
 
     onPressOption(screen) {
         const {navigation: {navigate}} = this.props;
+        switch (screen) {
+            case  ScreenKey.ABOUT:{
+                this.props.navigation.closeDrawer();
+                break;
+            }
+        }
         navigate(screen);
     }
 
@@ -289,7 +295,8 @@ export default class DrawerContainer extends PureComponent {
 
         const {userReducer} = this.props;
         const {payload} = userReducer;
-        if (firebase.auth().currentUser &&  payload) {
+        if (firebase.auth().currentUser && payload) {
+            this.props.navigation.closeDrawer();
             this.props.navigation.navigate(ScreenKey.PROFILE, {userUID: firebase.auth().currentUser.uid});
         }
 
@@ -315,18 +322,18 @@ export default class DrawerContainer extends PureComponent {
     }
 
     render() {
-        const {prayerReducer, drawerReducer, userReducer,navigation} = this.props;
+        const {prayerReducer, userReducer, navigation} = this.props;
         const {notificationNotRead} = this.state;
         const praysFinished = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.COMPLETE) || [];
         const praysInprogress = prayerReducer.payload && prayerReducer.payload.filter(e => e.status == StatusOfPray.INPROGRESS) || [];
-        const {payload, fetching } = userReducer;
-        const {displayName = "", avatarURL} = payload ||  {};
+        const {payload, fetching} = userReducer;
+        const {displayName = "", avatarURL} = payload || {};
         const isDrawerOpen = navigation && navigation.state && navigation.state.isDrawerOpen;
         return (
-            <View key={"main"} pointerEvents={fetching ?"none":"auto"}>
-                <LoadingIndicator visible={fetching  && isDrawerOpen}/>
+            <View key={"main"} pointerEvents={fetching ? "none" : "auto"}>
+                <LoadingIndicator visible={fetching && isDrawerOpen}/>
                 <View style={style.profileContainer}>
-                    <Avatar uri={avatarURL} largeX={true} />
+                    <Avatar uri={avatarURL} largeX={true}/>
                     <PlaceHolder/>
                     <TextBase large={true} bold={true}>{displayName}</TextBase>
                     <PlaceHolder/>
@@ -335,7 +342,7 @@ export default class DrawerContainer extends PureComponent {
                 <List>
                     <OptionButton text={I18n.t("inprogress")}
                                   leftIcon={IconName.prayer_inprogress}
-                                  count={ praysInprogress.length}
+                                  count={praysInprogress.length}
                                   onPress={this.onPressOption.bind(this, ScreenKey.PRAYING_INPROGESS)}/>
                     <OptionButton text={I18n.t("finished")}
                                   leftIcon={IconName.prayer_complete}
@@ -349,7 +356,8 @@ export default class DrawerContainer extends PureComponent {
                                   onPress={this.onPressOption.bind(this, ScreenKey.NOTIFICATIONS)} countRed={true}
                                   count={notificationNotRead}/>
                     {/*<OptionButton text={I18n.t("setting")} leftIcon={IconName.setting}/>*/}
-                    <OptionButton text={I18n.t("about")} leftIcon={IconName.about}  onPress={this.onPressOption.bind(this, ScreenKey.ABOUT)}/>
+                    <OptionButton text={I18n.t("about")} leftIcon={IconName.about}
+                                  onPress={this.onPressOption.bind(this, ScreenKey.ABOUT)}/>
                     <OptionButton text={I18n.t("logout")} leftIcon={IconName.logout}
                                   onPress={this.onPressLogout}/>
 

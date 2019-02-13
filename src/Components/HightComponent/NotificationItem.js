@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import {View, TouchableOpacity, TouchableHighlight} from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import PropTypes from 'prop-types';
-import {Colors, Fonts, IconName} from '../../Themes';
+import {Colors, IconName} from '../../Themes';
 import {TextBase, Button, Icon} from "../Common";
 import moment from "moment";
 import I18n from "../../I18n/index";

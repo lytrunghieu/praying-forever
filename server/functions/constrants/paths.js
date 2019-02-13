@@ -1,6 +1,3 @@
-// const paths = {
-//     prayer : "prayer/{userUID}/data/{prayUID}",
-// };
 
 exports.prayer = "prayer/{userUID}/data/{prayerUID}";
 exports.prayers ="prayer/{userUID}/data";
@@ -15,3 +12,5 @@ exports.profileUsers ="profile";
 exports.profileUsers ="profile";
 
 exports.signIn ="signIn/{userUID}";
+
+exports.report ="report";

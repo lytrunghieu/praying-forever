@@ -15,6 +15,8 @@ import NetworkBar from "./NetworkBar";
 import Avatar from "./Avatar";
 import DatePicker from "./DatePicker";
 import CheckboxModal from "./CheckboxModal";
+import ReportModal from "./ReportModal";
+import ReportInputModal from "./ReportInputModal";
 
 export {
     Header,
@@ -32,5 +34,7 @@ export {
     NetworkBar,
     Avatar,
     DatePicker,
-    CheckboxModal
+    CheckboxModal,
+    ReportModal,
+    ReportInputModal,
 };

@@ -13,6 +13,7 @@ import  Icon from "./Icon";
 import  Text from "./Text";
 import  Form from "./Form";
 import  StatusBar from "./StatusBar";
+import ModalBase from "./ModalBase";
 
 export {
     PlaceHolder,
@@ -28,5 +29,6 @@ export {
     Icon,
     Text,
     Form,
-    StatusBar
+    StatusBar,
+    ModalBase
 };

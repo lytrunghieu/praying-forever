@@ -10,3 +10,4 @@ export const REGISTER ="createUser";
 export const DELETE_NOTIFICATION ="deleteNotification";
 export const UPDATE_LAST_SIGN_IN ="updateLastSignIn";
 export const SYNC_PRAYER ="syncPrayer";
+export const ADD_REPORT ="addReport";

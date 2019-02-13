@@ -6,16 +6,13 @@ import {globalStyle} from "../Themes"
 import {AppState, AsyncStorage, View, Platform} from "react-native"
 import {TextBase} from "../Components/Common";
 import Immutable from 'seamless-immutable';
-
 import '../Config'
-import DebugConfig from '../Config/DebugConfig'
-
+import DebugConfig from '../Config/DebugConfig';
 import RootContainer from './RootContainer';
-
 import {applyMiddleware, compose, createStore} from 'redux';
 import thunk from 'redux-thunk';
 import logger from "redux-logger"
-import {persistReducer, persistStore, getStoredState, createTransform} from 'redux-persist';
+import {persistReducer, persistStore, createTransform} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import I18n from "../I18n";
 import {Colors} from "../Themes";
@@ -49,7 +46,6 @@ const myTransform = createTransform(
         _inboundState = _inboundState.set("fetching", false);
         _inboundState = _inboundState.set("statusCode", null);
         _inboundState = _inboundState.set("message", null);
-
         return _inboundState;
     },
     // transform state being rehydrated
@@ -62,8 +58,6 @@ const myTransform = createTransform(
         _outboundState = _outboundState.set("fetching", false);
         _outboundState = _outboundState.set("statusCode", null);
         _outboundState = _outboundState.set("message", null);
-
-
         return _outboundState;
     },
     // define which reducers this transform gets called for.
@@ -157,7 +151,6 @@ class App extends PureComponent {
             duration: 850,
             delay: 500
         });
-
     }
 
     componentWillUpdate(nextProps, nextState) {

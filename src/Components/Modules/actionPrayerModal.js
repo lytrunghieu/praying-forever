@@ -37,6 +37,10 @@ export default class ActionPrayerModal extends PureComponent {
 
     //region handle Action Sheet
 
+    onPressReport = (data) => () => {
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_REPORT_MODAL, params: { data :{prayer :{data}}}})
+    }
+
     onPressUpdateFollowingStatus = (data, follow) => () => {
         const {uid: prayerUID, owner = {}} = data;
         const {uid: userOtherUID} = owner;
@@ -132,10 +136,12 @@ export default class ActionPrayerModal extends PureComponent {
 
                 else {
                     options = options.concat([
-                        {text: I18n.t('following'), onPress: this.onPressUpdateFollowingStatus(data, true)},
+                        {text: I18n.t('unFollowing'), onPress: this.onPressUpdateFollowingStatus(data, false)},
                     ]);
-
                 }
+                options = options.concat([
+                    {text: I18n.t('reportViolation'), onPress: this.onPressReport(data)},
+                ]);
             }
         }
         return options;

@@ -21,7 +21,6 @@ firestore.settings(settings);
 // Take the text parameter passed to this HTTP endpoint and insert it into the
 // Realtime Database under the path /messages/:pushId/original
 
-
 function sendMessage({pushToken, payload}) {
     return admin.messaging().sendToDevice(pushToken, payload);
 }
@@ -97,7 +96,6 @@ function deletePublicPrayer({prayerUID, userUID}) {
         })
     }
 }
-
 
 function getUserProfile({userUID} = {}) {
     const path = paths.profileUsers;
@@ -627,7 +625,6 @@ exports.syncPrayer = functions.https.onCall(async (data) => {
     const {title, content, following, owner, uid: prayerUID} = prayer;
     const path = paths.prayer.replace("{userUID}", userUID).replace("{prayerUID}", prayerUID);
     const prayerDoc = firestore.doc(path);
-
     return prayerDoc.set({title, content, following, owner}, {merge: true}).then(res => {
         return {success: true, statusCode: 200, message: "request success"};
     }).catch(error => {
@@ -639,6 +636,33 @@ exports.syncPrayer = functions.https.onCall(async (data) => {
         );
     });
 })
+
+exports.addReport = functions.https.onCall(async (data) => {
+    const {sender, user, prayer, reportType, reportMessage} = data;
+    const path = paths.report;
+    return firestore.collection(path).add(createModel.reportModel({
+        sender, user, prayer, reportType, reportMessage
+    })).then(docRef => {
+        return docRef.update("created", admin.firestore.FieldValue.serverTimestamp()).then(() => {
+            return {success: true, statusCode: 200, message: "request success"};
+        }).catch(error => {
+            console.log("LOG ERROR", error);
+            throw new functions.https.HttpsError(
+                "unknown", // code
+                'request failed', // message
+                {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+            );
+        })
+    }).catch(error => {
+        console.log("LOG ERROR", error);
+        throw new functions.https.HttpsError(
+            "unknown", // code
+            'request failed', // message
+            {success: false, statusCode: 400, body: data, errorDescription: error.toString()}
+        );
+    });
+
+});
 
 //region API INTERNAL
 

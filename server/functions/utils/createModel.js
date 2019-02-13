@@ -37,7 +37,20 @@ exports.notificationModel = function (data) {
     if(!result.contentCode || !result.from){
         return null;
     }
+    return result;
+}
 
-
+exports.reportModel  = function (data) {
+    let result = {};
+    if(!data ){
+        return null;
+    }
+    result.sender = data.sender || null;
+    result.reportType = data.reportType || null;
+    result.reportMessage = data.reportMessage || null;
+    result.created  = data.created || null;
+    result.user = data.user || null;
+    result.prayer = data.prayer || null;
+    result.excuted = data.excuted || false;
     return result;
 }

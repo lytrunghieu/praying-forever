@@ -3,13 +3,13 @@ import {prayerService, locationService, userService} from "../Service";
 import {FOLLOWING} from "../Service/errorCode";
 import {getProfile} from "./userActions";
 
-export function getPrayer({userUID, prayerUID, status = null ,search,} = {}) {
+export function getPrayer({userUID, prayerUID, status = null, search,} = {}) {
     return function (dispatch) {
         dispatch({
             type: actionTypes.GET_PRAYER_PENDING,
         });
 
-        new prayerService().getPrayer({userUID, prayerUID,status, search}).then(res => {
+        new prayerService().getPrayer({userUID, prayerUID, status, search}).then(res => {
             if (res.success) {
 
                 dispatch(getProfile({isUser: false}));
@@ -90,12 +90,12 @@ export function deletePray(params) {
     }
 }
 
-export function followingPrayer({userOtherUID, prayerUID, follow,isPublic}) {
+export function followingPrayer({userOtherUID, prayerUID, follow, isPublic}) {
     return function (dispatch) {
         dispatch({
             type: actionTypes.FOLLOWING_PRAYER_PENDING,
         });
-        new prayerService().followingPrayer({userOtherUID, prayerUID, follow,isPublic}).then(res => {
+        new prayerService().followingPrayer({userOtherUID, prayerUID, follow, isPublic}).then(res => {
             if (res.success) {
                 dispatch({
                     type: actionTypes.FOLLOWING_PRAYER_SUCCESS,
@@ -251,7 +251,7 @@ export function syncPrayer({userUID, prayerUID}) {
         dispatch({
             type: actionTypes.SYNC_PRAYER_PENDING,
         });
-        return new prayerService().getPrayer({prayerUID, userUID,status : 0}).then(res => {
+        return new prayerService().getPrayer({prayerUID, userUID, status: 0}).then(res => {
             if (res.success) {
                 if (res.data && res.data.length === 0) {
                     return new prayerService().deletePrayer({prayerUID}).then(_res => {

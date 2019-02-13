@@ -9,12 +9,22 @@ import {
 } from 'react-native';
 
 import {style as styles} from "../Style";
-import {FormValidate, Content, Container, Header, ButtonFooter, EmptyHolder, Avatar,DatePicker} from "../../../Components/Modules";
+import {
+    FormValidate,
+    Content,
+    Container,
+    Header,
+    ButtonFooter,
+    EmptyHolder,
+    Avatar,
+    DatePicker
+} from "../../../Components/Modules";
 import {IconName} from "../../../Themes";
 import {TextBase, Checkbox, PlaceHolder, Button} from "../../../Components/Common";
 import I18n from "../../../I18n";
+import {EventRegisterTypes} from "../../../Constants";
 import moment from "moment";
-import {firebaseAnalytics} from "../../../Utils";
+import {firebaseAnalytics, CommonUtils} from "../../../Utils";
 
 
 var ImagePicker = require('react-native-image-picker');
@@ -34,7 +44,7 @@ export default class Profile extends PureComponent {
         const {userUID} = dataPassed;
         this.uid = userUID;
         this.isUser = userUID == payload.uid ? true : false;
-        this.userOri =  this.isUser ? payload : null;
+        this.userOri = this.isUser ? payload : null;
 
         this.onPressBack = this.onPressBack.bind(this);
         this.state = {
@@ -44,13 +54,17 @@ export default class Profile extends PureComponent {
             gender: this.userOri && this.userOri.gender,
             birthDay: this.userOri && this.userOri.birthDay,
             isChanged: false,
-            avatarURL:  this.userOri && this.userOri.avatarURL,
+            avatarURL: this.userOri && this.userOri.avatarURL,
         };
 
         this.leftHeader = {
             icon: IconName.back,
             onPress: this.onPressBack
         };
+        this.rightHeader = [{
+            text: I18n.t("report"),
+            onPress: this.onPressReport.bind(this)
+        }]
 
         this.getProfile = this.getProfile.bind(this);
         this.onPressGender = this.onPressGender.bind(this);
@@ -135,12 +149,15 @@ export default class Profile extends PureComponent {
                 console.log('User tapped custom button: ', response.customButton);
             }
             else {
-                userActions.updateAvatar({uri :response.uri});
+                userActions.updateAvatar({uri: response.uri});
             }
         });
 
     }
 
+    onPressReport() {
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_REPORT_MODAL, params: {data: {user: this.userOri}}});
+    }
 
     onPressSave() {
         const {validDisplayName, displayName, gender, birthDay} = this.state;
@@ -184,8 +201,8 @@ export default class Profile extends PureComponent {
         const {userActions} = this.props;
         userActions.getProfile({userUID: this.uid, isUser: this.isUser}).then(res => {
             if (res.success && !this.isUser) {
-                const {displayName, gender, birthDay,avatarURL} = res.data[0];
-                this.userOri = res.data;
+                const {displayName, gender, birthDay, avatarURL} = res.data[0];
+                this.userOri = res.data[0];
                 this.setState({
                     displayName,
                     gender,
@@ -201,8 +218,8 @@ export default class Profile extends PureComponent {
 
     render() {
 
-        const {loading, gender, birthDay, isChanged, displayName ,avatarURL} = this.state;
-        const {profileReducer,userReducer} = this.props;
+        const {loading, gender, birthDay, isChanged, displayName, avatarURL} = this.state;
+        const {profileReducer} = this.props;
         const {fetching} = profileReducer;
 
         return (
@@ -211,6 +228,7 @@ export default class Profile extends PureComponent {
                     title={I18n.t('profile')}
                     left={this.leftHeader}
                     isFetching={fetching}
+                    right={this.userOri  && !this.isUser? this.rightHeader  : null}
                 />
                 {
                     !loading && !this.userOri ? <EmptyHolder
@@ -233,17 +251,18 @@ export default class Profile extends PureComponent {
                                 }
 
                             </View>
-                            <View style={[styles.form]} pointerEvents={ !this.isUser ? "none" : "auto"} >
+                            <View style={[styles.form]} pointerEvents={!this.isUser ? "none" : "auto"}>
                                 <TextBase info={true}>{I18n.t("displayName")}</TextBase>
                                 <FormValidate
                                     defaultValue={displayName}
                                     onChangeText={this.onChangeTextInput.bind(this, inputKey.DISPLAY_NAME.name)}
-                                    maxLength ={256}
+                                    maxLength={256}
                                 />
                                 <TextBase info={true}>{I18n.t("gender")}</TextBase>
                                 <Checkbox text={I18n.t("male")} onPress={this.onPressGender}
                                           checked={gender ? false : true}/>
-                                <DatePicker defaultDate ={new Date(birthDay)} label={I18n.t("birthDay")} chosenDate={birthDay} setDate={this.onChangeBD}/>
+                                <DatePicker defaultDate={new Date(birthDay)} label={I18n.t("birthDay")}
+                                            chosenDate={birthDay} setDate={this.onChangeBD}/>
                             </View>
                         </Content> : null
                 }

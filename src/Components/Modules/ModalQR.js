@@ -8,7 +8,6 @@ import I18n from '../../I18n/index';
 import QRCode from 'react-native-qrcode';
 import {ButtonFooter} from "./index";
 
-
 export default class ModalQR extends ModalBase {
 
     constructor(props) {

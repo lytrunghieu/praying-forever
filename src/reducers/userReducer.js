@@ -1,6 +1,6 @@
 import {actionTypes} from '../Action';
 import InitialState from "./initialStates";
-
+import { PURGE} from 'redux-persist';
 
 export function userReducer(state = InitialState.profile, action) {
     const {type, data} = action;
@@ -30,7 +30,13 @@ export function userReducer(state = InitialState.profile, action) {
 
         //dependencies
 
-
+        case PURGE :{
+            state = state.set("fetching", false);
+            state = state.set("success", false);
+            state = state.set("message", null);
+            state = state.set("payload", null);
+            return state;
+        }
 
         default :
             return state

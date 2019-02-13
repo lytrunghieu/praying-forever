@@ -5,6 +5,7 @@ export default  {
     PROFILES :"profile",
     TEMPLATE_PRAYER :"template/prayer",
     TEMPLATE_DISTANCE_PRAYER :"template/distancePrayer",
+    TEMPLATE_REPORT :"template/reportType",
     SIGN_IN :"signIn/{userUID}",
 
 }
