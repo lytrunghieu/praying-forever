@@ -9,7 +9,7 @@ import {EventRegisterTypes, StatusOfPray, ScreenKey, firestorePaths} from "../..
 import {EventRegister} from 'react-native-event-listeners';
 import moment from "moment";
 import {OptionButton, LoadingIndicator, Avatar} from "../../../Components/Modules";
-import { Button, TextBase, PlaceHolder} from "../../../Components/Common";
+import {Button, TextBase, PlaceHolder} from "../../../Components/Common";
 import {List} from 'native-base';
 import {style} from "../Style";
 import {notification} from "../../../model";
@@ -143,6 +143,13 @@ export default class DrawerContainer extends PureComponent {
                 }
             }
         });
+
+        firebase.firestore().doc(firestorePaths.BANNED_USER.replace("{userUID}", firebase.auth().currentUser.uid)).onSnapshot(snapShot => {
+            if (snapShot.exists && !snapShot.metadata.fromCache) {
+                this.onPressLogout();
+            }
+        });
+
         docOfCurrentUserNotification.collection("data").onSnapshot(snapshot => {
             let notificationList = [];
             snapshot.forEach(e => {
@@ -272,7 +279,7 @@ export default class DrawerContainer extends PureComponent {
     onPressOption(screen) {
         const {navigation: {navigate}} = this.props;
         switch (screen) {
-            case  ScreenKey.ABOUT:{
+            case  ScreenKey.ABOUT: {
                 this.props.navigation.closeDrawer();
                 break;
             }

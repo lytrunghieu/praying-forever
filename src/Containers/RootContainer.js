@@ -4,10 +4,7 @@ import {View, Keyboard, ToastAndroid, BackHandler, NetInfo, Alert} from 'react-n
 import {connect} from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {SafeAreaView} from 'react-navigation';
-// Utilities
 import {Colors} from '../Themes';
-
-// Components
 import {StatusBar} from '../Components/Common';
 import {
     ModalScanQR,
@@ -19,7 +16,6 @@ import {
     ReportInputModal
 } from "../Components/Modules";
 import {prayerActions, commonActions} from '../Action';
-// Navigation
 import {EventRegisterTypes} from "../Constants";
 import {EventRegister} from 'react-native-event-listeners';
 import {bindActionCreators} from 'redux';
@@ -28,7 +24,7 @@ import AppNavigation from '../Navigation/AppNavigation';
 import {
     reduxifyNavigator,
     createReactNavigationReduxMiddleware,
-} from 'react-navigation-redux-helpers'
+} from 'react-navigation-redux-helpers';
 
 const middlewareRoot = createReactNavigationReduxMiddleware(
     "root",
@@ -139,7 +135,7 @@ class RootContainer extends PureComponent {
             }
         });
 
-        BackHandler.addEventListener('hardwareBackPress', this.handleHardwareBack)
+        BackHandler.addEventListener('hardwareBackPress', this.handleHardwareBack);
     }
 
     componentWillUnmount() {

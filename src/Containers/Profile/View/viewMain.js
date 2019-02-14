@@ -83,6 +83,7 @@ export default class Profile extends PureComponent {
 
         if (nextProps.userReducer.payload !== this.props.userReducer.payload) {
             const {displayName, gender, birthDay, avatarURL} = nextProps.userReducer.payload;
+            this.userOri = nextProps.userReducer.payload;
             this.setState({
                 displayName,
                 gender,

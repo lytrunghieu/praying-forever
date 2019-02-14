@@ -44,6 +44,7 @@ export default class LoginScreen extends PureComponent {
         this.onPressListComponent = this.onPressListComponent.bind(this);
         this.onPressResendEmail = this.onPressResendEmail.bind(this);
         this.onPressGoInboxMail = this.onPressGoInboxMail.bind(this);
+        this.onPressSupport = this.onPressSupport.bind(this);
 
         this.onChangeEmailText = this.onChangeEmailText.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
@@ -82,12 +83,23 @@ export default class LoginScreen extends PureComponent {
                 )
             }
             else {
-                Alert.alert(I18n.t("alert"), nextProps.loginReducer.message,
-                    [
-                        {text: I18n.t("done")},
-                    ],
-                    {cancelable: true}
-                )
+                if (nextProps.loginReducer.statusCode === 403) {
+                    Alert.alert(I18n.t("alert"), nextProps.loginReducer.message,
+                        [
+                            {text: I18n.t("done")},
+                            {text: I18n.t("support").toUpperCase(), onPress: this.onPressSupport}
+                        ],
+                        {cancelable: true}
+                    )
+                }
+                else{
+                    Alert.alert(I18n.t("alert"), nextProps.loginReducer.message,
+                        [
+                            {text: I18n.t("done")},
+                        ],
+                        {cancelable: true}
+                    )
+                }
             }
         }
     }
@@ -133,6 +145,10 @@ export default class LoginScreen extends PureComponent {
                 )
             }
         });
+    }
+
+    onPressSupport() {
+        CommonUtils.sendEmail();
     }
 
     onPressGoInboxMail(){

@@ -125,7 +125,7 @@ class UserService extends baseService {
                 }
 
                 case ErrorCodes.AUTH_USER_DISABLED : {
-                    result.data.statusCode = 401;
+                    result.data.statusCode = 403;
                     result.data.message = I18n.t("userDisabled");
                     break;
                 }

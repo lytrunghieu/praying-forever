@@ -1,8 +1,10 @@
-import {Dimensions, StatusBar, Platform, AsyncStorage} from 'react-native';
-
-import {Device} from '../Constants';
+import {Dimensions, StatusBar, Platform, AsyncStorage,Linking} from 'react-native';
+import I18n from "../I18n";
+import {Device,universalLink} from '../Constants';
 import DebugConfig from '../Config/DebugConfig';
-import { EventRegister } from 'react-native-event-listeners'
+import { EventRegister } from 'react-native-event-listeners';
+import DeviceInfo from "react-native-device-info";
+
 
 // See https://mydevice.io/devices/ for device dimensions
 const X_WIDTH = 375;
@@ -94,6 +96,29 @@ export default {
 
     sendEvent(action){
         EventRegister.emit("listener" , action);
+    },
+
+    sendEmail(){
+        Linking.canOpenURL(universalLink.FEEDBACK).then(supported => {
+            if (!supported) {
+                console.error('Can\'t handle url: ' + universalLink.FEEDBACK);
+            } else {
+                let footer = "\n\n\n\n{yourInfo}\n{version}: {Version}\n{deviceModel}: {Device Model}\n{platform}: {OS}";
+                const Version = DeviceInfo.getVersion();
+                const Model = DeviceInfo.getModel();
+                const OS = DeviceInfo.getSystemName().concat(" ").concat(DeviceInfo.getSystemVersion());
+                footer = footer.replace("{Version}", Version)
+                    .replace("{Device Model}", Model)
+                    .replace("{OS}", OS)
+                    .replace("{yourInfo}", I18n.t("yourInfo"))
+                    .replace("{version}", I18n.t("version"))
+                    .replace("{deviceModel}", I18n.t("deviceModel"))
+                    .replace("{platform}",  I18n.t("platform"))
+                ;
+                const url = universalLink.FEEDBACK.replace("{body}", footer);
+                return Linking.openURL(url);
+            }
+        }).catch(err => console.error('An error occurred', err));
     }
 
 }

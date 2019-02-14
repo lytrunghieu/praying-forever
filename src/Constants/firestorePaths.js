@@ -7,5 +7,5 @@ export default  {
     TEMPLATE_DISTANCE_PRAYER :"template/distancePrayer",
     TEMPLATE_REPORT :"template/reportType",
     SIGN_IN :"signIn/{userUID}",
-
+    BANNED_USER :"bannedUser/{userUID}",
 }
