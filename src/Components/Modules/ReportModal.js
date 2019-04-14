@@ -47,7 +47,7 @@ export default class ReportModal extends PureComponent {
         else {
             CommonUtils.sendEvent({
                 type: EventRegisterTypes.SHOW_REPORT_INPUT_MODAL,
-                params: {data: {user, prayer}}
+                params: {data: {prayer}}
             });
         }
     }

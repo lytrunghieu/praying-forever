@@ -38,7 +38,7 @@ export default class ActionPrayerModal extends PureComponent {
     //region handle Action Sheet
 
     onPressReport = (data) => () => {
-        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_REPORT_MODAL, params: { data :{prayer :{data}}}})
+        CommonUtils.sendEvent({type: EventRegisterTypes.SHOW_REPORT_MODAL, params: { data :{prayer :data}}})
     }
 
     onPressUpdateFollowingStatus = (data, follow) => () => {

@@ -76,7 +76,7 @@ export default class CreateAccount extends PureComponent {
         if (nextProps.registerReducer.success !== this.props.registerReducer.success && nextProps.registerReducer.success) {
             Alert.alert(I18n.t("alert"), I18n.t("checkEmailContent"), [
                     {
-                        text: I18n.t("ok"), onPress: this.onSignupSuccess
+                        text: I18n.t("close"), onPress: this.onSignupSuccess
                     }
                 ],
                 {cancelable: true}

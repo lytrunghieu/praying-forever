@@ -76,7 +76,7 @@ export default class LoginScreen extends PureComponent {
             if (nextProps.loginReducer.statusCode === 402) {
                 Alert.alert(I18n.t("alert"), nextProps.loginReducer.message,
                     [
-                        {text: I18n.t("done")},
+                        {text: I18n.t("close")},
                         {text: I18n.t("resendVerifyEmail"), onPress: this.onPressResendEmail}
                     ],
                     {cancelable: true}
@@ -86,7 +86,7 @@ export default class LoginScreen extends PureComponent {
                 if (nextProps.loginReducer.statusCode === 403) {
                     Alert.alert(I18n.t("alert"), nextProps.loginReducer.message,
                         [
-                            {text: I18n.t("done")},
+                            {text: I18n.t("close")},
                             {text: I18n.t("support").toUpperCase(), onPress: this.onPressSupport}
                         ],
                         {cancelable: true}
@@ -95,7 +95,7 @@ export default class LoginScreen extends PureComponent {
                 else{
                     Alert.alert(I18n.t("alert"), nextProps.loginReducer.message,
                         [
-                            {text: I18n.t("done")},
+                            {text: I18n.t("close")},
                         ],
                         {cancelable: true}
                     )
@@ -138,7 +138,7 @@ export default class LoginScreen extends PureComponent {
             if (res.success) {
                 Alert.alert(I18n.t("alert"), I18n.t("resendVerifyEmailSuccess"),
                     [
-                        {text: I18n.t("done")},
+                        {text: I18n.t("close")},
                         {text: I18n.t("goInbox"), onPress: this.onPressGoInboxMail}
                     ],
                     {cancelable: true}

@@ -21,6 +21,7 @@
   "checkEmailContent":"Hãy mở email đã gửi cho bạn để hoàn thành bước xác thực tài khoản",
   "checkForgotEmailContent":"Email khôi phục mật khẩu đã gửi đến hộp thư của bạn.",
   "career":"Sự nghiệp",
+  "close":"Đóng",
 
   //D
   "deleteAll": "Xoá tất cả",
@@ -119,7 +120,7 @@
   "prayerHadFinish":"Lời cầu nguyện của ,{displayName}, đã được ứng nghiệm",
   "prayingForever":"PRAYING FOREVER",
   "profile":"Hồ sơ",
-  "platform":"Nền tải",
+  "platform":"Nền tảng",
   //Q
   "QRCode": "Mã QR",
   //R

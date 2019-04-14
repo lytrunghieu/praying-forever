@@ -52,7 +52,7 @@ export default  class ReportInputModal extends ModalBase {
                     placeholder={I18n.t("inputDescription")}
                     value={data}
                     onChangeText={this.onChangeContent}
-                    maxLength={5000}
+                    maxLength={300}
                 />
                 <ButtonFooter onPress={this.onPressSubmit} text={I18n.t("send")}
                     disabled={!data}
